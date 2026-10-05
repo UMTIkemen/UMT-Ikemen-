@@ -1,0 +1,1438 @@
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;イントロ、ラウンド間演出、挑発
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;タイムオーバー敗北
+[Statedef 170]
+type = S
+ctrl = 0
+velset = 0,0
+anim = 170
+
+[State 170]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 1
+
+[State 170, 音を鳴らす]
+type = PlaySnd
+trigger1 = time = 1
+value = 10004,2
+
+[state 170]
+type = AssertSpecial
+trigger1 = time = [0,200]
+flag = roundnotover
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+; タイムオーバー引き分け
+[Statedef 175]
+type = S
+ctrl = 0
+velset = 0,0
+anim = 175
+
+[State 175]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 1
+
+[State 175, 音を鳴らす] ;「状況を中断。再開を進言する」
+type = PlaySnd
+trigger1 = time = 1
+value = 10007,0
+
+[state 175]
+type = AssertSpecial
+trigger1 = time = [0,200]
+flag = roundnotover
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;勝利ポーズ分岐
+[Statedef 180]
+type = S
+
+[State 180, 1]
+type = ChangeState
+trigger1 = Time >= 0
+trigger1 = Random = [0,250]
+value = 3500
+
+[State 180, 1]
+type = ChangeState
+trigger1 = Time >= 0
+trigger1 = Random = [250,500]
+value = 3510
+
+[State 180, 1]
+type = ChangeState
+trigger1 = Time >= 0
+trigger1 = Random = [500,750]
+value = 3520
+
+[State 180, 1]
+type = ChangeState
+trigger1 = Time >= 0
+trigger1 = Random = [750,1000]
+value = 3540
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;勝利ポーズ１
+[StateDef 3500]
+type = S
+ctrl = 0
+anim = 3500
+velset = 0,0
+
+[State 3500, 音を鳴らす] ;私はワルキュリア…貴様とは違う
+type = PlaySnd
+trigger1 = time = 1
+value = 10002,1
+
+[State 3500, 音を鳴らす]
+type = PlaySnd
+trigger1 = time = 90
+value = 3,2
+
+[State 3500, 1]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 1
+
+[State 3500, イントロ]
+type = AssertSpecial
+trigger1 = time < 210
+flag = RoundNoTover
+
+[State 3500, エフェクト] ;剣具現化
+type = Explod
+trigger1 = time = 95
+anim = 3501
+ID = 3501
+pos = -10,-60
+postype = p1
+facing = 1
+vfacing = 1
+bindtime = 34
+vel = 0,0
+accel = 0,0
+random = 0,0
+removetime = -2
+scale = 0.5,0.5
+sprpriority = 6
+ontop = 0
+shadow = 0,0,0
+ownpal= 0
+removeongethit = 1
+supermovetime = 0
+pausemovetime = 0
+
+[State 3500, エフェクト] ;剣
+type = Explod
+trigger1 = time = 115
+anim = 3502
+ID = 3502
+pos = -10,-60
+postype = p1
+facing = 1
+vfacing = 1
+bindtime = 34
+vel = 0,0
+accel = 0,0
+random = 0,0
+removetime = 999
+scale = 0.5,0.5
+sprpriority = 6
+ontop = 0
+shadow = 0,0,0
+ownpal= 0
+removeongethit = 1
+supermovetime = 0
+pausemovetime = 0
+
+[State 3500, エフェクト] ;剣、光
+type = Explod
+trigger1 = time = 115
+anim = 3503
+ID = 3502
+pos = -10,-60
+postype = p1
+facing = 1
+vfacing = 1
+bindtime = 34
+vel = 0,0
+accel = 0,0
+random = 0,0
+removetime = 999
+scale = 0.5,0.5
+sprpriority = 6
+ontop = 0
+shadow = 0,0,0
+ownpal= 0
+removeongethit = 1
+supermovetime = 0
+pausemovetime = 0
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;勝利ポーズ２
+[StateDef 3510]
+type = S
+ctrl = 0
+anim = 3510
+velset = 0,0
+
+[State 3510, 音を鳴らす] ;何とか殺さずにすんだか……よし！
+type = PlaySnd
+trigger1 = time = 1
+value = 10002,0
+
+[State 3510, 1]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 1
+
+[State 3510, イントロ]
+type = AssertSpecial
+trigger1 = time < 250
+flag = RoundNoTover
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;勝利ポーズ３－１
+[StateDef 3520]
+type = S
+ctrl = 0
+velset = 0,0
+sprpriority = 4
+
+[State 3520, 1]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 1
+
+[state 3520, ぶつかり判定]
+type = PlayerPush
+trigger1 = 1
+value = 0
+
+[state 3520, 音を鳴らす]
+type = playsnd
+trigger1 = time = 0
+value = 3,6
+
+[state 3520, カメラ固定]
+type = ScreenBound
+trigger1 = 1
+value = 0
+movecamera = 0,0
+
+[State 3520, アニメ変更]
+type = changeanim
+trigger1 = Facing = 1
+trigger1 = Pos X > 100
+trigger2 = Facing = -1
+trigger2 = Pos X < -100
+value = 115
+
+[State 3520, アニメ変更]
+type = changeanim
+trigger1 = Facing = 1
+trigger1 = Pos X < 90
+trigger2 = Facing = -1
+trigger2 = Pos X > -90
+value = 4020
+
+[State 3520, 移動速度]
+type = VelSet
+trigger1 = Facing = 1
+trigger1 = Pos X > 100
+trigger2 = Facing = -1
+trigger2 = Pos X < -100
+x = -6
+
+[State 3520, 移動速度]
+type = VelSet
+trigger1 = Facing = 1
+trigger1 = Pos X < 90
+trigger2 = Facing = -1
+trigger2 = Pos X > -90
+x = 6
+
+[State 3520, ステート変更]
+type = ChangeState
+trigger1 = Facing = 1
+trigger1 = Pos X > 90
+trigger2 = Facing = -1
+trigger2 = Pos X < -90
+value = 3521
+
+[State 3520, イントロ]
+type = AssertSpecial
+trigger1 = 1
+flag = RoundNoTover
+
+;---------------------------------------------------------------------------
+;勝利ポーズ３－２
+[StateDef 3521]
+type = S
+ctrl = 0
+anim = 3521
+velset = 0,0
+sprpriority = 4
+
+[State 3521, 1]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 1
+
+[state 3521, ぶつかり判定]
+type = PlayerPush
+trigger1 = 1
+value = 0
+
+[state 3521, カメラ固定]
+type = ScreenBound
+trigger1 = 1
+value = 0
+movecamera = 0,0
+
+[State 3521, 音を鳴らす] ;はぁっ……
+type = PlaySnd
+trigger1 = time = 1
+value = 10003,0
+
+[State 3521, 音を鳴らす] ;これは、ラーゲルクヴェスト司令官殿
+type = PlaySnd
+trigger1 = time = 101
+value = 10005,0
+
+[state 3521, ヘルパー呼び出し] ;ペトラ
+type = helper
+trigger1 = time = 80
+stateno = 3530
+ID = 3530
+postype = back
+pos = 0,0
+ownpal = 0
+sprpriority = 4
+supermovetime = 9999
+pausemovetime = 9999
+persistent = 0
+ignorehitpause = 1
+
+[State 3521, イントロ]
+type = AssertSpecial
+trigger1 = 1
+flag = RoundNoTover
+
+[state 3521, ステート変更]
+type = changestate
+trigger1 = numhelper(3532) = 1
+value = 3522
+ctrl = 0
+
+;---------------------------------------------------------------------------
+;勝利ポーズ３－３
+[StateDef 3522]
+type = S
+ctrl = 0
+anim = 3522
+velset = 0,0
+sprpriority = 4
+
+[State 3522, 1]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 1
+
+[state 3522, ぶつかり判定]
+type = PlayerPush
+trigger1 = 1
+value = 0
+
+[state 3522, カメラ固定]
+type = ScreenBound
+trigger1 = 1
+value = 0
+movecamera = 0,0
+
+[State 3522, 音を鳴らす] ;はっ！尽力するっ次第ですっ！
+type = PlaySnd
+trigger1 = time = 1
+value = 10005,6
+
+[State 3522, イントロ]
+type = AssertSpecial
+trigger1 = time <= 280
+flag = RoundNoTover
+
+;---------------------------------------------------------------------------
+;勝利ポーズ３ヘルパー（ペトラ）１
+[Statedef 3530]
+type = S
+movetype = I
+physics = S
+sprpriority = 4
+anim = 3530
+velset = 0,0
+
+[state 3530, ぶつかり判定]
+type = PlayerPush
+trigger1 = 1
+value = 0
+
+[State 3530, 移動速度]
+type = VelSet
+trigger1 = ParentDist X >= 81
+x = 1.2
+
+[State 3530, ステート変更]
+type = changestate
+trigger1 = ParentDist X <= 80
+value = 3531
+
+;---------------------------------------------------------------------------
+;勝利ポーズ３ヘルパー（ペトラ）２
+[StateDef 3531]
+type = S
+movetype = I
+physics = S
+sprpriority = 4
+anim = 3531
+velset = 0,0
+
+[state 3531, ぶつかり判定]
+type = PlayerPush
+trigger1 = 1
+value = 0
+
+[State 3531, 音を鳴らす] ;一般社会で私をそのようには呼びません
+type = PlaySnd
+trigger1 = time = 22
+value = 10005,2
+
+[state 3521, ヘルパー呼び出し] ;ペトラ
+type = helper
+trigger1 = time = 180
+stateno = 3532
+ID = 3532
+postype = p1
+pos = 0,0
+ownpal = 0
+sprpriority = 5
+supermovetime = 9999
+pausemovetime = 9999
+persistent = 0
+ignorehitpause = 1
+
+[State 3530, ヘルパー消去]
+type = DestroySelf
+trigger1 = time = 180
+
+;---------------------------------------------------------------------------
+;勝利ポーズ３ヘルパー（ペトラ）３
+[Statedef 3532]
+type = S
+movetype = I
+physics = S
+sprpriority = 5
+velset = 0,0
+anim = 3532
+
+[state 3531, ぶつかり判定]
+type = PlayerPush
+trigger1 = 1
+value = 0
+
+[State 3520, アニメ変更]
+type = changeanim
+trigger1 = time = 160
+value = 3533
+
+[State 3531, 音を鳴らす] ;まあ良いでしょう
+type = PlaySnd
+trigger1 = time = 165
+value = 10005,7
+
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;勝利ポーズ４－１
+[StateDef 3540]
+type = S
+ctrl = 0
+velset = 0,0
+sprpriority = 4
+
+[State 3540, 1]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 1
+
+[state 3540, ぶつかり判定]
+type = PlayerPush
+trigger1 = 1
+value = 0
+
+[state 3540, 音を鳴らす]
+type = playsnd
+trigger1 = time = 0
+value = 3,6
+
+[state 3540, カメラ固定]
+type = ScreenBound
+trigger1 = 1
+value = 0
+movecamera = 0,0
+
+[State 3540, アニメ変更]
+type = changeanim
+trigger1 = Facing = 1
+trigger1 = Pos X > 50
+trigger2 = Facing = -1
+trigger2 = Pos X < -50
+value = 115
+
+[State 3540, アニメ変更]
+type = changeanim
+trigger1 = Facing = 1
+trigger1 = Pos X < 40
+trigger2 = Facing = -1
+trigger2 = Pos X > -40
+value = 4020
+
+[State 3540, 移動速度]
+type = VelSet
+trigger1 = Facing = 1
+trigger1 = Pos X > 50
+trigger2 = Facing = -1
+trigger2 = Pos X < -50
+x = -6
+
+[State 3540, 移動速度]
+type = VelSet
+trigger1 = Facing = 1
+trigger1 = Pos X < 40
+trigger2 = Facing = -1
+trigger2 = Pos X > -40
+x = 6
+
+[State 3540, ステート変更]
+type = ChangeState
+trigger1 = Facing = 1
+trigger1 = Pos X > 40
+trigger2 = Facing = -1
+trigger2 = Pos X < -40
+value = 3541
+
+[State 3540, イントロ]
+type = AssertSpecial
+trigger1 = 1
+flag = RoundNoTover
+
+;---------------------------------------------------------------------------
+;勝利ポーズ４－２
+[StateDef 3541]
+type = S
+ctrl = 0
+anim = 3541
+velset = 0,0
+sprpriority = 4
+
+[State 3541, 1]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 1
+
+[state 3541, ぶつかり判定]
+type = PlayerPush
+trigger1 = 1
+value = 0
+
+[state 3541, カメラ固定]
+type = ScreenBound
+trigger1 = 1
+value = 0
+movecamera = 0,0
+
+[State 3541, 音を鳴らす] ;はぁっ……
+type = PlaySnd
+trigger1 = time = 1
+value = 10003,0
+
+[state 3541, ヘルパー呼び出し] ;望田
+type = helper
+trigger1 = time = 80
+stateno = 3550
+ID = 3550
+postype = back
+pos = 0,0
+ownpal = 0
+sprpriority = 4
+supermovetime = 9999
+pausemovetime = 9999
+persistent = 0
+ignorehitpause = 1
+
+[state 3541, ヘルパー呼び出し] ;館好事
+type = helper
+trigger1 = time = 95
+stateno = 3560
+ID = 3560
+postype = back
+pos = 0,-5
+ownpal = 0
+sprpriority = 4
+supermovetime = 9999
+pausemovetime = 9999
+persistent = 0
+ignorehitpause = 1
+
+[state 3541, ヘルパー呼び出し] ;辺瑠鍋
+type = helper
+trigger1 = time = 110
+stateno = 3570
+ID = 3570
+postype = back
+pos = 0,0
+ownpal = 0
+sprpriority = 4
+supermovetime = 9999
+pausemovetime = 9999
+persistent = 0
+ignorehitpause = 1
+
+[State 3541, イントロ]
+type = AssertSpecial
+trigger1 = 1
+flag = RoundNoTover
+
+[State 3541]
+type = VarSet
+trigger1 = time = 0
+v = 0
+value = 0
+
+[state 3541, ステート変更]
+type = changestate
+trigger1 = time >= 10
+trigger1 = Var(0) = 1
+value = 3542
+ctrl = 0
+
+;---------------------------------------------------------------------------
+;勝利ポーズ４－３
+[StateDef 3542]
+type = S
+ctrl = 0
+anim = 3542
+velset = 0,0
+sprpriority = 4
+
+[State 3542, 1]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 1
+
+[state 3542, ぶつかり判定]
+type = PlayerPush
+trigger1 = 1
+value = 0
+
+[state 3542, カメラ固定]
+type = ScreenBound
+trigger1 = 1
+value = 0
+movecamera = 0,0
+
+[State 3542, 音を鳴らす] ;が、がんばった……
+type = PlaySnd
+trigger1 = time = 145
+value = 10003,4
+
+[State 3542, イントロ]
+type = AssertSpecial
+trigger1 = time <= 260
+flag = RoundNoTover
+
+;---------------------------------------------------------------------------
+;勝利ポーズ４ヘルパー（望田）１
+[StateDef 3550]
+type = S
+movetype = I
+physics = S
+sprpriority = 4
+anim = 3550
+velset = 0,0
+
+[state 3550, ぶつかり判定]
+type = PlayerPush
+trigger1 = 1
+value = 0
+
+[State 3550, 音を鳴らす] ;ヴァーイスーぅ♪
+type = PlaySnd
+trigger1 = time = 1
+value = 10003,1
+
+[State 3550, 移動速度]
+type = VelSet
+trigger1 = ParentDist X >= 45
+x = 2.0
+
+[State 3550, ステート変更]
+type = changestate
+trigger1 = ParentDist X <= 50
+value = 3551
+
+;---------------------------------------------------------------------------
+;勝利ポーズ３ヘルパー（望田）２
+[StateDef 3551]
+type = S
+movetype = I
+physics = S
+sprpriority = 4
+anim = 3551
+velset = 0,0
+
+[state 3551, ぶつかり判定]
+type = PlayerPush
+trigger1 = 1
+value = 0
+
+[State 3530, ヘルパー消去]
+type = DestroySelf
+trigger1 = time = 600
+
+;---------------------------------------------------------------------------
+;勝利ポーズ４ヘルパー（館好事）１
+[StateDef 3560]
+type = S
+movetype = I
+physics = S
+sprpriority = 3
+anim = 3560
+velset = 0,0
+
+[state 3560, ぶつかり判定]
+type = PlayerPush
+trigger1 = 1
+value = 0
+
+[State 3560, 移動速度]
+type = VelSet
+trigger1 = ParentDist X >= 80
+x = 1.6
+
+[State 3560, ステート変更]
+type = changestate
+trigger1 = ParentDist X <= 82
+value = 3561
+
+;---------------------------------------------------------------------------
+;勝利ポーズ３ヘルパー（館好事）２
+[StateDef 3561]
+type = S
+movetype = I
+physics = S
+sprpriority = 3
+anim = 3561
+velset = 0,0
+
+[state 3561, ぶつかり判定]
+type = PlayerPush
+trigger1 = 1
+value = 0
+
+[State 3561, 音を鳴らす] ;ケガしてない？
+type = PlaySnd
+trigger1 = time = 1
+value = 10003,2
+
+[State 3561, ヘルパー消去]
+type = DestroySelf
+trigger1 = time = 600
+
+;---------------------------------------------------------------------------
+;勝利ポーズ４ヘルパー（辺瑠鍋）１
+[StateDef 3570]
+type = S
+movetype = I
+physics = S
+sprpriority = 4
+anim = 3570
+velset = 0,0
+
+[state 3570, ぶつかり判定]
+type = PlayerPush
+trigger1 = 1
+value = 0
+
+[State 3570, 移動速度]
+type = VelSet
+trigger1 = ParentDist X >= 100
+x = 1.0
+
+[State 3570, ステート変更]
+type = changestate
+trigger1 = ParentDist X <= 105
+value = 3571
+
+;---------------------------------------------------------------------------
+;勝利ポーズ３ヘルパー（辺瑠鍋）２
+[StateDef 3571]
+type = S
+movetype = I
+physics = S
+sprpriority = 4
+anim = 3571
+velset = 0,0
+
+[State 3571]
+type = ParentVarSet
+trigger1 = time = 1
+v = 0
+value = 1
+
+[state 3571, ぶつかり判定]
+type = PlayerPush
+trigger1 = 1
+value = 0
+
+[State 3571, 音を鳴らす] ;凄かったですよ～♪
+type = PlaySnd
+trigger1 = time = 40
+value = 10003,3
+
+[State 3571, ヘルパー消去]
+type = DestroySelf
+trigger1 = time = 600
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;イントロ分岐
+[Statedef 190]
+type = S
+ctrl = 0
+velset = 0,0
+
+[state 190, イントロ]
+type = AssertSpecial
+trigger1 = 1
+flag = intro
+
+[State 190, ステート変更] ;シャルラッハロート
+type = ChangeState
+triggerall = (RoundsExisted = 0) || TeamMode = turns
+trigger1 = P2Name = "Scharlachrot" || P2Name = "scharlachrot"
+value = 2640
+
+[State 190, ステート変更] ;えこ
+type = ChangeState
+triggerall = (RoundsExisted = 0) || TeamMode = turns
+trigger1 = P2Name = "Eko" || P2Name = "eko"
+value = 2630
+
+[State 190, ステート変更] ;ラーゲルクヴィスト司令官殿（ペトラ）
+type = ChangeState
+triggerall = (RoundsExisted = 0) || TeamMode = turns
+trigger1 = P2Name = "Petora" || P2Name = "Petra"
+trigger2 = p2name = "Petra Johanna Lagerkvist" || p2name = "Petra_Johanna_Lagerkvist"
+trigger3 = p2name = "Petra-Johanna-Lagerkvist" || p2name = "Petra=Johanna=Lagerkvist"
+value = 2600
+
+[State 190, ステート変更] ;リーゼロッテ・アッヒェンバッハ
+type = ChangeState
+triggerall = (RoundsExisted = 0) || TeamMode = turns
+trigger1 = P2Name = "Lieselotte"
+trigger2 = P2Name = "Lieselotte Achenbach" || P2Name = "Lieselotte_Achenbach" || P2Name = "Lieselotte-Achenbach" || P2Name = "Lieselotte=Achenbach"
+value = 2610
+
+[State 190, ステート変更] ;愛乃 はぁと
+type = ChangeState
+triggerall = (RoundsExisted = 0) || TeamMode = turns
+trigger1 = P2Name = "Aino" || P2Name = "Heart"
+trigger2 = P2Name = "Aino Heart" || P2Name = "Aino_Heart" || P2Name = "Aino-Heart" || P2Name = "Aino=Heart"
+trigger3 = P2Name = "Heart Aino" || P2Name = "Heart_Aino" || P2Name = "Heart-Aino" || P2Name = "Heart=Aino"
+value = 2650
+
+[State 190, ステート変更] ;朱鷺宮 神依
+type = ChangeState
+triggerall = (RoundsExisted = 0) || TeamMode = turns
+trigger1 = P2Name = "Kamui" || P2Name = "Tokinomiya"
+trigger2 = P2Name = "Tokinomiya Kamui" || P2Name = "Tokinomiya_Kamui" || P2Name = "Tokinomiya-Kamui" || P2Name = "Tokinomiya=Kamui"
+trigger3 = P2Name = "Kamui Tokinomiya" || P2Name = "Kamui_Tokinomiya" || P2Name = "Kamui-Tokinomiya" || P2Name = "Kamui=Tokinomiya"
+value = 2660
+
+[State 190, ステート変更] ;ヴァイス・同キャラ１Ｐ側
+type = ChangeState
+triggerall = P2Name = "Weiss"
+triggerall = TeamSide = 1
+trigger1 = RoundsExisted = 0
+trigger2 = TeamMode = turns
+value = 2620
+
+[State 190, ステート変更] ;ヴァイス・同キャラ２Ｐ側
+type = ChangeState
+triggerall = P2Name = "Weiss"
+triggerall = TeamSide = 2
+trigger1 = RoundsExisted = 0
+trigger2 = TeamMode = turns
+value = 2625
+
+[State 190, ステート変更] ;「戦闘が始まる。後方へ非難しろ」
+type = ChangeState
+triggerall = time >= 1
+triggerall = Random = [0,500]
+trigger1 = RoundsExisted = 0
+trigger2 = TeamMode = turns
+value = 2500
+
+[State 190, ステート変更] ;「Search & Destroy」
+type = ChangeState
+triggerall = time >= 1
+triggerall = Random = [500,1000]
+trigger1 = RoundsExisted = 0
+trigger2 = TeamMode = turns
+value = 2540
+
+;[State 190, ステート変更] ;「ヴァイス！状況を開始する」
+;type = ChangeState
+;triggerall = time >= 1
+;triggerall = Random = [700,1000]
+;trigger1 = RoundsExisted = 0
+;trigger2 = TeamMode = turns
+;value = 2550
+
+[State 190, ステート変更]
+type = ChangeState
+trigger1 = RoundsExisted != 0
+trigger1 = time = 1
+value = 0
+ctrl = 0
+
+;---------------------------------------------------------------------------
+; Taunt
+; CNS difficulty: easy
+[Statedef 195]
+type = S
+ctrl = 0
+anim = 195
+velset = 0,0
+movetype = I
+physics = S
+sprpriority = 2
+
+[State 195, 1]
+type = CtrlSet
+trigger1 = Time = 40
+value = 1
+
+[State 195, 2]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 0
+ctrl = 1
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;イントロ１
+[StateDef 2500]
+type = S
+ctrl = 0
+anim = 2500
+velset = 0,0
+sprpriority = 2
+
+[state 2500, イントロ]
+type = AssertSpecial
+trigger1 = 1
+flag = intro
+
+[state 2500, 音を鳴らす] ;「戦闘が始まる。後方へ非難しろ！」
+type = playsnd
+trigger1 = time = 18
+value = 10000,0
+
+[state 2500, 音を鳴らす] ;「了解！」Ｘ３
+type = playsnd
+trigger1 = time = 186
+value = 10000,4
+
+[state 2500, ヘルパー呼び出し] ;望田
+type = helper
+trigger1 = time = 0
+stateno = 2510
+ID = 2510
+postype = P1
+pos = 30,3
+ownpal = 0
+sprpriority = 4
+supermovetime = 0
+pausemovetime = 0
+persistent = 0
+ignorehitpause = 1
+
+[state 2500, ヘルパー呼び出し] ;館好事
+type = helper
+trigger1 = time = 0
+stateno = 2520
+ID = 2520
+postype = P1
+pos = -24,-5
+ownpal = 0
+sprpriority = 1
+supermovetime = 0
+pausemovetime = 0
+persistent = 0
+ignorehitpause = 1
+
+[state 2500, ヘルパー呼び出し] ;辺瑠鍋
+type = helper
+trigger1 = time = 0
+stateno = 2530
+ID = 2530
+postype = P1
+pos = -48,0
+ownpal = 0
+sprpriority = 3
+supermovetime = 0
+pausemovetime = 0
+persistent = 0
+ignorehitpause = 1
+
+[state 2500, アニメ変更]
+type = changeanim
+trigger1 = animtime = 0
+value = 0
+
+[state 2500, ステート変更]
+type = changestate
+trigger1 = time = 186
+value = 0
+ctrl = 0
+
+;---------------------------------------------------------------------------
+;イントロ１ヘルパー（望田）
+[StateDef 2510]
+type = S
+movetype = I
+physics = S
+sprpriority = 4
+anim = 2510
+velset = 0,0
+
+[state 2510, ステート変更]
+type = changestate
+trigger1 = time = 185
+value = 2511
+ctrl = 0
+
+;---------------------------------------------------------------------------
+;イントロ１ヘルパー（望田）
+[StateDef 2511]
+type = S
+movetype = I
+physics = S
+sprpriority = 4
+anim = 2511
+
+[State 2511, 移動速度]
+type = VelSet
+trigger1 = 1
+x = -2.8
+
+[state 2511, ヘルパー消去]
+type = DestroySelf
+trigger1 = time = 60
+
+;---------------------------------------------------------------------------
+;イントロ１ヘルパー（館好事）
+[StateDef 2520]
+type = S
+movetype = I
+physics = S
+sprpriority = 1
+anim = 2520
+velset = 0,0
+
+[state 2520, ステート変更]
+type = changestate
+trigger1 = time = 186
+value = 2521
+ctrl = 0
+
+;---------------------------------------------------------------------------
+;イントロ１ヘルパー（館好事）
+[StateDef 2521]
+type = S
+movetype = I
+physics = S
+sprpriority = 1
+anim = 2521
+
+[State 2521, 移動速度]
+type = VelSet
+trigger1 = 1
+x = -2.6
+
+[state 2521, ヘルパー消去]
+type = DestroySelf
+trigger1 = time = 60
+
+;---------------------------------------------------------------------------
+;イントロ１ヘルパー（辺瑠鍋）
+[StateDef 2530]
+type = S
+movetype = I
+physics = S
+sprpriority = 3
+anim = 2530
+velset = 0,0
+
+[state 2530, ステート変更]
+type = changestate
+trigger1 = time = 184
+value = 2531
+ctrl = 0
+
+;---------------------------------------------------------------------------
+;イントロ１ヘルパー（辺瑠鍋）
+[StateDef 2531]
+type = S
+movetype = I
+physics = S
+sprpriority = 3
+anim = 2531
+
+[State 6531, 移動速度]
+type = VelSet
+trigger1 = 1
+x = -2.4
+
+[state 2531, ヘルパー消去]
+type = DestroySelf
+trigger1 = time = 60
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;イントロ２
+[StateDef 2540]
+type = S
+ctrl = 0
+anim = 2540
+velset = 0,0
+
+[state 2540, イントロ]
+type = AssertSpecial
+trigger1 = 1
+flag = intro
+
+[state 2540, 音を鳴らす] ;「Search & Destroy」
+type = playsnd
+trigger1 = time = 24
+value = 10001,0
+
+[state 2540, 音を鳴らす]
+type = playsnd
+trigger1 = time = 134
+value = 3,2
+
+[state 2540, 音を鳴らす] ;「Open Combat」
+type = playsnd
+trigger1 = time = 156
+value = 10001,1
+
+[state 2540, 音を鳴らす] ;「状況開始！」
+type = playsnd
+trigger1 = time = 256
+value = 10001,2
+
+[state 2540, ステート変更]
+type = changestate
+trigger1 = animtime = 0
+value = 0
+ctrl = 0
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;イントロ３「ヴァイス！状況を開始する」予定
+[StateDef 2550]
+type = S
+ctrl = 0
+anim = 191
+velset = 0,0
+
+[state 2550, イントロ]
+type = AssertSpecial
+trigger1 = 1
+flag = intro
+
+[state 2550, 音を鳴らす]
+type = playsnd
+trigger1 = time = 12
+value = 22,0
+
+[state 2550, 音を鳴らす]
+type = playsnd
+trigger1 = time = 73
+value = 22,1
+
+[state 2550, ステート変更]
+type = changestate
+trigger1 = time = 160
+value = 0
+ctrl = 0
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;イントロ、ペトラ・ヨハンナ・ラーゲルクヴィスト
+[StateDef 2600]
+type = S
+ctrl = 0
+anim = 2600
+
+[state 2600, イントロ]
+type = AssertSpecial
+trigger1 = 1
+flag = intro
+
+[state 2600, 音を鳴らす]
+type = playsnd
+trigger1 = time = 10
+value = 3,10
+
+[state 2600, 音を鳴らす]
+type = playsnd
+trigger1 = time = 30
+value = 10008,6
+
+[state 2600, ステート変更]
+type = changestate
+trigger1 = animtime = 0
+value = 0
+ctrl = 1
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;イントロ、リーゼロッテ・アッヒェンバッハ
+[StateDef 2610]
+type = S
+ctrl = 0
+anim = 2610
+
+[state 2610, イントロ]
+type = AssertSpecial
+trigger1 = 1
+flag = intro
+
+[state 2610, 音を鳴らす]
+type = playsnd
+trigger1 = time = 40
+value = 10008,5
+
+[state 2610, 音を鳴らす]
+type = playsnd
+trigger1 = time = 190
+value = 3,2
+
+[state 2610, ステート変更]
+type = changestate
+trigger1 = animtime = 0
+value = 0
+ctrl = 0
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;イントロ、ヴァイス１Ｐ側
+[StateDef 2620]
+type = S
+ctrl = 0
+anim = 2620
+
+[state 2620, イントロ]
+type = AssertSpecial
+trigger1 = 1
+flag = intro
+
+[state 2620, 音を鳴らす]
+type = playsnd
+trigger1 = time = 15
+value = 10008,9
+
+[state 2620, 音を鳴らす]
+type = playsnd
+trigger1 = time = 281
+value = 3,2
+
+[state 2620, ステート変更]
+type = changestate
+trigger1 = animtime = 0
+value = 0
+ctrl = 1
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;イントロ、ヴァイス２Ｐ側
+[StateDef 2625]
+type = S
+ctrl = 0
+anim = 2625
+
+[state 2625, イントロ]
+type = AssertSpecial
+trigger1 = 1
+flag = intro
+
+[state 2620, 音を鳴らす]
+type = playsnd
+trigger1 = time = 281
+value = 3,2
+
+[state 2625, 音を鳴らす]
+type = playsnd
+trigger1 = time = 301
+value = 10008,10
+
+[state 2625, ステート変更]
+type = changestate
+trigger1 = animtime = 0
+value = 0
+ctrl = 1
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;イントロ、えこ
+[StateDef 2630]
+type = S
+ctrl = 0
+anim = 2630
+
+[state 2630, イントロ]
+type = AssertSpecial
+trigger1 = 1
+flag = intro
+
+[state 2630, 音を鳴らす]
+type = playsnd
+trigger1 = time = 200
+value = 3,2
+
+[state 2630, 音を鳴らす]
+type = playsnd
+trigger1 = time = 260
+value = 10008,8
+
+[state 2630, ステート変更]
+type = changestate
+trigger1 = animtime = 0
+value = 0
+ctrl = 1
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;イントロ、シャルラッハロート
+[StateDef 2640]
+type = S
+ctrl = 0
+anim = 2640
+
+[state 2640, イントロ]
+type = AssertSpecial
+trigger1 = 1
+flag = intro
+
+[state 2640, 音を鳴らす]
+type = playsnd
+trigger1 = time = 15
+value = 3,2
+
+[state 2640, 音を鳴らす]
+type = playsnd
+trigger1 = time = 51
+value = 10008,7
+
+[state 2640, ステート変更]
+type = changestate
+trigger1 = animtime = 0
+value = 0
+ctrl = 1
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;イントロ、愛乃 はぁと
+[StateDef 2650]
+type = S
+ctrl = 0
+anim = 2650
+
+[state 2650, イントロ]
+type = AssertSpecial
+trigger1 = 1
+flag = intro
+
+[state 2650, 音を鳴らす]
+type = playsnd
+trigger1 = time = 180
+value = 3,2
+
+[state 2650, 音を鳴らす]
+type = playsnd
+trigger1 = time = 240
+value = 10008,3
+
+[state 2650, ステート変更]
+type = changestate
+trigger1 = animtime = 0
+value = 0
+ctrl = 1
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;イントロ、朱鷺宮 神依
+[StateDef 2660]
+type = S
+ctrl = 0
+anim = 2660
+
+[state 2660, イントロ]
+type = AssertSpecial
+trigger1 = 1
+flag = intro
+
+[state 2660, 音を鳴らす]
+type = playsnd
+trigger1 = time = 280
+value = 3,2
+
+[state 2660, 音を鳴らす]
+type = playsnd
+trigger1 = time = 340
+value = 10008,4
+
+[state 2660, ステート変更]
+type = changestate
+trigger1 = animtime = 0
+value = 0
+ctrl = 1
+
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+
+

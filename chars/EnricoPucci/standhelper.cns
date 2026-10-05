@@ -1,0 +1,2779 @@
+;スタンド
+;---------------------------------------------------------------------------
+;待機中 遠隔操作中もここ
+[Statedef 9999]
+type    = A
+movetype= I
+physics = N
+velset = 0,0
+anim = 9999
+sprpriority = -1
+[State bind]
+Type = BindToParent
+trigger1 = 1
+time = 1
+pos = 6,0
+Facing = 1
+ignorehitpause = 1
+[State 向きを合わせる]
+type = turn
+trigger1 = root,facing != facing
+[State 非常用]
+type = ChangeState
+trigger1 = !numhelper
+value = 0
+ctrl = 1
+ignorehitpause = 1
+
+[State スタンド使用可能(ガード可能)]
+type = parentvarset
+trigger1 = numhelper(40000)=0;遠隔操作スタンドがいない
+var(5) = 0
+ignorehitpause = 1
+
+[State ガード]
+type = changestate
+triggerall = ishelper(10000)
+trigger1 = root,stateno = 120
+trigger2 = root,stateno = [130,132]
+trigger3 = root,stateno = 140
+trigger4 = root,stateno = [150,155]
+value = 10140
+ignorehitpause = 1
+
+[State 通常攻撃 白蛇]
+type = changestate
+triggerall = ishelper(10000) && stateno!=root,stateno+10000
+trigger1 = root,stateno = 220 && root,time = 1
+trigger2 = root,stateno = 410 && root,time = 1
+trigger3 = root,stateno = 420 && root,time = 1
+trigger4 = root,stateno = 625 && root,time = 1
+value = root,stateno+10000
+ignorehitpause = 1
+
+[State 通常攻撃 C-MOON]
+type = changestate
+triggerall = ishelper(10000) && stateno!=root,stateno-1
+trigger1 = root,stateno = 10202 && root,time = 1
+trigger2 = root,stateno = 10212 && root,time = 1
+trigger3 = root,stateno = 10222 && root,time = 1
+trigger4 = root,stateno = 10402 && root,time = 1
+trigger5 = root,stateno = 10412 && root,time = 1
+trigger6 = root,stateno = 10422 && root,time = 1
+trigger7 = root,stateno = 10602 && root,time = 1
+trigger8 = root,stateno = 10612 && root,time = 1
+trigger9 = root,stateno = 10622 && root,time = 1
+value = root,stateno-1
+ignorehitpause = 1
+
+[State コマンド技 C-MOON]
+type = changestate
+triggerall = ishelper(10000) && stateno!=root,stateno-1
+trigger1 = root,stateno = 11002 && root,time = 1
+value = root,stateno-1
+ignorehitpause = 1
+[State コマンド技 C-MOON]
+type = changestate
+triggerall = ishelper(10000) && stateno!=11706
+trigger1 = root,stateno = 11700 && root,time = 1
+value = 11706
+ignorehitpause = 1
+
+[State スデニデキテイタナ突進]
+type = changestate
+trigger1 = root,stateno = 2100 && root,time = 2
+value = 12105
+ignorehitpause = 1
+[State スデニデキテイタナ裏回り]
+type = changestate
+trigger1 = root,stateno = 2200 && root,time = 2
+value = 12205
+ignorehitpause = 1
+
+[State 新月の重力]
+type = null;changestate
+triggerall = ishelper(10000) && stateno!=root,stateno+10000
+trigger1 = root,stateno = 2020
+value = root,stateno+10000
+ignorehitpause = 1
+
+[State お前は私にとって釈迦の C-MOON]
+type = changestate
+triggerall = ishelper(10000)
+trigger1 = root,stateno = 12200 && root,time = 70
+value = 12300
+ignorehitpause = 1
+
+[State メイド・イン・ヘブン時のcommonアニメ]
+type = changeanim
+trigger1 = root,var(50)=2 && root,stateno = 0 && anim != 30000
+value = 30000
+[State メイド・イン・ヘブン時のcommonアニメ]
+type = changeanim
+trigger1 = root,var(50)=2 && root,anim = 29020 && anim != 30020
+value = 30020
+[State メイド・イン・ヘブン時のcommonアニメ]
+type = changeanim
+trigger1 = root,var(50)=2 && root,anim = 29021 && anim != 30021
+value = 30021
+[State メイド・イン・ヘブン時のcommonアニメ]
+type = changeanim
+trigger1 = root,var(50)=2 && (root,stateno = [10,12]) && anim != 30011
+value = 30011
+[State メイド・イン・ヘブン時のcommonアニメ]
+type = changeanim
+trigger1 = root,var(50)=2 && (root,stateno = 40) && anim != 30040
+value = 30040
+[State メイド・イン・ヘブン時のcommonアニメ]
+type = changeanim
+trigger1 = root,var(50)=2 && (root,stateno = 50) && anim != 30041
+value = 30041
+[State メイド・イン・ヘブン時のcommonアニメ]
+type = changeanim
+trigger1 = root,var(50)=2 && (root,stateno = 52) && anim != 30050
+value = 30050
+[State メイド・イン・ヘブン時のcommonアニメ]
+type = changeanim
+trigger1 = root,var(50)=2 && (root,stateno = 100) && anim != 30100
+value = 30100
+[State メイド・イン・ヘブン時のcommonアニメ]
+type = changeanim
+trigger1 = root,var(50)=2 && (root,stateno = 105) && anim != 30105
+value = 30105
+[State メイド・イン・ヘブン時のcommonアニメ やられ]
+type = changeanim
+trigger1 = root,var(50)=2 && root,movetype = H && anim != 35000
+trigger1 = !(root,anim=[5005,5007]) && !(root,anim=[5015,5017]) && !(root,anim=[5025,5027]) && !(root,stateno=5210) 
+value = 35000
+[State メイド・イン・ヘブン時のcommonアニメ やられもどり]
+type = changeanim
+trigger1 = root,var(50)=2 && root,movetype = H && anim != 35001
+trigger1 = (root,anim=[5005,5007]) || (root,anim=[5015,5017]) || (root,anim=[5025,5027]) || (root,stateno=5210) 
+value = 35001
+
+[State メイド・イン・ヘブン時のcommonアニメ やられもどり]
+type = changeanim
+trigger1 = (anim = [30000,39999])&&root,var(50)!=2
+value = 9999
+
+[State 透明]
+Type = AssertSpecial
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+Flag = Invisible
+Flag2 = NoShadow
+
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(50)=2 && root,var(21)=0
+trigger1 = root,stateno = 7444
+value = 7445
+ignorehitpause = 1
+
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(50)=2 && root,var(21)=0
+trigger1 = root,stateno = 31550
+value = 31551
+ignorehitpause = 1
+
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(50)=2 && root,var(21)=0
+trigger1 = root,stateno = 31200
+value = 31201
+ignorehitpause = 1
+
+[State ステート移動 挑発]
+type = ChangeState
+triggerall = root,var(50)=2 && root,var(21)=0
+trigger1 = root,stateno = 940
+trigger2 = root,stateno = 961
+value = 30941
+ignorehitpause = 1
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(50)=2 && root,var(21)=0
+trigger1 = root,stateno = 31600
+value = 31601
+ignorehitpause = 1
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(50)=2 && root,var(21)=0
+trigger1 = root,stateno = 31700
+value = 31701
+ignorehitpause = 1
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(50)=2 && root,var(21)=0
+trigger1 = root,stateno = 32000
+value = 32001
+ignorehitpause = 1
+[State ステート移動]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,var(21)=0 && root,stateno = 700
+value = 30701
+ignorehitpause = 1
+
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(50)=2 && root,var(21)=0 && RoundState != 4
+trigger1 = root,stateno != stateno-1 && root,stateno >= 200 && root,movetype!=H && !(root,stateno=[5000,5999])
+trigger1 = root,stateno != 700
+value = root,stateno+1
+ignorehitpause = 1
+
+[State 透明]
+Type = AssertSpecial
+trigger1 = RoundState = 4
+Flag = Invisible
+Flag2 = NoShadow
+
+;---------------------------------------------------------------------------
+;ガード
+[Statedef 10140]
+type    = U
+movetype= I
+physics = U
+velset = 0,0
+anim = 9999
+sprpriority = 1
+
+[State bind]
+Type = BindToParent
+trigger1 = root,anim = 120 || root,anim = 130 || root,anim = 140 || root,anim = 150
+pos = 1,9
+Facing = 1
+ignorehitpause = 1
+[State bind]
+Type = BindToParent
+trigger1 = root,anim = 121 || root,anim = 131 || root,anim = 141 || root,anim = 151
+pos = 5,55 -(root,var(50)=2&&root,anim%10=1)*50
+Facing = 1
+ignorehitpause = 1
+[State bind]
+Type = BindToParent
+trigger1 = root,anim = 122 || root,anim = 132 || root,anim = 142 || root,anim = 152
+pos = 0,-5
+Facing = 1
+ignorehitpause = 1
+
+[State ガード待機]
+type = ChangeAnim
+triggerall = anim != 133
+trigger1 = root,anim = 120 || root,anim = 130
+trigger2 = root,anim = 121 || root,anim = 131
+trigger3 = root,anim = 122 || root,anim = 132
+value = 133+root,var(50)*2 +(root,var(50)=2&&root,anim%10=1)*2
+
+[State ガード硬直中]
+type = ChangeAnim
+triggerall = anim != 134
+trigger1 = root,anim = 150
+trigger2 = root,anim = 151
+trigger3 = root,anim = 152
+value = 134+root,var(50)*2 +(root,var(50)=2&&root,anim%10=1)*1
+
+[State ガード解除]
+type = ChangeAnim
+triggerall = anim != 133
+trigger1 = root,anim = 140
+trigger2 = root,anim = 141
+trigger3 = root,anim = 142
+value = 133+root,var(50)*2 +(root,var(50)=2&&root,anim%10=1)*2
+
+[State ガード終了]
+type = ChangeState
+trigger1 = root,stateno != 120
+trigger1 = root,stateno != [130,132]
+trigger1 = root,stateno != 140
+trigger1 = root,stateno != [150,155]
+value = 9999
+
+;---------------------------------------------------------------------------
+;5H スタンド
+[Statedef 10220]
+type    = S
+movetype= I
+physics = S
+ctrl = 0
+anim = 221
+sprpriority = 3
+
+ignorehitpause = 1
+[State bind]
+Type = BindToParent
+trigger1 = 1
+pos = 20,0
+Facing = 1
+ignorehitpause = 1
+
+[State ヒットストップ 攻撃の表示時間は合わせる必要あり]
+type = Changeanim
+trigger1 = root,anim=220 && root,animelemno(0)=4 && animelemno(0)!=4
+value = 221
+elem = 4
+
+[State スタンドやられ]
+type = ChangeState
+trigger1 = root,movetype = H && root,stateno != [0,155];立ち～ガード以外。
+value = 15000;本体が攻撃受けてスタンド消滅
+ignorehitpause = 1
+
+[State 待機へ]
+type = changestate
+trigger1 = anim = 221 && animtime = 0
+trigger2 = root,stateno != 220
+value = 9999
+ignorehitpause = 1
+
+[State 通常攻撃キャンセル]
+type = changestate
+triggerall = ishelper(10000) && stateno!=root,stateno+10000
+trigger1 = root,stateno = 220 && root,time = 1
+trigger2 = root,stateno = 410 && root,time = 1
+trigger3 = root,stateno = 420 && root,time = 1
+value = root,stateno+10000
+ignorehitpause = 1
+
+;---------------------------------------------------------------------------
+;2M 白蛇ヘルパー
+[Statedef 10410]
+type    = C
+movetype= I
+physics = S
+ctrl = 0
+anim = 411
+sprpriority = 3
+
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 0,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State ヒットストップ 攻撃の表示時間は合わせる必要あり]
+type = Changeanim
+trigger1 = root,anim=410 && root,animelemno(0)=2 && animelemno(0)!=2
+value = 411
+elem = 6
+
+[State スタンドやられ]
+type = ChangeState
+trigger1 = root,movetype = H && root,stateno != [0,155];立ち～ガード以外。
+;ステートを奪われた場合も
+value = 15000;本体が攻撃受けてスタンド消滅
+
+[State 待機へ]
+type = changestate
+trigger1 = anim = 411 && animtime = 0
+trigger2 = root,stateno != 410
+value = 9999
+ignorehitpause = 1
+
+[State 通常攻撃キャンセル]
+type = changestate
+triggerall = ishelper(10000) && stateno!=root,stateno+10000
+trigger1 = root,stateno = 220 && root,time = 1
+trigger2 = root,stateno = 410 && root,time = 1
+trigger3 = root,stateno = 420 && root,time = 1
+value = root,stateno+10000
+ignorehitpause = 1
+
+;---------------------------------------------------------------------------
+;2H 白蛇ヘルパー
+[Statedef 10420]
+type    = S
+movetype= A
+physics = S
+ctrl = 0
+anim = 421
+sprpriority = 3
+
+[State 10001 固定]
+type = BindToParent
+trigger1 = 1
+time = 1
+facing = 1
+pos = 0, 0
+
+[State ヒットストップ 攻撃の表示時間は合わせる必要あり]
+type = Changeanim
+trigger1 = root,anim=420 && root,animelemno(0)=6 && animelemno(0)!=6
+value = 421
+elem = 6
+
+[State スタンドやられ]
+type = ChangeState
+trigger1 = root,movetype = H && root,stateno != [0,155];立ち～ガード以外。
+value = 15000;本体が攻撃受けてスタンド消滅
+ignorehitpause = 1
+
+[State 待機へ]
+type = changestate
+trigger1 = anim = 421 && animtime = 0
+trigger2 = root,stateno != 420
+value = 9999
+ignorehitpause = 1
+
+[State 通常攻撃キャンセル]
+type = changestate
+triggerall = ishelper(10000) && stateno!=root,stateno+10000
+trigger1 = root,stateno = 220 && root,time = 1
+trigger2 = root,stateno = 410 && root,time = 1
+trigger3 = root,stateno = 420 && root,time = 1
+value = root,stateno+10000
+ignorehitpause = 1
+
+;---------------------------------------------------------------------------
+;JH 白蛇ヘルパー
+[Statedef 10620]
+type    = A
+movetype= A
+physics = N
+ctrl = 0
+anim = 621
+sprpriority = 3
+
+[State 200, 声]
+type = PlaySnd
+trigger1 = Time = 6
+value = 5, 10
+channel = 0
+
+[State 610, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 6
+value = 0, 7
+
+[State 10001 固定]
+type = BindToParent
+trigger1 = 1
+time = 1
+pos = 0, 0
+Facing = 1
+IgnoreHitPause = 1
+
+[State スタンドやられ]
+type = ChangeState
+trigger1 = root,movetype = H && root,stateno != [0,155];立ち～ガード以外。
+value = 15000;本体が攻撃受けてスタンド消滅
+ignorehitpause = 1
+
+[State ヒットストップ 攻撃の表示時間は合わせる必要あり]
+type = Changeanim
+trigger1 = root,anim=620 && root,animelemno(0)=4 && animelemno(0)!=5
+value = 621
+elem = 5
+
+[State 着地ヒットストップ]
+type = Changeanim
+trigger1 = root,HitPauseTime>0
+value = 621
+elem = 5
+
+[State 待機へ]
+type = changestate
+trigger1 = anim = 621 && animtime = 0
+trigger2 = root,stateno != 620 && root,stateno != 623
+value = 9999
+ignorehitpause = 1
+
+[State 通常攻撃キャンセル]
+type = changestate
+triggerall = ishelper(10000) && stateno!=root,stateno+10000
+trigger1 = root,stateno = 220 && root,time = 1
+trigger2 = root,stateno = 410 && root,time = 1
+trigger3 = root,stateno = 420 && root,time = 1
+value = root,stateno+10000
+ignorehitpause = 1
+
+;---------------------------------------------------------------------------
+;JH パターン2 白蛇ヘルパー
+[Statedef 10625]
+type    = A
+movetype= A
+physics = N
+ctrl = 0
+anim = 626
+sprpriority = 3
+
+[State 200, 声]
+type = PlaySnd
+trigger1 = Time = 4
+value = 5, 10
+channel = 0
+
+[State 610, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 6
+value = 0, 7
+
+[State 10001 固定]
+type = BindToParent
+trigger1 = 1
+time = 1
+pos = 0, 0
+Facing = 1
+IgnoreHitPause = 1
+
+[State スタンドやられ]
+type = ChangeState
+trigger1 = root,movetype = H && root,stateno != [0,155];立ち～ガード以外。
+value = 15000;本体が攻撃受けてスタンド消滅
+ignorehitpause = 1
+
+[State ヒットストップ 攻撃の表示時間は合わせる必要あり]
+type = Changeanim
+trigger1 = root,anim=625 && root,animelemno(0)=4 && animelemno(0)!=5
+value = 626
+elem = 5
+
+[State 着地ヒットストップ]
+type = Changeanim
+trigger1 = root,HitPauseTime>0
+value = 626
+elem = 5
+
+[State 待機へ]
+type = changestate
+trigger1 = anim = 626 && animtime = 0
+trigger2 = root,stateno != 625
+value = 9999
+ignorehitpause = 1
+
+[State 通常攻撃キャンセル]
+type = changestate
+triggerall = ishelper(10000) && stateno!=root,stateno+10000
+trigger1 = root,stateno = 220 && root,time = 1
+trigger2 = root,stateno = 410 && root,time = 1
+trigger3 = root,stateno = 420 && root,time = 1
+value = root,stateno+10000
+ignorehitpause = 1
+;---------------------------------------------------------------------------
+;5L C-MOON
+[Statedef 10201]
+type    = S
+movetype= I
+physics = S
+ctrl = 0
+anim = 10201
+sprpriority = 3
+
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 10,10
+Facing = 1
+IgnoreHitPause = 1
+
+[State ヒットストップ 攻撃の表示時間は合わせる必要あり]
+type = Changeanim
+trigger1 = root,anim=10202 && (root,animelemtime(2)=1) && animelemno(0)!=2
+value = 10201
+elem = 2
+[State ヒットストップ 攻撃の表示時間は合わせる必要あり]
+type = Changeanim
+trigger1 = root,anim=10202 && (root,animelemtime(2)=[2,3]) && animelemno(0)!=3
+value = 10201
+elem = 3
+
+[State スタンドやられ]
+type = ChangeState
+trigger1 = root,movetype = H && root,stateno != [0,155];立ち～ガード以外。
+;ステートを奪われた場合も
+value = 15000;本体が攻撃受けてスタンド消滅
+
+[State 待機へ]
+type = changestate
+trigger1 = anim = 10201 && animtime = 0 && 0
+trigger2 = root,stateno != 10202
+value = 9999
+ignorehitpause = 1
+
+[State 通常攻撃キャンセル]
+type = changestate
+triggerall = ishelper(10000) && !(stateno=root,stateno-1 && time = 0)
+trigger1 = root,stateno = 10202 && root,time = 1
+trigger2 = root,stateno = 10212 && root,time = 1
+trigger3 = root,stateno = 10222 && root,time = 1
+trigger4 = root,stateno = 10402 && root,time = 1
+trigger5 = root,stateno = 10412 && root,time = 1
+trigger6 = root,stateno = 10422 && root,time = 1
+trigger7 = root,stateno = 10602 && root,time = 1
+trigger8 = root,stateno = 10612 && root,time = 1
+trigger9 = root,stateno = 10622 && root,time = 1
+trigger10 = root,stateno = 11002 && root,time = 1
+value = root,stateno-1
+ignorehitpause = 1
+
+;---------------------------------------------------------------------------
+;5M C-MOON
+[Statedef 10211]
+type    = S
+movetype= I
+physics = S
+ctrl = 0
+anim = 10211
+sprpriority = 3
+
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 5,15
+Facing = 1
+IgnoreHitPause = 1
+
+[State ヒットストップ 攻撃の表示時間は合わせる必要あり]
+type = Changeanim
+trigger1 = root,anim=10212 && (root,animelemno(0)=2) && animelemno(0)!=3
+value = 10211
+elem = 3
+[State ヒットストップ 攻撃の表示時間は合わせる必要あり]
+type = Changeanim
+trigger1 = root,anim=10212 && (root,animelemno(0)=3) && animelemno(0)!=4
+value = 10211
+elem = 4
+[State ヒットストップ 攻撃の表示時間は合わせる必要あり]
+type = Changeanim
+trigger1 = root,anim=10212 && (root,animelemtime(4)=1) && animelemno(0)!=5
+value = 10211
+elem = 5
+
+[State スタンドやられ]
+type = ChangeState
+trigger1 = root,movetype = H && root,stateno != [0,155];立ち～ガード以外。
+;ステートを奪われた場合も
+value = 15000;本体が攻撃受けてスタンド消滅
+
+[State 待機へ]
+type = changestate
+trigger1 = anim = 10211 && animtime = 0 && 0
+trigger2 = root,stateno != 10212
+value = 9999
+ignorehitpause = 1
+
+[State 通常攻撃キャンセル]
+type = changestate
+triggerall = ishelper(10000) && !(stateno=root,stateno-1 && time = 0)
+trigger1 = root,stateno = 10202 && root,time = 1
+trigger2 = root,stateno = 10212 && root,time = 1
+trigger3 = root,stateno = 10222 && root,time = 1
+trigger4 = root,stateno = 10402 && root,time = 1
+trigger5 = root,stateno = 10412 && root,time = 1
+trigger6 = root,stateno = 10422 && root,time = 1
+trigger7 = root,stateno = 10602 && root,time = 1
+trigger8 = root,stateno = 10612 && root,time = 1
+trigger9 = root,stateno = 10622 && root,time = 1
+trigger10 = root,stateno = 11002 && root,time = 1
+value = root,stateno-1
+ignorehitpause = 1
+
+;---------------------------------------------------------------------------
+;5H C-MOON
+[Statedef 10221]
+type    = S
+movetype= I
+physics = S
+ctrl = 0
+anim = 10221
+sprpriority = 3
+
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 27,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State ヒットストップ 攻撃の表示時間は合わせる必要あり]
+type = Changeanim
+trigger1 = animelemno(0) = 7 && root,anim=10222 && (root,animelemtime(5)<0)
+value = 10221
+elem = 7
+[State ヒットストップ 攻撃の表示時間は合わせる必要あり]
+type = Changeanim
+trigger1 = root,anim=10222 && (root,animelemtime(5)=1)
+value = 10221
+elem = 8
+
+[State スタンドやられ]
+type = ChangeState
+trigger1 = root,movetype = H && root,stateno != [0,155];立ち～ガード以外。
+;ステートを奪われた場合も
+value = 15000;本体が攻撃受けてスタンド消滅
+
+[State 待機へ]
+type = changestate
+trigger1 = anim = 10221 && animtime = 0 && 0
+trigger2 = root,stateno != 10222
+value = 9999
+ignorehitpause = 1
+
+[State 通常攻撃キャンセル]
+type = changestate
+triggerall = ishelper(10000) && !(stateno=root,stateno-1 && time = 0)
+trigger1 = root,stateno = 10202 && root,time = 1
+trigger2 = root,stateno = 10212 && root,time = 1
+trigger3 = root,stateno = 10222 && root,time = 1
+trigger4 = root,stateno = 10402 && root,time = 1
+trigger5 = root,stateno = 10412 && root,time = 1
+trigger6 = root,stateno = 10422 && root,time = 1
+trigger7 = root,stateno = 10602 && root,time = 1
+trigger8 = root,stateno = 10612 && root,time = 1
+trigger9 = root,stateno = 10622 && root,time = 1
+trigger10 = root,stateno = 11002 && root,time = 1
+value = root,stateno-1
+ignorehitpause = 1
+
+;---------------------------------------------------------------------------
+;2L C-MOON
+[Statedef 10401]
+type    = C
+movetype= I
+physics = S
+ctrl = 0
+anim = 10401
+sprpriority = 3
+
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 0,3
+Facing = 1
+IgnoreHitPause = 1
+
+[State ヒットストップ 攻撃の表示時間は合わせる必要あり]
+type = Changeanim
+trigger1 = root,anim=10402 && (root,animelemno(0)=2) && animelemno(0)!=3
+value = 10401
+elem = 3
+[State ヒットストップ 攻撃の表示時間は合わせる必要あり]
+type = Changeanim
+trigger1 = root,anim=10402 && (root,animelemtime(3)=1) && animelemno(0)!=4
+value = 10401
+elem = 4
+
+[State スタンドやられ]
+type = ChangeState
+trigger1 = root,movetype = H && root,stateno != [0,155];立ち～ガード以外。
+;ステートを奪われた場合も
+value = 15000;本体が攻撃受けてスタンド消滅
+
+[State 待機へ]
+type = changestate
+trigger1 = anim = 10401 && animtime = 0 && 0;これやると待機へのタイミングが重なってスタンドが消える
+trigger2 = root,stateno != 10402
+value = 9999
+ignorehitpause = 1
+
+[State 通常攻撃キャンセル]
+type = changestate
+triggerall = ishelper(10000) && !(stateno=root,stateno-1 && time = 0)
+trigger1 = root,stateno = 10202 && root,time = 1
+trigger2 = root,stateno = 10212 && root,time = 1
+trigger3 = root,stateno = 10222 && root,time = 1
+trigger4 = root,stateno = 10402 && root,time = 1
+trigger5 = root,stateno = 10412 && root,time = 1
+trigger6 = root,stateno = 10422 && root,time = 1
+trigger7 = root,stateno = 10602 && root,time = 1
+trigger8 = root,stateno = 10612 && root,time = 1
+trigger9 = root,stateno = 10622 && root,time = 1
+trigger10 = root,stateno = 11002 && root,time = 1
+value = root,stateno-1
+ignorehitpause = 1
+
+;---------------------------------------------------------------------------
+;2M C-MOON
+[Statedef 10411]
+type    = C
+movetype= I
+physics = S
+ctrl = 0
+anim = 10411
+sprpriority = 3
+
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 0,5
+Facing = 1
+IgnoreHitPause = 1
+
+[State ヒットストップ 攻撃の表示時間は合わせる必要あり]
+type = Changeanim
+trigger1 = root,anim=10412 && (root,animelemno(0)=3) && animelemno(0)!=4
+value = 10411
+elem = 4
+[State ヒットストップ 攻撃の表示時間は合わせる必要あり]
+type = Changeanim
+trigger1 = root,anim=10412 && (root,animelemno(0)=4) && animelemno(0)!=5
+value = 10411
+elem = 5
+[State ヒットストップ 攻撃の表示時間は合わせる必要あり]
+type = Changeanim
+trigger1 = root,anim=10412 && (root,animelemtime(5)=1) && animelemno(0)!=6
+value = 10411
+elem = 6
+
+[State スタンドやられ]
+type = ChangeState
+trigger1 = root,movetype = H && root,stateno != [0,155];立ち～ガード以外。
+;ステートを奪われた場合も
+value = 15000;本体が攻撃受けてスタンド消滅
+
+[State 待機へ]
+type = changestate
+trigger1 = anim = 10411 && animtime = 0 && 0
+trigger2 = root,stateno != 10412
+value = 9999
+ignorehitpause = 1
+
+[State 通常攻撃キャンセル]
+type = changestate
+triggerall = ishelper(10000) && !(stateno=root,stateno-1 && time = 0)
+trigger1 = root,stateno = 10202 && root,time = 1
+trigger2 = root,stateno = 10212 && root,time = 1
+trigger3 = root,stateno = 10222 && root,time = 1
+trigger4 = root,stateno = 10402 && root,time = 1
+trigger5 = root,stateno = 10412 && root,time = 1
+trigger6 = root,stateno = 10422 && root,time = 1
+trigger7 = root,stateno = 10602 && root,time = 1
+trigger8 = root,stateno = 10612 && root,time = 1
+trigger9 = root,stateno = 10622 && root,time = 1
+trigger10 = root,stateno = 11002 && root,time = 1
+value = root,stateno-1
+ignorehitpause = 1
+
+;---------------------------------------------------------------------------
+;2H C-MOON
+[Statedef 10421]
+type    = C
+movetype= I
+physics = S
+ctrl = 0
+anim = 10421
+sprpriority = 3
+
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 0,4
+Facing = 1
+IgnoreHitPause = 1
+
+[State ヒットストップ 攻撃の表示時間は合わせる必要あり]
+type = Changeanim
+trigger1 = root,anim=10422 && (root,animelemno(0)=4) && animelemno(0)!=4
+value = 10421
+elem = 4
+[State ヒットストップ 攻撃の表示時間は合わせる必要あり]
+type = Changeanim
+trigger1 = root,anim=10422 && (root,animelemtime(5)=1) && animelemno(0)!=5
+value = 10421
+elem = 5
+
+[State スタンドやられ]
+type = ChangeState
+trigger1 = root,movetype = H && root,stateno != [0,155];立ち～ガード以外。
+;ステートを奪われた場合も
+value = 15000;本体が攻撃受けてスタンド消滅
+
+[State 待機へ]
+type = changestate
+trigger1 = anim = 10421 && animtime = 0 && 0
+trigger2 = root,stateno != 10422
+value = 9999
+ignorehitpause = 1
+
+[State 通常攻撃キャンセル]
+type = changestate
+triggerall = ishelper(10000) && !(stateno=root,stateno-1 && time = 0)
+trigger1 = root,stateno = 10202 && root,time = 1
+trigger2 = root,stateno = 10212 && root,time = 1
+trigger3 = root,stateno = 10222 && root,time = 1
+trigger4 = root,stateno = 10402 && root,time = 1
+trigger5 = root,stateno = 10412 && root,time = 1
+trigger6 = root,stateno = 10422 && root,time = 1
+trigger7 = root,stateno = 10602 && root,time = 1
+trigger8 = root,stateno = 10612 && root,time = 1
+trigger9 = root,stateno = 10622 && root,time = 1
+trigger10 = root,stateno = 11002 && root,time = 1
+value = root,stateno-1
+ignorehitpause = 1
+
+;---------------------------------------------------------------------------
+;JL C-MOONヘルパー
+[Statedef 10601]
+type    = A
+movetype= A
+physics = N
+ctrl = 0
+anim = 10601
+sprpriority = 3
+
+[State 10001 固定]
+type = BindToParent
+trigger1 = 1
+time = 1
+pos = 0, 0
+Facing = 1
+IgnoreHitPause = 1
+
+[State スタンドやられ]
+type = ChangeState
+trigger1 = root,movetype = H && root,stateno != [0,155];立ち～ガード以外。
+value = 15000;本体が攻撃受けてスタンド消滅
+ignorehitpause = 1
+
+[State ヒットストップ 攻撃の表示時間は合わせる必要あり]
+type = Changeanim
+trigger1 = root,anim=10602 && root,animelemno(0)=3 && animelemno(0)!=3
+value = 10601
+elem = 3
+
+[State 待機へ]
+type = changestate
+trigger1 = root,stateno != 10602
+value = 9999
+ignorehitpause = 1
+
+[State 通常攻撃キャンセル]
+type = changestate
+triggerall = ishelper(10000) && !(stateno=root,stateno-1 && time = 0)
+trigger1 = root,stateno = 10202 && root,time = 1
+trigger2 = root,stateno = 10212 && root,time = 1
+trigger3 = root,stateno = 10222 && root,time = 1
+trigger4 = root,stateno = 10402 && root,time = 1
+trigger5 = root,stateno = 10412 && root,time = 1
+trigger6 = root,stateno = 10422 && root,time = 1
+trigger7 = root,stateno = 10602 && root,time = 1
+trigger8 = root,stateno = 10612 && root,time = 1
+trigger9 = root,stateno = 10622 && root,time = 1
+trigger10 = root,stateno = 11002 && root,time = 1
+value = root,stateno-1
+ignorehitpause = 1
+
+;---------------------------------------------------------------------------
+;JM C-MOONヘルパー
+[Statedef 10611]
+type    = A
+movetype= A
+physics = N
+ctrl = 0
+anim = 10611
+sprpriority = 3
+
+[State 10001 固定]
+type = BindToParent
+trigger1 = 1
+time = 1
+pos = 0, 0
+Facing = 1
+IgnoreHitPause = 1
+
+[State スタンドやられ]
+type = ChangeState
+trigger1 = root,movetype = H && root,stateno != [0,155];立ち～ガード以外。
+value = 15000;本体が攻撃受けてスタンド消滅
+ignorehitpause = 1
+
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=10612 && root,animelemno(0)=3 && animelemno(0)!=3
+value = 10611
+elem = 4
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=10612 && root,animelemtime(4)=1 && animelemno(0)!=5
+value = 10611
+elem = 5
+
+[State 待機へ]
+type = changestate
+trigger1 = root,stateno != 10612
+value = 9999
+ignorehitpause = 1
+
+[State 通常攻撃キャンセル]
+type = changestate
+triggerall = ishelper(10000) && !(stateno=root,stateno-1 && time = 0)
+trigger1 = root,stateno = 10202 && root,time = 1
+trigger2 = root,stateno = 10212 && root,time = 1
+trigger3 = root,stateno = 10222 && root,time = 1
+trigger4 = root,stateno = 10402 && root,time = 1
+trigger5 = root,stateno = 10412 && root,time = 1
+trigger6 = root,stateno = 10422 && root,time = 1
+trigger7 = root,stateno = 10602 && root,time = 1
+trigger8 = root,stateno = 10612 && root,time = 1
+trigger9 = root,stateno = 10622 && root,time = 1
+trigger10 = root,stateno = 11002 && root,time = 1
+value = root,stateno-1
+ignorehitpause = 1
+
+;---------------------------------------------------------------------------
+;JH C-MOONヘルパー
+[Statedef 10621]
+type    = A
+movetype= A
+physics = N
+ctrl = 0
+anim = 10621
+sprpriority = 3
+
+[State 10001 固定]
+type = BindToParent
+trigger1 = 1
+time = 1
+pos = 0, 0
+Facing = 1
+IgnoreHitPause = 1
+
+[State スタンドやられ]
+type = ChangeState
+trigger1 = root,movetype = H && root,stateno != [0,155];立ち～ガード以外。
+value = 15000;本体が攻撃受けてスタンド消滅
+ignorehitpause = 1
+
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=10622 && root,animelemno(0)=3 && animelemno(0)!=5
+value = 10621
+elem = 5
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=10622 && root,animelemtime(4)=1 && animelemno(0)!=6
+value = 10621
+elem = 6
+
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=10622 && root,animelemno(0)=6 && animelemno(0)!=8
+value = 10621
+elem = 8
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=10622 && root,animelemtime(7)=1 && animelemno(0)!=9
+value = 10621
+elem = 9
+
+[State 待機へ]
+type = changestate
+trigger1 = root,stateno != 10622
+value = 9999
+ignorehitpause = 1
+
+[State 通常攻撃キャンセル]
+type = changestate
+triggerall = ishelper(10000) && !(stateno=root,stateno-1 && time = 0)
+trigger1 = root,stateno = 10202 && root,time = 1
+trigger2 = root,stateno = 10212 && root,time = 1
+trigger3 = root,stateno = 10222 && root,time = 1
+trigger4 = root,stateno = 10402 && root,time = 1
+trigger5 = root,stateno = 10412 && root,time = 1
+trigger6 = root,stateno = 10422 && root,time = 1
+trigger7 = root,stateno = 10602 && root,time = 1
+trigger8 = root,stateno = 10612 && root,time = 1
+trigger9 = root,stateno = 10622 && root,time = 1
+trigger10 = root,stateno = 11002 && root,time = 1
+value = root,stateno-1
+ignorehitpause = 1
+
+;---------------------------------------------------------------------------
+;重力は逆転する C-MOONヘルパー
+[Statedef 11001]
+type    = A
+movetype= A
+physics = N
+ctrl = 0
+anim = 11002
+sprpriority = 3
+
+[State 10001 固定]
+type = BindToParent
+trigger1 = 1
+time = 1
+pos = 0, 0
+Facing = 1
+IgnoreHitPause = 1
+
+[State PalFX]
+type = PalFX
+trigger1 = time = 0
+trigger2 = time = 7
+time = 3
+mul = 110,110,110
+ignorehitpause = 1
+
+[State スタンドやられ]
+type = ChangeState
+trigger1 = root,movetype = H && root,stateno != [0,155];立ち～ガード以外。
+value = 15000;本体が攻撃受けてスタンド消滅
+ignorehitpause = 1
+
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=11000 && root,animelemno(0)=3 && animelemno(0)!=9
+value = 11002
+elem = 9
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=11000 && root,animelemtime(4)=1 && animelemno(0)!=10
+value = 11002
+elem = 10
+
+[State 待機へ]
+type = changestate
+trigger1 = root,stateno != 11002
+value = 9999
+ignorehitpause = 1
+
+;---------------------------------------------------------------------------
+;スデニ…デキテイタナ…突進版　カットイン中ヘルパー
+[Statedef 12105]
+type    = A
+movetype= I
+physics = N
+ctrl = 0
+anim = 2205
+sprpriority = -1
+
+[State 自分は対象外]
+type = null;palfx
+trigger1 = !Time
+time = 30-1
+Add = 30,30,30
+persistent = 0
+
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 10,-40
+Facing = 1
+IgnoreHitPause = 1
+
+[State 突進版攻撃へ]
+type = changestate
+trigger1 = root,stateno = 2120
+value = 12110
+ignorehitpause = 1
+
+[State 待機へ]
+type = changestate
+trigger1 = root,stateno != [2100,2120]
+value = 9999
+ignorehitpause = 1
+
+;---------------------------------------------------------------------------
+;スデニ…デキテイタナ…突進版　ダッシュ攻撃ヘルパー
+[Statedef 12110]
+type    = S
+movetype= I
+physics = N
+ctrl = 0
+anim = 2110
+sprpriority = -1
+
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 10,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State 成功へ]
+type = changestate
+trigger1 = root,stateno = 2140
+value = 12130
+ignorehitpause = 1
+
+[State -2 消えるSE]
+type = playsnd
+trigger1 = root,stateno != [2100,2120]
+trigger2 = root,anim = 2120 && root,animelemtime(6) >= 0
+value = 50,1
+persistent = 0
+
+[State 待機へ]
+type = changestate
+trigger1 = root,stateno != [2100,2120]
+trigger2 = root,anim = 2120 && root,animelemtime(6) >= 0
+value = 9999
+ignorehitpause = 1
+
+;---------------------------------------------------------------------------
+;スデニ…デキテイタナ…突進版　成功ヘルパー
+[Statedef 12130]
+type    = S
+movetype= I
+physics = N
+ctrl = 0
+anim = 9999
+sprpriority = -1
+
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 15,0
+Facing = 1
+IgnoreHitPause = 1
+
+[state 1200, 透明から]
+type = Trans
+trigger1 = time < 15
+Trans = AddAlpha
+Alpha = (time/15**1.0)*256,256-(time/15**1.0)*256
+
+[State ドシバ]
+type = changeanim
+trigger1 = root,stateno = 2140 && root,anim = 2140
+trigger1 = anim != 2130
+value = 2130
+ignorehitpause = 1
+
+[State -2 消えるSE]
+type = playsnd
+trigger1 = root,stateno != [2100,2140]
+trigger2 = anim = 2130 && animtime = 0
+value = 50,1
+persistent = 0
+
+[State 待機へ]
+type = changestate
+trigger1 = root,stateno != [2100,2140]
+trigger2 = anim = 2130 && animtime = 0
+value = 9999
+ignorehitpause = 1
+
+;---------------------------------------------------------------------------
+;スデニ…デキテイタナ…裏回り版　カットイン中ヘルパー
+[Statedef 12205]
+type    = A
+movetype= I
+physics = N
+ctrl = 0
+anim = 2205
+sprpriority = -1
+
+[State 自分は対象外]
+type = null;palfx
+trigger1 = !Time
+time = 30-1
+Add = 30,30,30
+persistent = 0
+
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 10,-40
+Facing = 1
+IgnoreHitPause = 1
+
+[State 裏回り版攻撃へ]
+type = changestate
+trigger1 = root,stateno = 2220
+value = 12230
+ignorehitpause = 1
+
+[State 待機へ]
+type = changestate
+trigger1 = root,stateno != [2200,2220]
+value = 9999
+ignorehitpause = 1
+
+;---------------------------------------------------------------------------
+;スデニ…デキテイタナ…裏回り版　攻撃ヘルパー
+[Statedef 12230]
+type    = S
+movetype= I
+physics = N
+ctrl = 0
+anim = 9999
+sprpriority = -1
+
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 0,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State 待機へ]
+type = changeanim
+trigger1 = root,stateno = 2220 && root,anim = 2240
+trigger1 = anim != 2230
+value = 2230
+ignorehitpause = 1
+
+[State 待機へ]
+type = changestate
+trigger1 = root,stateno != [2200,2220]
+trigger2 = anim = 2230 && animtime = 0
+value = 9999
+ignorehitpause = 1
+;---------------------------------------------------------------------------
+;プッツンキャンセル MIH
+[Statedef 7881]
+type    = S
+movetype= I
+physics = N
+ctrl = 0
+anim = 30000
+sprpriority = 3
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = (root,stateno = [0,199]) || root,movetype=H
+value = 9999
+[State 透明]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+value = 9999
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(50)=2
+trigger1 = root,stateno != stateno-1 && root,stateno >= 200 && root,movetype!=H && !(root,stateno=[5000,5999])
+trigger1 = root,stateno != 700
+value = root,stateno+1
+ignorehitpause = 1
+[State 特別ステート移動]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,stateno = 700
+value = 30701
+ignorehitpause = 1
+
+;---------------------------------------------------------------------------
+;5L MIH
+[Statedef 30201]
+type    = S
+movetype= I
+physics = S
+ctrl = 0
+anim = 30201
+sprpriority = 3
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=30200 && (root,animelemno(0)=2)
+value = 30201
+elem = 3
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=30200 && (root,animelemtime(3)=1)
+value = 30201
+elem = 3+1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = (root,stateno = [0,199]) || root,movetype=H
+trigger2 = !(root,stateno = [30200,30209])
+value = 9999
+[State 透明]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+value = 9999
+[State ステート移動]
+type = ChangeState
+trigger1 = root,stateno != stateno-1 && root,stateno >= 200 && root,movetype!=H && !(root,stateno=[5000,5999])
+value = root,stateno+1
+;---------------------------------------------------------------------------
+;5M MIH
+[Statedef 30211]
+type    = S
+movetype= I
+physics = S
+ctrl = 0
+anim = 30211
+sprpriority = 3
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=30210 && (root,animelemno(0)=2)
+value = 30211
+elem = 3
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=30210 && (root,animelemtime(3)=1)
+value = 30211
+elem = 3+1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = (root,stateno = [0,199]) || root,movetype=H
+value = 9999
+[State 透明]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+value = 9999
+[State ステート移動]
+type = ChangeState
+trigger1 = root,stateno != stateno-1 && root,stateno >= 200 && root,movetype!=H && !(root,stateno=[5000,5999])
+value = root,stateno+1
+
+;---------------------------------------------------------------------------
+;5H MIH
+[Statedef 30221]
+type    = S
+movetype= I
+physics = N
+ctrl = 0
+anim = 30231
+sprpriority = 3
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=30230 && (root,animelemno(0)=4)
+value = 30231
+elem = 5
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=30230 && (root,animelemtime(5)=1)
+value = 30231
+elem = 5+1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = (root,stateno = [0,199]) || root,movetype=H
+trigger2 = !(root,stateno = [30220,30249])
+value = 9999
+[State 透明]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+value = 9999
+[State ステート移動]
+type = ChangeState
+trigger1 = root,stateno = 30235
+value = 30236
+[State ステート移動]
+type = ChangeState
+trigger1 = root,stateno != stateno-1 && root,stateno >= 200 && root,movetype!=H && !(root,stateno=[5000,5999])
+value = root,stateno+1
+;---------------------------------------------------------------------------
+;5H 急降下 MIH
+[Statedef 30236]
+type    = S
+movetype= I
+physics = N
+ctrl = 0
+anim = 30236
+sprpriority = 3
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = (root,stateno = [0,199]) || root,movetype=H
+trigger2 = !(root,stateno = [30220,30249])
+value = 9999
+[State 透明]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+value = 9999
+[State ステート移動]
+type = ChangeState
+trigger1 = root,stateno = 30240
+value = 30241
+[State ステート移動]
+type = ChangeState
+trigger1 = root,stateno != stateno-1 && root,stateno >= 200 && root,movetype!=H && !(root,stateno=[5000,5999])
+value = root,stateno+1
+;---------------------------------------------------------------------------
+;5H 2撃目 MIH
+[Statedef 30241]
+type    = S
+movetype= I
+physics = N
+ctrl = 0
+anim = 30241
+sprpriority = 3
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=30240 && (root,animelemno(0)=2)
+value = 30241
+elem = 3
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=30240 && (root,animelemtime(4)=0)
+value = 30241
+elem = 4
+
+[State ステート移動]
+type = ChangeState
+trigger1 = (root,stateno = [0,199]) || root,movetype=H
+trigger2 = !(root,stateno = [30220,30249])
+value = 9999
+[State 透明]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+value = 9999
+[State ステート移動]
+type = ChangeState
+trigger1 = root,stateno = 30235
+value = 30236
+[State ステート移動]
+type = ChangeState
+trigger1 = root,stateno != stateno-1 && root,stateno >= 200 && root,movetype!=H && !(root,stateno=[5000,5999])
+value = root,stateno+1
+;---------------------------------------------------------------------------
+;2L MIH
+[Statedef 30401]
+type    = C
+movetype= I
+physics = S
+ctrl = 0
+anim = 30401
+sprpriority = 3
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=30400 && (root,animelemno(0)=2)
+value = 30401
+elem = 3
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=30400 && (root,animelemtime(3)=1)
+value = 30401
+elem = 3+1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = (root,stateno = [0,199]) || root,movetype=H
+value = 9999
+[State 透明]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+value = 9999
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(21)=0 && root,movetype!=H && root,hitpausetime=0
+trigger1 = root,stateno != stateno-1 && root,stateno >= 200 && root,movetype!=H && !(root,stateno=[5000,5999])
+value = root,stateno+1
+[State ステート移動]
+type = ChangeState
+trigger1 = root,stateno = 30400 && root,time=1 && time!=0
+value = 30401
+
+;---------------------------------------------------------------------------
+;2M MIH
+[Statedef 30411]
+type    = C
+movetype= I
+physics = S
+ctrl = 0
+anim = 30411
+sprpriority = 3
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=30410 && (root,animelemno(0)=3)
+value = 30411
+elem = 4
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=30410 && (root,animelemtime(4)=1)
+value = 30411
+elem = 4+1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = (root,stateno = [0,199]) || root,movetype=H
+value = 9999
+[State 透明]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+value = 9999
+[State ステート移動]
+type = ChangeState
+trigger1 = root,stateno != stateno-1 && root,stateno >= 200 && root,movetype!=H && !(root,stateno=[5000,5999])
+value = root,stateno+1
+
+;---------------------------------------------------------------------------
+;2H MIH
+[Statedef 30421]
+type    = C
+movetype= I
+physics = S
+ctrl = 0
+anim = 30421
+sprpriority = 3
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=30420 && (root,animelemno(0)=3)
+value = 30421
+elem = 4
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=30420 && (root,animelemtime(4)=1)
+value = 30421
+elem = 4+1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = (root,stateno = [0,199]) || root,movetype=H
+value = 9999
+[State 透明]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+value = 9999
+[State ステート移動]
+type = ChangeState
+trigger1 = root,stateno != stateno-1 && root,stateno >= 200 && root,movetype!=H && !(root,stateno=[5000,5999])
+value = root,stateno+1
+
+;---------------------------------------------------------------------------
+;JL MIH
+[Statedef 30601]
+type    = A
+movetype= I
+physics = N
+ctrl = 0
+anim = 30601
+sprpriority = 3
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=30600 && (root,animelemno(0)=2)
+value = 30601
+elem = 2
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=30600 && (root,animelemtime(3)=1)
+value = 30601
+elem = 2+1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = (root,stateno = [0,199]) || root,movetype=H
+value = 9999
+[State 透明]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+value = 9999
+[State ステート移動]
+type = ChangeState
+trigger1 = root,stateno != stateno-1 && root,stateno >= 200 && root,movetype!=H && !(root,stateno=[5000,5999])
+value = root,stateno+1
+
+;---------------------------------------------------------------------------
+;JM MIH
+[Statedef 30611]
+type    = A
+movetype= I
+physics = N
+ctrl = 0
+anim = 30611
+sprpriority = 3
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=30610 && (root,animelemno(0)=2)
+value = 30611
+elem = 3
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=30610 && (root,animelemtime(3)=1)
+value = 30611
+elem = 3+1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = (root,stateno = [0,199]) || root,movetype=H
+value = 9999
+[State 透明]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+value = 9999
+[State ステート移動]
+type = ChangeState
+trigger1 = root,stateno != stateno-1 && root,stateno >= 200 && root,movetype!=H && !(root,stateno=[5000,5999])
+value = root,stateno+1
+
+;---------------------------------------------------------------------------
+;JH MIH
+[Statedef 30621]
+type    = A
+movetype= I
+physics = N
+ctrl = 0
+anim = 30621
+sprpriority = 3
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=30620 && (root,animelemno(0)=2)
+value = 30621
+elem = 4
+[State ヒットストップ]
+type = Changeanim
+trigger1 = root,anim=30620 && (root,animelemtime(3)=1)
+value = 30621
+elem = 4+1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = (root,stateno = [0,199]) || root,movetype=H
+value = 9999
+[State 透明]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+value = 9999
+[State ステート移動]
+type = ChangeState
+trigger1 = root,stateno != stateno-1 && root,stateno >= 200 && root,movetype!=H && !(root,stateno=[5000,5999])
+value = root,stateno+1
+
+;---------------------------------------------------------------------------
+;投げ MIH
+[Statedef 30701]
+type    = S
+movetype= I
+physics = S
+ctrl = 0
+sprpriority = -1
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+[State アニメ]
+type = Changeanim
+trigger1 = anim != 30701
+value = 30701
+
+[State ステート移動]
+type = ChangeState
+trigger1 = (root,stateno = [0,199]) || root,movetype=H
+value = 9999
+[State 透明]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+value = 9999
+[State ステート移動]
+type = ChangeState
+trigger1 = root,stateno != stateno-1 && root,stateno >= 200 && root,movetype!=H && !(root,stateno=[5000,5999])
+trigger1 = root,stateno != 700 && root,stateno != 750 && !(root,stateno = [20700,20799])
+value = root,stateno+1
+
+[State 成功時アニメ]
+type = Changeanim
+trigger1 = root,anim = 30705
+value = 30711
+[State 成功時アニメ]
+type = Changeanim
+trigger1 = root,anim = 29041
+value = 30041
+[State 成功時アニメ]
+type = Changeanim
+trigger1 = root,anim = 29047
+value = 30050
+[State 投げ抜け時アニメ]
+type = Changeanim
+trigger1 = root,stateno = 750
+value = 35000
+
+;---------------------------------------------------------------------------
+;スタイリッシュムーブ MIH
+[Statedef 7445]
+type    = S
+movetype= I
+physics = N
+ctrl = 0
+anim = 30000
+sprpriority = -2
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+[State 透明]
+Type = AssertSpecial
+trigger1 = 1
+Flag = Invisible
+Flag2 = NoShadow
+
+[State ステート移動]
+type = ChangeState
+trigger1 = (root,stateno = [0,199]) || root,movetype=H
+trigger2 = root,stateno != 7444
+value = 9999
+;---------------------------------------------------------------------------
+;挑発 MIH
+[Statedef 30941]
+type    = S
+movetype= I
+physics = N
+ctrl = 0
+anim = 30000
+sprpriority = 3
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = (root,stateno = [0,199]) || root,movetype=H
+trigger2 = !(root,stateno = 940 || root,stateno = 961)
+value = 9999
+;---------------------------------------------------------------------------
+;高速突進 MIH
+[Statedef 31001]
+type    = S
+movetype= I
+physics = S
+ctrl = 0
+anim = 31005
+sprpriority = 3
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6 *ifelse(root,anim = 31001,-1,1),0
+Facing = ifelse(root,anim = 31001,-1,1)
+IgnoreHitPause = 1
+
+[State ヒットストップ]
+type = null;Changeanim
+trigger1 = root,anim=31000 && (root,animelemno(0)=4)
+value = 31005
+elem = 5
+[State ヒットストップ]
+type = null;Changeanim
+trigger1 = root,anim=31000 && (root,animelemtime(5)=1)
+value = 31005
+elem = 5+1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = (root,stateno = [0,199]) || root,movetype=H
+value = 9999
+[State 透明]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+value = 9999
+[State ステート移動]
+type = ChangeState
+trigger1 = root,stateno != stateno-1 && root,stateno >= 200 && root,movetype!=H && !(root,stateno=[5000,5999])
+value = root,stateno+1
+
+;---------------------------------------------------------------------------
+;高速突進 空中 MIH
+[Statedef 31101]
+type    = A
+movetype= I
+physics = N
+ctrl = 0
+anim = 31105
+sprpriority = 3
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State 落下]
+type = Changeanim
+trigger1 = root,anim=29041 && anim != 30041
+value = 30041
+
+[State ステート移動]
+type = ChangeState
+trigger1 = (root,stateno = [0,199]) || root,movetype=H
+value = 9999
+[State 透明]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+value = 9999
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(21)=0 && root,movetype!=H && root,hitpausetime=0
+trigger1 = root,stateno != stateno-1 && root,stateno >= 200 && root,movetype!=H && !(root,stateno=[5000,5999])
+value = root,stateno+1
+;---------------------------------------------------------------------------
+;高速突進 空中 着地 MIH
+[Statedef 31103]
+type    = S
+movetype= I
+physics = N
+ctrl = 0
+anim = 30050
+sprpriority = 3
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = (root,stateno = [0,199]) || root,movetype=H
+value = 9999
+[State 透明]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+value = 9999
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(21)=0
+trigger1 = root,stateno != stateno-1 && root,stateno >= 200 && root,movetype!=H && !(root,stateno=[5000,5999])
+value = root,stateno+1
+;---------------------------------------------------------------------------
+;対空ドバァァ MIH
+[Statedef 31201]
+type    = A
+movetype= I
+physics = N
+ctrl = 0
+anim = 31201
+sprpriority = 3
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = !(root,stateno = [31200,31299]) || root,movetype=H
+value = 9999
+[State ステート移動]
+type = ChangeState
+trigger1 = root,stateno = 31210
+value = 31211
+[State 透明]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+value = 9999
+;---------------------------------------------------------------------------
+;対空ドバァァ MIH
+[Statedef 31211]
+type    = A
+movetype= I
+physics = N
+ctrl = 0
+anim = 31211
+sprpriority = 3
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = !(root,stateno = [31200,31299]) || root,movetype=H
+value = 9999
+[State ステート移動]
+type = ChangeState
+trigger1 = root,stateno = 31220
+value = 31221
+[State 透明]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+value = 9999
+;---------------------------------------------------------------------------
+;対空ドバァァ MIH
+[Statedef 31221]
+type    = A
+movetype= I
+physics = N
+ctrl = 0
+anim = 30011
+sprpriority = 3
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = !(root,stateno = [31200,31299]) || root,movetype=H
+value = 9999
+[State 透明]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+value = 9999
+;---------------------------------------------------------------------------
+;スタイルアクション 高速ダッシュ 溜め MIH
+[Statedef 31401]
+type    = S
+movetype= I
+physics = N
+ctrl = 0
+anim = 30011
+sprpriority = -1
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = (root,stateno = [0,199]) || root,movetype=H
+value = 9999
+[State 透明]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+value = 9999
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(21)=0
+trigger1 = root,stateno != stateno-1 && root,stateno >= 200 && root,movetype!=H && !(root,stateno=[5000,5999])
+value = root,stateno+1
+;---------------------------------------------------------------------------
+;スタイルアクション 高速ダッシュ MIH
+[Statedef 31406]
+type    = S
+movetype= I
+physics = N
+ctrl = 0
+anim = 30000
+sprpriority = -1
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State アニメ]
+type = Changeanim
+trigger1 = root,anim = 31400 && anim != 30011
+trigger2 = root,anim = 31408 && anim != 30011
+value = 30011
+[State アニメ]
+type = Changeanim
+trigger1 = root,anim = 31405
+value = 31410
+elem = 2
+
+[State ステート移動]
+type = ChangeState
+trigger1 = (root,stateno = [0,199]) || root,movetype=H
+value = 9999
+[State 透明]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+value = 9999
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(21)=0
+trigger1 = root,stateno != stateno-1 && root,stateno >= 200 && root,movetype!=H && !(root,stateno=[5000,5999])
+value = root,stateno+1
+;---------------------------------------------------------------------------
+;スタイルアクション 裏回り MIH
+[Statedef 31501]
+type    = S
+movetype= I
+physics = N
+ctrl = 0
+anim = 30000
+sprpriority = -2
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+[State 透明]
+Type = AssertSpecial
+trigger1 = root,anim = 31501
+Flag = Invisible
+Flag2 = NoShadow
+
+[State ステート移動]
+type = ChangeState
+trigger1 = (root,stateno = [0,199]) || root,movetype=H
+value = 9999
+[State 透明]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+value = 9999
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(21)=0
+trigger1 = root,stateno != stateno-1 && root,stateno >= 200 && root,movetype!=H && !(root,stateno=[5000,5999])
+value = root,stateno+1
+
+;---------------------------------------------------------------------------
+;スタイルアクション 裏回り 攻撃版 MIH
+[Statedef 31551]
+type    = S
+movetype= I
+physics = N
+ctrl = 0
+anim = 30000
+sprpriority = -2
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+[State 透明]
+Type = AssertSpecial
+trigger1 = root,anim = 31550
+Flag = Invisible
+Flag2 = NoShadow
+
+[State ステート移動]
+type = ChangeState
+trigger1 = (root,stateno = [0,199]) || root,movetype=H
+value = 9999
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(21)=0
+trigger1 = root,stateno = 31560
+value = 31561
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(50)=2 && root,var(21)=0
+trigger1 = root,stateno = 7880
+value = 7881
+ignorehitpause = 1
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(50)=2 && root,var(21)=0
+trigger1 = root,stateno = 32000
+value = 32001
+ignorehitpause = 1
+[State 透明]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+value = 9999
+;---------------------------------------------------------------------------
+;スタイルアクション 裏回り 攻撃版 MIH
+[Statedef 31561]
+type    = S
+movetype= I
+physics = N
+ctrl = 0
+anim = 31561
+sprpriority = 1
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = (root,stateno = [0,199]) || root,movetype=H
+value = 9999
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(50)=2 && root,var(21)=0
+trigger1 = root,stateno = 7880
+value = 7881
+ignorehitpause = 1
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(50)=2 && root,var(21)=0
+trigger1 = root,stateno = 32000
+value = 32001
+ignorehitpause = 1
+[State 透明]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+value = 9999
+;---------------------------------------------------------------------------
+;スタイルアクション 急降下 MIH
+[Statedef 31601]
+type    = A
+movetype= I
+physics = N
+ctrl = 0
+anim = 30041
+sprpriority = -2
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = !(root,stateno = [31600,31605])
+value = 9999
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(21)=0
+trigger1 = root,stateno = 31602
+value = 31603
+;---------------------------------------------------------------------------
+;スタイルアクション 急降下 MIH
+[Statedef 31603]
+type    = A
+movetype= I
+physics = N
+ctrl = 0
+anim = 30041
+sprpriority = -2
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+[State 透明]
+Type = AssertSpecial
+trigger1 = 1
+Flag = Invisible
+Flag2 = NoShadow
+
+[State ステート移動]
+type = ChangeState
+trigger1 = !(root,stateno = [31600,31605])
+value = 9999
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(21)=0
+trigger1 = root,stateno = 31605
+value = 31606
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(21)=0
+trigger1 = root,stateno = 31608
+value = 31609
+;---------------------------------------------------------------------------
+;スタイルアクション 急降下 MIH
+[Statedef 31606]
+type    = S
+movetype= I
+physics = N
+ctrl = 0
+anim = 30011
+sprpriority = -2
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = !(root,stateno = [31600,31605])
+value = 9999
+
+;---------------------------------------------------------------------------
+;スタイルアクション 急降下着地高速ダッシュ MIH
+[Statedef 31609]
+type    = S
+movetype= I
+physics = N
+ctrl = 0
+anim = 30000
+sprpriority = -1
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State アニメ]
+type = Changeanim
+trigger1 = root,anim = 31400 && anim != 30011
+trigger2 = root,anim = 31408 && anim != 30011
+value = 30011
+[State アニメ]
+type = Changeanim
+trigger1 = root,anim = 31405
+value = 31410
+elem = 2
+
+[State ステート移動]
+type = ChangeState
+trigger1 = (root,stateno = [0,199]) || root,movetype=H
+value = 9999
+[State 透明]
+type = ChangeState
+trigger1 = root,var(50)=2 && root,statetype=L
+trigger2 = root,var(50)=2 && root,var(21)>0
+trigger3 = root,Alive=0
+value = 9999
+;---------------------------------------------------------------------------
+;スタイルアクション 急上昇 MIH
+[Statedef 31701]
+type    = A
+movetype= I
+physics = N
+ctrl = 0
+anim = 30040
+sprpriority = 2
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = !(root,stateno = [31700,31710])
+value = 9999
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(21)=0
+trigger1 = root,stateno = 31702
+value = 31703
+;---------------------------------------------------------------------------
+;スタイルアクション 急上昇 MIH
+[Statedef 31703]
+type    = A
+movetype= I
+physics = N
+ctrl = 0
+anim = 30041
+sprpriority = -2
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+[State 透明]
+Type = AssertSpecial
+trigger1 = 1
+Flag = Invisible
+Flag2 = NoShadow
+
+[State ステート移動]
+type = ChangeState
+trigger1 = !(root,stateno = [31700,31710])
+value = 9999
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(21)=0
+trigger1 = root,stateno = 31704
+value = 31705
+;---------------------------------------------------------------------------
+;スタイルアクション 急上昇 MIH
+[Statedef 31705]
+type    = A
+movetype= I
+physics = N
+ctrl = 0
+anim = 30041
+sprpriority = -2
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6,0
+Facing = 1
+IgnoreHitPause = 1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = !(root,stateno = [31700,31710])
+value = 9999
+;---------------------------------------------------------------------------
+;崩れ落ちる自分の貧弱さを MIH
+[Statedef 32001]
+type    = S
+movetype= I
+physics = S
+ctrl = 0
+anim = 32001
+sprpriority = 0
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6
+Facing = 1
+IgnoreHitPause = 1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = !(root,stateno = [32000,32045]) || root,movetype=H
+value = 9999
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(21)=0
+trigger1 = root,stateno = 32010
+value = 32011
+
+;---------------------------------------------------------------------------
+;崩れ落ちる自分の貧弱さを 裏回り MIH
+[Statedef 32011]
+type    = S
+movetype= I
+physics = S
+ctrl = 0
+anim = 30000
+sprpriority = 0
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6
+Facing = 1
+IgnoreHitPause = 1
+
+[State 透明]
+Type = AssertSpecial
+trigger1 = root,anim = 31501
+Flag = Invisible
+Flag2 = NoShadow
+
+[State ステート移動]
+type = ChangeState
+trigger1 = !(root,stateno = [32000,32045]) || root,movetype=H
+value = 9999
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(21)=0
+trigger1 = root,stateno = 32020
+value = 32021
+
+;---------------------------------------------------------------------------
+;崩れ落ちる自分の貧弱さを とんで手刀振りおろし MIH
+[Statedef 32021]
+type    = S
+movetype= I
+physics = S
+ctrl = 0
+anim = 32023
+sprpriority = 3
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6
+;Facing = 1
+IgnoreHitPause = 1
+[State 透明]
+Type = AssertSpecial
+trigger1 = root,anim = 32024
+Flag = Invisible
+Flag2 = NoShadow
+
+[State ステート移動]
+type = ChangeState
+trigger1 = !(root,stateno = [32000,32045]) || root,movetype=H
+value = 9999
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(21)=0
+trigger1 = root,stateno = 32030
+value = 32031
+
+;---------------------------------------------------------------------------
+;崩れ落ちる自分の貧弱さを 着地MIH
+[Statedef 32031]
+type    = S
+movetype= I
+physics = S
+ctrl = 0
+anim = 32031
+sprpriority = 3
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6
+Facing = 1
+IgnoreHitPause = 1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = !(root,stateno = [32000,32045]) || root,movetype=H
+value = 9999
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(21)=0
+trigger1 = root,stateno = 32032
+value = 32033
+
+;---------------------------------------------------------------------------
+;崩れ落ちる自分の貧弱さを 手刀斬り上げ MIH
+[Statedef 32033]
+type    = S
+movetype= I
+physics = S
+ctrl = 0
+anim = 32033
+sprpriority = 3
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6
+Facing = 1
+IgnoreHitPause = 1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = !(root,stateno = [32000,32045]) || root,movetype=H
+value = 9999
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(21)=0
+trigger1 = root,stateno = 32036
+value = 32037
+
+;---------------------------------------------------------------------------
+;崩れ落ちる自分の貧弱さを 高速突進 MIH
+[Statedef 32037]
+type    = S
+movetype= I
+physics = S
+ctrl = 0
+anim = 32037
+sprpriority = 3
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6
+Facing = 1
+IgnoreHitPause = 1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = !(root,stateno = [32000,32045]) || root,movetype=H
+value = 9999
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(21)=0
+trigger1 = root,stateno = 32040
+value = 32041
+
+;---------------------------------------------------------------------------
+;崩れ落ちる自分の貧弱さを ぐるっと MIH
+[Statedef 32041]
+type    = S
+movetype= I
+physics = S
+ctrl = 0
+anim = 32042
+sprpriority = -1
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6
+Facing = 1
+IgnoreHitPause = 1
+
+[State アニメ変更]
+type = Changeanim
+trigger1 = root,anim = 32040
+value = 32042
+[State アニメ変更]
+type = Changeanim
+trigger1 = root,anim = 32041
+value = 32043
+
+[State ステート移動]
+type = ChangeState
+trigger1 = !(root,stateno = [32000,32045]) || root,movetype=H
+value = 9999
+[State ステート移動]
+type = ChangeState
+triggerall = root,var(21)=0
+trigger1 = root,stateno = 32045
+value = 32046
+
+;---------------------------------------------------------------------------
+;崩れ落ちる自分の貧弱さを 思い知れェエ――！！ MIH
+[Statedef 32046]
+type    = S
+movetype= I
+physics = S
+ctrl = 0
+anim = 32046
+sprpriority = 1
+[State 215]
+type = BindToParent
+trigger1 = 1
+pos = 6
+Facing = 1
+IgnoreHitPause = 1
+
+[State ステート移動]
+type = ChangeState
+trigger1 = !(root,stateno = [32000,32045]) || root,movetype=H
+value = 9999
+
+;---------------------------------------------------------------------------
+;スタンドやられ(すぐ消滅)
+[Statedef 15000]
+type    = A
+movetype= H
+physics = N
+anim = 15020+root,var(50)*10000
+sprpriority = -1
+[State カメラ]
+Type = ScreenBound
+trigger1 = 1
+value = 0
+ignorehitpause = 1
+
+[State スタンド使用可能(ガード可能)]
+type = parentvarset
+trigger1 = time = 0
+var(5) = 0
+ignorehitpause = 1
+
+[State 遠隔操作終了]
+type = parentvarset
+trigger1 = time = 0
+var(49) = 0
+ignorehitpause = 1
+
+[State ガード]
+type = changestate
+triggerall = ishelper(10000)
+trigger1 = root,stateno = 120
+trigger2 = root,stateno = [130,132]
+trigger3 = root,stateno = 140
+trigger4 = root,stateno = [150,155]
+value = 10140
+ignorehitpause = 1
+
+[State 170, 無敵]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 1
+ignorehitpause = 1
+
+[State 待機へ]
+type = changestate
+trigger1 = root,gethitvar(hitshaketime)=0
+value = 9999
+ignorehitpause = 1
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------

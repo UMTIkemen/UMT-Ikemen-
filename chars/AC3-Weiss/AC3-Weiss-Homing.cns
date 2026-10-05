@@ -1,0 +1,3150 @@
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;アルカナハート３のホーミング
+;このままコピペで使えます。性能はヴァイスの物となっているので、
+;速度とかは多少弄らないといけないキャラもいますが基本弄らなくてもおｋです。
+;ただアニメとVarの調整は自分のキャラに合わせてください
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;使用Var表
+
+;FVar(0)     ホーミング時のエフェクト
+
+;FVar(10)    相手のＸ座標軸抽出
+;FVar(11)    相手のＹ座標軸抽出
+
+
+;Var(16)    ホーミングＸ軸レバー入力制御
+;Var(17)    ホーミングＹ軸レバー入力制御
+
+;FVar(12)    ホーミング時、後方レバー入力制御用
+;FVar(13)    ホーミング時、追加加速度制御
+
+;------------------------------
+;ステート表
+
+;StateDef 4000  ホーミング、地上、発動。
+;StateDef 4010  ホーミング、地上前。
+;StateDef 4020  ホーミング、地上前、ホバー走行。
+;StateDef 4030  ホーミング、地上後ろ。
+
+;StateDef 4050  ホーミング、空中、発動。
+;StateDef 4060  ホーミング、空中、上昇。
+;StateDef 4065  ホーミング、空中、前方上昇。
+;StateDef 4070  ホーミング、空中、前方。
+;StateDef 4070  ホーミング、空中、前方下降。
+;StateDef 4080  ホーミング、空中、下降。
+
+;StateDef 4090  ホーミング、空中、後ろ。
+;StateDef 4095  ホーミング、空中、後方上昇。
+
+;StateDef 4100  ホーミング、地上、誘導開始。
+
+;StateDef 4300  空中ホーミング時・青い波紋のエフェクト
+;StateDef 4350  空中ホーミング発動、魔方陣・横
+;StateDef 4360  空中ホーミング発動、魔方陣・縦
+;StateDef 4370  空中ホーミング発動、フラッシュ
+
+------------------------------
+
+;StateDef 4500  地上ガードキャンセルホーミング・前
+;StateDef 4550  空中ガードキャンセルホーミング・前
+;StateDef 4590  地上および空中ガードキャンセルホーミング・後ろ
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;ホーミング、地上、発動。
+[StateDef 4000]
+type = A
+physics = N
+anim = 4000
+sprpriority = 2
+ctrl = 0
+
+[State 4000, VarAdd] ;ホーミングキャンセル時のアルカナゲージ消費
+type = null;VarAdd
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14499])
+trigger2 = (PrevStateNo =  [14600,14699])
+Fv = 30
+value = -0.1666
+
+[State 4000, VarAdd] ;アルカナゲージ自動回復阻止
+type = VarSet
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14699])
+v = 3
+value = 1
+
+[State 4000, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・横
+type = Helper
+triggerall = PrevStateNo <= 199
+trigger1 = time = 0
+helpertype = Normal
+ID = 4350
+stateno = 4350
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4000, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・縦
+type = Helper
+triggerall = PrevStateNo <= 199
+trigger1 = time = 0
+helpertype = Normal
+ID = 4360
+stateno = 4360
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4000, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・横、技キャンセル
+type = Helper
+triggerall = PrevStateNo >= 200
+trigger1 = time = 0
+helpertype = Normal
+ID = 4355
+stateno = 4355
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4000, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・縦、技キャンセル
+type = Helper
+triggerall = PrevStateNo >= 200
+trigger1 = time = 0
+helpertype = Normal
+ID = 4365
+stateno = 4365
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4000, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・フラッシュ
+type = Helper
+trigger1 = time = 0
+helpertype = Normal
+ID = 4370
+stateno = 4370
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4000, エフェクト表示]
+type = Explod
+triggerall = PrevStateNo <= 199
+trigger1 = time = 0
+anim = 4371
+ID = 4371
+pos = 0,-70
+postype = p1
+facing = 1
+vfacing = 1
+bindtime = 11
+vel = 0,0
+accel = 0,0
+random = 0,0
+removetime = 11
+scale = 0.9,0.9
+sprpriority = 3
+ontop = 0
+shadow = 0,0,0
+ownpal= 0
+removeongethit = 1
+supermovetime = 0
+pausemovetime = 0
+ignorehitpause = 0
+
+[State 4000, エフェクト表示] ;技キャンセル
+type = Explod
+triggerall = PrevStateNo >= 200
+trigger1 = time = 0
+anim = 4372
+ID = 4372
+pos = 0,-70
+postype = p1
+facing = 1
+vfacing = 1
+bindtime = 11
+vel = 0,0
+accel = 0,0
+random = 0,0
+removetime = 11
+scale = 0.9,0.9
+sprpriority = 3
+ontop = 0
+shadow = 0,0,0
+ownpal= 0
+removeongethit = 1
+supermovetime = 0
+pausemovetime = 0
+ignorehitpause = 0
+
+[State 4000, 音を鳴らす]
+type = playsnd
+trigger1 = time = 1
+value = 3,4
+
+[state 4000, 振り向き]
+type = Turn
+trigger1 = P2Dist X < 0
+
+
+
+
+
+[state 4000, 移動速度]
+type = velset
+trigger1 = p2stateno = 7350
+Y = -2
+
+[state 4000, 移動速度]
+type = velset
+trigger1 = time = 1
+x = -0.5
+
+[state 4000, 移動速度]
+type = velset
+trigger1 = time = 12
+x = 0
+
+[state 4000, ステート変更]
+type = changestate
+trigger1 = animtime = 0
+value = 4100
+ctrl = 0
+
+;---------------------------------------------------------------------------
+;ホーミング、地上前。
+[StateDef 4010]
+type = A
+physics = N
+anim = 4010
+sprpriority = 2
+ctrl = 0
+
+[State 4010, VarAdd] ;ホーミングキャンセル時のアルカナゲージ消費
+type = null;VarAdd
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14499])
+trigger2 = (PrevStateNo =  [14600,14699])
+Fv = 30
+value = -0.1666
+
+[State 4010, VarAdd] ;アルカナゲージ自動回復阻止
+type = VarSet
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14699])
+v = 3
+value = 1
+
+[State 4010, 音を鳴らす]
+type = playsnd
+trigger1 = time = 0
+value = 3,3
+
+[state 4010, 振り向き]
+type = Turn
+trigger1 = P2Dist X < 0
+
+[state 4010, 移動速度]
+type = velset
+trigger1 = time = 1
+x = 0.0
+
+[State 4010, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・横、技キャンセル
+type = Helper
+triggerall = PrevStateNo >= 200
+trigger1 = time = 0
+helpertype = Normal
+ID = 4355
+stateno = 4355
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4010, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・縦、技キャンセル
+type = Helper
+triggerall = PrevStateNo >= 200
+trigger1 = time = 0
+helpertype = Normal
+ID = 4365
+stateno = 4365
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4010, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・フラッシュ
+type = Helper
+triggerall = PrevStateNo >= 200
+trigger1 = time = 0
+helpertype = Normal
+ID = 4370
+stateno = 4370
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4010, エフェクト表示] ;技キャンセル
+type = Explod
+triggerall = PrevStateNo >= 200
+trigger1 = time = 0
+anim = 4372
+ID = 4372
+pos = 0,-70
+postype = p1
+facing = 1
+vfacing = 1
+bindtime = 11
+vel = 0,0
+accel = 0,0
+random = 0,0
+removetime = 11
+scale = 0.9,0.9
+sprpriority = 3
+ontop = 0
+shadow = 0,0,0
+ownpal= 0
+removeongethit = 1
+supermovetime = 0
+pausemovetime = 0
+ignorehitpause = 0
+
+;---------------------
+
+[State 4010, VarSet] ;先行入力用、初期値リセット
+type = VarSet
+trigger1 = time = 0
+v = 10
+value = 0
+
+[State 4010, VarSet] ;先行入力用、立ち中攻撃
+type = VarSet
+triggerall = time >= 1
+triggerall = command != "holdback"
+triggerall = command != "holddown"
+trigger1 = command = "y"
+v = 10
+value = 1
+
+[State 4010, VarSet] ;先行入力用、立ち強攻撃
+type = VarSet
+triggerall = time >= 1
+triggerall = command != "holdfwd"
+triggerall = command != "holddown"
+trigger1 = command = "z"
+v = 10
+value = 2
+
+[State 4010, VarSet] ;先行入力用、レバー後ろ立ち中攻撃
+type = VarSet
+triggerall = time >= 1
+triggerall = command = "holdback"
+triggerall = command != "holddown"
+trigger1 = command = "y"
+v = 10
+value = 3
+
+[State 4010, VarSet] ;先行入力用、レバー前立ち強攻撃
+type = VarSet
+triggerall = time >= 1
+triggerall = command = "holdfwd"
+triggerall = command != "holddown"
+trigger1 = command = "z"
+v = 10
+value = 4
+
+[State 4010, VarSet] ;先行入力用、立ちＥ攻撃
+type = VarSet
+triggerall = time >= 1
+triggerall = command != "holddown"
+trigger1 = command = "c"
+v = 10
+value = 5
+
+[State 4010, VarSet] ;先行入力用、しゃがみ中攻撃
+type = VarSet
+triggerall = time >= 1
+triggerall = command = "holddown"
+trigger1 = command = "y"
+v = 10
+value = 6
+
+[State 4010, VarSet] ;先行入力用、しゃがみ強攻撃
+type = VarSet
+triggerall = time >= 1
+triggerall = command = "holddown"
+trigger1 = command = "z"
+v = 10
+value = 7
+
+[State 4010, VarSet] ;先行入力用、しゃがみＥ攻撃
+type = VarSet
+triggerall = time >= 1
+triggerall = command = "holddown"
+trigger1 = command = "c"
+v = 10
+value = 8
+
+[State 4010, VarSet] ;先行入力用、しゃがみ弱攻撃
+type = VarSet
+triggerall = time >= 1
+triggerall = command = "holddown"
+trigger1 = command = "x"
+v = 10
+value = 9
+
+[State 4010, VarSet] ;先行入力用、立ち弱攻撃
+type = VarSet
+triggerall = time >= 1
+triggerall = command != "holddown"
+trigger1 = command = "x"
+v = 10
+value = 10
+
+;---------------------
+
+[state 4030, ステート変更]
+type = changestate
+trigger1 = animtime = 0
+value = 4020
+ctrl = 0
+
+;---------------------------------------------------------------------------
+;ホーミング、地上ホバー走行。
+[StateDef 4020]
+type = S
+physics = S
+anim = 4020
+sprpriority = 2
+ctrl = 0
+
+[State 4020, 音を鳴らす]
+type = playsnd
+trigger1 = time = 0
+value = 3,1
+
+[State 4020, 音を鳴らす]
+type = playsnd
+trigger1 = time >= 1
+trigger1 = time % 12 = 0
+value = 5,0
+
+[State 4020, 1]
+type = VelSet
+trigger1 = 1
+x = const(velocity.run.fwd.x)
+
+[State 4020] ;歩けない
+type = AssertSpecial
+trigger1 = 1
+flag = NoWalk
+
+[State 4020] ;振り向けない
+type = AssertSpecial
+trigger1 = 1
+flag = NoAutoTurn
+
+[State 4020, エフェクト表示] ;砂埃
+type = Explod
+trigger1 = time >= 1
+trigger1 = time % 6 = 0
+anim = 4021
+ID = 4021
+pos = -40,0
+postype = p1
+facing = -1
+vfacing = 1
+bindtime = 11
+vel = 0,0
+accel = 0,0
+random = 0,0
+removetime = 11
+scale = 1.5,1.8
+sprpriority = 3
+ontop = 0
+shadow = 0,0,0
+ownpal= 0
+removeongethit = 1
+supermovetime = 0
+pausemovetime = 0
+ignorehitpause = 0
+
+[State 4020, エフェクト表示] ;砂埃
+type = Explod
+trigger1 = time >= 1
+trigger1 = time % 8 = 0
+anim = 4022
+ID = 4022
+pos = -30,-10
+postype = p1
+facing = -1
+vfacing = 1
+bindtime = 11
+vel = 0,0
+accel = 0,0
+random = 0,0
+removetime = 11
+scale = 2.0,2.0
+sprpriority = 1
+ontop = 0
+shadow = 0,0,0
+ownpal= 0
+removeongethit = 1
+supermovetime = 0
+pausemovetime = 0
+ignorehitpause = 0
+
+;---------------------先行入力済み
+
+[State 4020, ステート変更] ;立ち中攻撃へ
+type = changestate
+trigger1 = Var(10) = 1
+trigger1 = time = 1
+value = 210
+
+[State 4020, ステート変更] ;立ち強攻撃へ
+type = changestate
+trigger1 = Var(10) = 2
+trigger1 = time = 1
+value = 220
+
+[State 4020, ステート変更] ;レバー後ろ立ち中攻撃へ
+type = changestate
+trigger1 = Var(10) = 3
+trigger1 = time = 1
+value = 230
+
+[State 4020, ステート変更] ;レバー前立ち強攻撃へ
+type = changestate
+trigger1 = Var(10) = 4
+trigger1 = time = 1
+value = 240
+
+[State 4020, ステート変更] ;立ちＥ攻撃へ
+type = changestate
+trigger1 = Var(10) = 5
+trigger1 = time = 1
+value = 250
+
+[State 4020, ステート変更] ;しゃがみ中攻撃へ
+type = changestate
+trigger1 = Var(10) = 6
+trigger1 = time = 1
+value = 410
+
+[State 4020, ステート変更] ;しゃがみ強攻撃へ
+type = changestate
+trigger1 = Var(10) = 7
+trigger1 = time = 1
+value = 420
+
+[State 4020, ステート変更] ;しゃがみＥ攻撃へ
+type = changestate
+trigger1 = Var(10) = 8
+trigger1 = time = 1
+value = 430
+
+[State 4020, ステート変更] ;しゃがみ弱攻撃へ
+type = changestate
+trigger1 = Var(10) = 9
+trigger1 = time = 1
+value = 400
+
+[State 4020, ステート変更] ;立ち弱攻撃へ
+type = changestate
+trigger1 = Var(10) = 10
+trigger1 = time = 1
+value = 200
+
+;---------------------
+
+[state 4020, ステート変更]
+type = changestate
+trigger1 = Var(59) = 0
+trigger1 = (Command != "/a")
+trigger1 = P2BodyDist X <= 0
+trigger2 = Var(59) >= 1
+trigger2 = P2BodyDist X <= 0
+value = 101
+ctrl = 0
+
+[State 4020, Stop Guarding]
+type = null;ChangeState
+trigger1 = Var(59) = 0
+trigger1 = Var(3) = 0
+trigger1 = command = "holdback"
+trigger1 = P2movetype = A
+value = 140
+
+;---------------------------------------------------------------------------
+;ホーミング、地上後ろ。
+[StateDef 4030]
+type = A
+physics = N
+anim = 4030
+sprpriority = 2
+ctrl = 0
+
+[State 4030, VarAdd] ;ホーミングキャンセル時のアルカナゲージ消費
+type = VarAdd
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14499])
+trigger2 = (PrevStateNo =  [14600,14699])
+Fv = 30
+value = -0.1666
+
+[State 4030, VarAdd] ;アルカナゲージ自動回復阻止
+type = VarSet
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14699])
+v = 3
+value = 1
+
+[state 4030, 特定の攻撃を食らわなくする]
+type = nothitby
+trigger1 = time <= 30
+value = SCA,AA,AT,AP
+
+[State 4030, 音を鳴らす]
+type = playsnd
+trigger1 = time = 0
+value = 3,3
+
+[State 4030, VarAdd] ;ガーキャン時アルカナゲージ消費
+type = VarAdd
+triggerall = (PrevStateNo = [150,159])
+trigger1 = time = 0
+Fv = 30
+value = -0.1666
+
+[state 4030, ヘルパー呼び出し] ;ガーキャン時、光のエフェクト
+type = Helper
+triggerall = (PrevStateNo = [150,159])
+trigger1 = time = 0
+helpertype = Normal
+ID = 7010
+StateNo = 7010
+pos = 0,-66
+postype = p1
+ownpal = 1
+
+[State 4030, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・横
+type = Helper
+triggerall = !(PrevStateNo = [150,159])
+triggerall = PrevStateNo <= 199
+trigger1 = time = 0
+helpertype = Normal
+ID = 4350
+stateno = 4350
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4030, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・縦
+type = Helper
+triggerall = !(PrevStateNo = [150,159])
+triggerall = PrevStateNo <= 199
+trigger1 = time = 0
+helpertype = Normal
+ID = 4360
+stateno = 4360
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4030, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・横、技キャンセル
+type = Helper
+triggerall = PrevStateNo >= 200
+trigger1 = time = 0
+helpertype = Normal
+ID = 4355
+stateno = 4355
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4030, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・縦、技キャンセル
+type = Helper
+triggerall = PrevStateNo >= 200
+trigger1 = time = 0
+helpertype = Normal
+ID = 4365
+stateno = 4365
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4030, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・フラッシュ
+type = Helper
+triggerall = !(PrevStateNo = [150,159])
+trigger1 = time = 0
+helpertype = Normal
+ID = 4370
+stateno = 4370
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4030, エフェクト表示]
+type = Explod
+triggerall = !(PrevStateNo = [150,159])
+triggerall = PrevStateNo <= 199
+trigger1 = time = 0
+anim = 4371
+ID = 4371
+pos = 0,-70
+postype = p1
+facing = 1
+vfacing = 1
+bindtime = 11
+vel = 0,0
+accel = 0,0
+random = 0,0
+removetime = 11
+scale = 0.9,0.9
+sprpriority = 3
+ontop = 0
+shadow = 0,0,0
+ownpal= 0
+removeongethit = 1
+supermovetime = 0
+pausemovetime = 0
+ignorehitpause = 0
+
+[State 4030, エフェクト表示] ;技キャンセル
+type = Explod
+triggerall = PrevStateNo >= 200
+trigger1 = time = 0
+anim = 4372
+ID = 4372
+pos = 0,-70
+postype = p1
+facing = 1
+vfacing = 1
+bindtime = 11
+vel = 0,0
+accel = 0,0
+random = 0,0
+removetime = 11
+scale = 0.9,0.9
+sprpriority = 3
+ontop = 0
+shadow = 0,0,0
+ownpal= 0
+removeongethit = 1
+supermovetime = 0
+pausemovetime = 0
+ignorehitpause = 0
+
+[state 4030, 振り向き]
+type = Turn
+trigger1 = P2Dist X < 0
+
+[state 4030, 移動速度]
+type = velset
+trigger1 = time = 1
+x = -4.0
+
+[state 4030, 移動速度]
+type = veladd
+trigger1 = time >= 12
+x = 0.1
+
+[State 4030, VarSet] ;先行入力用、初期値リセット
+type = VarSet
+trigger1 = time = 0
+v = 10
+value = 0
+
+[state 4030, ステート変更]
+type = changestate
+trigger1 = animtime = 0
+value = 4020
+ctrl = 0
+
+;---------------------------------------------------------------------------
+;Homing, airborne, activating
+[StateDef 4050]
+type = A
+physics = N
+anim = 4050
+sprpriority = 2
+ctrl = 0
+
+[State 4050, VarAdd] ;ホーミングキャンセル時のアルカナゲージ消費
+type = null;VarAdd
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14499])
+trigger2 = (PrevStateNo =  [14600,14699])
+Fv = 30
+value = -0.1666
+
+
+
+[State 0, VarSet]
+type = VarSet
+trigger1 = prevstateno = 620
+var(36) =  1
+
+
+
+[State 4050, VarAdd] ;アルカナゲージ自動回復阻止
+type = VarSet
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14699])
+v = 3
+value = 1
+
+[State 4050, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・横
+type = Helper
+triggerall = PrevStateNo <= 199
+trigger1 = time = 0
+helpertype = Normal
+ID = 4350
+stateno = 4350
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4050, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・縦
+type = Helper
+triggerall = PrevStateNo <= 199
+trigger1 = time = 0
+helpertype = Normal
+ID = 4360
+stateno = 4360
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4050, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・横、技キャンセル
+type = Helper
+triggerall = PrevStateNo >= 200
+trigger1 = time = 0
+helpertype = Normal
+ID = 4355
+stateno = 4355
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4050, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・縦、技キャンセル
+type = Helper
+triggerall = PrevStateNo >= 200
+trigger1 = time = 0
+helpertype = Normal
+ID = 4365
+stateno = 4365
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4050, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・フラッシュ
+type = Helper
+trigger1 = time = 0
+helpertype = Normal
+ID = 4370
+stateno = 4370
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4050, エフェクト表示]
+type = Explod
+triggerall = PrevStateNo <= 199
+trigger1 = time = 0
+anim = 4371
+ID = 4371
+pos = 0,-70
+postype = p1
+facing = 1
+vfacing = 1
+bindtime = 11
+vel = 0,0
+accel = 0,0
+random = 0,0
+removetime = 11
+scale = 0.9,0.9
+sprpriority = 3
+ontop = 0
+shadow = 0,0,0
+ownpal= 0
+removeongethit = 1
+supermovetime = 0
+pausemovetime = 0
+ignorehitpause = 0
+
+[State 4050, エフェクト表示] ;技キャンセル
+type = Explod
+triggerall = PrevStateNo >= 200
+trigger1 = time = 0
+anim = 4372
+ID = 4372
+pos = 0,-70
+postype = p1
+facing = 1
+vfacing = 1
+bindtime = 11
+vel = 0,0
+accel = 0,0
+random = 0,0
+removetime = 11
+scale = 0.9,0.9
+sprpriority = 3
+ontop = 0
+shadow = 0,0,0
+ownpal= 0
+removeongethit = 1
+supermovetime = 0
+pausemovetime = 0
+ignorehitpause = 0
+
+[State 4050, 音を鳴らす]
+type = playsnd
+trigger1 = time = 1
+value = 3,4
+
+[state 4050, 振り向き]
+type = Turn
+trigger1 = P2Dist X < 0
+
+[state 4050, 移動速度]
+type = velset
+trigger1 = time = 1
+y = -1
+
+[state 4050, 移動速度]
+type = velset
+trigger1 = time = 10
+x = 0
+
+[state 4050, ステート変更]
+type = changestate
+trigger1 = animtime = 0
+value = 4100
+ctrl = 0
+
+
+
+
+
+
+
+
+
+
+;---------------------------------------------------------------------------
+;Homing, airborne, activating
+[StateDef 4055]
+type = A
+physics = N
+anim = 4055
+sprpriority = 2
+ctrl = 0
+velset = 0,0
+
+
+
+[State 4050, VarAdd] ;ホーミングキャンセル時のアルカナゲージ消費
+type = null;VarAdd
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14499])
+trigger2 = (PrevStateNo =  [14600,14699])
+Fv = 30
+value = -0.1666
+
+
+
+[State 0, VarSet]
+type = VarSet
+trigger1 = prevstateno = 620
+var(36) =  1
+
+
+
+[State 4050, VarAdd] ;アルカナゲージ自動回復阻止
+type = VarSet
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14699])
+v = 3
+value = 1
+
+[State 4050, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・横
+type = Helper
+triggerall = PrevStateNo <= 199
+trigger1 = time = 0
+helpertype = Normal
+ID = 4350
+stateno = 4350
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4050, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・縦
+type = Helper
+triggerall = PrevStateNo <= 199
+trigger1 = time = 0
+helpertype = Normal
+ID = 4360
+stateno = 4360
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4050, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・横、技キャンセル
+type = Helper
+triggerall = PrevStateNo >= 200
+trigger1 = time = 0
+helpertype = Normal
+ID = 4355
+stateno = 4355
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4050, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・縦、技キャンセル
+type = Helper
+triggerall = PrevStateNo >= 200
+trigger1 = time = 0
+helpertype = Normal
+ID = 4365
+stateno = 4365
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4050, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・フラッシュ
+type = Helper
+trigger1 = time = 0
+helpertype = Normal
+ID = 4370
+stateno = 4370
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4050, エフェクト表示]
+type = Explod
+triggerall = PrevStateNo <= 199
+trigger1 = time = 0
+anim = 4371
+ID = 4371
+pos = 0,-70
+postype = p1
+facing = 1
+vfacing = 1
+bindtime = 11
+vel = 0,0
+accel = 0,0
+random = 0,0
+removetime = 11
+scale = 0.9,0.9
+sprpriority = 3
+ontop = 0
+shadow = 0,0,0
+ownpal= 0
+removeongethit = 1
+supermovetime = 0
+pausemovetime = 0
+ignorehitpause = 0
+
+[State 4050, エフェクト表示] ;技キャンセル
+type = Explod
+triggerall = PrevStateNo >= 200
+trigger1 = time = 0
+anim = 4372
+ID = 4372
+pos = 0,-70
+postype = p1
+facing = 1
+vfacing = 1
+bindtime = 11
+vel = 0,0
+accel = 0,0
+random = 0,0
+removetime = 11
+scale = 0.9,0.9
+sprpriority = 3
+ontop = 0
+shadow = 0,0,0
+ownpal= 0
+removeongethit = 1
+supermovetime = 0
+pausemovetime = 0
+ignorehitpause = 0
+
+[State 4050, 音を鳴らす]
+type = playsnd
+trigger1 = time = 1
+value = 3,4
+
+[state 4050, 振り向き]
+type = Turn
+trigger1 = P2Dist X < 0
+
+[state 4050, 移動速度]
+type = velset
+trigger1 = prevstateno != 650
+trigger1 = time = 1
+y = -3
+
+
+[state 4050, 移動速度]
+type = velset
+trigger1 = prevstateno = 650
+trigger1 = time = 1
+y = -10
+
+
+
+[state 4050, 移動速度]
+type = velset
+trigger1 = 123
+y = 0
+
+
+
+
+[state 4050, 移動速度]
+type = velset
+trigger1 = time = 10
+x = 0
+
+[state 4050, ステート変更]
+type = changestate
+trigger1 = animtime = 0
+value = 4100
+ctrl = 0
+
+;---------------------------------------------------------------------------
+;ホーミング、空中、上昇。
+[StateDef 4060]
+type = A
+physics = N
+anim = 46
+sprpriority = 2
+ctrl = 0
+
+[State 4060, VarAdd] ;ホーミングキャンセル時のアルカナゲージ消費
+type = VarAdd
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14499])
+trigger2 = (PrevStateNo =  [14600,14699])
+Fv = 30
+value = -0.1666
+
+[State 4060, VarAdd] ;アルカナゲージ自動回復阻止
+type = VarSet
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14699])
+v = 3
+value = 1
+
+[State 4060, 音を鳴らす]
+type = playsnd
+trigger1 = time = 1
+value = 3,5
+
+[state 4060, 初期速度]
+type = VelSet
+trigger1 = time = 1
+y = -5.0
+
+[state 4060, 初期速度]
+type = VelSet
+trigger1 = time = 15
+x = 2.5
+y = -1.0
+
+[state 4060, ステート変更]
+type = changestate
+trigger1 = time = 18
+value = 4100
+
+;---------------------------------------------------------------------------
+;ホーミング、空中、前方上昇。
+[StateDef 4065]
+type = A
+physics = N
+anim = 42
+sprpriority = 2
+ctrl = 0
+
+[State 4065, VarAdd] ;ホーミングキャンセル時のアルカナゲージ消費
+type = VarAdd
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14499])
+trigger2 = (PrevStateNo =  [14600,14699])
+Fv = 30
+value = -0.1666
+
+[State 4065, VarAdd] ;アルカナゲージ自動回復阻止
+type = VarSet
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14699])
+v = 3
+value = 1
+
+[State 4065, 音を鳴らす]
+type = playsnd
+trigger1 = time = 1
+value = 3,5
+
+[state 4065, 初期速度]
+type = VelSet
+trigger1 = time = 1
+x = 3.5
+y = -4.5
+
+[state 4065, 初期速度]
+type = VelSet
+trigger1 = time = 15
+y = -1.0
+
+[state 4065, ステート変更]
+type = changestate
+trigger1 = time = 18
+value = 4100
+
+
+
+
+
+
+
+
+
+
+
+;---------------------------------------------------------------------------
+;ホーミング、空中、上昇。
+[StateDef 4060]
+type = A
+physics = N
+anim = 46
+sprpriority = 2
+ctrl = 0
+
+[State 4060, VarAdd] ;ホーミングキャンセル時のアルカナゲージ消費
+type = VarAdd
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14499])
+trigger2 = (PrevStateNo =  [14600,14699])
+Fv = 30
+value = -0.1666
+
+[State 4060, VarAdd] ;アルカナゲージ自動回復阻止
+type = VarSet
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14699])
+v = 3
+value = 1
+
+[State 4060, 音を鳴らす]
+type = playsnd
+trigger1 = time = 1
+value = 3,5
+
+[state 4060, 初期速度]
+type = VelSet
+trigger1 = time = 1
+y = -5.0
+
+[state 4060, 初期速度]
+type = VelSet
+trigger1 = time = 15
+x = 2.5
+y = -1.0
+
+[state 4060, ステート変更]
+type = changestate
+trigger1 = time = 18
+value = 4100
+
+;---------------------------------------------------------------------------
+;ホーミング、空中、前方上昇。
+[StateDef 4065]
+type = A
+physics = N
+anim = 42
+sprpriority = 2
+ctrl = 0
+
+[State 4065, VarAdd] ;ホーミングキャンセル時のアルカナゲージ消費
+type = VarAdd
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14499])
+trigger2 = (PrevStateNo =  [14600,14699])
+Fv = 30
+value = -0.1666
+
+[State 4065, VarAdd] ;アルカナゲージ自動回復阻止
+type = VarSet
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14699])
+v = 3
+value = 1
+
+[State 4065, 音を鳴らす]
+type = playsnd
+trigger1 = time = 1
+value = 3,5
+
+[state 4065, 初期速度]
+type = VelSet
+trigger1 = time = 1
+x = 3.5
+y = -4.5
+
+[state 4065, 初期速度]
+type = VelSet
+trigger1 = time = 15
+y = -1.0
+
+[state 4065, ステート変更]
+type = changestate
+trigger1 = time = 18
+value = 4100
+
+
+
+
+;---------------------------------------------------------------------------------------
+
+
+
+;Air Homing by IKEISLEGEND
+[StateDef 4068]
+type = A
+physics = N
+anim = 4050
+sprpriority = 2
+ctrl = 0
+
+[State 4050, VarAdd] ;ホーミングキャンセル時のアルカナゲージ消費
+type = VarAdd
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14499])
+trigger2 = (PrevStateNo =  [14600,14699])
+Fv = 30
+value = -0.1666
+
+[State 4050, VarAdd] ;アルカナゲージ自動回復阻止
+type = VarSet
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14699])
+v = 3
+value = 1
+
+[State 4050, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・横
+type = Helper
+triggerall = PrevStateNo <= 199
+trigger1 = time = 0
+helpertype = Normal
+ID = 4350
+stateno = 4350
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4050, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・縦
+type = Helper
+triggerall = PrevStateNo <= 199
+trigger1 = time = 0
+helpertype = Normal
+ID = 4360
+stateno = 4360
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4050, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・横、技キャンセル
+type = Helper
+triggerall = PrevStateNo >= 200
+trigger1 = time = 0
+helpertype = Normal
+ID = 4355
+stateno = 4355
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4050, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・縦、技キャンセル
+type = Helper
+triggerall = PrevStateNo >= 200
+trigger1 = time = 0
+helpertype = Normal
+ID = 4365
+stateno = 4365
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4050, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・フラッシュ
+type = Helper
+trigger1 = time = 0
+helpertype = Normal
+ID = 4370
+stateno = 4370
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4050, エフェクト表示]
+type = Explod
+triggerall = PrevStateNo <= 199
+trigger1 = time = 0
+anim = 4371
+ID = 4371
+pos = 0,-70
+postype = p1
+facing = 1
+vfacing = 1
+bindtime = 11
+vel = 0,0
+accel = 0,0
+random = 0,0
+removetime = 11
+scale = 0.9,0.9
+sprpriority = 3
+ontop = 0
+shadow = 0,0,0
+ownpal= 0
+removeongethit = 1
+supermovetime = 0
+pausemovetime = 0
+ignorehitpause = 0
+
+[State 4050, エフェクト表示] ;技キャンセル
+type = Explod
+triggerall = PrevStateNo >= 200
+trigger1 = time = 0
+anim = 4372
+ID = 4372
+pos = 0,-70
+postype = p1
+facing = 1
+vfacing = 1
+bindtime = 11
+vel = 0,0
+accel = 0,0
+random = 0,0
+removetime = 11
+scale = 0.9,0.9
+sprpriority = 3
+ontop = 0
+shadow = 0,0,0
+ownpal= 0
+removeongethit = 1
+supermovetime = 0
+pausemovetime = 0
+ignorehitpause = 0
+
+[State 4050, 音を鳴らす]
+type = playsnd
+trigger1 = time = 1
+value = 3,4
+
+[state 4050, 振り向き]
+type = Turn
+trigger1 = P2Dist X < 0
+
+[state 4050, 移動速度]
+type = velset
+trigger1 = time = 1
+y = -1
+
+[state 4050, 移動速度]
+type = velset
+trigger1 = time = 10
+x = 0
+
+[state 4050, ステート変更]
+type = changestate
+trigger1 = animtime = 0
+value = 4100
+ctrl = 0
+
+
+
+
+
+
+;---------------------------------------------------------------------------
+;ホーミング、空中、前。
+[StateDef 4070]
+type = A
+physics = N
+anim = 4101
+sprpriority = 2
+ctrl = 0
+
+[State 4070, VarAdd] ;ホーミングキャンセル時のアルカナゲージ消費
+type = VarAdd
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14499])
+trigger2 = (PrevStateNo =  [14600,14699])
+Fv = 30
+value = -0.1666
+
+[State 4070, VarAdd] ;アルカナゲージ自動回復阻止
+type = VarSet
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14699])
+v = 3
+value = 1
+
+[State 4070, 音を鳴らす]
+type = playsnd
+trigger1 = time = 1
+value = 3,5
+
+[state 4070, 移動速度]
+type = velset
+trigger1 = time = 1
+x = 5.0
+y = 0
+
+[state 4070, ステート変更]
+type = changestate
+trigger1 = time = 18
+value = 4100
+ctrl = 0
+
+;---------------------------------------------------------------------------
+;ホーミング、空中、前方下降。
+[StateDef 4075]
+type = A
+physics = N
+anim = 4102
+sprpriority = 2
+ctrl = 0
+
+[State 4075, VarAdd] ;ホーミングキャンセル時のアルカナゲージ消費
+type = VarAdd
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14499])
+trigger2 = (PrevStateNo =  [14600,14699])
+Fv = 30
+value = -0.1666
+
+[State 4075, VarAdd] ;アルカナゲージ自動回復阻止
+type = VarSet
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14699])
+v = 3
+value = 1
+
+[State 4075, 音を鳴らす]
+type = playsnd
+trigger1 = time = 1
+value = 3,5
+
+[state 4075, 初期速度]
+type = VelSet
+trigger1 = time = 1
+x = 3.5
+y = 4.5
+
+[state 4075, 初期速度]
+type = VelSet
+trigger1 = time = 15
+y = 1.0
+
+[state 4075, ステート変更]
+type = changestate
+trigger1 = time = 18
+value = 4100
+
+;---------------------------------------------------------------------------
+;ホーミング、空中、下降。
+[StateDef 4080]
+type = A
+physics = N
+anim = 46
+sprpriority = 2
+ctrl = 0
+
+[State 4080, VarAdd] ;ホーミングキャンセル時のアルカナゲージ消費
+type = VarAdd
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14499])
+trigger2 = (PrevStateNo =  [14600,14699])
+Fv = 30
+value = -0.1666
+
+[State 4080, VarAdd] ;アルカナゲージ自動回復阻止
+type = VarSet
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14699])
+v = 3
+value = 1
+
+[State 4080, 音を鳴らす]
+type = playsnd
+trigger1 = time = 1
+value = 3,5
+
+[state 4080, 初期速度]
+type = VelSet
+trigger1 = time = 1
+y = 4.0
+
+[state 4080, 初期速度]
+type = VelSet
+trigger1 = time = 15
+x = 2.5
+y = 1.0
+
+[state 4080, ステート変更]
+type = changestate
+trigger1 = time = 18
+value = 4100
+
+;---------------------------------------------------------------------------
+;ホーミング、空中、後方下降。
+[StateDef 4085]
+type = A
+physics = N
+anim = 46
+sprpriority = 2
+ctrl = 0
+
+[State 4085, VarAdd] ;ホーミングキャンセル時のアルカナゲージ消費
+type = VarAdd
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14499])
+trigger2 = (PrevStateNo =  [14600,14699])
+Fv = 30
+value = -0.1666
+
+[State 4085, VarAdd] ;アルカナゲージ自動回復阻止
+type = VarSet
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14699])
+v = 3
+value = 1
+
+[State 4085, 音を鳴らす]
+type = playsnd
+trigger1 = time = 1
+value = 3,5
+
+[state 4085, 初期速度]
+type = VelSet
+trigger1 = time = 1
+x = -3.5
+y = 4.5
+
+[state 4085, 初期速度]
+type = VelSet
+trigger1 = time = 15
+y = 1.0
+
+[state 4085, ステート変更]
+type = changestate
+trigger1 = time = 18
+value = 4100
+
+;---------------------------------------------------------------------------
+;ホーミング、空中、後ろ。
+[StateDef 4090]
+type = A
+physics = N
+anim = 4031
+sprpriority = 2
+ctrl = 0
+
+[State 4090, VarAdd] ;ホーミングキャンセル時のアルカナゲージ消費
+type = VarAdd
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14499])
+trigger2 = (PrevStateNo =  [14600,14699])
+Fv = 30
+value = -0.1666
+
+[State 4090, VarAdd] ;アルカナゲージ自動回復阻止
+type = VarSet
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14699])
+v = 3
+value = 1
+
+[state 4090, 特定の攻撃を食らわなくする]
+type = nothitby
+trigger1 = time <= 26
+value = SCA,AA,AT,AP
+
+[State 4090, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・横
+type = Helper
+triggerall = PrevStateNo <= 199
+trigger1 = time = 0
+helpertype = Normal
+ID = 4350
+stateno = 4350
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4090, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・縦
+type = Helper
+triggerall = PrevStateNo <= 199
+trigger1 = time = 0
+helpertype = Normal
+ID = 4360
+stateno = 4360
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4090, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・横、技キャンセル
+type = Helper
+triggerall = PrevStateNo >= 200
+trigger1 = time = 0
+helpertype = Normal
+ID = 4355
+stateno = 4355
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4090, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・縦、技キャンセル
+type = Helper
+triggerall = PrevStateNo >= 200
+trigger1 = time = 0
+helpertype = Normal
+ID = 4365
+stateno = 4365
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4090, ヘルパー呼び出し] ;演出用エフェクト、魔方陣・フラッシュ
+type = Helper
+trigger1 = time = 0
+helpertype = Normal
+ID = 4370
+stateno = 4370
+pos = 0,-70
+postype = p1
+ownpal = 0
+
+[State 4090, エフェクト表示]
+type = Explod
+triggerall = PrevStateNo <= 199
+trigger1 = time = 0
+anim = 4371
+ID = 4371
+pos = 0,-70
+postype = p1
+facing = 1
+vfacing = 1
+bindtime = 11
+vel = 0,0
+accel = 0,0
+random = 0,0
+removetime = 11
+scale = 0.9,0.9
+sprpriority = 3
+ontop = 0
+shadow = 0,0,0
+ownpal= 0
+removeongethit = 1
+supermovetime = 0
+pausemovetime = 0
+ignorehitpause = 0
+
+[State 4090, エフェクト表示] ;技キャンセル
+type = Explod
+triggerall = PrevStateNo >= 200
+trigger1 = time = 0
+anim = 4372
+ID = 4372
+pos = 0,-70
+postype = p1
+facing = 1
+vfacing = 1
+bindtime = 11
+vel = 0,0
+accel = 0,0
+random = 0,0
+removetime = 11
+scale = 0.9,0.9
+sprpriority = 3
+ontop = 0
+shadow = 0,0,0
+ownpal= 0
+removeongethit = 1
+supermovetime = 0
+pausemovetime = 0
+ignorehitpause = 0
+
+[State 4090, 音を鳴らす]
+type = playsnd
+trigger1 = time = 1
+value = 3,5
+
+[state 4090, 振り向き]
+type = Turn
+trigger1 = P2Dist X < 0
+
+[state 4090, 移動速度]
+type = velset
+trigger1 = time = 1
+x = -6.0
+y = -0.1
+
+[state 4090, 移動速度]
+type = velset
+trigger1 = time = 12
+x = -1
+
+[state 4090, ステート変更]
+type = changestate
+trigger1 = animtime = 0
+value = 4100
+ctrl = 0
+
+;---------------------------------------------------------------------------
+;ホーミング、空中、後方上昇。
+[StateDef 4095]
+type = A
+physics = N
+anim = 43
+sprpriority = 2
+ctrl = 0
+
+[State 4095, VarAdd] ;ホーミングキャンセル時のアルカナゲージ消費
+type = VarAdd
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14499])
+trigger2 = (PrevStateNo =  [14600,14699])
+Fv = 30
+value = -0.1666
+
+[State 4095, VarAdd] ;アルカナゲージ自動回復阻止
+type = VarSet
+triggerall = time = 0
+trigger1 = (PrevStateNo =  [200,14699])
+v = 3
+value = 1
+
+[State 4095, 音を鳴らす]
+type = playsnd
+trigger1 = time = 1
+value = 3,5
+
+[state 4095, 初期速度]
+type = VelSet
+trigger1 = time = 1
+x = -3.5
+y = -4.5
+
+[state 4095, 初期速度]
+type = VelSet
+trigger1 = time = 15
+y = -1.0
+
+[state 4095, ステート変更]
+type = changestate
+trigger1 = time = 18
+value = 4100
+
+;---------------------------------------------------------------------------
+;homing, induction initiation
+[StateDef 4100]
+type = A
+physics = N
+sprpriority = 2
+ctrl = 0
+
+[State 4100, 音を鳴らす]
+type = playsnd
+trigger1 = time = 1
+trigger2 = time >= 30
+trigger2 = time % 20 = 0
+value = 3,5
+
+
+
+
+[State 0, ScreenBound]
+type = ScreenBound
+trigger1 = 1
+value = 0
+movecamera = 0,0
+
+[State 0, VelMul]
+type = Veladd
+trigger1 = enemy,pos y >= -5
+trigger1 = time > 8
+y = 2
+
+
+[State 0, VelMul]
+type = Veladd
+trigger1 = Pos Y >= Enemy, Pos Y
+trigger1 = P2stateno = 7350
+y = -.40
+
+
+
+[State 0, VelMul]
+type = Veladd
+trigger1 = Vel Y < 0
+y = -.40
+
+
+[State 0, CtrlSet]    ;Dash cancel restriction code Salvador was wondering about
+type = CtrlSet
+trigger1 = time > 5
+value = 1
+
+;---------------------
+;相手のＹ軸の高さによるアニメの変更
+[state 4100, アニメ変更]
+type = changeanim
+triggerall = anim != 4100
+trigger1 = Vel Y < -3.0
+value = 4100
+
+[state 4100, アニメ変更]
+type = changeanim
+triggerall = anim != 4101
+trigger1 = Vel Y <= -0.1
+trigger1 = Vel Y >= -3.0
+value = 4101
+
+[state 4100, アニメ変更]
+type = changeanim
+triggerall = anim != 4102
+trigger1 = Vel Y >= 0
+trigger1 = Vel Y <= 3.0
+value = 4102
+
+[state 4100, アニメ変更]
+type = changeanim
+triggerall = anim != 4103
+trigger1 = Vel Y >= 3.1
+value = 4102
+
+
+
+[state 4100, アニメ変更]
+type = changeanim
+triggerall = anim != 4104
+trigger1 = Vel Y >= 0
+trigger1 = command = "holdback"
+value = 4104
+
+
+[State 0, VelAdd]
+type = VelAdd
+trigger1 = Anim = 4104
+x = -2
+
+
+
+
+
+
+;---------------------
+;---------------------
+;座標軸抽出（ホーミング）
+
+[State 4100, 相手のＸ座標]
+type = VarSet
+trigger1 = 1
+Fv = 10
+value = (P2Dist X * 1.01) / 10
+
+[State 4100, 相手のＹ座標]
+type = VarSet
+trigger1 = 1
+Fv = 11
+value = (P2Dist Y * 1.01) / 10
+
+[State 4100, XY総合速度] ;減速用
+type = VarSet
+trigger1 = 1
+Fv = 1
+value = (Vel X)+abs(Vel Y)
+
+;---------------------
+;---------------------
+[State 4100, Ｘ軸加速、移動速度]
+type = VelAdd
+trigger1 = Vel X < (8.0*cos(Atan(FVar(11)/FVar(10))))*(FVar(13)) ;先頭の 8.0 が最大速度。キャラによってこの数値を弄れば、おｋ
+;trigger1 = FVar(13) = 1.0    ;加速無し時のみ
+x = 0.7 + (0.80*cos(Atan(FVar(11)/FVar(10))))*(FVar(13))    ;先頭の 0.80 が加速度。キャラによってこの数値を弄れば、おｋ
+
+[State 4100, Ｙ軸加速、移動速度]
+type = VelAdd
+trigger1 = Vel Y < (8.0*cos(Atan(FVar(11)/FVar(10))))*(FVar(13)) ;先頭の 8.0 が最大速度。キャラによってこの数値を弄れば、おｋ
+y = 0.7 + (0.80*sin(Atan(FVar(11)/FVar(10))))*(FVar(13))    ;先頭の 0.80 が加速度。キャラによってこの数値を弄れば、おｋ
+
+
+[State 4100, Ｘ軸加速、移動速度]
+type = VelSet
+triggerall = Facing = 1 &&(Pos X <= EnemyNear,Pos X) || Facing = -1 &&(Pos X > EnemyNear,Pos X)
+trigger1 = Vel X >= (8.0*cos(Atan(FVar(11)/FVar(10))))*(FVar(13))        ;8.0 が最大速度。キャラによってこの数値を弄れば、おｋ
+x = 0.7 + (8.0*cos(Atan(FVar(11)/FVar(10))))*(FVar(13))             ;8.0 が最大速度。キャラによってこの数値を弄れば、おｋ
+
+[State 4100, Ｙ軸加速、移動速度]
+type = VelSet
+triggerall = Facing = 1 &&(Pos X <= EnemyNear,Pos X) || Facing = -1 &&(Pos X > EnemyNear,Pos X)
+trigger1 = Vel Y >= (8.0*cos(Atan(FVar(11)/FVar(10))))*(FVar(13))        ;8.0 が最大速度。キャラによってこの数値を弄れば、おｋ
+y = 0.7 + (8.0*sin(Atan(FVar(11)/FVar(10))))*(FVar(13))             ;8.0 が最大速度。キャラによってこの数値を弄れば、おｋ
+
+[State 4100, Ｙ軸減速フラグ]
+type = VarSet
+triggerall = Var(59) = 0 
+trigger1 = time = 0
+v = 0
+value = 0
+
+[State 4100, Ｙ軸減速フラグ]
+type = VarSet
+triggerall = Var(59) = 0 
+trigger1 = (Command = "holdup")
+trigger2 = (Command = "holddown")
+trigger3 = (Command = "holdfwd")
+trigger4 = (Command = "holdback")
+v = 0
+value = 1
+
+;---------------------
+;---------------------
+;ホーミング加速制御
+
+[State 4100, ホーミング初期速度]
+type = VarSet
+trigger1 = time = 0
+trigger2 = FVar(13) < 1
+Fv = 13
+value = 1.0
+
+[State 4100, ホーミング初期速度]
+type = VarSet
+trigger1 = FVar(13) = 2.0
+trigger1 = Command = "a"
+trigger2 = FVar(13) > 3.0
+Fv = 13
+value = 3.0
+
+[State 4100, ホーミング初期速度]
+type = VarSet
+trigger1 = FVar(13) = 1.0
+trigger1 = Command = "a"
+Fv = 13
+value = 2.0
+
+;---------------------
+;---------------------
+;レバー入力初速の減速用
+
+[State 4100, VarSet] ;初期値リセット
+type = VarSet
+trigger1 = time = 0
+Fv = 12
+value = 0
+
+[State 4100, VarSet]
+type = VarAdd
+triggerall = FVar(12) <= 6.0
+trigger1 = time = [1,6]
+Fv = 12
+value = 0.03
+
+[State 4100, VarSet] ;
+type = VarAdd
+triggerall = FVar(12) <= 6.0
+trigger1 = time = [7,12]
+Fv = 12
+value = 0.05
+
+[State 4100, VarSet] ;
+type = VarAdd
+triggerall = FVar(12) <= 6.0
+trigger1 = time >= 13
+Fv = 12
+value = 0.6
+
+[State 4100, 移動速度Ｘ軸] ;正面の相手に対して距離が一番離れている。後ろ方向レバー入力
+type = VelSet
+triggerall = Var(59) = 0 
+triggerall = FVar(10) >= abs(FVar(11))
+triggerall = P2BodyDist X >= 20
+trigger1 = Command = "holdback"
+trigger1 = time <= 13
+x = 1.0 + FVar(12)
+
+;---------------------
+;---------------------
+;---------------------
+;相手真下時に相手方向への速度減速
+[state 4100, 移動速度] ;レバー入力Ｙ軸制御、上方向（ほぼ密着）
+type = Velset
+triggerall = Var(59) = 0 
+trigger1 = P2BodyDist X  <= 20
+trigger1 = P2BodyDist Y = [0,150]
+trigger1 = Command = "holdup"
+y = 3.25
+
+;---------------------
+;多少以上距離が離れている場合の下方向へのレバー移動
+[state 4100, 移動速度] ;レバー入力Ｙ軸制御、下方向（密着以上以上）
+type = VelSet
+triggerall = Var(59) = 0 
+triggerall = FVar(10) >= abs(FVar(11))
+trigger1 = P2BodyDist X >= 21
+trigger1 = Command = "holddown"
+y = 4.0 / FVar(13)
+
+;---------------------
+;Ｙ軸上方向へのレバー入力制御
+[state 4100, 移動速度] ;レバー入力Ｙ軸制御1
+type = Velset
+triggerall = Var(59) = 0
+triggerall = FVar(10) >= abs(FVar(11))
+triggerall = P2BodyDist Y >= 150 || P2BodyDist Y <= -150
+;trigger1 = P2BodyDist X >= 20
+trigger1 = P2BodyDist X  <= 199
+trigger1 = Command = "holdup"
+y = -(P2BodyDist X / 50) / FVar(13)
+
+[state 4100, 移動速度] ;レバー入力Ｙ軸制御2
+type = Velset
+triggerall = Var(59) = 0 
+triggerall = FVar(10) >= abs(FVar(11))
+trigger1 = P2BodyDist X  >= 200;[200,399]
+trigger1 = Command = "holdup"
+y = -(P2BodyDist X / 100) / FVar(13)
+
+[state 4100, 移動速度] ;レバー入力Ｙ軸制御3
+type = Velset
+triggerall = Var(59) = 0
+triggerall = FVar(10) >= abs(FVar(11))
+triggerall = P2BodyDist Y >= 150 || P2BodyDist Y <= -150
+trigger1 = P2BodyDist X  = [400,599]
+trigger1 = Command = "holdup"
+y = -(P2BodyDist X / 200) / FVar(13)
+
+[state 4100, 移動速度] ;レバー入力Ｙ軸制御4
+type = Velset
+triggerall = Var(59) = 0 
+triggerall = FVar(10) >= abs(FVar(11))
+trigger1 = P2BodyDist X  = [600,799]
+trigger1 = Command = "holdup"
+y = -(P2BodyDist X / 300) / FVar(13)
+
+[state 4100, 移動速度] ;レバー入力Ｙ軸制御5
+type = Velset
+triggerall = Var(59) = 0 
+triggerall = FVar(10) >= abs(FVar(11))
+trigger1 = P2BodyDist X  = [800,999]  ;これ以上の距離は想定外で試せないが一応。
+trigger1 = Command = "holdup"         ;計算が合ってれば2000ドットまでは大丈夫なはず。
+y = -(P2BodyDist X / 400) / FVar(13)
+
+[state 4100, 移動速度] ;レバー入力Ｙ軸制御6
+type = Velset
+triggerall = Var(59) = 0 
+triggerall = FVar(10) >= abs(FVar(11))
+trigger1 = P2BodyDist X  = [1000,1199]
+trigger1 = Command = "holdup"
+y = -(P2BodyDist X / 500) / FVar(13)
+
+[state 4100, 移動速度] ;レバー入力Ｙ軸制御7
+type = Velset
+triggerall = Var(59) = 0 
+triggerall = FVar(10) >= abs(FVar(11))
+trigger1 = P2BodyDist X  = [1200,1399]
+trigger1 = Command = "holdup"
+y = -(P2BodyDist X / 600) / FVar(13)
+
+[state 4100, 移動速度] ;レバー入力Ｙ軸制御8
+type = Velset
+triggerall = Var(59) = 0 
+triggerall = FVar(10) >= abs(FVar(11))
+trigger1 = P2BodyDist X  = [1400,1599]
+trigger1 = Command = "holdup"
+y = -(P2BodyDist X / 700) / FVar(13)
+
+[state 4100, 移動速度] ;レバー入力Ｙ軸制御9
+type = Velset
+triggerall = Var(59) = 0 
+triggerall = FVar(10) >= abs(FVar(11))
+trigger1 = P2BodyDist X  = [1600,1799]
+trigger1 = Command = "holdup"
+y = -(P2BodyDist X / 800) / FVar(13)
+
+[state 4100, 移動速度] ;レバー入力Ｙ軸制御10
+type = Velset
+triggerall = Var(59) = 0 
+triggerall = FVar(10) >= abs(FVar(11))
+trigger1 = P2BodyDist X  = [1800,1999]   ;
+trigger1 = Command = "holdup"
+y = -(P2BodyDist X / 900) / FVar(13)
+
+[state 4100, 移動速度] ;レバー入力Ｙ軸制御10
+type = Velset
+triggerall = Var(59) = 0 
+triggerall = FVar(10) >= abs(FVar(11))
+trigger1 = P2BodyDist X  >= 2000       ;2000ドット以上は想定外。多分無い。
+trigger1 = Command = "holdup"
+y = -(P2BodyDist X / 1000) / FVar(13)
+
+;---------------------
+;---------------------
+;相手飛び越し
+
+[state 4100, 移動速度] ;レバー入力Ｙ軸制御（近距離）
+type = Velset
+triggerall = Var(59) = 0 
+trigger1 = P2BodyDist X  <= 20
+trigger1 = Command = "holdfwd"
+x = 4
+
+;上手く行かないので保留。原作より早すぎて崩しが強すぎる。
+;---------------------
+;---------------------
+;相手より下方向
+
+[State 4100, 移動速度Ｙ軸] ;下方向減速
+type = VelSet
+triggerall = Var(59) = 0 
+trigger1 = abs(FVar(11)) > FVar(10)+10
+trigger1 = P2BodyDist X >= 120
+trigger1 = P2BodyDist Y <= -100
+trigger1 = Command = "holddown"
+trigger1 = !(Vel X > 0)
+trigger1 = time <= 13
+y = -1.0 + FVar(12)
+
+;---------------------
+;相手より上方向
+
+[State 4100, 移動速度Ｙ軸] ;上方向減速
+type = VelSet
+triggerall = Var(59) = 0 
+trigger1 = abs(FVar(11)) > FVar(10)+10
+trigger1 = P2BodyDist X >= 120
+trigger1 = P2BodyDist Y >= 100
+trigger1 = Command != "holdup"
+trigger1 = !(Vel X < 0)
+y = 1.0 + FVar(12)
+
+;---------------------
+;相手より上・下方向共通
+
+[state 4100, 移動速度] ;レバー入力Ｘ軸制御（遠距離）
+type = null;VelSet
+triggerall = Var(59) = 0 
+triggerall = abs(FVar(11)) > FVar(10)+10
+trigger1 = (P2BodyDist Y >= 151) || (P2BodyDist Y <= -151)
+trigger1 = Command = "holdfwd"
+x = -(P2BodyDist Y / 500) / FVar(13)
+
+[state 4100, 移動速度] ;レバー入力Ｘ軸制御（遠距離）
+type = null;VelSet
+triggerall = Var(59) = 0 
+triggerall = abs(FVar(11)) > FVar(10)+10
+trigger1 = (P2BodyDist Y >= 151) || (P2BodyDist Y <= -151)
+trigger1 = Command = "holdback"
+x = (P2BodyDist Y / 500) / FVar(13)
+
+;---------------------
+;---------------------
+;レバーを離した場合反対方向への移動速度を０へリセット
+
+[State 4100, Ｙ軸減速]
+type = null;VelSet
+triggerall = FVar(10) >= abs(FVar(11))
+triggerall = command != "holdfwd"
+triggerall = command != "holdback"
+triggerall = command != "holdup"
+triggerall = command != "holddown"
+trigger1 = P2BodyDist Y >= -10
+trigger1 = Vel Y < 0
+y = 0
+
+;---------------------
+;---------------------
+;エフェクト（飛び散る光）
+
+[state 4100, VarSet]
+type = VarSet
+trigger1 = 1
+Fv = 0
+value = random%30
+
+[state 4100, VarSet]
+type = VarSet
+trigger1 = 1
+Fv = 0
+value = Fvar(0)/100
+
+[state 4100, エフェクト表示] ;散る光
+type = Explod
+triggerall = anim = 4100
+trigger1 = random % 2 = 0
+anim = 4310
+ID = 4310
+postype = p1
+pos = 0, -67
+removetime = 24
+vel = -3.5+(random%22)/10,-0.5+(random%22)/10
+random = 15,15
+scale = 0.65 + Fvar(0),0.65 + Fvar(0)
+sprpriority = 3
+ownpal = 1
+
+[state 4100, エフェクト表示] ;散る光
+type = Explod
+triggerall = anim = 4101
+trigger1 = random % 2 = 0
+anim = 4310
+ID = 4310
+postype = p1
+pos = 0, -67
+removetime = 24
+vel = -3.5+(random%22)/10,2.0+(random%22)/10
+random = 15,15
+scale = 0.65 + Fvar(0),0.65 + Fvar(0)
+sprpriority = 3
+ownpal = 1
+
+[state 4100, エフェクト表示] ;散る光
+type = Explod
+triggerall = anim = 4102
+trigger1 = random % 2 = 0
+anim = 4310
+ID = 4310
+postype = p1
+pos = 0, -67
+removetime = 24
+vel = -3.5+(random%22)/10,-2.0+(random%22)/10
+random = 15,15
+scale = 0.65 + Fvar(0),0.65 + Fvar(0)
+sprpriority = 3
+ownpal = 1
+
+[state 4100, エフェクト表示] ;散る光
+type = Explod
+triggerall = anim = 4103
+trigger1 = random % 2 = 0
+anim = 4310
+ID = 4310
+postype = p1
+pos = 0, -67
+removetime = 24
+vel = -3.5+(random%22)/10,-4.5+(random%22)/10
+random = 15,15
+scale = 0.65 + Fvar(0),0.65 + Fvar(0)
+sprpriority = 3
+ownpal = 1
+
+;---------------------
+
+[State 4100, ヘルパー呼び出し] ;演出用エフェクト
+type = Helper
+triggerall = Var(59) = 0 && Command != "holdback"
+trigger1 = time >= 0
+trigger1 = time % 15 = 0
+helpertype = Normal
+ID = 4300
+stateno = 4300
+pos = 0,-69
+postype = p1
+ownpal = 0
+
+;---------------------
+
+[State 4100, 空中ガード不可] ;ホーミングキャンセル時
+type = AssertSpecial
+trigger1 = Var(3) = 1
+flag = NoAirGuard
+
+[state 4100, 振り向き]
+type = Turn
+trigger1 = P2Dist X < 0
+
+[state 4100, ステート変更] ;地面めりこみ防止
+type = changestate
+trigger1 = Pos Y >= 10
+value = 52
+ctrl = 0
+
+
+
+[state 4100, ステート変更]
+type = changestate
+trigger1 = p2stateno != 7350
+;trigger1 = P2bodydist X <= 30        ;Unlock on contact with the opponent
+trigger1 = Pos Y >= -40
+trigger2 = RoundState != 2           ;Released after the end of the round
+value = 53
+ctrl = 1
+
+
+
+[state 4100, ステート変更]
+type = changestate
+trigger1 = p2stateno != 7350
+trigger1 = P2Statetype = A       ;Unlock on contact with the opponent
+trigger1 = Pos Y <= Enemy,Pos Y + 10
+trigger2 = RoundState != 2           ;Released after the end of the round
+value = 53
+ctrl = 1
+
+
+[state 4100, ステート変更]
+type = changestate
+trigger1 = p2stateno = 7350
+trigger1 = P2Statetype = A       ;Unlock on contact with the opponent
+trigger1 = Pos Y <= Enemy,Pos Y + 10
+trigger2 = RoundState != 2           ;Released after the end of the round
+value = 53
+ctrl = 1
+
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;空中ホーミング時・青い波紋のエフェクト
+[StateDef 4300]
+type = A
+movetype = I
+physics = N
+sprpriority = 4
+anim = 4300
+
+[state 4300, 透過処理]
+type = Trans
+trigger1 = 1
+trans = addalpha
+alpha = 256,256
+
+;---------------------
+
+[State 4300, VarSet]
+type = VarSet
+triggerall = Parent,anim = 4101
+trigger1 = time = 0
+v = 0
+value = 1
+
+[State 4300, VarSet]
+type = VarSet
+triggerall = Parent,anim = 4100
+trigger1 = time = 0
+v = 0
+value = 0
+
+[State 4300, VarSet]
+type = VarSet
+triggerall = Parent,anim = 4102
+trigger1 = time = 0
+v = 0
+value = 2
+
+[State 4300, VarSet]
+type = VarSet
+triggerall = Parent,anim = 4103
+trigger1 = time = 0
+v = 0
+value = 3
+
+[State 4300, 角度]
+type = AngleDraw
+triggerall = Var(0) = 0
+trigger1 = 1
+value = 45
+
+[State 4300, 角度]
+type = AngleDraw
+triggerall = Var(0) = 1
+trigger1 = 1
+value = 0
+
+[State 4300, 角度]
+type = AngleDraw
+triggerall = Var(0) = 2
+trigger1 = 1
+value = 340
+
+[State 4300, 角度]
+type = AngleDraw
+triggerall = Var(0) = 3
+trigger1 = 1
+value = 305
+
+;---------------------
+
+[State 4300, ヘルパー消去]
+type = DestroySelf
+trigger1 = animtime = 0
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;空中ホーミング発動、魔方陣・横
+[StateDef 4350]
+type = A
+movetype = I
+physics = N
+sprpriority = 4
+anim = 4350
+
+[state 4350, 親の位置に固定]
+type = BindToParent
+trigger1 = 1
+time = 1
+facing = 0
+pos = 0,-70
+
+[state 4350, 透過処理]
+type = Trans
+trigger1 = 1
+trans = addalpha
+alpha = 256,256
+
+[State 4350, 縮尺]
+type = AngleDraw
+trigger1 = 1
+value = 0
+scale = 1.0, 2.0
+
+[State 4350, ヘルパー消去]
+type = DestroySelf
+trigger1 = animtime = 0
+
+;---------------------------------------------------------------------------
+;空中ホーミングキャンセル発動、魔方陣・横
+[StateDef 4355]
+type = A
+movetype = I
+physics = N
+sprpriority = 4
+anim = 4355
+
+[state 4355, 親の位置に固定]
+type = BindToParent
+trigger1 = 1
+time = 1
+facing = 0
+pos = 0,-70
+
+[state 4355, 透過処理]
+type = Trans
+trigger1 = 1
+trans = addalpha
+alpha = 256,256
+
+[State 4355, 縮尺]
+type = AngleDraw
+trigger1 = 1
+value = 0
+scale = 1.0, 2.0
+
+[State 4355, ヘルパー消去]
+type = DestroySelf
+trigger1 = animtime = 0
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;空中ホーミング発動、魔方陣・縦
+[StateDef 4360]
+type = A
+movetype = I
+physics = N
+sprpriority = 4
+anim = 4360
+
+[state 4360, 親の位置に固定]
+type = BindToParent
+trigger1 = 1
+time = 1
+facing = 0
+pos = 0,-70
+
+[state 4360, 透過処理]
+type = Trans
+trigger1 = 1
+trans = addalpha
+alpha = 256,256
+
+[State 4360, 縮尺]
+type = AngleDraw
+trigger1 = 1
+value = 0
+scale = 2.0, 1.0
+
+[State 4360, ヘルパー消去]
+type = DestroySelf
+trigger1 = animtime = 0
+
+;---------------------------------------------------------------------------
+;空中ホーミングキャンセル発動、魔方陣・縦
+[StateDef 4365]
+type = A
+movetype = I
+physics = N
+sprpriority = 4
+anim = 4365
+
+[state 4365, 親の位置に固定]
+type = BindToParent
+trigger1 = 1
+time = 1
+facing = 0
+pos = 0,-70
+
+[state 4365, 透過処理]
+type = Trans
+trigger1 = 1
+trans = addalpha
+alpha = 256,256
+
+[State 4365, 縮尺]
+type = AngleDraw
+trigger1 = 1
+value = 0
+scale = 2.0, 1.0
+
+[State 4365, ヘルパー消去]
+type = DestroySelf
+trigger1 = animtime = 0
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;空中ホーミング発動、フラッシュ
+[StateDef 4370]
+type = A
+movetype = I
+physics = N
+sprpriority = 4
+anim = 4370
+
+[state 4370, 親の位置に固定]
+type = BindToParent
+trigger1 = 1
+time = 1
+facing = 0
+pos = 0,-70
+
+[state 4370, 透過処理]
+type = Trans
+trigger1 = 1
+trans = addalpha
+alpha = 256,256
+
+[state 4370] ;ヒットエフェクトの幅（初期値）を変更
+type = VarSet
+trigger1 = time = 0
+FV = 0
+value = 0
+
+[state 4370] ;ヒットエフェクトの幅（ヒット後の時間経過で）を変更
+type = VarAdd
+trigger1 = time > 0
+fv = 0
+value = 0.1
+
+[State 4370, 縮尺]
+type = AngleDraw
+trigger1 = 1
+value = 0 + (150 * Fvar(0))
+scale = 0.0 + Fvar(0) * 1.2, 0.0 + Fvar(0) * 1.2
+
+[State 4370, ヘルパー消去]
+type = DestroySelf
+trigger1 = time = 11
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;地上ガードキャンセルホーミング・前
+[StateDef 4500]
+type = S
+physics = S
+sprpriority = 2
+ctrl = 0
+
+[State 4500, VarAdd] ;アルカナゲージ消費
+type = VarAdd
+triggerall = (PrevStateNo = [150,159])
+trigger1 = time = 0
+Fv = 30
+value = -0.1666
+
+[state 4500]
+type = Helper
+trigger1 = time = 0
+helpertype = Normal
+ID = 6300
+stateno = 6300
+pos = 18,-70
+postype = p1
+ownpal = 0
+supermovetime = 9999
+pausemovetime = 9999
+
+[State 4500, ステートタイプ]
+type = StateTypeSet
+trigger1 = time = 0
+movetype = I
+
+[State 4500, アニメ変更]
+type = Changeanim
+triggerall = (PrevStateNo != 4500)
+trigger1 = time = 0
+value = 4020
+
+[State 4500, 音を鳴らす]
+type = playsnd
+triggerall = (PrevStateNo != 4500)
+trigger1 = time = 0
+value = 3,1
+
+[state 4500, エフェクト表示]
+type = Explod
+triggerall = NumExplod(4501) = 0
+triggerall = (PrevStateNo != 4500)
+trigger1 = time = 0
+anim = 4500
+ID = 4501
+postype = p1
+pos = 10, -40
+bindtime = 999
+removetime = 999
+vel = 0,0
+random = 0,0
+scale = 1.0,1.0
+sprpriority = 3
+ownpal = 1
+
+[state 4500, VarRandom]
+type = VarRandom
+trigger1 = 1
+v = 0
+range = 0,1
+
+[state 4500, VarSet]
+type = VarSet
+trigger1 = 1
+Fv = 0
+value = random%30/100
+
+[state 4500, エフェクト表示] ;散る光
+type = Explod
+trigger1 = random % 8 = 0
+anim = 4510
+ID = 4510
+postype = p1
+pos = 0, -67
+removetime = 40
+vel = -3.5+Var(0)+(random%22)/10,-0.5+(random%22)/10
+random = 15,15
+scale = 0.5 + Fvar(0),0.5 + Fvar(0)
+sprpriority = 2
+ownpal = 1
+
+[state 4500, エフェクト表示] ;散る光
+type = Explod
+trigger1 = random % 8 = 0
+anim = 4510
+ID = 4510
+postype = p1
+pos = 0, -67
+removetime = 40
+vel = -3.5+Var(0)+(random%22)/10,2.0+(random%22)/10
+random = 15,15
+scale = 0.5 + Fvar(0),0.5 + Fvar(0)
+sprpriority = 3
+ownpal = 1
+
+[state 4500, エフェクト表示] ;散る光
+type = Explod
+trigger1 = random % 8 = 0
+anim = 4510
+ID = 4510
+postype = p1
+pos = 0, -67
+removetime = 40
+vel = -3.5+Var(0)+(random%22)/10,-2.0+(random%22)/10
+random = 15,15
+scale = 0.5 + Fvar(0),0.5 + Fvar(0)
+sprpriority = 3
+ownpal = 1
+
+;----------------------------------------
+
+[State 4500, 移動速度] ;ヒットストップ停止中
+type = VelSet
+trigger1 = Var(19) <= 1
+x = const(velocity.run.fwd.x)/2
+
+[State 4500, 移動速度] ;ヒットストップ解除
+type = VelSet
+trigger1 = Var(19) >= 1
+x = 0
+
+;----------------------------------------
+
+[state 4500, 特定の攻撃を食らわなくする]
+type = nothitby
+trigger1 = Var(20) >= 1
+value = ,AT
+
+[State 4500, HitOverride]
+type = HitOverride
+trigger1 = Var(20) >= 1
+attr = SCA,AA,AP
+StateNo = 4500
+
+;----------------------------------------
+
+[State 4500, VarSet] ;先行入力リセット
+type = VarSet
+trigger1 = time = 0
+trigger1 = (PrevStateNo != [4500,4599])
+v = 10
+value = 0
+
+[State 4500, VarSet] ;先行入力、突攻剣ツァールライヒ
+type = VarSet
+triggerall = time >= 1
+trigger1 = command = "hadou-x+y"
+v = 10
+value = 50
+
+[State 4500, ステート変更] ;突攻剣ツァールライヒ
+type = changestate
+triggerall = (Var(18) != 1 && FVar(30) >= 0.1666) || (Var(18) = 1 && Power >= 1000)
+triggerall = Var(19) <= 1
+triggerall = Var(20) <= 12
+trigger1 = Var(10) = 50
+trigger1 = Var(19) <= 0
+value = 3200
+
+;---------------------
+
+[State 4500, VarSet] ;先行入力、穿孔剣ツェントルム
+type = VarSet
+triggerall = time >= 1
+trigger1 = command = "syoryu-x+y"
+v = 10
+value = 51
+
+[State 4500, ステート変更] ;穿孔剣ツェントルム
+type = changestate
+triggerall = (Var(18) != 1 && FVar(30) >= 0.1666) || (Var(18) = 1 && Power >= 1000)
+triggerall = Var(19) <= 1
+triggerall = Var(20) <= 12
+trigger1 = Var(10) = 51
+trigger1 = Var(19) <= 0
+value = 3000
+
+;---------------------
+
+[State 4500, VarSet] ;先行入力、郡剣グライフェン
+type = VarSet
+triggerall = time >= 1
+trigger1 = command = "gyaku-haousyokou-x" || command = "gyaku-haousyokou-y" || command = "gyaku-haousyokou-z"
+v = 10
+value = 33
+
+[State 4500, ステート変更] ;郡剣グライフェン
+type = changestate
+triggerall = Var(19) <= 1
+triggerall = Var(20) <= 12
+trigger1 = Var(10) = 33
+trigger1 = Var(19) <= 0
+value = 2000
+
+;---------------------
+
+[State 4500, VarSet] ;先行入力、穿剣フリーゲン・弱、地上
+type = VarSet
+triggerall = time >= 1
+trigger1 = command = "syoryu-x"
+v = 10
+value = 20
+
+[State 4500, ステート変更] ;穿剣フリーゲン・弱、地上
+type = changestate
+triggerall = Var(19) <= 1
+triggerall = Var(20) <= 12
+trigger1 = Var(10) = 20
+trigger1 = Var(19) <= 0
+value = 1600
+
+;---------------------
+
+[State 4500, VarSet] ;先行入力、穿剣フリーゲン・中、地上
+type = VarSet
+triggerall = time >= 1
+trigger1 = command = "syoryu-y"
+v = 10
+value = 21
+
+[State 4500, ステート変更] ;穿剣フリーゲン・中、地上
+type = changestate
+triggerall = Var(19) <= 1
+triggerall = Var(20) <= 12
+trigger1 = Var(10) = 21
+trigger1 = Var(19) <= 0
+value = 1650
+
+;---------------------
+
+[State 4500, VarSet] ;先行入力、穿剣フリーゲン・強、地上
+type = VarSet
+triggerall = time >= 1
+trigger1 = command = "syoryu-z"
+v = 10
+value = 22
+
+[State 4500, ステート変更] ;穿剣フリーゲン・強、地上
+type = changestate
+triggerall = Var(19) <= 1
+triggerall = Var(20) <= 12
+trigger1 = Var(10) = 22
+trigger1 = Var(19) <= 0
+value = 1700
+
+;---------------------
+
+[state 4500, ステート変更]
+type = changestate
+trigger1 = Var(20) <= 0
+value = 100
+ctrl = 1
+
+[State 4500, Stop Guarding]
+type = ChangeState
+trigger1 = Var(59) = 0
+trigger1 = Var(20) <= 1
+trigger1 = command = "holdback"
+trigger1 = P2movetype = A
+value = 130
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;空中ガードキャンセルホーミング・前
+[StateDef 4550]
+type = A
+movetype = I
+physics = N
+sprpriority = 2
+ctrl = 0
+
+[State 4550, VarAdd] ;アルカナゲージ消費
+type = VarAdd
+triggerall = (PrevStateNo =  [150,159])
+trigger1 = time = 0
+Fv = 30
+value = -0.1666
+
+[state 4550]
+type = Helper
+trigger1 = time = 0
+helpertype = Normal
+ID = 6300
+stateno = 6300
+pos = 40,-72
+postype = p1
+ownpal = 0
+supermovetime = 9999
+pausemovetime = 9999
+
+[State 4550, ステートタイプ]
+type = StateTypeSet
+trigger1 = time = 0
+movetype = I
+
+[State 4550, アニメ変更]
+type = Changeanim
+triggerall = (PrevStateNo != 4550)
+trigger1 = time = 0
+value = 4101
+
+[State 4550, 音を鳴らす]
+type = playsnd
+triggerall = (PrevStateNo != 4550)
+trigger1 = time = 0
+value = 3,1
+
+[state 4550, エフェクト表示]
+type = Explod
+triggerall = NumExplod(4551) = 0
+triggerall = (PrevStateNo != 4550)
+trigger1 = time = 0
+anim = 4500
+ID = 4551
+postype = p1
+pos = 10, -65
+bindtime = 999
+removetime = 999
+vel = 0,0
+random = 0,0
+scale = 1.0,1.0
+sprpriority = 3
+ownpal = 1
+
+[state 4550, VarRandom]
+type = VarRandom
+trigger1 = 1
+v = 0
+range = 0,1
+
+[state 4550, VarSet]
+type = VarSet
+trigger1 = 1
+Fv = 0
+value = random%30/100
+
+[state 4550, エフェクト表示] ;散る光
+type = Explod
+trigger1 = random % 8 = 0
+anim = 4510
+ID = 4510
+postype = p1
+pos = 10, -73
+removetime = 40
+vel = -3.5+Var(0)+(random%22)/10,-0.5+(random%22)/10
+random = 15,15
+scale = 0.5 + Fvar(0),0.5 + Fvar(0)
+sprpriority = 2
+ownpal = 1
+
+[state 4550, エフェクト表示] ;散る光
+type = Explod
+trigger1 = random % 8 = 0
+anim = 4510
+ID = 4510
+postype = p1
+pos = 10, -73
+removetime = 40
+vel = -3.5+Var(0)+(random%22)/10,2.0+(random%22)/10
+random = 15,15
+scale = 0.5 + Fvar(0),0.5 + Fvar(0)
+sprpriority = 3
+ownpal = 1
+
+[state 4550, エフェクト表示] ;散る光
+type = Explod
+trigger1 = random % 8 = 0
+anim = 4510
+ID = 4510
+postype = p1
+pos = 10, -73
+removetime = 40
+vel = -3.5+Var(0)+(random%22)/10,-2.0+(random%22)/10
+random = 15,15
+scale = 0.5 + Fvar(0),0.5 + Fvar(0)
+sprpriority = 3
+ownpal = 1
+
+;----------------------------------------
+
+[State 4550, 移動速度] ;ヒットストップ停止中
+type = VelSet
+trigger1 = Var(19) <= 1
+x = 2.5
+
+[State 4550, 移動速度] ;ヒットストップ解除
+type = VelSet
+trigger1 = Var(19) >= 1
+x = 0
+
+;----------------------------------------
+
+[state 4550, 特定の攻撃を食らわなくする]
+type = nothitby
+trigger1 = Var(20) >= 1
+value = ,AT
+
+[State 4550, HitOverride]
+type = HitOverride
+trigger1 = Var(20) >= 1
+attr = SCA,AA,AP
+StateNo = 4550
+
+;----------------------------------------
+
+[state 4550, ステート変更]
+type = changestate
+trigger1 = Var(20) <= 0
+trigger2 = time >= 60
+value = 4100
+ctrl = 0
+
+[State 4550, Stop Guarding]
+type = ChangeState
+trigger1 = Var(59) = 0
+trigger1 = Var(20) <= 1
+trigger1 = command = "holdback"
+trigger1 = P2movetype = A
+value = 132
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;地上および空中ガードキャンセルホーミング・後ろ
+[StateDef 4590]
+type = U
+movetype = I
+physics = N
+anim = 105
+sprpriority = 2
+ctrl = 0
+
+[State 4590, VarAdd] ;アルカナゲージ消費
+type = VarAdd
+triggerall = (PrevStateNo =  [150,159])
+trigger1 = time = 1
+Fv = 30
+value = -0.1666
+
+[state 4590, 特定の攻撃を食らわなくする]
+type = nothitby
+trigger1 = time <= 26
+value = SCA,AA,AT,AP
+
+[state 4590, ヘルパー呼び出し] ;光のエフェクト
+type = Helper
+trigger1 = time = 0
+helpertype = Normal
+ID = 7010
+StateNo = 7010
+pos = 0,-66
+postype = p1
+ownpal = 1
+
+[State 4590, 音を鳴らす]
+type = playsnd
+trigger1 = time = 1
+value = 3,5
+
+[state 4590, 振り向き]
+type = Turn
+trigger1 = P2Dist X < 0
+
+[state 4590, 移動速度]
+type = velset
+trigger1 = time = 0
+x = -6.0
+y = -1.0
+
+[state 4590, 移動速度]
+type = velset
+trigger1 = time = 12
+x = -1
+
+[state 4590, ステート変更]
+type = changestate
+trigger1 = animtime = 0
+value = 4100
+ctrl = 0
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------

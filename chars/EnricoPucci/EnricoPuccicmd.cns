@@ -1,0 +1,2084 @@
+
+;-| ボタンリマップ（ボタンコンフィグ）|----------------------------------------
+[Remap]
+x = x      ;Ｘボタンの入力判定を実際に押すボタンに割り当てる。
+y = y      ;Ｙボタン　　　　　　　　　〃
+z = z      ;Ｚボタン　　　　　　　　　〃
+a = a      ;Ａボタン　　　　　　　　　〃
+b = b      ;Ｂボタン　　　　　　　　　〃
+c = c      ;Ｃボタン　　　　　　　　　〃
+s = s      ;スタートボタン　　　　　　〃
+
+;------------------------------------------------------------------------------
+;-| デフォルト設定 |-----------------------------------------------------------
+[Defaults]
+command.time = 15  ;標準のコマンド入力受付時間。
+                   ;各コマンドで省略している場合に有効。
+                   ;このパラメータを消した場合、デフォルトは１フレームになる。
+                   ;（　M.U.G.E.Nでの１フレーム　＝　１／６０秒　）
+
+command.buffer.time = 1  ;標準のコマンド入力記憶時間。
+                         ;入力した直後にコマンドを記憶し、
+                         ;指を離してもコマンドが成功している状態を
+                         ;ここで設定した時間の分維持する。
+                         ;１～３０フレームまでの間で設定可能。
+                         ;デフォルトは１フレーム。第３部
+;==============================================================================
+;■書式の決まり■
+;
+; [Command]         ：入力コマンドを１個定義する。
+; name = "***"      ：コマンド名を決める。大文字と小文字も区別される。
+; command = ###     ：実際に入力するキーを組み合わせる。詳細は後述。
+; time = &&&        ：入力受付時間を設定（オプション）。
+; buffer.time = @@@ ：入力記憶時間を設定（オプション）。
+;
+; 小ネタでも説明している通り、登録が可能な数は最大『１２８個』まで。
+;
+;※『必須コマンド名』と書いてるコマンドは、システム側で処理してます。
+;　コマンド名を変えたり、消してはいけません。キーの変更は出来ます。
+;------------------------------------------------------------------------------
+;■必要なアルファベットと記号■
+;
+; 上記の「command = ###」の『###』に該当する部分で、
+; 組み合わせるキーとボタンを設定しなければならない。
+;
+; ※設定したキーやボタンはM.U.G.E.Nのオプションモードにある
+;  「キーコンフィグ」にて設定したキーなどに対応しています。
+;
+; ★方向キー★（全て必ず大文字で）
+;
+; 　B 　：「後方」にキーを入れる（ Backward ）
+; 　D 　：「下方」にキーを入れる（ Downward ）
+; 　F 　：「前方」にキーを入れる（ Forward ）
+; 　U 　：「上方」にキーを入れる（ Upward ）
+;
+; 　DB　：「後ろ斜め下」にキーを入れる（「D」と「B」が同時に入力された事を認識）
+; 　UB　：「後ろ斜め上」にキーを入れる（「U」と「B」が同時に入力された事を認識）
+; 　DF　：「前斜め下」にキーを入れる（「D」と「F」が同時に入力された事を認識）
+; 　UF　：「前斜め上」にキーを入れる（「U」と「F」が同時に入力された事を認識）
+;
+; ★ボタン★（全て必ず小文字で）
+;
+; 　a 　：「Ａボタン」を押す
+; 　b 　：「Ｂボタン」を押す
+; 　c 　：「Ｃボタン」を押す
+; 　x 　：「Ｘボタン」を押す
+; 　y 　：「Ｙボタン」を押す
+; 　z 　：「Ｚボタン」を押す
+; 　s 　：「スタートボタン」を押す
+;
+; ★記号★（入力効果を変化させる命令）
+;
+; 　/ 　：（スラッシュ）キーやボタンを「押しっぱなし」にしている事を認識する場合に追加する
+;
+; 　　（例）：　/b       = Ｂボタンを押したままにする
+; 　　　　　　　/F       = 前キーを押したままにする
+; 　　　　　　　/U,z     = 上キーを押したままＺボタンを入力する
+;
+;　　━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+;
+; 　~ 　：（チルダ）キーやボタンが「離された時」を認識する場合に追加する
+;
+; 　　（例）：　~x       = Ｘボタンを離す
+; 　　　　　　　~DF      =「前斜め下」のキーを離す
+; 　　　　　　　~DB,F,c  =「後ろ斜め下」を離した後に前キー・Ｃボタンの順番に入力する
+;
+; 　　　　　　※「ボタンを離すまでの時間（溜め時間）」も設定する事が出来る
+;
+; 　　　　　　　~30x     = Ｘボタンを押したままにして、３０フレーム以上経ったら離す
+; 　　　　　　　~50B,F,a = 後ろキーを５０フレームまで溜めて前キー・Ａボタンの順番に入力する
+;
+;　　━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+;
+; 　$ 　：（ドル）方向キーの「複数の内どれかが入力されている事」を認識する場合に追加する
+;
+; 　　（例）：　$B       =「後方」「後ろ斜め下」「後ろ斜め上」のどれかが入力されている状態
+; 　　　　　　　$UF      =「前」「上」「前斜め上」のどれかが入力されている状態
+;
+; 　　　　　　※この記号は「方向キー」でしか使えません。
+;
+;　　━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+;
+; 　+ 　：（プラス）ボタンを「同時押し」している事を認識する場合に追加する
+;
+; 　　（例）：　x+y      = ＸボタンとＹボタンを同時押しする
+; 　　　　　　　a+b+c    = ＡボタンとＢボタンとＣボタンを同時押しする
+;
+; 　　　　　　※この記号は「ボタン」でしか使えません。
+;
+;　　━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+;
+; 　> 　：（グレーターザン）大なり（Win版で追加された記号）
+; 　　　　　　　　　　　　「他のキーが入力されていない事を確認して、そのキーを押す」場合
+;
+; 　　（例）：　a,>~a    = Ａボタン以外が入力されていない状態でＡボタンを離す
+; 　　　　　　　F,>~F,>F = 前キー以外が入力されていない状態で前キーを離し、
+;　　　　　　　　　　　　　もう一度前キーを入力する
+;-------------------------------------------------------------------------------
+; ●これらの記号は全て組み合わせて使う事が出来る●
+;
+; 　　（例）：　~80$DB,DF,F,/a+y+c
+; 　　　　　　　
+; 　　　　　　「後方」「下」「後ろ斜め下」のどれかを８０フレームまで溜めて
+; 　　　　　　「前斜め下」→「前」を入力した後、ＡとＹとＣを同時押ししたままにする
+;------------------------------------------------------------------------------
+;-| 超必殺技 |-----------------------------------------------------------------
+
+[Command]
+name = "236xy"
+command = ~D, DF, F, b
+time = 20
+
+[Command]
+name = "236xy"
+command = ~D, DF, F, x+y
+time = 20
+
+[Command]
+name = "236xy"
+command = ~D, DF, F, y+z
+time = 20
+
+[Command]
+name = "236xy"
+command = ~D, DF, F, z+x
+time = 20
+
+[Command]
+name = "214xy"
+command = ~D, DB, B, b
+time = 20
+
+[Command]
+name = "214xy"
+command = ~D, DB, B, x+y
+time = 20
+
+[Command]
+name = "214xy"
+command = ~D, DB, B, y+z
+time = 20
+
+[Command]
+name = "214xy"
+command = ~D, DB, B, z+x
+time = 20
+
+;------------------------------------------------------------------------------
+;-| 必殺技 |-------------------------------------------------------------------
+
+[Command]
+name = "236x"
+command = ~D, DF, F, x
+time = 20
+
+[Command]
+name = "236y"
+command = ~D, DF, F, y
+time = 20
+
+[Command]
+name = "236z"
+command = ~D, DF, F, z
+time = 20
+
+[Command]
+name = "214x"
+command = ~D, DB, B, x
+time = 20
+
+[Command]
+name = "214y"
+command = ~D, DB, B, y
+time = 20
+
+[Command]
+name = "214z"
+command = ~D, DB, B, z
+time = 20
+
+[Command]
+name = "623x"
+command = ~F, D, DF, x
+time = 13
+[Command]
+name = "623x"
+command = F, D, DF, x
+time = 16
+
+[Command]
+name = "623x"
+command = ~F, D, DF, y
+time = 13
+[Command]
+name = "623x"
+command = F, D, DF, y
+time = 16
+
+[Command]
+name = "623x"
+command = ~F, D, DF, z
+time = 13
+[Command]
+name = "623x"
+command = F, D, DF, z
+time = 16
+
+[Command]
+name = "421x"
+command = ~B, D, DB, x
+time = 13
+[Command]
+name = "421x"
+command = B, D, DB, x
+time = 16
+
+[Command]
+name = "421x"
+command = ~B, D, DB, y
+time = 13
+[Command]
+name = "421x"
+command = B, D, DB, y
+time = 16
+
+[Command]
+name = "421x"
+command = ~B, D, DB, z
+time = 13
+[Command]
+name = "421x"
+command = B, D, DB, z
+time = 16
+
+[Command];ハイジャンプ
+name = "HJ"
+command = ~$D, $U
+time = 8
+
+[Command];ハイジャンプ暴発阻止
+name = "NHJ"
+command = ~12$D, $U
+time = 8
+
+[Command];ハイジャンプ暴発阻止
+name = "NHJ"
+command = /$D
+time = 12
+
+[Command]
+name = "SM6"
+command = F
+time = 1
+[Command]
+name = "SM2"
+command = D
+time = 1
+
+[Command]
+name = "xy"
+command = x+y
+time = 1
+
+;------------------------------------------------------------------------------
+[Command]
+name = "投げ抜けコマンド"
+command = x+y
+[Command]
+name = "投げ抜けコマンド"
+command = x+z
+[Command]
+name = "投げ抜けコマンド"
+command = x+a
+[Command]
+name = "投げ抜けコマンド"
+command = x+b
+[Command]
+name = "投げ抜けコマンド"
+command = x+c
+[Command]
+name = "投げ抜けコマンド"
+command = y+z
+[Command]
+name = "投げ抜けコマンド"
+command = y+a
+[Command]
+name = "投げ抜けコマンド"
+command = y+b
+[Command]
+name = "投げ抜けコマンド"
+command = y+c
+[Command]
+name = "投げ抜けコマンド"
+command = z+a
+[Command]
+name = "投げ抜けコマンド"
+command = z+b
+[Command]
+name = "投げ抜けコマンド"
+command = z+c
+[Command]
+name = "投げ抜けコマンド"
+command = a+b
+[Command]
+name = "投げ抜けコマンド"
+command = a+c
+[Command]
+name = "投げ抜けコマンド"
+command = b+c
+
+;------------------------------------------------------------------------------
+;-| キー２回連続入力 |---------------------------------------------------------
+
+[Command]
+name = "FF"       ;必須コマンド名
+command = F, F
+time = 10
+
+[Command]
+name = "BB"       ;必須コマンド名
+command = B, B
+time = 10
+
+;------------------------------------------------------------------------------
+
+[Command]
+name = "recovery" ;必須コマンド名
+command = x
+time = 1
+[Command]
+name = "recovery" ;必須コマンド名
+command = y
+time = 1
+[Command]
+name = "recovery" ;必須コマンド名
+command = z
+time = 1
+
+;------------------------------------------------------------------------------
+;-| 方向キー＋ボタン |---------------------------------------------------------
+
+[Command]
+name = "down_a"
+command = /$D,a
+time = 1
+
+[Command]
+name = "down_b"
+command = /$D,b
+time = 1
+
+[Command]
+name = "6a"
+command = /$F,a
+time = 1
+
+[Command]
+name = "4a"
+command = /$B,a
+time = 1
+
+[Command]
+name = "2a"
+command = /$D,a
+time = 1
+
+;------------------------------------------------------------------------------
+;-| ボタン単発 |---------------------------------------------------------------
+
+[Command]
+name = "a"
+command = a
+time = 1
+
+[Command]
+name = "b"
+command = b
+time = 1
+
+[Command]
+name = "c"
+command = c
+time = 1
+
+[Command]
+name = "x"
+command = x
+time = 1
+
+[Command]
+name = "y"
+command = y
+time = 1
+
+[Command]
+name = "z"
+command = z
+time = 1
+
+[Command]
+name = "start"
+command = s
+time = 1
+
+;---------------------------
+;(「パワー溜め」用にコマンドを追加してます)
+[Command]
+name = "hold_c"
+command = /c
+
+;------------------------------------------------------------------------------
+;-| 方向キー |-----------------------------------------------------------------
+
+[Command]
+name = "holdfwd"   ;必須コマンド名
+command = /$F
+time = 1
+
+[Command]
+name = "holdback"  ;必須コマンド名
+command = /$B
+time = 1
+
+[Command]
+name = "holdup"    ;必須コマンド名
+command = /$U
+time = 1
+
+[Command]
+name = "holddown"  ;必須コマンド名
+command = /$D
+time = 1
+
+[Statedef -1] ;←この行は絶対に消さないでね。必須項目です。
+
+;==============================================================================
+; 超必殺技
+;==============================================================================
+;------------------------------------------------------------------------------
+
+[State -1, 崩れ落ちる自分の貧弱さを]
+type = ChangeState
+value = 32000
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 2
+triggerall = power >= 1000
+triggerall = ((helper(99999),command="236xy"||helper(99999),var(11)>0)&&facing*p2dist X>=0)||((helper(99999),command="214xy"||helper(99999),var(12)>0)&&facing*p2dist X<0)
+triggerall = command!="holdback"
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 30200 && time=[5,10]) || (stateno = 30210 && time=[6,16]) || (stateno = 30240 && time=[3,10])
+trigger3 = (stateno = 30400 && time=[6,10]) || (stateno = 30410 && time=[7,17])
+trigger4 = (stateno = 30420 && time=[8,16])
+trigger5 = (stateno = 100) && time>=8 && var(5)=0;スタンド使用可能中ダッシュ
+trigger6 = stateno = 31405 && time >=5;高速ダッシュ
+trigger7 = (stateno = 31000 && time=[7,16]) && helper(99999),var(49)=1
+trigger8 = (stateno = 31560 && time=[5,10])
+trigger9 = (stateno = 31220 && time=[3,5])
+
+[State -1, HHAドバァァ]
+type = null;ChangeState
+value = 32200
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 2
+triggerall = power >= 1000
+triggerall = ((helper(99999),command="236xy"||helper(99999),var(11)>0)&&facing*p2dist X>=0)||((helper(99999),command="214xy"||helper(99999),var(12)>0)&&facing*p2dist X<0)
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype = A
+trigger1 = ctrl
+trigger2 = (stateno = 30220 && time=[6,16])
+trigger3 = (stateno = 30600 && time=[4,16]) || (stateno = 30610 && time=[6,18]) || (stateno = 30620 && time=[6,17])
+
+[State -1, お前は私にとって]
+type = ChangeState
+value = 12100
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 1
+triggerall = power >= 1000
+triggerall = ((helper(99999),command="236xy"||helper(99999),var(11)>0)&&facing*p2dist X>=0)||((helper(99999),command="214xy"||helper(99999),var(12)>0)&&facing*p2dist X<0)
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 10202 && time=[5,14]) ||  (stateno = 10203 && time=[8,23]) || (stateno = 10212 && time=[8,17]) || (stateno = 10213 && time=[13,26]) || (stateno = 10222 && time=[9,18])
+trigger3 = (stateno = 10402 && time=[7,12]) || (stateno = 10403 && time=[5,14]) || (stateno = 10412 && time=[7,18]) || (stateno = 10422 && time=[12,21])
+trigger4 = (stateno = 11400 && time=[18,40])
+trigger5 = (stateno = 11002 && time=[12,24]) &&helper(99999),var(49)=1
+trigger6 = 0;(stateno = 7120) && helper(40000),animelemtime(9)>0 && helper(40000),animelemtime(11)<3 && helper(40000),anim = 21000
+trigger7 = 0;(stateno = 7120) && helper(40000),animelemtime(1)>0 && helper(40000),animelemtime(3)<3 && helper(40000),anim = 21001
+[State -1, お前は私にとって C-MOON遠隔操作中]
+type = null;ChangeState
+value = 12100
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = ((helper(99999),command="236xy"||helper(99999),var(11)>0)&&facing*p2dist X>=0)||((helper(99999),command="214xy"||helper(99999),var(12)>0)&&facing*p2dist X<0)
+triggerall = statetype != A
+triggerall = power >= 1000
+triggerall = ctrl
+triggerall = !( ((helper(99999),command="236xy"||helper(99999),var(21)>0)&&facing*p2dist X>=0)||((helper(99999),command="214xy"||helper(99999),var(22)>0)&&facing*p2dist X<0) )
+triggerall = !( ((helper(99999),command="236xy"||helper(99999),var(21)>0)&&facing*p2dist X<0)||((helper(99999),command="214xy"||helper(99999),var(22)>0)&&facing*p2dist X>=0) )
+trigger1 = (helper(40000),stateno = 20100) && (helper(40000),anim=20100&&helper(40000),time > 20)||(helper(40000),anim=20101&&helper(40000),time > 28)
+trigger2 = (helper(40000),stateno = 20105) && (helper(40000),time > 16)
+trigger3 = (helper(40000),stateno = 20042) || (helper(40000),stateno = 20045)
+trigger4 = 0;(helper(40000),stateno = 21000) && helper(40000),animelemtime(9)>0 && helper(40000),animelemtime(11)<3 && helper(40000),anim = 21000
+trigger5 = 0;(helper(40000),stateno = 21000) && helper(40000),animelemtime(1)>0 && helper(40000),animelemtime(3)<3 && helper(40000),anim = 21001
+
+[State -1, スデニ…デキテイタナ…突進版]
+type = ChangeState
+value = 2100
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 0
+triggerall = power >= 1000
+triggerall = ((helper(99999),command="236xy"||helper(99999),var(11)>0)&&facing*p2dist X>=0)||((helper(99999),command="214xy"||helper(99999),var(12)>0)&&facing*p2dist X<0)
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno=200 && time=[6,13]) || (stateno=210 && time=[7,21]) || (stateno=220 && time=[16,29])
+trigger3 = (stateno=400 && time=[5,13]) || (stateno=410 && time=[7,17]) || (stateno=420 && time=[11,27])
+trigger4 =  (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+trigger5 = (stateno = 1000 || stateno = 1010 || stateno = 1020)&&animelemtime(11)>3 &&helper(99999),var(49)=1
+
+[State -1, スデニ…デキテイタナ…突進版 遠隔操作からのキャンセル]
+type = ChangeState
+value = 2100
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 0
+triggerall = power >= 1000
+triggerall = ((helper(99999),command="236xy"||helper(99999),var(11)>0)&&facing*p2dist X>=0)||((helper(99999),command="214xy"||helper(99999),var(12)>0)&&facing*p2dist X<0)
+triggerall = statetype != A
+triggerall = numhelper(40000)
+trigger1 = helper(40000),var(1)
+trigger2 = (helper(40000),stateno = 40200) && (helper(40000),movecontact&&helper(40000),HitPauseTime=0) && helper(40000),animelemtime(7)<0
+trigger3 = (helper(40000),stateno = 40400) && (helper(40000),movecontact&&helper(40000),HitPauseTime=0) && helper(40000),animelemtime(5)<0
+trigger4 = (helper(40000),stateno = 40210) && (helper(40000),movecontact&&helper(40000),HitPauseTime=0) && helper(40000),animelemtime(7)<0
+trigger5 = (helper(40000),stateno = 40410) && (helper(40000),movecontact&&helper(40000),HitPauseTime=0) && helper(40000),animelemtime(8)<0
+trigger6 = (helper(40000),stateno = 40220) && (helper(40000),movecontact&&helper(40000),HitPauseTime=0) && helper(40000),animelemtime(7)<0
+trigger7 = (helper(40000),stateno = 40420) && (helper(40000),movecontact&&helper(40000),HitPauseTime=0) && helper(40000),animelemtime(9)<0
+trigger8 = (helper(40000),stateno = 42000) && (helper(40000),movecontact&&helper(40000),HitPauseTime=0) && helper(40000),animelemtime(10)<0
+trigger9 = (helper(40000),stateno = 42400) && (helper(40000),movecontact&&helper(40000),HitPauseTime=0) && helper(40000),animelemtime(9)<0
+trigger10 = (helper(40000),stateno = 42210) && (helper(40000),movecontact&&helper(40000),HitPauseTime=0) && helper(40000),animelemtime(4)<0
+trigger11 = (helper(40000),stateno = 42500) && (helper(40000),movecontact&&helper(40000),HitPauseTime=0) && !(helper(40000),animelemtime(19) = 1)
+trigger12 = (helper(40000),stateno = 42600) && (helper(40000),movecontact&&helper(40000),HitPauseTime=0) && helper(40000),pos Y >= 0
+trigger13 = (helper(40000),stateno = 42700) && (helper(40000),movecontact&&helper(40000),HitPauseTime=0)
+
+[State -1, 新月の重力]
+type = ChangeState
+value = 2000
+triggerall = !ishelper && roundstate=2
+triggerall = var(59) <= 0
+triggerall = var(50) = 0
+triggerall = var(49) = 0;遠隔操作中でない
+triggerall = power >= 1000
+triggerall = var(5) = 0;スタンド使用可能
+triggerall = var(50) = 0
+triggerall = ((helper(99999),command="236xy"||helper(99999),var(11)>0)&&facing*p2dist X<0)||((helper(99999),command="214xy"||helper(99999),var(12)>0)&&facing*p2dist X>=0)
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno=200 && time=[6,13]) || (stateno=210 && time=[7,21]) || (stateno=220 && time=[16,29])
+trigger3 = (stateno=400 && time=[5,13]) || (stateno=410 && time=[7,17]) || (stateno=420 && time=[11,27])
+trigger4 =  (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+trigger5 = (stateno = 1000 || stateno = 1010 || stateno = 1020)&&animelemtime(11)>3
+
+[State -1, 新月の重力 遠隔操作からのキャンセル]
+type = ChangeState
+value = 2000
+triggerall = !ishelper && roundstate=2
+triggerall = var(59) <= 0
+triggerall = var(50) = 0
+triggerall = power >= 1000
+triggerall = ((helper(99999),command="236xy"||helper(99999),var(11)>0)&&facing*p2dist X<0)||((helper(99999),command="214xy"||helper(99999),var(12)>0)&&facing*p2dist X>=0)
+triggerall = statetype != A
+triggerall = numhelper(40000)
+trigger1 = helper(40000),var(1)
+trigger2 = (helper(40000),stateno = 40200) && (helper(40000),movecontact) && helper(40000),animelemtime(7)<0
+trigger3 = (helper(40000),stateno = 40400) && (helper(40000),movecontact) && helper(40000),animelemtime(5)<0
+trigger4 = (helper(40000),stateno = 40210) && (helper(40000),movecontact) && helper(40000),animelemtime(7)<0
+trigger5 = (helper(40000),stateno = 40410) && (helper(40000),movecontact) && helper(40000),animelemtime(8)<0
+trigger6 = (helper(40000),stateno = 40220) && (helper(40000),movecontact) && helper(40000),animelemtime(7)<0
+trigger7 = (helper(40000),stateno = 40420) && (helper(40000),movecontact) && helper(40000),animelemtime(9)<0
+trigger8 = (helper(40000),stateno = 42000) && (helper(40000),movecontact) && helper(40000),animelemtime(10)<0
+trigger9 = (helper(40000),stateno = 42400) && (helper(40000),movecontact) && helper(40000),animelemtime(9)<0
+trigger10 = (helper(40000),stateno = 42210) && (helper(40000),movecontact) && helper(40000),animelemtime(4)<0
+trigger11 = (helper(40000),stateno = 42500) && (helper(40000),movecontact)
+trigger12 = (helper(40000),stateno = 42600) && (helper(40000),movecontact) && helper(40000),pos Y >= 0
+trigger13 = (helper(40000),stateno = 42700) && (helper(40000),movecontact)
+
+[State -1, メイド・イン・ヘブン]
+type = ChangeState
+value = 12000
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 1
+triggerall = power >= 1000
+triggerall = ((helper(99999),command="236xy"||helper(99999),var(11)>0)&&facing*p2dist X<0)||((helper(99999),command="214xy"||helper(99999),var(12)>0)&&facing*p2dist X>=0)
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 10202 && time=[5,14]) ||  (stateno = 10203 && time=[8,23]) || (stateno = 10212 && time=[8,17]) || (stateno = 10213 && time=[13,26]) || (stateno = 10222 && time=[9,18])
+trigger3 = (stateno = 10402 && time=[7,12]) || (stateno = 10403 && time=[5,14]) || (stateno = 10412 && time=[7,18]) || (stateno = 10422 && time=[12,21])
+trigger4 = (stateno = 11400 && time=[18,40]) &&helper(99999),var(48)=1
+trigger5 = (stateno = 11002 && time=[12,24]) &&helper(99999),var(49)=1
+trigger6 = 0;(stateno = 7120) && helper(40000),animelemtime(9)>0 && helper(40000),animelemtime(11)<3 && helper(40000),anim = 21000
+trigger7 = 0;(stateno = 7120) && helper(40000),animelemtime(1)>0 && helper(40000),animelemtime(3)<3 && helper(40000),anim = 21001
+[State -1,  メイド・イン・ヘブン C-MOON遠隔操作中]
+type = ChangeState
+value = 12000
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = ((helper(99999),command="236xy"||helper(99999),var(11)>0)&&facing*p2dist X<0)||((helper(99999),command="214xy"||helper(99999),var(12)>0)&&facing*p2dist X>=0)
+triggerall = statetype != A
+triggerall = power >= 1000
+triggerall = ctrl
+triggerall = !( ((helper(99999),command="236xy"||helper(99999),var(21)>0)&&facing*p2dist X>=0)||((helper(99999),command="214xy"||helper(99999),var(22)>0)&&facing*p2dist X<0) )
+triggerall = !( ((helper(99999),command="236xy"||helper(99999),var(21)>0)&&facing*p2dist X<0)||((helper(99999),command="214xy"||helper(99999),var(22)>0)&&facing*p2dist X>=0) )
+trigger1 = (helper(40000),stateno = 20100) && (helper(40000),anim=20100&&helper(40000),time > 20)||(helper(40000),anim=20101&&helper(40000),time > 28)
+trigger2 = (helper(40000),stateno = 20105) && (helper(40000),time > 16)
+trigger3 = (helper(40000),stateno = 20042) || (helper(40000),stateno = 20045)
+trigger4 = 0;(helper(40000),stateno = 21000) && helper(40000),animelemtime(9)>0 && helper(40000),animelemtime(11)<3 && helper(40000),anim = 21000
+trigger5 = 0;(helper(40000),stateno = 21000) && helper(40000),animelemtime(1)>0 && helper(40000),animelemtime(3)<3 && helper(40000),anim = 21001
+
+;==============================================================================
+; 必殺技
+;==============================================================================
+
+[State -1, 高速突進]
+type = ChangeState
+value = 31000
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 2
+triggerall = ((helper(99999),command="236z"||helper(99999),var(4)>0)&&facing*p2dist X>=0)||((helper(99999),command="214z"||helper(99999),var(7)>0)&&facing*p2dist X<0)
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 30200 && time=[5,10]) || (stateno = 30210 && time=[6,16]) || (stateno = 30240 && time=[3,10])
+trigger3 = (stateno = 30400 && time=[6,10]) || (stateno = 30410 && time=[7,17])
+trigger4 = (stateno = 30420 && time=[8,16])
+trigger5 = (stateno = 100) && time>=8 && var(5)=0;スタンド使用可能中ダッシュ
+trigger6 = stateno = 31405 && time >=5;高速ダッシュ
+[State -1, 高速突進]
+type = ChangeState
+value = 31000
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 2
+triggerall = ((helper(99999),command="236y"||helper(99999),var(3)>0)&&facing*p2dist X>=0)||((helper(99999),command="214y"||helper(99999),var(6)>0)&&facing*p2dist X<0)
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 30200 && time=[5,10]) || (stateno = 30210 && time=[6,16]) || (stateno = 30240 && time=[3,10])
+trigger3 = (stateno = 30400 && time=[6,10]) || (stateno = 30410 && time=[7,17])
+trigger4 = (stateno = 30420 && time=[8,16])
+trigger5 = (stateno = 100) && time>=8 && var(5)=0;スタンド使用可能中ダッシュ
+trigger6 = stateno = 31405 && time >=5;高速ダッシュ
+[State -1, 高速突進]
+type = ChangeState
+value = 31000
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 2
+triggerall = ((helper(99999),command="236x"||helper(99999),var(2)>0)&&facing*p2dist X>=0)||((helper(99999),command="214x"||helper(99999),var(5)>0)&&facing*p2dist X<0)
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 30200 && time=[5,10]) || (stateno = 30210 && time=[6,16]) || (stateno = 30240 && time=[3,10])
+trigger3 = (stateno = 30400 && time=[6,10]) || (stateno = 30410 && time=[7,17])
+trigger4 = (stateno = 30420 && time=[8,16])
+trigger5 = (stateno = 100) && time>=8 && var(5)=0;スタンド使用可能中ダッシュ
+trigger6 = stateno = 31405 && time >=5;高速ダッシュ
+
+[State -1, 高速突進 空中]
+type = ChangeState
+value = 31100
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 2
+triggerall = ((helper(99999),command="236z"||helper(99999),var(4)>0)&&facing*p2dist X>=0)||((helper(99999),command="214z"||helper(99999),var(7)>0)&&facing*p2dist X<0)
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype = A
+trigger1 = ctrl
+trigger2 = (stateno = 30220 && time=[6,16])
+trigger3 = (stateno = 30600 && time=[4,14]) || (stateno = 30610 && time=[6,16]) || (stateno = 30620 && time=[6,15])
+[State -1, 高速突進 空中]
+type = ChangeState
+value = 31100
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 2
+triggerall = ((helper(99999),command="236y"||helper(99999),var(3)>0)&&facing*p2dist X>=0)||((helper(99999),command="214y"||helper(99999),var(6)>0)&&facing*p2dist X<0)
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype = A
+trigger1 = ctrl
+trigger2 = (stateno = 30220 && time=[6,16])
+trigger3 = (stateno = 30600 && time=[4,14]) || (stateno = 30610 && time=[6,16]) || (stateno = 30620 && time=[6,15])
+[State -1, 高速突進 空中]
+type = ChangeState
+value = 31100
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 2
+triggerall = ((helper(99999),command="236x"||helper(99999),var(2)>0)&&facing*p2dist X>=0)||((helper(99999),command="214x"||helper(99999),var(5)>0)&&facing*p2dist X<0)
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype = A
+trigger1 = ctrl
+trigger2 = (stateno = 30220 && time=[6,16])
+trigger3 = (stateno = 30600 && time=[4,14]) || (stateno = 30610 && time=[6,16]) || (stateno = 30620 && time=[6,15])
+
+[State -1, 対空ドバァァ]
+type = ChangeState
+value = 31200
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 2
+triggerall = ((helper(99999),command="236z"||helper(99999),var(4)>0)&&facing*p2dist X<0)||((helper(99999),command="214z"||helper(99999),var(7)>0)&&facing*p2dist X>=0)
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 30200 && time=[5,10]) || (stateno = 30210 && time=[6,16]) || (stateno = 30240 && time=[3,10])
+trigger3 = (stateno = 30400 && time=[6,10]) || (stateno = 30410 && time=[7,17])
+trigger4 = (stateno = 30420 && time=[8,16])
+trigger5 = (stateno = 100) && time>=8 && var(5)=0;スタンド使用可能中ダッシュ
+trigger6 = stateno = 31405 && time >=5;高速ダッシュ
+[State -1, 対空ドバァァ]
+type = ChangeState
+value = 31200
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 2
+triggerall = ((helper(99999),command="236y"||helper(99999),var(3)>0)&&facing*p2dist X<0)||((helper(99999),command="214y"||helper(99999),var(6)>0)&&facing*p2dist X>=0)
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 30200 && time=[5,10]) || (stateno = 30210 && time=[6,16]) || (stateno = 30240 && time=[3,10])
+trigger3 = (stateno = 30400 && time=[6,10]) || (stateno = 30410 && time=[7,17])
+trigger4 = (stateno = 30420 && time=[8,16])
+trigger5 = (stateno = 100) && time>=8 && var(5)=0;スタンド使用可能中ダッシュ
+trigger6 = stateno = 31405 && time >=5;高速ダッシュ
+[State -1, 対空ドバァァ]
+type = ChangeState
+value = 31200
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 2
+triggerall = ((helper(99999),command="236x"||helper(99999),var(2)>0)&&facing*p2dist X<0)||((helper(99999),command="214x"||helper(99999),var(5)>0)&&facing*p2dist X>=0)
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 30200 && time=[5,10]) || (stateno = 30210 && time=[6,16]) || (stateno = 30240 && time=[3,10])
+trigger3 = (stateno = 30400 && time=[6,10]) || (stateno = 30410 && time=[7,17])
+trigger4 = (stateno = 30420 && time=[8,16])
+trigger5 = (stateno = 100) && time>=8 && var(5)=0;スタンド使用可能中ダッシュ
+trigger6 = stateno = 31405 && time >=5;高速ダッシュ
+
+[State -1, 脳にくらって]
+type = ChangeState
+value = 11700
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 1
+triggerall = ((helper(99999),command="623x"||helper(99999),var(22)>0)&&facing*p2dist X>=0)||((helper(99999),command="421x"||helper(99999),var(23)>0)&&facing*p2dist X<0)
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 10202 && time=[5,14]) ||  (stateno = 10203 && time=[8,23]) || (stateno = 10212 && time=[8,17]) || (stateno = 10213 && time=[13,26]) || (stateno = 10222 && time=[9,18])
+trigger3 = (stateno = 10402 && time=[7,12]) || (stateno = 10403 && time=[5,14]) || (stateno = 10412 && time=[7,18]) || (stateno = 10422 && time=[12,21])
+trigger4 = (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, 重力は逆転する]
+type = ChangeState
+value = 11002
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 1
+triggerall = ((helper(99999),command="236z"||helper(99999),var(4)>0)&&facing*p2dist X>=0)||((helper(99999),command="214z"||helper(99999),var(7)>0)&&facing*p2dist X<0)
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 10202 && time=[5,14]) ||  (stateno = 10203 && time=[8,23]) || (stateno = 10212 && time=[8,17]) || (stateno = 10213 && time=[13,26]) || (stateno = 10222 && time=[9,18])
+trigger3 = (stateno = 10402 && time=[7,12]) || (stateno = 10403 && time=[5,14]) || (stateno = 10412 && time=[7,18]) || (stateno = 10422 && time=[12,21])
+trigger4 = (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+[State -1, 重力は逆転する]
+type = ChangeState
+value = 11002
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 1
+triggerall = ((helper(99999),command="236y"||helper(99999),var(3)>0)&&facing*p2dist X>=0)||((helper(99999),command="214y"||helper(99999),var(6)>0)&&facing*p2dist X<0)
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 10202 && time=[5,14]) ||  (stateno = 10203 && time=[8,23]) || (stateno = 10212 && time=[8,17]) || (stateno = 10213 && time=[13,26]) || (stateno = 10222 && time=[9,18])
+trigger3 = (stateno = 10402 && time=[7,12]) || (stateno = 10403 && time=[5,14]) || (stateno = 10412 && time=[7,18]) || (stateno = 10422 && time=[12,21])
+trigger4 = (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+[State -1, 重力は逆転する]
+type = ChangeState
+value = 11002
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 1
+triggerall = ((helper(99999),command="236x"||helper(99999),var(2)>0)&&facing*p2dist X>=0)||((helper(99999),command="214x"||helper(99999),var(5)>0)&&facing*p2dist X<0)
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 10202 && time=[5,14]) ||  (stateno = 10203 && time=[8,23]) || (stateno = 10212 && time=[8,17]) || (stateno = 10213 && time=[13,26]) || (stateno = 10222 && time=[9,18])
+trigger3 = (stateno = 10402 && time=[7,12]) || (stateno = 10403 && time=[5,14]) || (stateno = 10412 && time=[7,18]) || (stateno = 10422 && time=[12,21])
+trigger4 = (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, これを待っていた！]
+type = ChangeState
+value = 11400
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 1
+triggerall = numhelper(11410)=0
+triggerall = ((helper(99999),command="236z"||helper(99999),var(4)>0)&&facing*p2dist X<0)||((helper(99999),command="214z"||helper(99999),var(7)>0)&&facing*p2dist X>=0)
+;triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 10202 && time=[5,14]) ||  (stateno = 10203 && time=[8,23]) || (stateno = 10212 && time=[8,17]) || (stateno = 10213 && time=[13,26]) || (stateno = 10222 && time=[9,18])
+trigger3 = (stateno = 10402 && time=[7,12]) || (stateno = 10403 && time=[5,14]) || (stateno = 10412 && time=[7,18]) || (stateno = 10422 && time=[12,21])
+trigger4 = (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, これを待っていた！]
+type = ChangeState
+value = 11400
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 1
+triggerall = numhelper(11410)=0
+triggerall = ((helper(99999),command="236y"||helper(99999),var(3)>0)&&facing*p2dist X<0)||((helper(99999),command="214y"||helper(99999),var(6)>0)&&facing*p2dist X>=0)
+;triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 10202 && time=[5,14]) ||  (stateno = 10203 && time=[8,23]) || (stateno = 10212 && time=[8,17]) || (stateno = 10213 && time=[13,26]) || (stateno = 10222 && time=[9,18])
+trigger3 = (stateno = 10402 && time=[7,12]) || (stateno = 10403 && time=[5,14]) || (stateno = 10412 && time=[7,18]) || (stateno = 10422 && time=[12,21])
+trigger4 = (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, これを待っていた！]
+type = ChangeState
+value = 11400
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 1
+triggerall = numhelper(11410)=0
+triggerall = ((helper(99999),command="236x"||helper(99999),var(2)>0)&&facing*p2dist X<0)||((helper(99999),command="214x"||helper(99999),var(5)>0)&&facing*p2dist X>=0)
+;triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 10202 && time=[5,14]) ||  (stateno = 10203 && time=[8,23]) || (stateno = 10212 && time=[8,17]) || (stateno = 10213 && time=[13,26]) || (stateno = 10222 && time=[9,18])
+trigger3 = (stateno = 10402 && time=[7,12]) || (stateno = 10403 && time=[5,14]) || (stateno = 10412 && time=[7,18]) || (stateno = 10422 && time=[12,21])
+trigger4 = (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+;------------------------------------------------------------------------------
+
+[State -1, 幻覚だ_H]
+type = ChangeState
+value = 1240
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 0
+triggerall = ((helper(99999),command="236z"||helper(99999),var(4)>0)&&facing*p2dist X<0)||((helper(99999),command="214z"||helper(99999),var(7)>0)&&facing*p2dist X>=0)
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno=200 && time=[6,13]) || (stateno=210 && time=[7,21]) || (stateno=220 && time=[16,29])
+trigger3 = (stateno=400 && time=[5,13]) || (stateno=410 && time=[7,17]) || (stateno=420 && time=[11,27])
+trigger4 =  (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, 幻覚だ_M]
+type = ChangeState
+value = 1220
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 0
+triggerall = ((helper(99999),command="236y"||helper(99999),var(3)>0)&&facing*p2dist X<0)||((helper(99999),command="214y"||helper(99999),var(6)>0)&&facing*p2dist X>=0)
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno=200 && time=[6,13]) || (stateno=210 && time=[7,21]) || (stateno=220 && time=[16,29])
+trigger3 = (stateno=400 && time=[5,13]) || (stateno=410 && time=[7,17]) || (stateno=420 && time=[11,27])
+trigger4 =  (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, 幻覚だ_L]
+type = ChangeState
+value = 1200
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 0
+triggerall = ((helper(99999),command="236x"||helper(99999),var(2)>0)&&facing*p2dist X<0)||((helper(99999),command="214x"||helper(99999),var(5)>0)&&facing*p2dist X>=0)
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno=200 && time=[6,13]) || (stateno=210 && time=[7,21]) || (stateno=220 && time=[16,29])
+trigger3 = (stateno=400 && time=[5,13]) || (stateno=410 && time=[7,17]) || (stateno=420 && time=[11,27])
+trigger4 =  (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+;------------------------------------------------------------------------------
+
+[State -1, DISCを1枚この私に_L]
+type = ChangeState
+value = 1000
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 0
+triggerall = ((helper(99999),command="236x"||helper(99999),var(2)>0)&&facing*p2dist X>=0)||((helper(99999),command="214x"||helper(99999),var(5)>0)&&facing*p2dist X<0)
+triggerall = var(5) = 0;スタンド使用可能
+triggerall = numhelper(1050)=0;場にカエルがいない
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno=200 && time=[6,13]) || (stateno=210 && time=[7,21]) || (stateno=220 && time=[16,29])
+trigger3 = (stateno=400 && time=[5,13]) || (stateno=410 && time=[7,17]) || (stateno=420 && time=[11,27])
+trigger4 =  (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, DISCを1枚この私に_M]
+type = ChangeState
+value = 1010
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 0
+triggerall = ((helper(99999),command="236y"||helper(99999),var(3)>0)&&facing*p2dist X>=0)||((helper(99999),command="214y"||helper(99999),var(6)>0)&&facing*p2dist X<0)
+triggerall = var(5) = 0;スタンド使用可能
+triggerall = numhelper(1050)=0;場にカエルがいない
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno=200 && time=[6,13]) || (stateno=210 && time=[7,21]) || (stateno=220 && time=[16,29])
+trigger3 = (stateno=400 && time=[5,13]) || (stateno=410 && time=[7,17]) || (stateno=420 && time=[11,27])
+trigger4 =  (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, DISCを1枚この私に_H]
+type = ChangeState
+value = 1020
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 0
+triggerall = ((helper(99999),command="236z"||helper(99999),var(4)>0)&&facing*p2dist X>=0)||((helper(99999),command="214z"||helper(99999),var(7)>0)&&facing*p2dist X<0)
+triggerall = var(5) = 0;スタンド使用可能
+triggerall = numhelper(1050)=0;場にカエルがいない
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno=200 && time=[6,13]) || (stateno=210 && time=[7,21]) || (stateno=220 && time=[16,29])
+trigger3 = (stateno=400 && time=[5,13]) || (stateno=410 && time=[7,17]) || (stateno=420 && time=[11,27])
+trigger4 =  (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+;==============================================================================
+; 移動関連
+;==============================================================================
+;------------------------------------------------------------------------------
+
+[State -1, 走る]
+type = ChangeState
+value = 100
+triggerall = !ishelper
+triggerall = var(59) <= 0
+trigger1 = (facing>0&&(helper(99998),command="FF" || helper(99998),var(9))) || (facing<0&&(helper(99998),command="BB" || helper(99998),var(8)))
+trigger1 = statetype != A
+trigger1 = ctrl
+
+[State -1, バックステップ]
+type = ChangeState
+value = 105
+triggerall = !ishelper
+triggerall = var(59) <= 0
+trigger1 = (facing<0&&(helper(99998),command="FF" || helper(99998),var(9))) || (facing>0&&(helper(99998),command="BB" || helper(99998),var(8)))
+trigger1 = statetype != A
+trigger1 = ctrl
+
+;==============================================================================
+; 特殊技
+;==============================================================================
+;------------------------------------------------------------------------------
+
+[State -1, MIHスタイルアクション6]
+type = ChangeState
+value = 31400
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(49) = 0;遠隔操作中でない
+triggerall = var(5) = 0;スタンド使用可能
+triggerall = var(50) = 2
+triggerall = (((helper(99999),command = "6a") || (helper(99999),var(1)=[11,19]))&&facing*p2dist X>=0) || (((helper(99999),command = "4a") || (helper(99999),var(1)=[21,29]))&&facing*p2dist X<0)
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 30200 && time=[5,10]) || (stateno = 30210 && time=[6,16]) || (stateno = 30240 && time=[3,10])
+trigger3 = (stateno = 30400 && time=[6,10]) || (stateno = 30410 && time=[7,17])
+trigger4 = (stateno = 30420 && time=[8,16])
+trigger5 = (stateno = 100) && time>=8 && var(5)=0;スタンド使用可能中ダッシュ
+;trigger6 = stateno = 31405 && time >=5;高速ダッシュ
+
+[State -1, MIHスタイルアクション2]
+type = ChangeState
+value = 31700
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(49) = 0;遠隔操作中でない
+triggerall = var(5) = 0;スタンド使用可能
+triggerall = var(50) = 2
+triggerall = (command = "2a") || (helper(99999),var(1)=[31,39])
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 30200 && time=[5,10]) || (stateno = 30210 && time=[6,16]) || (stateno = 30240 && time=[3,10])
+trigger3 = (stateno = 30400 && time=[6,10]) || (stateno = 30410 && time=[7,17])
+trigger4 = (stateno = 30420 && time=[8,16])
+trigger5 = (stateno = 100) && time>=8 && var(5)=0;スタンド使用可能中ダッシュ
+trigger6 = stateno = 31405 && time >=4;高速ダッシュ ちょっとはやめ
+
+[State -1, MIHスタイルアクション2 空中]
+type = ChangeState
+value = 31600
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(49) = 0;遠隔操作中でない
+triggerall = var(5) = 0;スタンド使用可能
+triggerall = var(50) = 2
+triggerall = (command = "2a") || (helper(99999),var(1)=[31,39])
+trigger1 = statetype = A
+trigger1 = ctrl && (stateno != [31702,31704])
+trigger1 = (stateno=50 && time>=9) || stateno!=50
+trigger2 = stateno = 31704 && time > 5
+trigger3 = (stateno = 30220 && time=[6,16])
+trigger4 = (stateno = 30600 && time=[4,14]) || (stateno = 30610 && time=[6,16]) || (stateno = 30620 && time=[6,15])
+trigger4 = prevstateno!= [31702,31704]
+trigger5 = (stateno = 30600 && time=[8,14]) || (stateno = 30610 && time=[8,16]) || (stateno = 30620 && time=[8,15])
+trigger5 = prevstateno= [31702,31704]
+
+[State -1, MIHスタイルアクション4]
+type = ChangeState
+value = 31550
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(49) = 0;遠隔操作中でない
+triggerall = var(5) = 0;スタンド使用可能
+triggerall = var(50) = 2
+triggerall = (((helper(99999),command = "6a") || (helper(99999),var(1)=[11,19]))&&facing*p2dist X<0) || (((helper(99999),command = "4a") || (helper(99999),var(1)=[21,29]))&&facing*p2dist X>=0)
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 30200 && time=[5,10]) || (stateno = 30210 && time=[6,16]) || (stateno = 30240 && time=[3,10])
+trigger3 = (stateno = 30400 && time=[6,10]) || (stateno = 30410 && time=[7,17])
+trigger4 = (stateno = 30420 && time=[8,16])
+trigger5 = (stateno = 100) && time>=8 && var(5)=0;スタンド使用可能中ダッシュ
+trigger6 = stateno = 31405 && time >=5;高速ダッシュ
+
+[State -1, C-MOONスタイルアクション6]
+type = ChangeState
+value = 7100
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(49) = 0;遠隔操作中でない
+triggerall = var(5) = 0;スタンド使用可能
+triggerall = var(50) = 1
+triggerall = (((helper(99999),command = "6a") || (helper(99999),var(1)=[11,19]))&&facing*p2dist X>=0) || (((helper(99999),command = "4a") || (helper(99999),var(1)=[21,29]))&&facing*p2dist X<0)
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 10202 && time=[5,14]) ||  (stateno = 10203 && time=[8,23]) || (stateno = 10212 && time=[8,17]) || (stateno = 10213 && time=[13,26]) || (stateno = 10222 && time=[9,18])
+trigger3 = (stateno = 10402 && time=[7,12]) || (stateno = 10403 && time=[5,14]) || (stateno = 10412 && time=[7,18]) || (stateno = 10422 && time=[12,21])
+trigger4 = (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, C-MOONスタイルアクションN]
+type = ChangeState
+value = 7120
+triggerall = !ishelper && roundstate = 2
+triggerall = var(59) <= 0
+triggerall = var(49) = 0;遠隔操作中でない
+triggerall = var(5) = 0;スタンド使用可能
+triggerall = var(50) = 1
+triggerall = (command = "a" && command != "holdfwd" && command != "holdback" && command != "holdup" && command != "holddown") || (helper(99999),var(1)=[1,9])
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 10202 && time=[5,14]) ||  (stateno = 10203 && time=[8,23]) || (stateno = 10212 && time=[8,17]) || (stateno = 10213 && time=[13,26]) || (stateno = 10222 && time=[9,18])
+trigger3 = (stateno = 10402 && time=[7,12]) || (stateno = 10403 && time=[5,14]) || (stateno = 10412 && time=[7,18]) || (stateno = 10422 && time=[12,21])
+trigger4 = (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, C-MOONスタイルアクション4]
+type = ChangeState
+value = 7140
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(49) = 0;遠隔操作中でない
+triggerall = var(5) = 0;スタンド使用可能
+triggerall = var(50) = 1
+triggerall = (((helper(99999),command = "6a") || (helper(99999),var(1)=[11,19]))&&facing*p2dist X<0) || (((helper(99999),command = "4a") || (helper(99999),var(1)=[21,29]))&&facing*p2dist X>=0)
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 10202 && time=[5,14]) ||  (stateno = 10203 && time=[8,23]) || (stateno = 10212 && time=[8,17]) || (stateno = 10213 && time=[13,26]) || (stateno = 10222 && time=[9,18])
+trigger3 = (stateno = 10402 && time=[7,12]) || (stateno = 10403 && time=[5,14]) || (stateno = 10412 && time=[7,18]) || (stateno = 10422 && time=[12,21])
+trigger4 = (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, C-MOONスタイルアクション2]
+type = ChangeState
+value = 7160
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(49) = 0;遠隔操作中でない
+triggerall = var(5) = 0;スタンド使用可能
+triggerall = var(50) = 1
+triggerall = (command = "2a") || (helper(99999),var(1)=[31,39])
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 10202 && time=[5,14]) ||  (stateno = 10203 && time=[8,23]) || (stateno = 10212 && time=[8,17]) || (stateno = 10213 && time=[13,26]) || (stateno = 10222 && time=[9,18])
+trigger3 = (stateno = 10402 && time=[7,12]) || (stateno = 10403 && time=[5,14]) || (stateno = 10412 && time=[7,18]) || (stateno = 10422 && time=[12,21])
+trigger4 = (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, WSスタイルアクション6]
+type = ChangeState
+value = 7020
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(49) = 0;遠隔操作中でない
+triggerall = var(5) = 0;スタンド使用可能
+triggerall = var(50) = 0
+triggerall = (((helper(99999),command = "6a") || (helper(99999),var(1)=[11,19]))&&facing*p2dist X>=0) || (((helper(99999),command = "4a") || (helper(99999),var(1)=[21,29]))&&facing*p2dist X<0)
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno=200 && time=[6,13]) || (stateno=210 && time=[7,21]) || (stateno=220 && time=[16,29])
+trigger3 = (stateno=400 && time=[5,13]) || (stateno=410 && time=[7,17]) || (stateno=420 && time=[11,27])
+trigger4 =  (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, WSスタイルアクション2]
+type = ChangeState
+value = 7040
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(49) = 0;遠隔操作中でない
+triggerall = var(5) = 0;スタンド使用可能
+triggerall = var(50) = 0
+triggerall = (command = "2a") || (helper(99999),var(1)=[31,39])
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno=200 && time=[6,13]) || (stateno=210 && time=[7,21]) || (stateno=220 && time=[16,29])
+trigger3 = (stateno=400 && time=[5,13]) || (stateno=410 && time=[7,17]) || (stateno=420 && time=[11,27])
+trigger4 =  (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, WSスタイルアクション4]
+type = ChangeState
+value = 7060
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(49) = 0;遠隔操作中でない
+triggerall = var(5) = 0;スタンド使用可能
+triggerall = var(50) = 0
+triggerall = (((helper(99999),command = "6a") || (helper(99999),var(1)=[11,19]))&&facing*p2dist X<0) || (((helper(99999),command = "4a") || (helper(99999),var(1)=[21,29]))&&facing*p2dist X>=0)
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno=200 && time=[6,13]) || (stateno=210 && time=[7,21]) || (stateno=220 && time=[16,29])
+trigger3 = (stateno=400 && time=[5,13]) || (stateno=410 && time=[7,17]) || (stateno=420 && time=[11,27])
+trigger4 =  (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, WSスタイルアクションN]
+type = ChangeState
+value = 7000
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(49) = 0;遠隔操作中でない
+triggerall = var(5) = 0;スタンド使用可能
+triggerall = var(50) = 0
+triggerall = (command = "a" && command != "holdfwd" && command != "holdback" && command != "holdup" && command != "holddown") || (helper(99999),var(1)=[1,9])
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno=200 && time=[6,13]) || (stateno=210 && time=[7,21]) || (stateno=220 && time=[16,29])
+trigger3 = (stateno=400 && time=[5,13]) || (stateno=410 && time=[7,17]) || (stateno=420 && time=[11,27])
+trigger4 =  (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, 投げ]
+type = ChangeState
+value = 700
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = (command = "xy") || (helper(99999),var(21))
+triggerall = statetype != A
+triggerall = !(command = "holdback")
+triggerall = var(49) = 0;遠隔操作中でない
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = ctrl
+trigger1 = 1 || var(2):=0
+trigger2 = (stateno = 100) && time>=10 && var(5)=0 && var(50)!=2;スタンド使用可能中ダッシュ
+trigger2 = 1 || var(2):=0
+trigger3 = (stateno = 100) && time>=8 && var(5)=0 && var(50)=2;スタンド使用可能中ダッシュ
+trigger3 = 1 || var(2):=0
+[State -1, 投げ]
+type = ChangeState
+value = 700
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = (command = "xy") || (helper(99999),var(21))
+triggerall = statetype != A
+triggerall = (command = "holdback")
+triggerall = var(49) = 0;遠隔操作中でない
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = ctrl
+trigger1 = 1 || var(2):=1
+trigger2 = (stateno = 100) && time>=10 && var(5)=0 && var(50)!=2;スタンド使用可能中ダッシュ
+trigger2 = 1 || var(2):=1
+trigger3 = (stateno = 100) && time>=8 && var(5)=0 && var(50)=2;スタンド使用可能中ダッシュ
+trigger3 = 1 || var(2):=1
+
+[State -1, プッツンキャンセル]
+type = ChangeState
+value = 7880
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = (command = "b") || (helper(99999),var(19))
+triggerall = statetype != A
+triggerall = power >= 1000
+;暴発防止
+triggerall = !( ((helper(99999),command="236xy"||helper(99999),var(21)>0)&&facing*p2dist X>=0)||((helper(99999),command="214xy"||helper(99999),var(22)>0)&&facing*p2dist X<0) )
+triggerall = !( ((helper(99999),command="236xy"||helper(99999),var(21)>0)&&facing*p2dist X<0)||((helper(99999),command="214xy"||helper(99999),var(22)>0)&&facing*p2dist X>=0) )
+trigger1 = 0
+trigger2 = (stateno=200 && time=[6,13]) || (stateno=210 && time=[7,21]) || (stateno=220 && time=[16,29])
+trigger3 = (stateno=400 && time=[5,13]) || (stateno=410 && time=[7,17]) || (stateno=420 && time=[11,27])
+trigger4 =  0
+trigger5 = (stateno = 1000 || stateno = 1010 || stateno = 1020)&&animelemtime(11)>3
+trigger6 = (stateno = 10202 && time=[5,14]) ||  (stateno = 10203 && time=[8,23]) || (stateno = 10212 && time=[8,17]) || (stateno = 10213 && time=[13,26]) || (stateno = 10222 && time=[9,18])
+trigger7 = (stateno = 10402 && time=[7,12]) || (stateno = 10403 && time=[5,14]) || (stateno = 10412 && time=[7,18]) || (stateno = 10422 && time=[12,21])
+trigger8 = (stateno = 11400 && time=[18,40])
+trigger9 = (stateno = 11002 && time=[12,24])
+trigger10 = 0;(stateno = 7120) && helper(40000),animelemtime(9)>0 && helper(40000),animelemtime(11)<3 && helper(40000),anim = 21000
+trigger11 = 0;(stateno = 7120) && helper(40000),animelemtime(1)>0 && helper(40000),animelemtime(3)<3 && helper(40000),anim = 21001
+trigger12 = (stateno = 30200 && time=[5,10]) || (stateno = 30210 && time=[6,16]) || (stateno = 30240 && time=[3,10])
+trigger13 = (stateno = 30400 && time=[6,10]) || (stateno = 30410 && time=[7,17])
+trigger14 = (stateno = 30420 && time=[8,16])
+trigger15 = (stateno = 31000 && time=[7,16])
+trigger16 = (stateno = 31560 && time=[5,10])
+
+[State -1, プッツンキャンセル遠隔操作からのキャンセル]
+type = ChangeState
+value = 7880
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = (command = "b") || (helper(99999),var(19))
+triggerall = statetype != A
+triggerall = power >= 1000
+;暴発防止
+triggerall = !( ((helper(99999),command="236xy"||helper(99999),var(21)>0)&&facing*p2dist X>=0)||((helper(99999),command="214xy"||helper(99999),var(22)>0)&&facing*p2dist X<0) )
+triggerall = !( ((helper(99999),command="236xy"||helper(99999),var(21)>0)&&facing*p2dist X<0)||((helper(99999),command="214xy"||helper(99999),var(22)>0)&&facing*p2dist X>=0) )
+trigger1 = helper(40000),var(1)
+trigger2 = (helper(40000),stateno = 40200) && (helper(40000),movecontact&&helper(40000),HitPauseTime=0) && helper(40000),animelemtime(7)<0
+trigger3 = (helper(40000),stateno = 40400) && (helper(40000),movecontact&&helper(40000),HitPauseTime=0) && helper(40000),animelemtime(5)<0
+trigger4 = (helper(40000),stateno = 40210) && (helper(40000),movecontact&&helper(40000),HitPauseTime=0) && helper(40000),animelemtime(7)<0
+trigger5 = (helper(40000),stateno = 40410) && (helper(40000),movecontact&&helper(40000),HitPauseTime=0) && helper(40000),animelemtime(8)<0
+trigger6 = (helper(40000),stateno = 40220) && (helper(40000),movecontact&&helper(40000),HitPauseTime=0) && helper(40000),animelemtime(7)<0
+trigger7 = (helper(40000),stateno = 40420) && (helper(40000),movecontact&&helper(40000),HitPauseTime=0) && helper(40000),animelemtime(9)<0
+trigger8 = (helper(40000),stateno = 42000) && (helper(40000),movecontact&&helper(40000),HitPauseTime=0) && helper(40000),animelemtime(10)<0
+trigger9 = (helper(40000),stateno = 42400) && (helper(40000),movecontact&&helper(40000),HitPauseTime=0) && helper(40000),animelemtime(9)<0
+trigger10 = (helper(40000),stateno = 42210) && (helper(40000),movecontact&&helper(40000),HitPauseTime=0) && helper(40000),animelemtime(4)<0
+trigger11 = (helper(40000),stateno = 42500) && (helper(40000),movecontact&&helper(40000),HitPauseTime=0) && !(helper(40000),animelemtime(19) = 1)
+trigger12 = (helper(40000),stateno = 42600) && (helper(40000),movecontact&&helper(40000),HitPauseTime=0) && helper(40000),pos Y >= 0
+trigger13 = (helper(40000),stateno = 42700) && (helper(40000),movecontact&&helper(40000),HitPauseTime=0)
+
+[State -1, プッツンキャンセル C-MOON遠隔操作中]
+type = ChangeState
+value = 7880
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = (command = "b") || (helper(99999),var(19))
+triggerall = statetype != A
+triggerall = power >= 1000
+triggerall = ctrl
+triggerall = !( ((helper(99999),command="236xy"||helper(99999),var(21)>0)&&facing*p2dist X>=0)||((helper(99999),command="214xy"||helper(99999),var(22)>0)&&facing*p2dist X<0) )
+triggerall = !( ((helper(99999),command="236xy"||helper(99999),var(21)>0)&&facing*p2dist X<0)||((helper(99999),command="214xy"||helper(99999),var(22)>0)&&facing*p2dist X>=0) )
+trigger1 = (helper(40000),stateno = 20100) && (helper(40000),anim=20100&&helper(40000),time > 20)||(helper(40000),anim=20101&&helper(40000),time > 28)
+trigger2 = (helper(40000),stateno = 20105) && (helper(40000),time > 16)
+trigger3 = (helper(40000),stateno = 20042) || (helper(40000),stateno = 20045)
+;trigger4 = (helper(40000),stateno = 21000) && helper(40000),animelemtime(9)>0 && helper(40000),animelemtime(11)<3 && helper(40000),anim = 21000
+;trigger5 = (helper(40000),stateno = 21000) && helper(40000),animelemtime(1)>0 && helper(40000),animelemtime(3)<3 && helper(40000),anim = 21001
+
+;==============================================================================
+; 通常攻撃技
+;==============================================================================
+;------------------------------------------------------------------------------
+;ホワイトスネイク
+[State -1, 5L]
+type = ChangeState
+value = 200
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 0
+triggerall = (command = "x" && command != "holddown") || (helper(99999),var(0)=[1,9])
+trigger1 = statetype = S
+trigger1 = ctrl
+trigger2 = (stateno = 400) && time=[5,13]
+trigger3 =  (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, 5M]
+type = ChangeState
+value = 210
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 0
+triggerall = (command = "y" && command != "holddown") || (helper(99999),var(0)=[11,19])
+trigger1 = statetype = S
+trigger1 = ctrl
+trigger2 = (stateno = 200 && time=[6,13])
+trigger3 = (stateno = 400) && time=[5,13]
+trigger4 =  (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, 5M スタンド使えないとき]
+type = null;ChangeState
+value = 210
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 0
+triggerall = (command = "z" && command != "holddown") || (helper(99999),var(0)=[21,29])
+triggerall = var(5) = 1;スタンド使用不可
+trigger1 = statetype = S
+trigger1 = ctrl
+trigger2 = (stateno = 200 && time=[6,13])
+trigger3 = (stateno = 400) && time=[5,13]
+trigger4 =  (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, 5H]
+type = ChangeState
+value = 220
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 0
+triggerall = (command = "z" && command != "holddown") || (helper(99999),var(0)=[21,29])
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype = S
+trigger1 = ctrl
+trigger2 = (stateno = 200 && time=[6,13]) || (stateno = 210 && time=[7,21])
+trigger3 = (stateno = 400) && time=[5,13]
+trigger4 = (stateno = 410) && time=[7,17]
+trigger5 = (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+;------------------------------------------------------------------------------
+
+[State -1, 2L]
+type = ChangeState
+value = 400
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 0
+triggerall = (command = "x" && command = "holddown") || (helper(99999),var(0)=[31,39])
+trigger1 = statetype = C
+trigger1 = ctrl
+trigger2 = (stateno = 400) && time=[5,13]
+trigger3 =  (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, 2Lスタンド使えないとき]
+type = null;ChangeState
+value = 400
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 0
+triggerall = ((command = "y" && command = "holddown") || (helper(99999),var(0)=[41,49])) || ((command = "z" && command = "holddown") || (helper(99999),var(0)=[51,59]))
+triggerall = var(5) = 1;スタンド使用不可
+trigger1 = statetype = C
+trigger1 = ctrl
+trigger2 = (stateno = 400) && time=[5,13]
+trigger3 =  (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, 2M]
+type = ChangeState
+value = 410
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 0
+triggerall = (command = "y" && command = "holddown") || (helper(99999),var(0)=[41,49])
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype = C
+trigger1 = ctrl
+trigger2 = (stateno = 200 && time=[6,13])
+trigger3 = (stateno = 400) && time=[5,13]
+trigger4 =  (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, 2H]
+type = ChangeState
+value = 420
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 0
+triggerall = (command = "z" && command = "holddown") || (helper(99999),var(0)=[51,59])
+trigger1 = var(5) = 0;スタンド使用可能
+trigger1 = statetype = C
+trigger1 = ctrl
+trigger2 = (stateno = 200 && time=[6,13]) || (stateno = 210 && time=[7,21])
+trigger3 = (stateno = 400) && time=[5,13]
+trigger4 = (stateno = 410) && time=[7,17]
+trigger5 = (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+;------------------------------------------------------------------------------
+
+[State -1, JL]
+type = ChangeState
+value = 600
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 0
+triggerall = command = "x" || (helper(99999),var(0)=[1,9]) || (helper(99999),var(0)=[31,39])
+trigger1 = statetype = A
+trigger1 = ctrl
+
+[State -1, JM]
+type = ChangeState
+value = 610
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 0
+triggerall = command = "y" || (helper(99999),var(0)=[11,19]) || (helper(99999),var(0)=[41,49])
+trigger1 = statetype = A
+trigger1 = ctrl
+
+[State -1, JM スタンド使えないとき]
+type = ChangeState
+value = 610
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 0
+triggerall = command = "z" || (helper(99999),var(0)=[21,29]) || (helper(99999),var(0)=[51,59])
+triggerall = var(5) = 1;スタンド使用不可
+trigger1 = statetype = A
+trigger1 = ctrl
+
+[State -1, JH]
+type = ChangeState
+value = 625;620
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 0
+triggerall = command = "z" || (helper(99999),var(0)=[21,29]) || (helper(99999),var(0)=[51,59])
+trigger1 = var(5) = 0;スタンド使用可能
+trigger1 = statetype = A
+trigger1 = ctrl
+trigger1 = ifelse(stateno = 50,time>1,1)
+
+;------------------------------------------------------------------------------
+[State -1, 5挑発]
+type = ChangeState
+value = 940
+triggerall = var(59) <= 0
+triggerall = (command = "start"); || (helper(99999),var())
+triggerall = roundstate = 2
+trigger1 = statetype != A
+trigger1 = ctrl
+
+;------------------------------------------------------------------------------
+;C-MOON
+[State -1, C-MOON5L]
+type = ChangeState
+value = 10202
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 1
+triggerall = (command = "x" && command != "holddown") || (helper(99999),var(0)=[1,9])
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 10402 && time=[7,12]) || (stateno = 10403 && time=[5,14])
+trigger3 =  (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, C-MOONスタンド使用不可5L]
+type = ChangeState
+value = 10203
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 1
+triggerall = (command = "x" && command != "holddown") || (helper(99999),var(0)=[1,9])
+triggerall = var(5) != 0;スタンド使用不可
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 10403 && time=[5,14])
+trigger3 =  (stateno = 100) && time>=10 && var(5)!=0;ダッシュ
+
+[State -1, C-MOON5M]
+type = ChangeState
+value = 10212
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 1
+triggerall = (command = "y" && command != "holddown") || (helper(99999),var(0)=[11,19])
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 10202 && time=[5,14]) || (stateno = 10203 && time=[8,23])
+trigger3 = (stateno = 10402 && time=[7,12]) || (stateno = 10403 && time=[5,14])
+trigger4 =  (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, C-MOONスタンド使用不可5M]
+type = ChangeState
+value = 10213
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 1
+triggerall = (command = "y" && command != "holddown") || (helper(99999),var(0)=[11,19])
+triggerall = var(5) != 0
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 10203 && time=[8,23])
+trigger3 = (stateno = 10403 && time=[5,14])
+trigger4 =  (stateno = 100) && time>=10 && var(5)!=0;ダッシュ
+
+[State -1, C-MOON5H]
+type = ChangeState
+value = 10222
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 1
+triggerall = (command = "z" && command != "holddown") || (helper(99999),var(0)=[21,29])
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 10202 && time=[5,14]) || (stateno = 10203 && time=[8,23]) || (stateno = 10212 && time=[8,18]) || (stateno = 10213 && time=[13,26])
+trigger3 = (stateno = 10402 && time=[7,12]) || (stateno = 10403 && time=[5,14]) || (stateno = 10412 && time=[7,18])
+trigger4 = (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, C-MOON2L]
+type = ChangeState
+value = 10402
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 1
+triggerall = (command = "x" && command = "holddown") || (helper(99999),var(0)=[31,39])
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 10402 && time=[7,12]) || (stateno = 10403 && time=[5,14])
+trigger3 = (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, C-MOONスタンド使用不可2L]
+type = ChangeState
+value = 10403
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 1
+triggerall = (command = "x" && command = "holddown") || (helper(99999),var(0)=[31,39])
+triggerall = var(5) != 0;スタンド使用不可
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 10402 && time=[7,12]) || (stateno = 10403 && time=[5,14])
+trigger3 =  (stateno = 100) && time>=10 && var(5)!=0;スタンド使用不可中ダッシュ
+
+[State -1, C-MOON2M]
+type = ChangeState
+value = 10412
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 1
+triggerall = (command = "y" && command = "holddown") || (helper(99999),var(0)=[41,49])
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 10202 && time=[5,14]) ||  (stateno = 10203 && time=[8,23])
+trigger3 = (stateno = 10402 && time=[7,12]) || (stateno = 10403 && time=[5,14])
+trigger4 =  (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, C-MOON2H]
+type = ChangeState
+value = 10422
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 1
+triggerall = (command = "z" && command = "holddown") || (helper(99999),var(0)=[51,59])
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 10202 && time=[5,14]) ||  (stateno = 10203 && time=[8,23]) || (stateno = 10212 && time=[8,17]) || (stateno = 10213 && time=[13,26])
+trigger3 = (stateno = 10402 && time=[7,12]) || (stateno = 10403 && time=[5,14]) || (stateno = 10412 && time=[7,18])
+trigger4 = (stateno = 100) && time>=10 && var(5)=0;スタンド使用可能中ダッシュ
+
+[State -1, C-MOONJL]
+type = ChangeState
+value = 10602
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 1
+triggerall = command = "x" || (helper(99999),var(0)=[1,9]) || (helper(99999),var(0)=[31,39])
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype = A
+trigger1 = ctrl
+
+[State -1, C-MOONJM]
+type = ChangeState
+value = 10612
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 1
+triggerall = command = "y" || (helper(99999),var(0)=[11,19]) || (helper(99999),var(0)=[41,49])
+trigger1 = var(5) = 0;スタンド使用可能
+trigger1 = statetype = A
+trigger1 = ctrl
+
+[State -1, C-MOONJH]
+type = ChangeState
+value = 10622
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 1
+triggerall = command = "z" || (helper(99999),var(0)=[21,29]) || (helper(99999),var(0)=[51,59])
+trigger1 = var(5) = 0;スタンド使用可能
+trigger1 = statetype = A
+trigger1 = ctrl
+
+[State -1, C-MOONスタンド使用不可JL]
+type = ChangeState
+value = 10603
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 1
+triggerall = command = "x" || (helper(99999),var(0)=[1,9]) || (helper(99999),var(0)=[31,39])
+triggerall = var(5) != 0;スタンド使用不可
+trigger1 = statetype = A
+trigger1 = ctrl
+
+[State -1, C-MOONスタンド使用不可JM]
+type = ChangeState
+value = 10613
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 1
+triggerall = command = "y" || (helper(99999),var(0)=[11,19]) || (helper(99999),var(0)=[41,49])
+trigger1 = var(5) != 0;スタンド使用不可
+trigger1 = statetype = A
+trigger1 = ctrl
+
+[State -1, C-MOONスタンド使用不可JH]
+type = ChangeState
+value = 10623
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 1
+triggerall = command = "z" || (helper(99999),var(0)=[21,29]) || (helper(99999),var(0)=[51,59])
+trigger1 = var(5) != 0;スタンド使用不可
+trigger1 = statetype = A
+trigger1 = ctrl
+
+;------------------------------------------------------------------------------
+;MIH
+[State -1, MIH5L]
+type = ChangeState
+value = 30200
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 2
+triggerall = (command = "x" && command != "holddown") || (helper(99999),var(0)=[1,9])
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 30400 && time=[6,10])
+trigger3 =  (stateno = 100) && time>=8 && var(5)=0;スタンド使用可能中ダッシュ
+trigger4 = stateno = 31405 && time >=5;高速ダッシュ
+
+[State -1, MIH5M]
+type = ChangeState
+value = 30210
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 2
+triggerall = (command = "y" && command != "holddown") || (helper(99999),var(0)=[11,19])
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 30200 && time=[5,10])
+trigger3 = (stateno = 30400 && time=[6,10])
+trigger4 =  (stateno = 100) && time>=8 && var(5)=0;スタンド使用可能中ダッシュ
+trigger5 = stateno = 31405 && time >=5;高速ダッシュ
+
+[State -1, MIH5H]
+type = ChangeState
+value = 30220
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 2
+triggerall = (command = "z" && command != "holddown") || (helper(99999),var(0)=[21,29])
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 30200 && time=[5,10]) || (stateno = 30210 && time=[6,16])
+trigger3 = (stateno = 30400 && time=[6,10]) || (stateno = 30410 && time=[7,17])
+trigger4 = (stateno = 100) && time>=8 && var(5)=0;スタンド使用可能中ダッシュ
+trigger5 = stateno = 31405 && time >=5;高速ダッシュ
+
+[State -1, MIH2L];相手硬直16
+type = ChangeState
+value = 30400
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 2
+triggerall = (command = "x" && command = "holddown") || (helper(99999),var(0)=[31,39])
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 30400 && time=[8,10]);time=[6,10])
+trigger3 = (stateno = 100) && time>=8 && var(5)=0;スタンド使用可能中ダッシュ
+trigger4 = stateno = 31405 && time >=5;高速ダッシュ
+
+[State -1, MIH2M]
+type = ChangeState
+value = 30410
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 2
+triggerall = (command = "y" && command = "holddown") || (helper(99999),var(0)=[41,49])
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 30200 && time=[5,10])
+trigger3 = (stateno = 30400 && time=[6,10])
+trigger4 =  (stateno = 100) && time>=8 && var(5)=0;スタンド使用可能中ダッシュ
+trigger5 = stateno = 31405 && time >=5;高速ダッシュ
+
+[State -1, MIH2H]
+type = ChangeState
+value = 30420
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 2
+triggerall = (command = "z" && command = "holddown") || (helper(99999),var(0)=[51,59])
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = 30200 && time=[5,10]) || (stateno = 30210 && time=[6,16])
+trigger3 = (stateno = 30400 && time=[6,10]) || (stateno = 30410 && time=[7,17])
+trigger4 = (stateno = 100) && time>=8 && var(5)=0;スタンド使用可能中ダッシュ
+trigger5 = stateno = 31405 && time >=5;高速ダッシュ
+
+[State -1,MIHJL]
+type = ChangeState
+value = 30600
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 2
+triggerall = command = "x" || (helper(99999),var(0)=[1,9]) || (helper(99999),var(0)=[31,39])
+triggerall = var(5) = 0;スタンド使用可能
+trigger1 = statetype = A
+trigger1 = ctrl && ifelse(stateno = 50,time>1,1)
+
+[State -1, MIHJM]
+type = ChangeState
+value = 30610
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 2
+triggerall = command = "y" || (helper(99999),var(0)=[11,19]) || (helper(99999),var(0)=[41,49])
+trigger1 = var(5) = 0;スタンド使用可能
+trigger1 = statetype = A
+trigger1 = ctrl && ifelse(stateno = 50,time>1,1)
+
+[State -1, MIHJH]
+type = ChangeState
+value = 30620
+triggerall = !ishelper
+triggerall = var(59) <= 0
+triggerall = var(50) = 2
+triggerall = command = "z" || (helper(99999),var(0)=[21,29]) || (helper(99999),var(0)=[51,59])
+trigger1 = var(5) = 0;スタンド使用可能
+trigger1 = statetype = A
+trigger1 = ctrl && ifelse(stateno = 50,time>1,1)
+
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+;遠隔操作中のスタンド
+
+[State -1, WSフィニッシュ技N ウショオアア]
+type = ChangeState
+value = 42500
+triggerall = ishelper(40000) && movetype!=H
+triggerall = root,var(59) <= 0
+triggerall = (command = "a" && command != "holdfwd" && command != "holdback" && command != "holdup" && command != "holddown") || (helper(99999),var(1)=[1,9])
+triggerall = statetype != A && (stateno != 40100 && stateno != 40105)
+trigger1 = var(1)
+trigger2 = (stateno = 40200) && animelemtime(7)<0 && (animelemtime(5)>0 || movecontact)
+trigger3 = (stateno = 40400) && animelemtime(5)<0 && (animelemtime(3)>0 || movecontact)
+trigger4 = (stateno = 40210) && animelemtime(7)<0 && (animelemtime(4)>0 || movecontact)
+trigger5 = (stateno = 40410) && animelemtime(8)<0 && (animelemtime(5)>0 || movecontact)
+trigger6 = (stateno = 40220) && animelemtime(7)<0 && (animelemtime(5)>0 || movecontact)
+trigger7 = (stateno = 40420) && animelemtime(9)<0 && (animelemtime(7)>0 || movecontact)
+trigger8 = (stateno = 42000) && animelemtime(7)<6 && (animelemtime(6)>0 || movecontact);一瞬
+trigger9 = (stateno = 42400) && animelemtime(7)<8 && (animelemtime(7)>0 || movecontact);打ち上げ
+trigger10 = (stateno = 42210) && animelemtime(2)<4 && time > 1;中段
+
+[State -1, WSフィニッシュ技6 コマ投げ]
+type = ChangeState
+value = 42800
+triggerall = ishelper(40000) && movetype!=H
+triggerall = root,var(59) <= 0
+triggerall = (((helper(99999),command = "6a") || (helper(99999),var(1)=[11,19]))&&facing*p2dist X>=0) || (((helper(99999),command = "4a") || (helper(99999),var(1)=[21,29]))&&facing*p2dist X<0)
+triggerall = statetype != A && (stateno != 40100 && stateno != 40105)
+trigger1 = var(1)
+trigger2 = (stateno = 40200) && (animelemtime(5)>0 || movecontact) && animelemtime(7)<0
+trigger3 = (stateno = 40400) && (animelemtime(3)>0 || movecontact) && animelemtime(5)<0
+trigger4 = (stateno = 40210) && (animelemtime(4)>0 || movecontact) && animelemtime(7)<0
+trigger5 = (stateno = 40410) && (animelemtime(5)>0 || movecontact) && animelemtime(8)<0
+trigger6 = (stateno = 40220) && (animelemtime(5)>0 || movecontact) && animelemtime(7)<0
+trigger7 = (stateno = 40420) && (animelemtime(7)>0 || movecontact) && animelemtime(9)<0
+trigger8 = (stateno = 42000) && animelemtime(7)<6 && (animelemtime(6)>0 || movecontact);一瞬
+trigger9 = (stateno = 42400) && animelemtime(7)<8 && (animelemtime(7)>0 || movecontact);打ち上げ
+trigger10 = (stateno = 42210) && animelemtime(2)<4 && time > 1;中段
+
+[State -1, WSフィニッシュ技4 お前は磔刑だァー！！]
+type = ChangeState
+value = 42600
+triggerall = ishelper(40000) && movetype!=H
+triggerall = root,var(59) <= 0
+triggerall = (((helper(99999),command = "6a") || (helper(99999),var(1)=[11,19]))&&facing*p2dist X<0) || (((helper(99999),command = "4a") || (helper(99999),var(1)=[21,29]))&&facing*p2dist X>=0)
+triggerall = statetype != A && (stateno != 40100 && stateno != 40105)
+trigger1 = var(1)
+trigger2 = (stateno = 40200) && (animelemtime(5)>0 || movecontact) && animelemtime(7)<0
+trigger3 = (stateno = 40400) && (animelemtime(3)>0 || movecontact) && animelemtime(5)<0
+trigger4 = (stateno = 40210) && (animelemtime(4)>0 || movecontact) && animelemtime(7)<0
+trigger5 = (stateno = 40410) && (animelemtime(5)>0 || movecontact) && animelemtime(8)<0
+trigger6 = (stateno = 40220) && (animelemtime(5)>0 || movecontact) && animelemtime(7)<0
+trigger7 = (stateno = 40420) && (animelemtime(7)>0 || movecontact) && animelemtime(9)<0
+trigger8 = (stateno = 42000) && animelemtime(7)<6 && (animelemtime(6)>0 || movecontact);一瞬
+trigger9 = (stateno = 42400) && animelemtime(7)<8 && (animelemtime(7)>0 || movecontact);打ち上げ
+trigger10 = (stateno = 42210) && animelemtime(2)<4 && time > 1;中段
+
+[State -1, WSフィニッシュ技2 もう1本貰っとくぞ]
+type = ChangeState
+value = 42700
+triggerall = ishelper(40000) && movetype!=H
+triggerall = root,var(59) <= 0
+triggerall = (command = "2a") || (helper(99999),var(1)=[31,39])
+triggerall = statetype != A && (stateno != 40100 && stateno != 40105)
+trigger1 = var(1)
+trigger2 = (stateno = 40200) && (animelemtime(5)>0 || movecontact) && animelemtime(7)<0
+trigger3 = (stateno = 40400) && (animelemtime(3)>0 || movecontact) && animelemtime(5)<0
+trigger4 = (stateno = 40210) && (animelemtime(4)>0 || movecontact) && animelemtime(7)<0
+trigger5 = (stateno = 40410) && (animelemtime(5)>0 || movecontact) && animelemtime(8)<0
+trigger6 = (stateno = 40220) && (animelemtime(5)>0 || movecontact) && animelemtime(7)<0
+trigger7 = (stateno = 40420) && (animelemtime(7)>0 || movecontact) && animelemtime(9)<0
+trigger8 = (stateno = 42000) && animelemtime(7)<6 && (animelemtime(6)>0 || movecontact);一瞬
+trigger9 = (stateno = 42400) && animelemtime(7)<8 && (animelemtime(7)>0 || movecontact);打ち上げ
+trigger10 = (stateno = 42210) && animelemtime(2)<4 && time > 1;中段
+
+[State -1, WS5L]
+type = ChangeState
+value = 40200
+triggerall = ishelper(40000) && movetype!=H
+triggerall = root,var(59) <= 0
+triggerall = (command = "x" && command != "holddown") || (helper(99999),var(0)=[1,9])
+triggerall = statetype != A && !(stateno = 40100 || stateno = 40105)
+trigger1 = var(1)
+;trigger2 = (stateno = 42000) && (movecontact);animelemtime(7)>0
+;trigger3 = (stateno = 42400) && (movecontact)
+
+[State -1, WS5M]
+type = ChangeState
+value = 40210
+triggerall = ishelper(40000) && movetype!=H
+triggerall = root,var(59) <= 0
+triggerall = (command = "y" && command != "holddown") || (helper(99999),var(0)=[11,19])
+triggerall = statetype != A && !(stateno = 40100 || stateno = 40105)
+trigger1 = var(1)
+trigger2 = (stateno = 40200) && (animelemtime(5)>0 || movecontact) && animelemtime(7)<0
+trigger3 = (stateno = 40400) && (animelemtime(3)>0 || movecontact) && animelemtime(5)<0
+;trigger4 = (stateno = 42000) && (movecontact);animelemtime(7)>0
+;trigger5 = (stateno = 42400) && (movecontact)
+[State -1, WS5M イージービート]
+type = ChangeState
+value = 40210
+triggerall = ishelper(40000) && movetype!=H
+triggerall = root,var(59) <= 0
+triggerall = (command = "x" && command != "holddown") || (helper(99999),var(0)=[1,9])
+triggerall = statetype != A && !(stateno = 40100 || stateno = 40105)
+trigger1 = (stateno = 40200) && (movecontact) && animelemtime(7)<0
+trigger2 = (stateno = 40400) && (movecontact) && animelemtime(5)<0
+
+[State -1, WS5H]
+type = ChangeState
+value = 40220
+triggerall = ishelper(40000) && movetype!=H
+triggerall = root,var(59) <= 0
+triggerall = (command = "z" && command != "holddown") || (helper(99999),var(0)=[21,29])
+triggerall = statetype != A && !(stateno = 40100 || stateno = 40105)
+trigger1 = var(1)
+trigger2 = (stateno = 40200) && (animelemtime(5)>0 || movecontact) && animelemtime(7)<0
+trigger3 = (stateno = 40400) && (animelemtime(3)>0 || movecontact) && animelemtime(5)<0
+trigger4 = (stateno = 40210) && (animelemtime(4)>0 || movecontact) && animelemtime(7)<0
+trigger5 = (stateno = 40410) && (animelemtime(5)>0 || movecontact) && animelemtime(8)<0
+;trigger6 = (stateno = 42000) && (movecontact);animelemtime(7)>0
+;trigger7 = (stateno = 42400) && (movecontact)
+[State -1, WS5H イージー]
+type = ChangeState
+value = 40220
+triggerall = ishelper(40000) && movetype!=H
+triggerall = root,var(59) <= 0
+triggerall = (command = "x" && command != "holddown") || (helper(99999),var(0)=[1,9])
+triggerall = statetype != A && !(stateno = 40100 || stateno = 40105)
+trigger1 = 0
+trigger2 = (stateno = 40200) && (movecontact) && animelemtime(7)<0
+trigger3 = (stateno = 40400) && (movecontact) && animelemtime(5)<0
+trigger4 = (stateno = 40210) && (movecontact) && animelemtime(7)<0
+trigger5 = (stateno = 40410) && (movecontact) && animelemtime(8)<0
+
+[State -1, WS2L]
+type = ChangeState
+value = 40400
+triggerall = ishelper(40000) && movetype!=H
+triggerall = root,var(59) <= 0
+triggerall = (command = "x" && command = "holddown") || (helper(99999),var(0)=[31,39])
+triggerall = statetype != A && !(stateno = 40100 || stateno = 40105)
+trigger1 = var(1)
+;trigger2 = (stateno = 42000) && (movecontact);animelemtime(7)>0
+;trigger3 = (stateno = 42400) && (movecontact)
+
+[State -1, WS2M]
+type = ChangeState
+value = 40410
+triggerall = ishelper(40000) && movetype!=H
+triggerall = root,var(59) <= 0
+triggerall = (command = "y" && command = "holddown") || (helper(99999),var(0)=[41,49])
+triggerall = statetype != A && !(stateno = 40100 || stateno = 40105)
+trigger1 = var(1)
+trigger2 = (stateno = 40200) && (animelemtime(5)>0 || movecontact) && animelemtime(7)<0
+trigger3 = (stateno = 40400) && (animelemtime(3)>0 || movecontact) && animelemtime(5)<0
+;trigger4 = (stateno = 42000) && (movecontact);animelemtime(7)>0
+;trigger5 = (stateno = 42400) && (movecontact)
+
+[State -1, WS2H]
+type = ChangeState
+value = 40420
+triggerall = ishelper(40000) && movetype!=H
+triggerall = root,var(59) <= 0
+triggerall = (command = "z" && command = "holddown") || (helper(99999),var(0)=[51,59])
+triggerall = statetype != A && !(stateno = 40100 || stateno = 40105)
+trigger1 = var(1)
+trigger2 = (stateno = 40200) && (animelemtime(5)>0 || movecontact) && animelemtime(7)<0
+trigger3 = (stateno = 40400) && (animelemtime(3)>0 || movecontact) && animelemtime(5)<0
+trigger4 = (stateno = 40210) && (animelemtime(4)>0 || movecontact) && animelemtime(7)<0
+trigger5 = (stateno = 40410) && (animelemtime(5)>0 || movecontact) && animelemtime(8)<0
+;trigger6 = (stateno = 42000) && (movecontact);animelemtime(7)>0
+;trigger7 = (stateno = 42400) && (movecontact)
+
+[State -1, WSJL]
+type = null;ChangeState
+value = 40600
+triggerall = ishelper(40000) && movetype!=H
+triggerall = root,var(59) <= 0
+triggerall = command = "x" || (helper(99999),var(0)=[1,9]) || (helper(99999),var(0)=[31,39])
+triggerall = statetype = A
+trigger1 = var(1)
+
+[State -1, WSJM]
+type = null;ChangeState
+value = 40610
+triggerall = ishelper(40000) && movetype!=H
+triggerall = root,var(59) <= 0
+triggerall = command = "y" || (helper(99999),var(0)=[11,19]) || (helper(99999),var(0)=[41,49])
+triggerall = statetype = A
+trigger1 = var(1)
+trigger2 = (stateno = 40600) && (animelemtime(3)>0 || movecontact)
+
+[State -1, WSJH]
+type = null;ChangeState
+value = 40620
+triggerall = ishelper(40000) && movetype!=H
+triggerall = root,var(59) <= 0
+triggerall = command = "z" || (helper(99999),var(0)=[21,29]) || (helper(99999),var(0)=[51,59])
+triggerall = statetype = A
+trigger1 = var(1)
+trigger2 = (stateno = 40600) && (animelemtime(3)>0 || movecontact)
+trigger3 = (stateno = 40610) && (animelemtime(5)>0 || movecontact)
+
+[State -1, ジャンプ]
+type = null;ChangeState
+value = 40040
+triggerall = ishelper(40000) && movetype!=H
+triggerall = root,var(59) <= 0
+triggerall = command = "holdup"
+triggerall = statetype != A
+trigger1 = var(1)
+
+[State -1, ハイジャンプ]
+type = null;ChangeState
+value = 40040
+triggerall = ishelper(40000) && movetype!=H
+triggerall = root,var(59) <= 0
+triggerall = command = "HJ"
+triggerall = command != "NHJ"
+triggerall = statetype != A
+trigger1 = var(1)
+trigger2 = (stateno = 40200) && (animelemtime(5)>0 || movecontact)
+trigger3 = (stateno = 40400) && (animelemtime(3)>0 || movecontact)
+trigger4 = (stateno = 40210) && (animelemtime(4)>0 || movecontact)
+trigger5 = (stateno = 40410) && (animelemtime(5)>0 || movecontact)
+trigger6 = (stateno = 40220) && (animelemtime(5)>0 || movecontact)
+trigger7 = (stateno = 40420) && (animelemtime(7)>0 || movecontact)
+trigger8 = (stateno = 42000) && (movecontact);animelemtime(7)>0
+trigger9 = (stateno = 42400) && (movecontact)
+
+[State -1, ハイジャンプ2段目]
+type = null;ChangeState
+value = 40045
+triggerall = ishelper(40000) && movetype!=H
+triggerall = root,var(59) <= 0
+triggerall = command = "HJ"
+triggerall = command != "NHJ"
+triggerall = statetype = A
+trigger1 = (stateno = 40041) && (time > 5)
+
+[State -1, WSダッシュ後技N]
+type = ChangeState
+value = 42100
+triggerall = ishelper(40000) && movetype!=H
+triggerall = root,var(59) <= 0
+triggerall = (command = "a" && command != "holdfwd" && command != "holdback" && command != "holdup" && command != "holddown") || (helper(99999),var(1)=[1,9])
+triggerall = statetype != A
+trigger1 = var(1) && (stateno = 40100 || stateno = 40105)
+
+[State -1, WSダッシュ後技6]
+type = ChangeState
+value = 42000
+triggerall = ishelper(40000) && movetype!=H
+triggerall = root,var(59) <= 0
+triggerall = (((helper(99999),command = "6a") || (helper(99999),var(1)=[11,19]))&&facing*p2dist X>=0) || (((helper(99999),command = "4a") || (helper(99999),var(1)=[21,29]))&&facing*p2dist X<0)
+triggerall = statetype != A
+trigger1 = var(1) && (stateno = 40100 || stateno = 40105)
+
+[State -1, WSダッシュ後技4]
+type = ChangeState
+value = 42200
+triggerall = ishelper(40000) && movetype!=H
+triggerall = root,var(59) <= 0
+triggerall = (((helper(99999),command = "6a") || (helper(99999),var(1)=[11,19]))&&facing*p2dist X<0) || (((helper(99999),command = "4a") || (helper(99999),var(1)=[21,29]))&&facing*p2dist X>=0)
+triggerall = statetype != A
+trigger1 = var(1) && (stateno = 40100 || stateno = 40105)
+
+[State -1, WSダッシュ後技2]
+type = ChangeState
+value = 42400
+triggerall = ishelper(40000) && movetype!=H
+triggerall = root,var(59) <= 0
+triggerall = (command = "2a") || (helper(99999),var(1)=[31,39])
+triggerall = statetype != A
+trigger1 = var(1) && (stateno = 40100 || stateno = 40105)
+
+[State -1, WSダッシュ]
+type = ChangeState
+value = 40100
+triggerall = ishelper(40000) && movetype!=H
+triggerall = root,var(59) <= 0
+triggerall = (facing>0&&(helper(99998),command="FF" || helper(99998),var(9))) || (facing<0&&(helper(99998),command="BB" || helper(99998),var(8)))
+triggerall = statetype != A
+trigger1 = var(1) && (stateno != 40100 && stateno != 40105)
+trigger2 = (stateno = 40200) && animelemtime(7)<0 && (animelemtime(5)>0 || movecontact)
+trigger3 = (stateno = 40400) && animelemtime(5)<0 && (animelemtime(3)>0 || movecontact)
+trigger4 = (stateno = 40210) && animelemtime(7)<0 && (animelemtime(4)>0 || movecontact)
+trigger5 = (stateno = 40410) && animelemtime(8)<0 && (animelemtime(5)>0 || movecontact)
+trigger6 = (stateno = 40220) && animelemtime(7)<0 && (animelemtime(5)>0 || movecontact)
+trigger7 = (stateno = 40420) && animelemtime(9)<0 && (animelemtime(7)>0 || movecontact)
+trigger8 = (stateno = 42000) && animelemtime(7)<6 && (animelemtime(6)>0 || movecontact);一瞬
+trigger9 = (stateno = 42400) && animelemtime(7)<8 && (animelemtime(7)>0 || movecontact);打ち上げ
+trigger10 = (stateno = 42210) && animelemtime(2)<4 && time > 1;中段
+
+[State -1, WSバクステ]
+type = ChangeState
+value = 40105
+triggerall = ishelper(40000) && movetype!=H
+triggerall = root,var(59) <= 0
+triggerall = (facing<0&&(helper(99998),command="FF" || helper(99998),var(9))) || (facing>0&&(helper(99998),command="BB" || helper(99998),var(8)))
+triggerall = statetype != A
+trigger1 = var(1) && (stateno != 40100 && stateno != 40105)
+trigger2 = (stateno = 40200) && animelemtime(7)<0 && (animelemtime(5)>0 || movecontact)
+trigger3 = (stateno = 40400) && animelemtime(5)<0 && (animelemtime(3)>0 || movecontact)
+trigger4 = (stateno = 40210) && animelemtime(7)<0 && (animelemtime(4)>0 || movecontact)
+trigger5 = (stateno = 40410) && animelemtime(8)<0 && (animelemtime(5)>0 || movecontact)
+trigger6 = (stateno = 40220) && animelemtime(7)<0 && (animelemtime(5)>0 || movecontact)
+trigger7 = (stateno = 40420) && animelemtime(9)<0 && (animelemtime(7)>0 || movecontact)
+trigger8 = (stateno = 42000) && animelemtime(7)<6 && (animelemtime(6)>0 || movecontact);一瞬
+trigger9 = (stateno = 42400) && animelemtime(7)<8 && (animelemtime(7)>0 || movecontact);打ち上げ
+trigger10 = (stateno = 42210) && animelemtime(2)<4 && time > 1;中段

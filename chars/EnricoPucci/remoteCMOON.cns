@@ -1,0 +1,1884 @@
+;===========================================================================
+; 遠隔操作中のスタンド(root)
+;---------------------------------------------------------------------------
+;遠隔操作発動 6
+[Statedef 7100]
+type    = S
+movetype= I
+physics = S
+velset = 0,0
+ctrl = 0
+anim = 20000
+sprpriority = -1
+
+[State スタイルアクション使用回数変数リセット]
+type = varset
+trigger1 = !time
+var(40) = 0
+persistent = 0
+
+;スタンドがやられた時の動作は-3ステートで(ホワイトスネイクと同じ)
+
+[State 遠隔操作用スタンドC-MOON]
+type = helper
+trigger1 = time = 0
+stateno = 20100
+HelperType = Player
+ID = 40000
+pos = 0,0
+ownpal = 1
+KeyCtrl = 1
+
+[State 声]
+type = PlaySnd
+trigger1 = !Time
+value = 200, 0
+channel = 0
+
+[State 終了]
+type = ChangeState
+trigger1 = animtime = 0
+;trigger2 = var(49) = 0
+value = 0
+ctrl = 1
+
+;---------------------------------------------------------------------------
+;遠隔操作発動 N
+[Statedef 7120]
+type    = S
+movetype= I
+physics = S
+velset = 0,0
+ctrl = 0
+anim = 20004
+sprpriority = -1
+
+[State スタイルアクション使用回数変数リセット]
+type = varset
+trigger1 = !time
+var(40) = 0
+persistent = 0
+
+;スタンドがやられた時の動作は-3ステートで(ホワイトスネイクと同じ)
+
+[State 遠隔操作用スタンドC-MOON]
+type = helper
+trigger1 = time = 0
+stateno = 21000
+HelperType = Player
+ID = 40000
+pos = 14,0
+ownpal = 1
+KeyCtrl = 1
+
+[State 終了]
+type = ChangeState
+trigger1 = animtime = 0
+;trigger2 = var(49) = 0
+value = 0
+ctrl = 1
+
+;---------------------------------------------------------------------------
+;遠隔操作発動 4
+[Statedef 7140]
+type    = S
+movetype= I
+physics = S
+velset = 0,0
+ctrl = 0
+anim = 20001
+sprpriority = -1
+
+[State スタイルアクション使用回数変数リセット]
+type = varset
+trigger1 = !time
+var(40) = 0
+persistent = 0
+
+;スタンドがやられた時の動作は-3ステートで(ホワイトスネイクと同じ)
+
+[State 遠隔操作用スタンドC-MOON]
+type = helper
+trigger1 = time = 0
+stateno = 20105
+HelperType = Player
+ID = 40000
+pos = 0,0
+ownpal = 1
+KeyCtrl = 1
+
+[State 声]
+type = PlaySnd
+trigger1 = !Time
+value = 200, 0
+channel = 0
+
+[State 終了]
+type = ChangeState
+trigger1 = animtime = 0
+;trigger2 = var(49) = 0
+value = 0
+ctrl = 1
+
+;---------------------------------------------------------------------------
+;遠隔操作発動 2
+[Statedef 7160]
+type    = S
+movetype= I
+physics = S
+velset = 0,0
+ctrl = 0
+anim = 20000
+sprpriority = -1
+
+[State スタイルアクション使用回数変数リセット]
+type = varset
+trigger1 = !time
+var(40) = 0
+persistent = 0
+
+;スタンドがやられた時の動作は-3ステートで(ホワイトスネイクと同じ)
+
+[State 遠隔操作用スタンドC-MOON]
+type = helper
+trigger1 = time = 0
+stateno = 20040
+HelperType = Player
+ID = 40000
+pos = 0,0
+ownpal = 1
+KeyCtrl = 1
+
+[State 声]
+type = PlaySnd
+trigger1 = !Time
+value = 200, 0
+channel = 0
+
+[State 終了]
+type = ChangeState
+trigger1 = animtime = 0
+;trigger2 = var(49) = 0
+value = 0
+ctrl = 1
+
+;---------------------------------------------------------------------------
+;遠隔操作始動 6サイコザク特格 C-MOON ヘルパー
+[Statedef 20100]
+type    = S
+movetype= A
+physics = N
+velset = 0,0
+ctrl = 0
+anim = ifelse((prevstateno = [20000,21000]),20100,20101)
+sprpriority = 1
+facep2 = (prevstateno = [20000,21000])
+[State 40000, NotHitBy]
+type = NotHitBy
+trigger1 = 1
+value = SCA,AT
+time = 1
+[State カメラ]
+Type = ScreenBound
+trigger1 = 1
+value = 1
+ignorehitpause = 1
+[State -2 体力を合わせる]
+Type = lifeset
+trigger1 = !time
+value = parent,life
+IgnoreHitPause = 1
+
+[State 空中の挙動]
+Type = statetypeset
+trigger1 = pos Y < 0
+statetype = A
+IgnoreHitPause = 1
+[State 空中の挙動]
+Type = veladd
+trigger1 = pos Y < 0
+Y = 0.5
+IgnoreHitPause = 1
+[State 空中の挙動]
+Type = posset
+trigger1 = pos Y > 0
+Y = 0
+IgnoreHitPause = 1
+
+[State 透明]
+Type = AssertSpecial
+triggerall = ishelper(40000) && stateno != 45000
+trigger1 = (root,stateno =7880); && root,var(50)=1
+trigger2 = (root,stateno =12100); && root,var(50)=1
+trigger3 = (root,stateno =12000); && root,var(50)=1
+Flag = Invisible
+Flag2 = NoShadow
+ignorehitpause = 1
+[State 遠隔操作スタンド C-MOON時のプッツンキャンセルやゲージキャンセル]
+type = ChangeState
+triggerall = ishelper(40000) && stateno != 45000
+trigger1 = (root,stateno =7880); && root,var(50)=1
+trigger2 = (root,stateno =12100); && root,var(50)=1
+trigger3 = (root,stateno =12000); && root,var(50)=1
+value = 45000
+ignorehitpause = 1
+
+[State 遠隔操作スイッチON]
+type = ParentVarSet
+trigger1 = !time
+var(49) = 10000
+[State スタンド使用不可スイッチ]
+type = ParentVarSet
+trigger1 = !time
+var(5) = 1
+
+[State スタイルアクション使用回数変数増加]
+type = parentvaradd
+trigger1 = !time
+var(40) = 1
+persistent = 0
+
+[State 本体がやられると即消える]
+type = ChangeState
+trigger1 = root,movetype = H && !(root,stateno = [7500,7550]);遠隔操作専用やられ以外
+value = 45000
+ignorehitpause = 1
+
+[State 速度]
+type = velset
+trigger1 = (time = 4 && anim = 20100) || (time = 4+6 && anim = 20101)
+X = 5.3
+[State 速度]
+type = velmul
+trigger1 = anim=20100 && animelemtime(4)>8 && vel X >= 0.1
+trigger2 = anim=20101 && animelemtime(9)>8 && vel X >= 0.1
+X = 0.86
+[State 速度]
+type = veladd
+trigger1 = anim=20100 && animelemtime(5)=0
+trigger1 = anim=20101 && animelemtime(10)=0
+X = 2.8
+[State 速度]
+type = velset
+trigger1 = vel X < 0.1
+X = 0
+
+[State 200, 発現SE]
+type = PlaySnd
+trigger1 = !Time
+value = 50, 0
+
+[State 発現エフェクト]
+type = Explod
+trigger1 = !time; && numexplod(7210)=0
+anim = 7210
+ID = 7210
+postype = p1
+pos =0,-60
+IgnoreHitPause = 1
+Persistent = 0
+sprpriority = 2
+scale = 0.5, 0.5
+removetime = -2
+bindtime = -1
+[State オーラエフェクト]
+type = Explod
+trigger1 = !time && numexplod(7200)=0
+anim = 7200
+ID = 7200
+postype = p1
+pos =0,-60
+IgnoreHitPause = 1
+Persistent = 0
+sprpriority = 2
+scale = 0.5, 0.5
+removetime = -1
+bindtime = -1
+RemoveOnGethit = 1
+
+[State 200, SE]
+type = PlaySnd
+trigger1 = Time=4
+value = 0, 6
+
+[State 200, 空振り音]
+type = PlaySnd
+trigger1 = anim=20100 && animelemTime(5) = 0
+trigger2 = anim=20101 && animelemTime(10) = 0
+value = 0, 5
+
+[State 打ち上げやられ]
+type = TargetState
+triggerall = movehit = 1
+trigger1 = numtarget(20100) &&target(20100),ishelper=0 &&target(20100),statetype != A
+value = 21940
+ID = 20100
+persistent = 0
+IgnoreHitPause = 1
+
+[State 410, ヒット定義]
+type = HitDef
+trigger1 = (anim=20100&&AnimElemno(0) = 7) || (anim=20101&&AnimElemno(0) = 12)
+trigger1 = movecontact=0 && movereversed=0
+attr = S, SA
+damage    = ceil(22*root,fvar(0))
+animtype  = B
+hitflag = MAF
+guardflag = MA
+pausetime = 11,2
+sparkno = -1
+Guard.SparkNo = -1
+hitsound = s6, 2
+guardsound = s7, 0
+ground.type = H
+ground.slidetime = 20
+ground.hittime  = 32
+air.hittime  = 32
+ground.velocity = -0.6,-5.5
+yaccel = 0.2+(p2statetype=A)*0.1
+air.velocity = -0.8,-3
+Ground.CornerPush.VelOff = -8
+Guard.CtrlTime = 15
+Guard.Kill = 0
+fall = 1
+Fall.RecoverTime = 50
+getpower  = ceil( 34*(1+(root,var(38)>0)*0.1) ),ceil( 18*(1+(root,var(38)>0)*0.1) )
+givepower = 12,6;18,23,30
+ID = 20100
+P2Facing =1
+
+[State 331,ヒットエフェクト]
+type = Explod
+trigger1 = Movehit = 1
+anim = 801
+postype = p1
+pos = P2BodyDist X+40+root,var(3)%20,-100+root,var(3)%20
+IgnoreHitPause = 1
+Persistent = 0
+scale = 0.55, 0.55
+ontop = 1
+[State 331,ヒットエフェクト強]
+type = Explod
+trigger1 = Movehit = 1
+anim = 810
+postype = p1
+pos = P2BodyDist X+40+root,var(3)%20,-100+root,var(3)%20
+IgnoreHitPause = 1
+Persistent = 0
+scale = 0.5, 0.5
+ontop = 1
+[State 331,ガードエフェクト]
+type = Explod
+trigger1 = Moveguarded
+anim = 840
+postype = p2
+pos = 10-random%10,-60+random%20
+IgnoreHitPause = 1
+Persistent = 0
+scale = 0.5, 0.5
+ontop = 1
+
+[State キャンセル]
+type = ChangeState
+triggerall = root,var(40)<3
+triggerall = (((helper(99999),command = "6a") || (helper(99999),var(1)=[11,19]))&&facing*p2dist X>=0) || (((helper(99999),command = "4a") || (helper(99999),var(1)=[21,29]))&&facing*p2dist X<0)
+trigger1 = (anim=20100&&time > 28)||(anim=20101&&time > 37)
+value = 20100
+[State キャンセル]
+type = ChangeState
+triggerall = root,var(40)<3
+triggerall = (((helper(99999),command = "6a") || (helper(99999),var(1)=[11,19]))&&facing*p2dist X<0) || (((helper(99999),command = "4a") || (helper(99999),var(1)=[21,29]))&&facing*p2dist X>=0)
+trigger1 = (anim=20100&&time > 16)||(anim=20101&&time > 28)
+value = 20105
+[State キャンセル]
+type = ChangeState
+triggerall = root,var(40)<3
+triggerall = (command = "2a") || (helper(99999),var(1)=[31,39])
+trigger1 = (anim=20100&&time > 16)||(anim=20101&&time > 28)
+value = 20040
+[State キャンセル]
+type = ChangeState
+triggerall = root,var(40)<3 && roundstate = 2
+triggerall = (command = "a" && command != "holdfwd" && command != "holdback" && command != "holdup" && command != "holddown") || (helper(99999),var(1)=[1,9])
+trigger1 = (anim=20100&&time > 28)||(anim=20101&&time > 37)
+value = 21000
+
+[State オーラエフェクト消滅]
+type = removeExplod
+triggerall = numexplod(7200)
+trigger1 = animtime = 0
+trigger2 = root,var(40)>=3; && animelemtime(12)>10
+IgnoreHitPause = 1
+ID = 7200
+[State 終了エフェクト]
+type = Explod
+trigger1 = animtime = 0
+trigger2 = root,var(40)>=3; && animelemtime(12)>10
+anim = 7220
+ID = 7220
+postype = p1
+pos =0,-60
+IgnoreHitPause = 1
+Persistent = 0
+sprpriority = 2
+scale = 0.5, 0.5
+removetime = -2
+bindtime = -1
+
+[State 一定時間後終了]
+type = ChangeState
+trigger1 = animtime = 0
+trigger2 = root,var(40)>=3 && animelemtime(12)>30
+value = 40021
+
+;---------------------------------------------------------------------------
+;遠隔操作始動 4回避 C-MOON ヘルパー
+[Statedef 20105]
+type    = S
+movetype= I
+physics = N
+velset = 0,0
+ctrl = 0
+anim = 20105
+sprpriority = 1
+facep2 = (prevstateno = [20000,21000])
+[State 40000, NotHitBy]
+type = NotHitBy
+trigger1 = 1
+value = SCA,AT
+time = 1
+[State カメラ]
+Type = ScreenBound
+trigger1 = 1
+value = 1
+ignorehitpause = 1
+[State -2 体力を合わせる]
+Type = lifeset
+trigger1 = !time
+value = parent,life
+IgnoreHitPause = 1
+
+[State 空中の挙動]
+Type = statetypeset
+trigger1 = pos Y < 0
+statetype = A
+IgnoreHitPause = 1
+[State 空中の挙動]
+Type = veladd
+trigger1 = pos Y < 0
+Y = 1.6
+IgnoreHitPause = 1
+[State 空中の挙動]
+Type = veladd
+trigger1 = pos Y < 0
+X = -3
+IgnoreHitPause = 1
+persistent = 0
+[State 空中の挙動]
+Type = posset
+trigger1 = pos Y > 0
+Y = 0
+IgnoreHitPause = 1
+[State 空中の挙動]
+Type = statetypeset
+trigger1 = pos Y >= 0
+statetype = S
+IgnoreHitPause = 1
+[State 空中の挙動]
+Type = velset
+trigger1 = pos Y >= 0 && vel Y > 0
+Y = 0
+IgnoreHitPause = 1
+
+[State 遠隔操作スイッチON]
+type = ParentVarSet
+trigger1 = !time
+var(49) = 10000
+[State スタンド使用不可スイッチ]
+type = ParentVarSet
+trigger1 = !time
+var(5) = 1
+
+[State スタイルアクション使用回数変数増加]
+type = parentvaradd
+trigger1 = !time
+var(40) = 1
+persistent = 0
+
+[State 本体がやられると即消える]
+type = ChangeState
+trigger1 = root,movetype = H && !(root,stateno = [7500,7550]);遠隔操作専用やられ以外
+value = 45000
+ignorehitpause = 1
+
+[State 170, 無敵]
+type = NotHitBy
+trigger1 = time < 7
+value = SCA
+
+[State 速度]
+type = velset
+trigger1 = animelemtime(5)<0
+X = -3+(command = "holdfwd")*1-(command = "holdback")*1
+[State 速度]
+type = velmul
+trigger1 = (animelemno(0) = [5,8]) && abs(vel X) >= 0.08
+X = 0.7 +(command = "holdfwd")*0.05-(command = "holdback")*0.05
+[State 速度]
+type = velset
+trigger1 = abs(vel X) < 0.08
+X = 0
+[State 速度]
+type = velset
+trigger1 = animelemtime(9) >= 0 && animelemtime(11) < 0
+X = -2+(command = "holdfwd")*0.5-(command = "holdback")*2
+[State 速度]
+type = velmul
+trigger1 = animelemtime(11) >= 0 && abs(vel X) >= 0.08
+X = 0.85
+
+[State 200, 発現SE]
+type = PlaySnd
+trigger1 = !Time
+value = 50, 0
+
+[State 発現エフェクト]
+type = Explod
+trigger1 = !time; && numexplod(7210)=0
+anim = 7210
+ID = 7210
+postype = p1
+pos =0,-60
+IgnoreHitPause = 1
+Persistent = 0
+sprpriority = 2
+scale = 0.5, 0.5
+removetime = -2
+bindtime = -1
+[State オーラエフェクト]
+type = Explod
+trigger1 = !time && numexplod(7200)=0
+anim = 7200
+ID = 7200
+postype = p1
+pos =0,-60
+IgnoreHitPause = 1
+Persistent = 0
+sprpriority = 2
+scale = 0.5, 0.5
+removetime = -1
+bindtime = -1
+RemoveOnGethit = 1
+
+[State 200, SE]
+type = PlaySnd
+trigger1 = Time=0
+value = 40, 1
+
+[State キャンセル]
+type = ChangeState
+triggerall = root,var(40)<3
+triggerall = (((helper(99999),command = "6a") || (helper(99999),var(1)=[11,19]))&&facing*p2dist X>=0) || (((helper(99999),command = "4a") || (helper(99999),var(1)=[21,29]))&&facing*p2dist X<0)
+trigger1 = time > 16
+value = 20100
+[State キャンセル]
+type = ChangeState
+triggerall = root,var(40)<3
+triggerall = (((helper(99999),command = "6a") || (helper(99999),var(1)=[11,19]))&&facing*p2dist X<0) || (((helper(99999),command = "4a") || (helper(99999),var(1)=[21,29]))&&facing*p2dist X>=0)
+trigger1 = time > 16
+value = 20105
+[State キャンセル]
+type = ChangeState
+triggerall = root,var(40)<3
+triggerall = (command = "2a") || (helper(99999),var(1)=[31,39])
+trigger1 = time > 16
+value = 20040
+[State キャンセル]
+type = ChangeState
+triggerall = root,var(40)<3 && roundstate = 2
+triggerall = (command = "a" && command != "holdfwd" && command != "holdback" && command != "holdup" && command != "holddown") || (helper(99999),var(1)=[1,9])
+trigger1 = time > 16
+value = 21000
+
+[State オーラエフェクト消滅]
+type = removeExplod
+triggerall = numexplod(7200)
+trigger1 = animtime = 0
+trigger2 = root,var(40)>=3; && animelemtime(13)>10
+IgnoreHitPause = 1
+ID = 7200
+[State 終了エフェクト]
+type = Explod
+trigger1 = animtime = 0
+trigger2 = root,var(40)>=3; && animelemtime(13)>10
+anim = 7220
+ID = 7220
+postype = p1
+pos =0,-60
+IgnoreHitPause = 1
+Persistent = 0
+sprpriority = 2
+scale = 0.5, 0.5
+removetime = -2
+bindtime = -1
+
+[State 一定時間後終了]
+type = ChangeState
+trigger1 = animtime = 0
+trigger2 = root,var(40)>=3 && animelemtime(13)>10
+value = 40021
+
+;---------------------------------------------------------------------------
+;遠隔操作始動 2ハイジャンプ C-MOON ヘルパー 地上
+[Statedef 20040]
+type    = S
+movetype= A
+physics = N
+velset = 0,0
+ctrl = 0
+anim = 20040
+sprpriority = 1
+facep2 = (prevstateno = [20000,21000])
+[State 40000, NotHitBy]
+type = NotHitBy
+trigger1 = 1
+value = SCA,AT
+time = 1
+[State カメラ]
+Type = ScreenBound
+trigger1 = 1
+value = 1
+ignorehitpause = 1
+[State -2 体力を合わせる]
+Type = lifeset
+trigger1 = !time
+value = parent,life
+IgnoreHitPause = 1
+
+[State 遠隔操作スイッチON]
+type = ParentVarSet
+trigger1 = !time
+var(49) = 10000
+[State スタンド使用不可スイッチ]
+type = ParentVarSet
+trigger1 = !time
+var(5) = 1
+
+[State スタイルアクション使用回数変数増加]
+type = parentvaradd
+trigger1 = !time
+var(40) = 1
+persistent = 0
+
+[State 本体がやられると即消える]
+type = ChangeState
+trigger1 = root,movetype = H && !(root,stateno = [7500,7550]);遠隔操作専用やられ以外
+value = 45000
+ignorehitpause = 1
+
+[State 200, 発現SE]
+type = PlaySnd
+trigger1 = !Time
+value = 50, 0
+
+[State 発現エフェクト]
+type = Explod
+trigger1 = !time; && numexplod(7210)=0
+anim = 7210
+ID = 7210
+postype = p1
+pos =0,-60
+IgnoreHitPause = 1
+Persistent = 0
+sprpriority = 2
+scale = 0.5, 0.5
+removetime = -2
+bindtime = -1
+[State オーラエフェクト]
+type = Explod
+trigger1 = !time && numexplod(7200)=0
+anim = 7200
+ID = 7200
+postype = p1
+pos =0,-60
+IgnoreHitPause = 1
+Persistent = 0
+sprpriority = 2
+scale = 0.5, 0.5
+removetime = -1
+bindtime = -1
+RemoveOnGethit = 1
+
+[State 速度]
+type = velset
+trigger1 = animtime = 0
+X = 2+2*!(prevstateno = [20000,21000])
+Y = -12
+
+[State 200, 発現SE]
+type = PlaySnd
+trigger1 = animtime = 0
+value = 0, 7
+
+[State 一定時間後終了]
+type = ChangeState
+trigger1 = animtime = 0
+value = 20042
+
+;---------------------------------------------------------------------------
+;遠隔操作始動 2ハイジャンプ C-MOON ヘルパー 空中
+[Statedef 20042]
+type    = A
+movetype= A
+physics = N
+ctrl = 0
+anim = 20042
+sprpriority = 1
+[State 40000, NotHitBy]
+type = NotHitBy
+trigger1 = 1
+value = SCA,AT
+time = 1
+[State カメラ]
+Type = ScreenBound
+trigger1 = 1
+value = 1
+ignorehitpause = 1
+
+[State 本体がやられると即消える]
+type = ChangeState
+trigger1 = root,movetype = H && !(root,stateno = [7500,7550]);遠隔操作専用やられ以外
+value = 45000
+ignorehitpause = 1
+
+[State 向き]
+type = turn
+trigger1 = animelemtime(10)=0
+trigger1 = p2dist X < 0
+
+[State 重力]
+type = veladd
+trigger1 = animelemtime(12) < 0
+Y = 0.7
+[State 重力2]
+type = veladd
+trigger1 = animelemtime(17) >= 0
+Y = 0.6
+[State トマル]
+type = velmul
+trigger1 = animelemtime(12) >= 0 && animelemtime(18) < 0
+X = 0.8
+Y = 0.8
+
+[State var]
+type = varset
+trigger1 = !time
+var(2) = 0
+[State var]
+type = varset
+trigger1 = animelemno(0)=16 && (movecontact=1 || movereversed=1)
+var(2) = 1
+ignorehitpause = 1
+
+[State 410, ヒット定義]
+type = HitDef
+trigger1 = AnimElemno(0) = 13
+trigger1 = movecontact=0 && movereversed=0
+trigger2 = AnimElemno(0) = 16
+trigger2 = var(2)=0
+attr = S, SA
+damage    = ceil(13*root,fvar(0))
+animtype  = H
+hitflag = AF;MAF
+guardflag = MA
+pausetime = 8,8
+sparkno = -1
+Guard.SparkNo = -1
+hitsound = s6, 2
+guardsound = s7, 0
+ground.type = H
+ground.slidetime = 20
+ground.hittime  = 20
+ground.velocity = -2
+;yaccel = 0.3
+air.velocity = -2.5,0
+Ground.CornerPush.VelOff = -2
+Guard.CtrlTime = 15
+Guard.Kill = 0
+air.fall = 1
+Fall.RecoverTime = 40
+getpower  = ceil( 20*(1+(root,var(38)>0)*0.1) ),ceil( 20*(1+(root,var(38)>0)*0.1) )
+givepower = 12,6;18,23,30
+ID = 20042
+
+[State 1030, 床バウンド]
+type = null;TargetState
+trigger1 = AnimElemno(0) = 16 && movehit = 1
+trigger1 = numtarget(20042)
+trigger1 = Roundstate = 2
+value = 42670
+ID = 20042
+persistent = 0
+IgnoreHitPause = 1
+
+[State 331,ヒットエフェクト]
+type = Explod
+trigger1 = Movehit = 1 && HitPauseTime = 8-1 && animelemno(0) = 13
+trigger2 = Movehit = 1 && HitPauseTime = 8-1 && animelemno(0) = 16
+anim = 801
+postype = p1
+pos = P2BodyDist X+15+root,var(3)%30,-10-root,var(3)%30
+IgnoreHitPause = 1
+scale = 0.55, 0.55
+ontop = 1
+
+[State 331,ガードエフェクト]
+type = Explod
+trigger1 = Moveguarded = 1 && HitPauseTime = 8-1 && animelemno(0) = 13
+trigger2 = Moveguarded = 1 && HitPauseTime = 8-1 && animelemno(0) = 16
+anim = 840
+postype = p2
+pos = 10-random%10,-60+random%20
+IgnoreHitPause = 1
+Persistent = 0
+scale = 0.5, 0.5
+ontop = 1
+
+[State SE]
+type = PlaySnd
+trigger1 = animelemtime(12) = 0
+trigger2 = animelemtime(14) = 0
+value = 0, 5
+[State SE]
+type = PlaySnd
+trigger1 = animelemtime(9) = 0
+value = 5, 16
+
+[State 着地]
+type = ChangeState
+trigger1 = pos Y >= 0 && vel Y > 0
+value = 20045
+
+[State キャンセル]
+type = ChangeState
+triggerall = root,var(40)<3
+triggerall = (((helper(99999),command = "6a") || (helper(99999),var(1)=[11,19]))&&facing*p2dist X<0) || (((helper(99999),command = "4a") || (helper(99999),var(1)=[21,29]))&&facing*p2dist X>=0)
+trigger1 = time >= 26
+value = 20105
+
+;---------------------------------------------------------------------------
+;遠隔操作始動 2ハイジャンプ C-MOON ヘルパー 着地
+[Statedef 20045]
+type    = S
+movetype= I
+physics = N
+ctrl = 0
+anim = 20045
+sprpriority = 1
+[State 40000, NotHitBy]
+type = NotHitBy
+trigger1 = 1
+value = SCA,AT
+time = 1
+[State カメラ]
+Type = ScreenBound
+trigger1 = 1
+value = 1
+ignorehitpause = 1
+
+[State 本体がやられると即消える]
+type = ChangeState
+trigger1 = root,movetype = H && !(root,stateno = [7500,7550]);遠隔操作専用やられ以外
+value = 45000
+ignorehitpause = 1
+
+[State トマル]
+type = posset
+trigger1 = !time
+Y = 0
+[State トマル]
+type = velset
+trigger1 = !time
+X = 0
+Y = 0
+
+[State SE]
+type = PlaySnd
+trigger1 = !Time
+value = 40, 0
+
+[State オーラエフェクト消滅]
+type = removeExplod
+triggerall = numexplod(7200)
+trigger1 = animtime = 0
+trigger2 = root,var(40)>=3; && animelemtime(3)>10
+IgnoreHitPause = 1
+ID = 7200
+[State 終了エフェクト]
+type = Explod
+trigger1 = animtime = 0
+trigger2 = root,var(40)>=3; && animelemtime(3)>10
+anim = 7220
+ID = 7220
+postype = p1
+pos =0,-60
+IgnoreHitPause = 1
+Persistent = 0
+sprpriority = 2
+scale = 0.5, 0.5
+removetime = -2
+bindtime = -1
+
+[State 終了]
+type = ChangeState
+trigger1 = animtime = 0
+trigger2 = root,var(40)>=3 && animelemtime(3)>40
+value = 40021
+
+[State キャンセル]
+type = ChangeState
+triggerall = root,var(40)<3
+triggerall = (((helper(99999),command = "6a") || (helper(99999),var(1)=[11,19]))&&facing*p2dist X>=0) || (((helper(99999),command = "4a") || (helper(99999),var(1)=[21,29]))&&facing*p2dist X<0)
+trigger1 = time > 0
+value = 20100
+[State キャンセル]
+type = ChangeState
+triggerall = root,var(40)<3
+triggerall = (((helper(99999),command = "6a") || (helper(99999),var(1)=[11,19]))&&facing*p2dist X<0) || (((helper(99999),command = "4a") || (helper(99999),var(1)=[21,29]))&&facing*p2dist X>=0)
+trigger1 = time > 0
+value = 20105
+[State キャンセル]
+type = ChangeState
+triggerall = root,var(40)<3
+triggerall = (command = "2a") || (helper(99999),var(1)=[31,39])
+trigger1 = time > 0
+value = 20040
+[State キャンセル]
+type = ChangeState
+triggerall = root,var(40)<3 && roundstate = 2
+triggerall = (command = "a" && command != "holdfwd" && command != "holdback" && command != "holdup" && command != "holddown") || (helper(99999),var(1)=[1,9])
+trigger1 = time > 0
+value = 21000
+
+;---------------------------------------------------------------------------
+;遠隔操作始動 N遠隔操作始動 C-MOON ヘルパー
+[Statedef 20010]
+type    = S
+movetype= I
+physics = N
+velset = 0,0
+ctrl = 0
+anim = 20010
+sprpriority = -1
+facep2 = (prevstateno = [20000,21000])
+[State 40000, NotHitBy]
+type = NotHitBy
+trigger1 = 1
+value = SCA,AT
+time = 1
+[State カメラ]
+Type = ScreenBound
+trigger1 = 1
+value = 1
+ignorehitpause = 1
+[State -2 体力を合わせる]
+Type = lifeset
+trigger1 = !time
+value = parent,life
+IgnoreHitPause = 1
+
+[State 遠隔操作スイッチON]
+type = ParentVarSet
+trigger1 = !time
+var(49) = 10000
+[State スタンド使用不可スイッチ]
+type = ParentVarSet
+trigger1 = !time
+var(5) = 1
+
+[State スタイルアクション使用回数変数増加]
+type = parentvaradd
+trigger1 = !time
+var(40) = 1
+persistent = 0
+
+[State 本体がやられると即消える]
+type = ChangeState
+trigger1 = root,movetype = H && !(root,stateno = [7500,7550]);遠隔操作専用やられ以外
+value = 45000
+ignorehitpause = 1
+
+[State 200, 発現SE]
+type = PlaySnd
+trigger1 = !Time
+value = 50, 0
+
+[State 発現エフェクト]
+type = Explod
+trigger1 = !time; && numexplod(7210)=0
+anim = 7210
+ID = 7210
+postype = p1
+pos =0,-60
+IgnoreHitPause = 1
+Persistent = 0
+sprpriority = 2
+scale = 0.5, 0.5
+removetime = -2
+bindtime = -1
+[State オーラエフェクト]
+type = Explod
+trigger1 = !time && numexplod(7200)=0
+anim = 7200
+ID = 7200
+postype = p1
+pos =0,-60
+IgnoreHitPause = 1
+Persistent = 0
+sprpriority = 2
+scale = 0.5, 0.5
+removetime = -1
+bindtime = -1
+RemoveOnGethit = 1
+
+[State キャンセル]
+type = ChangeState
+triggerall = root,var(40)<3
+triggerall = (((helper(99999),command = "6a") || (helper(99999),var(1)=[11,19]))&&facing*p2dist X>=0) || (((helper(99999),command = "4a") || (helper(99999),var(1)=[21,29]))&&facing*p2dist X<0)
+trigger1 = time > 7
+value = 20100
+[State キャンセル]
+type = ChangeState
+triggerall = root,var(40)<3
+triggerall = (((helper(99999),command = "6a") || (helper(99999),var(1)=[11,19]))&&facing*p2dist X<0) || (((helper(99999),command = "4a") || (helper(99999),var(1)=[21,29]))&&facing*p2dist X>=0)
+trigger1 = time > 7
+value = 20105
+[State キャンセル]
+type = ChangeState
+triggerall = root,var(40)<3
+triggerall = (command = "2a") || (helper(99999),var(1)=[31,39])
+trigger1 = time > 7
+value = 20040
+[State キャンセル]
+type = ChangeState
+triggerall = root,var(40)<3 && roundstate = 2
+triggerall = (command = "a" && command != "holdfwd" && command != "holdback" && command != "holdup" && command != "holddown") || (helper(99999),var(1)=[1,9])
+trigger1 = time > 7
+value = 21000
+
+[State 一定時間後終了]
+type = ChangeState
+trigger1 = time > 180;animtime = 0
+value = 40021
+
+;---------------------------------------------------------------------------
+;遠隔操作始動 Nパンチは必ず1発 C-MOON ヘルパー
+[Statedef 21000]
+type    = S
+movetype= A
+physics = N
+velset = 0,0
+ctrl = 0
+anim = 21000
+sprpriority = 1
+facep2 = (prevstateno = [20000,21000])
+[State 40000, NotHitBy]
+type = NotHitBy
+trigger1 = 1
+value = SCA,AT
+time = 1
+[State カメラ]
+Type = ScreenBound
+trigger1 = 1
+value = 1
+ignorehitpause = 1
+[State -2 体力を合わせる]
+Type = lifeset
+trigger1 = !time
+value = parent,life
+IgnoreHitPause = 1
+
+[State 170, 無敵]
+type = NotHitBy
+trigger1 = movehit || anim = 21001
+value = SCA
+IgnoreHitPause = 1
+
+[State 遠隔操作スイッチON]
+type = ParentVarSet
+trigger1 = !time
+var(49) = 10000
+[State スタンド使用不可スイッチ]
+type = ParentVarSet
+trigger1 = !time
+var(5) = 1
+
+[State スタイルアクション使用回数変数増加]
+type = parentvaradd
+trigger1 = !time
+var(40) = 1
+persistent = 0
+
+[State 本体がやられると即消える]
+type = ChangeState
+trigger1 = root,movetype = H && !(root,stateno = [7500,7550]);遠隔操作専用やられ以外
+trigger1 = movehit=0
+value = 45000
+ignorehitpause = 1
+
+[State 声]
+type = PlaySnd
+trigger1 = !Time
+value = 200, 1
+channel = 0
+
+[State 速度]
+type = velset
+trigger1 = anim = 21000 && animelemtime(6) = 2
+trigger1 = !(p2movetype = H && p2bodydist X < 40)
+X = 15
+[State 速度];相手がやられていて近い時は抑える
+type = velset
+trigger1 = anim = 21000 && animelemtime(6) = 0
+trigger1 = (p2movetype = H && p2bodydist X < 40)
+X = 7
+[State 速度]
+type = velmul
+trigger1 = anim = 21000 && animelemtime(8)>0 && vel X >= 0.1
+X = 0.65
+[State 速度]
+type = velset
+trigger1 = vel X < 0.1
+X = 0
+
+[State 1030, 無敵吹き飛ばし]
+type = TargetState
+triggerall = movehit = 1
+trigger1 = numtarget(21000) &&target(21000),ishelper=0
+value = 21960
+ID = 21000
+persistent = 0
+IgnoreHitPause = 1
+
+[State 410, ヒット定義]
+type = HitDef
+trigger1 = anim = 21000 && AnimElemno(0) = 8
+trigger1 = movecontact=0 && movereversed=0
+attr = S, SA
+damage    = ceil(0*root,fvar(0))
+animtype  = B
+hitflag = MAF
+guardflag = MA
+pausetime = 18,18
+guard.pausetime = 8,8
+sparkno = -1
+Guard.SparkNo = -1
+hitsound = s6, 1
+guardsound = s7, 0
+ground.type = H
+ground.slidetime = 15
+ground.hittime  = 15
+ground.velocity = -3,-6
+Ground.CornerPush.VelOff = -9
+Guard.velocity = -7.5
+Guard.CtrlTime = 15
+Guard.Kill = 0
+yaccel = 0.55
+Fall = 1
+Fall.recover = 0
+getpower  = ceil( 40*(1+(root,var(38)>0)*0.1) ),ceil( 20*(1+(root,var(38)>0)*0.1) )
+givepower = 23,12;18,23,30
+ID = 21000
+EnvShake.Time = 15
+EnvShake.Ampl = 4
+P2Facing =1
+
+[State 331,ヒットエフェクト]
+type = Explod
+trigger1 = Movehit = 1
+anim = 812
+postype = p1
+pos = P2BodyDist X+40+root,var(3)%10,-105-root,var(3)%10
+IgnoreHitPause = 1
+Persistent = 0
+scale = 0.5, 0.5
+ontop = 1
+[State 331,ガードエフェクト]
+type = Explod
+trigger1 = Moveguarded
+anim = 840
+postype = p2
+pos = 10-random%10,-60+random%20
+IgnoreHitPause = 1
+Persistent = 0
+scale = 0.4, 0.4
+ontop = 1
+
+[State 重力エフェクト]
+type = Explod
+trigger1 = movehit = 1 && numexplod(21011)=0
+trigger1 = 1 || var(3):=1
+Anim = 21011
+ID = 21011
+pos = 0,target(21000),const(size.mid.pos.y)
+postype = P2
+removetime = 40
+bindtime = -1
+ownpal = 1
+sprpriority = 5
+IgnoreHitPause = 1
+[State 重力エフェクト]
+type = varadd
+trigger1 = var(3) > 0
+var(3)=1
+IgnoreHitPause = 1
+[State 1000, Spark];エフェクト
+type = ModifyExplod
+trigger1 = numexplod(21011)
+ID = 21011
+postype = P2
+scale = 0.2+0.05*(var(3)%22),0.2+0.05*(var(3)%22)
+Trans = AddAlpha
+Alpha = 128-(var(3)%22/22.0)*128,100+(var(3)%22/22.0)*156
+IgnoreHitPause = 1
+
+[State しぶきエフェクト]
+type = Explod
+trigger1 = movehit = 1 && numexplod(21012)=0
+Anim = 21012
+ID = 21012
+pos = 0,target(21000),const(size.mid.pos.y)
+postype = P2
+removetime = -2
+bindtime = 34
+ownpal = 1
+sprpriority = 6
+IgnoreHitPause = 1
+scale = 0.9,0.9
+pausemovetime = 47
+supermovetime = 47
+[State 331,ヒットエフェクト]
+type = Explod
+trigger1 = movehit = 1 && numexplod(21020)=0
+anim = 21020
+bindtime = 34
+postype = p2
+pos = 0,target(21000),const(size.mid.pos.y)
+IgnoreHitPause = 1
+Persistent = 0
+scale = 0.6, 0.6
+ontop = 1
+pausemovetime = 0
+supermovetime = 0
+[State 重力音]
+type = PlaySnd
+trigger1 = movehit = 1
+value = 1,2
+persistent = 0
+IgnoreHitPause = 1
+[State 遅れてヒット音]
+type = PlaySnd
+triggerall = movehit
+trigger1 = numtarget(21000) && target(21000),stateno = 21962 && target(21000),time=1
+value = 6,2
+volume = 50
+persistent = 0
+IgnoreHitPause = 1
+[State 遅れてメギャ音]
+type = PlaySnd
+triggerall = movehit
+trigger1 = numtarget(21000) && target(21000),stateno = 21962 && target(21000),time=1
+value = 0,11
+volume = 40
+persistent = 0
+IgnoreHitPause = 1
+[State ダメージ]
+type = Targetlifeadd
+triggerall = movehit
+trigger1 = numtarget(21000) && target(21000),stateno = 21962 && target(21000),time=1
+value = ceil(-90*root,fvar(0))
+ID = 21000
+persistent = 0
+IgnoreHitPause = 1
+
+[State 相手の位置]
+type = targetbind
+trigger1 = numtarget
+trigger1 = hitpausetime && target,statetype=A
+pos = 50,-120-target(21000),const(size.mid.pos.y)
+ID = 21000
+IgnoreHitPause = 1
+
+[State 200, 発現SE]
+type = PlaySnd
+trigger1 = !Time
+value = 50, 0
+
+[State 発現エフェクト]
+type = Explod
+trigger1 = !time; && numexplod(7210)=0
+anim = 7210
+ID = 7210
+postype = p1
+pos =0,-60
+IgnoreHitPause = 1
+Persistent = 0
+sprpriority = 2
+scale = 0.5, 0.5
+removetime = -2
+bindtime = -1
+[State オーラエフェクト]
+type = Explod
+trigger1 = !time && numexplod(7200)=0
+anim = 7200
+ID = 7200
+postype = p1
+pos =0,-60
+IgnoreHitPause = 1
+Persistent = 0
+sprpriority = 2
+scale = 0.5, 0.5
+removetime = -1
+bindtime = -1
+RemoveOnGethit = 1
+
+[State 200, SE]
+type = PlaySnd
+trigger1 = Time=1
+value = 0, 6
+[State 200, SE]
+type = PlaySnd
+trigger1 = anim = 21000 && animelemtime(6) = 0
+value = 0, 5
+
+[State オーラエフェクト消滅]
+type = removeExplod
+trigger1 = animelemtime(11)>0 && numexplod(7200)
+IgnoreHitPause = 1
+ID = 7200
+[State 終了エフェクト]
+type = Explod
+trigger1 = animelemtime(11)>0
+anim = 7220
+ID = 7220
+postype = p1
+pos =0,-60
+IgnoreHitPause = 1
+Persistent = 0
+sprpriority = 2
+scale = 0.5, 0.5
+removetime = -2
+bindtime = -1
+
+[State ヒットでアニメ変更]
+type = Changeanim
+trigger1 = movehit && anim != 21001
+value = 21001
+[State 速度]
+type = velmul
+trigger1 = movehit
+X = 0.4
+
+[State KOカットイン背景]
+type = Explod
+triggerall = numtarget && var(18)=0 && roundstate = 2
+trigger1 = !numexplod(16600) && target,Alive=0;WinKO
+anim = 16600
+postype = L
+pos = 0,0
+ID = 16600
+IgnoreHitPause = 1
+OwnPal = 1
+bindtime = 2147483647
+pausemovetime = 2147483647
+supermovetime = 2147483647
+removetime = 120
+sprpriority = -3
+scale = 1,1
+persistent = 0
+[State KOスローしない]
+type = AssertSpecial
+trigger1 = 1 && var(18)=0
+flag = NoKOSlow
+[State KO音]
+type = playsnd
+triggerall = numtarget && var(18)=0
+trigger1 = target,Alive=0;WinKO
+value = 90,6
+persistent = 0
+[State KO時間停止]
+type = Pause
+triggerall = numtarget && var(18)=0
+trigger1 = target,Alive=0;WinKO
+Time = 120
+movetime = 120
+PauseBG = 0;背景はそのまま
+persistent = 0
+[State KO演出用変数]
+Type = varset
+trigger1 = target,Alive = 0 && movehit = 0
+var(18) =  1
+IgnoreHitPause = 1
+
+[State 一定時間後終了]
+type = ChangeState
+trigger1 = animtime = 0
+value = 40021
+
+;---------------------------------------------------------------------------
+; 打ち上げやられ相手　ヒットストップ
+[Statedef 21940]
+type    = A    ;空中判定
+movetype= H    ;ダメージ状態
+physics = N    ;重力・摩擦力無視
+VelSet   = 0,0
+
+[State 1034,noturn]
+type = AssertSpecial
+flag = NoAutoTurn
+trigger1 = 1
+ignorehitpause = 1
+[State 1034]
+Type = PosSet
+Trigger1 = Pos Y > 0
+Y = 0
+IgnoreHitPause = 1
+Persistent = 0
+[State 1034,落下状態にする]
+Type = HitFallSet
+Trigger1 = 1
+Value = 0
+IgnoreHitPause = 1
+Persistent = 0
+[State 1034,変更]
+Type = ChangeAnim
+Trigger1 = 1
+Value = 5000
+[State -1]
+Type = ChangeState
+Trigger1 = GetHitVar(HitShakeTime) = 0
+Trigger2 = time >= 300
+Value = 21945
+
+;---------------------------------------------------------------------------
+;打ち上げやられ　相手　とんでく
+[Statedef 21945]
+type    = A    ;空中判定
+movetype= H    ;ダメージ状態
+physics = N    ;重力・摩擦力無視
+
+[State 初速]
+type = velset
+trigger1 = Time = 0
+x = -0.6
+y = -9
+[State 重力]
+Type = veladd
+trigger1 = (vel Y = [-2,2])
+Y = 0.18
+[State 重力]
+Type = veladd
+trigger1 = !(vel Y = [-2,2])
+Y = 0.48
+
+[State 5035, 1]
+type = ChangeAnim
+trigger1 = Time = 0
+trigger1 = SelfAnimExist(5035)
+trigger1 = Anim != [5051,5059] ;Not if in hit up anim
+trigger1 = Anim != 5090 ;Not if hit off ground anim
+value = 5035
+
+[State 5035, 1]
+type = ChangeAnim
+trigger1 = animTime = 0
+trigger1 = anim = 5035 || (anim = 5030 && SelfAnimExist(5035)=0)
+value = 5050
+
+[State 5035, 1]
+type = ChangeAnim
+trigger1 = animTime = 0
+trigger1 = anim = 5050 && SelfAnimExist(5060)
+value = 5060
+
+[State 1036, SelfState]
+type = selfstate;changeState
+Trigger1 = pos Y > 0
+value = 5100;21966
+ctrl=0
+
+[State 1036, SelfState]
+type = SelfState
+Trigger1 = time >= 300
+value = 5035
+ctrl=0
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+; 強制ダウン相手　ヒットストップ
+[Statedef 21960]
+type    = A    ;空中判定
+movetype= H    ;ダメージ状態
+physics = N    ;重力・摩擦力無視
+VelSet   = 0,0
+
+[State 1034,noturn]
+type = AssertSpecial
+flag = NoAutoTurn
+trigger1 = 1
+ignorehitpause = 1
+
+[State 1034]
+Type = PosSet
+Trigger1 = Pos Y > 0
+Y = 0
+IgnoreHitPause = 1
+Persistent = 0
+
+[State 1034,落下状態にする]
+Type = HitFallSet
+Trigger1 = 1
+Value = 0
+IgnoreHitPause = 1
+Persistent = 0
+
+[State 1034,変更]
+Type = ChangeAnim
+Trigger1 = GetHitVar(HitShakeTime) != 0
+Value = 5010
+[State 1034,変更]
+Type = ChangeAnim
+Trigger1 = GetHitVar(HitShakeTime) = 0; && anim != 5010
+Value = 5010
+
+[State -1]
+Type = ChangeState
+Trigger1 = 0;GetHitVar(HitShakeTime) = 0
+Trigger2 = time >= 18+16
+Value = 21962
+
+[State 1202, 無敵]
+type = nothitby
+trigger1 = 1
+value = SCA
+Time = 1
+
+[State ふわっと]
+type = velset
+Trigger1 = GetHitVar(HitShakeTime) = 0
+X = -0.2
+Y = -0.3
+[State ふわっと]
+type = veladd
+Trigger1 = GetHitVar(HitShakeTime) = 0
+Y = 0.1
+
+;---------------------------------------------------------------------------
+; 強制ダウン相手　ヒットストップ2
+[Statedef 21962]
+type    = A    ;空中判定
+movetype= H    ;ダメージ状態
+physics = N    ;重力・摩擦力無視
+VelSet   = 0,0
+;facep2 = 1
+[State 2000, とりあえず揺らす]
+type = EnvShake
+trigger1 = Time = 0
+Time = 22
+Ampl = -7
+Freq = 90
+
+[State 1034,noturn]
+type = AssertSpecial
+flag = NoAutoTurn
+trigger1 = 1
+ignorehitpause = 1
+
+[State 1034]
+Type = PosSet
+Trigger1 = Pos Y > 0
+Y = 0
+IgnoreHitPause = 1
+Persistent = 0
+
+[State 1034,落下状態にする]
+Type = HitFallSet
+Trigger1 = 1
+Value = 0
+IgnoreHitPause = 1
+Persistent = 0
+
+[State 1034,変更]
+Type = ChangeAnim
+Trigger1 = time<15
+Value = 5000
+
+[State -1]
+Type = ChangeState
+Trigger1 = time >= 17
+Value = 21965
+
+[State 1202, 無敵]
+type = nothitby
+trigger1 = 1
+value = SCA
+Time = 1
+
+;---------------------------------------------------------------------------
+;強制ダウン　相手　とんでく
+[Statedef 21965]
+type    = A    ;空中判定
+movetype= H    ;ダメージ状態
+physics = N    ;重力・摩擦力無視
+
+[State 1202, 無敵]
+type = nothitby
+trigger1 = 1
+value = SCA
+Time = 1
+
+[State 7010]
+type = velset
+trigger1 = Time = 0
+x = -1
+y = -1
+
+[State 重力]
+Type = veladd
+trigger1 = 1
+Y = 0.4
+
+[State 5035, 1]
+type = ChangeAnim
+trigger1 = Time = 0
+trigger1 = SelfAnimExist(5035)
+trigger1 = Anim != [5051,5059] ;Not if in hit up anim
+trigger1 = Anim != 5090 ;Not if hit off ground anim
+value = ifelse(SelfAnimExist(5035),5035,5030)
+
+[State 5035, 1]
+type = ChangeAnim
+trigger1 = animTime = 0
+trigger1 = anim = 5035 || (anim = 5030 && SelfAnimExist(5035)=0)
+trigger2 = Time = 0
+value = 5050
+
+[State 1036, SelfState]
+type = null;selfstate;changeState
+Trigger1 = pos Y > 0
+value = 5100;21966
+ctrl=0
+[State 1036, SelfState]
+type = changeState
+Trigger1 = pos Y > 0
+value = 21966
+ctrl=0
+
+[State 1036, SelfState]
+type = SelfState
+Trigger1 = time >= 300
+value = 5035
+ctrl=0
+
+;-------------------------------------------------------------------
+;強制ダウン　相手　地面に激突
+[Statedef 21966]
+type = L
+movetype = H
+physics = N
+[State 1202, 無敵]
+type = null;nothitby
+trigger1 = 1
+value = SCA
+Time = 1
+
+[State 5100, 1]
+type = VelSet
+trigger1 = Time = 0
+trigger1 = GetHitVar(fall.yvel) = 0
+trigger1 = vel x > 1
+x = 1
+
+[State 5100, EnvShake]
+type = FallEnvShake
+trigger1 = Time = 0
+
+[State 5100, 2] ;Hit ground anim (normal)
+type = ChangeAnim
+trigger1 = time = 0
+value = 5100
+
+[State 5100, 4]
+type = PosSet
+trigger1 = Time = 0
+y = 0
+
+[State 5100, 5]
+type = VelSet
+trigger1 = Time = 0
+y = 0
+
+[State 5100, 6] ;Reduce speed
+type = VelMul
+trigger1 = Time = 0
+x = 0.75
+
+[State 5100, 7]
+type = ChangeState
+trigger1 = Time = 0
+trigger1 = GetHitVar(fall.yvel) = 0
+value = 5110 ;HIT_LIEDOWN
+
+[State 5100, 8]
+type = GameMakeAnim
+trigger1 = Time = 1
+value = 60;61
+pos = 0, 0
+under = 1
+
+[State 5100, 9]
+type = HitFallDamage
+trigger1 = Time = 3
+
+[State 5100, 10]
+type = PlaySnd
+trigger1 = Time = 1
+value = F7, (sysvar(1) > 5) + (sysvar(1) > 14)
+
+[State 5100, 11]
+type = PosFreeze
+trigger1 = 1
+
+[State 5100, 12]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 21967
+
+[State 1040,ステート非常用]
+type = selfstate
+trigger1 = time > 220
+value = 5050
+
+;---------------------------------------------------------------------------
+;強制ダウン　相手　バウンド
+[Statedef 21967]
+type    = L
+movetype= H
+physics = N
+[State 1202, 無敵]
+type = null;nothitby
+trigger1 = 1
+value = SCA
+Time = 1
+
+[State 5101, 1] ;Coming hit ground anim (normal)
+type = ChangeAnim
+trigger1 = time = 0
+value = 5160
+
+[State 5101, 3]
+type = HitFallVel
+trigger1 = Time = 0
+
+[State 5101, 4]
+type = PosSet
+trigger1 = Time = 0
+y = 20
+
+[State 5101, 5] ;Acceleration
+type = VelAdd
+trigger1 = 1
+y = .4
+
+[State 5101, 6] ;Hit ground
+trigger1 = Vel Y > 0
+trigger1 = Pos Y >= 12
+trigger1 = Alive
+type = ChangeState
+value = 21968
+
+[State 1040,ステート非常用]
+type = selfstate
+trigger1 = time > 220
+trigger2 = !Alive
+value = 5050
+
+;---------------------------------------------------------------------------
+;強制ダウン　相手　ダウン
+[Statedef 21968]
+type    = L
+movetype= H
+physics = N
+[State 1202, 無敵]
+type = null;nothitby
+trigger1 = 1
+value = SCA
+Time = 1
+
+[State 5110, EnvShake]
+type = FallEnvShake
+trigger1 = Time = 0
+
+[State 5110, 1] ;For hit up/up-diag type (from state 5081)
+type = ChangeAnim
+persistent = 0
+trigger1 = SelfAnimExist(5110 + (anim % 10))
+trigger1 = anim = [5081,5089]
+value = 5110 + (anim % 10)
+
+[State 5110, 2] ;Hit ground anim (normal)
+type = ChangeAnim
+trigger1 = time = 0
+trigger1 = anim != [5110,5119] ;Not already changed anim
+value = 5170
+
+[State 5110, 4]
+type = HitFallDamage
+trigger1 = Time = 0
+
+[State 5110, 5]
+type = PosSet
+trigger1 = Time = 0
+y = 0
+
+[State 5110, 6]
+type = PlaySnd
+trigger1 = Time = 0;0
+value = F7, 0;1
+
+[State 5110, 7]
+type = GameMakeAnim
+trigger1 = Time = 0
+value = 60;61
+pos = 0, 0
+under = 1
+
+[State 5110, 8]
+type = VelSet
+trigger1 = Time = 0
+y = 0
+
+[State 5110, 10] ;For normal
+type = ChangeAnim
+persistent = 0
+triggerall = Anim != [5111,5119]
+trigger1 = AnimTime = 0
+value = 5110
+
+[State 5110, 13] ;Friction
+type = VelMul
+trigger1 = 1
+x = 0.85
+
+[State 1040,ダウン時間経過後起き上がる]
+type = selfstate
+trigger1 = time > 24
+value = 5120
+
+[State 1040,ステート非常用]
+type = selfstate
+trigger1 = !Alive
+value = 5150
+
+
+;---------------------------------------------------------------------------

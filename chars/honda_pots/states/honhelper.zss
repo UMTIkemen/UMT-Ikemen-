@@ -1,0 +1,1206 @@
+# _______________________________________
+#| Edmond Honda by Phantom.of.the.Server |
+# ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#==============================================================================================
+#=======================================<HELPER STATES>========================================
+#==============================================================================================
+
+#========================<PROJECTILE SHIELD>=============================
+#----- Oni Musou -----
+
+#============================================================
+# State 3005
+#============================================================
+
+[StateDef 3005;
+	type: A;
+	physics: N;
+	moveType: I;
+	anim: 3005;
+	ctrl: 0;
+	velSet: 0, 0;
+]
+
+ignoreHitPause {
+	# Override
+	hitOverride{attr: SCA, AA, AP, AT; time: -1; stateno: 3005}
+	# NHB
+	notHitBy{time: -1; value: SCA}
+}
+
+# HB
+ignoreHitPause if root, stateno = 3000 {
+	hitBy{value: SCA, NP, SP; time: -1}
+}
+
+# HB
+ignoreHitPause if root, stateno = 3050 {
+	hitBy{value: SCA, NP, SP, HP; time: -1}
+}
+
+# Bind
+bindToRoot{facing: 1}
+
+# End
+if root, moveType = H
+|| (root, stateno != 3000 && root, stateno != 3050)
+|| (root, stateno = 3000 && root, animElemTime(5) < 0)
+|| (root, stateno = 3050 && root, animElemTime(5) < 0) {
+	destroySelf{}
+}
+
+#========================<DUSTS>=============================
+#----- Jump -----
+
+#============================================================
+# State 8100
+#============================================================
+[StateDef 8100;
+	type: S;
+	anim: 9999;
+	velSet: 0, 0;
+]
+
+# Pos
+if !time {
+	posSet{y: 0}
+}
+
+# Bind
+if time {
+	bindtoparent{}
+}
+
+# Dust
+if !time {
+	explod{
+		anim: 8100;
+		sprPriority: 3;
+		posType: p1;
+		pos: 0, ceil(pos y);
+		scale: 0.5, 0.5;
+		pausemovetime: -1;
+		supermovetime: -1;
+		ownpal: 1;
+	}
+}
+
+# Dust
+if !time || time = 2 || time = 6 {
+	explod{
+		anim: 8101;
+		sprPriority: 3;
+		posType: p1;
+		scale: 0.5, 0.5;
+		pausemovetime: -1;
+		supermovetime: -1;
+		ownpal: 1;
+	}
+}
+
+# End
+if !numexplod
+|| time >= 60 {
+	destroySelf{}
+}
+
+#----- Dash -----
+
+#============================================================
+# State 8103
+#============================================================
+[StateDef 8103;
+	type: A;
+	anim: 9999;
+	velSet: 0, 0;
+	sprPriority: 5;
+]
+
+# Pos
+if !time = 0 {
+	posSet{y: 0}
+}
+
+# Dust
+if time = 0 || time = 3 || time = 6 {
+	explod{
+		anim: 8103;
+		id: ifelse((time = 6), 3, ifelse((time = 3), 2, 1));
+		posType: p1;
+		pos: 0, -4;
+		random: 8, 8;
+		vel: -3 -(random / 1000.0), -2 -(random / 2000.0);
+		facing: ifelse(random < 500, -1, 1);
+		vfacing: ifelse(random < 500, -1, 1);
+		angle: 90 * (random % 4);
+		removetime: 16;
+		sprPriority: 3;
+		pausemovetime: -1;
+		supermovetime: -1;
+	}
+}
+
+# Scale
+if numexplod(1) {
+	modifyexplod{
+		id: 1;
+		scale: 0.1 + (0.025 * time), 0.1 + (0.025 * time);
+		trans: addAlpha;
+		alpha: 256 - (16 * time), 256;
+	}
+}
+
+# Scale
+if numexplod(2) {
+	modifyexplod{
+		id: 2;
+		scale: 0.1 + (0.025 * (time -3)), 0.1 + (0.025 * (time -3));
+		trans: addAlpha;
+		alpha: 256 - (16 * (time -3)), 256;
+	}
+}
+
+# Scale
+if numexplod(3) {
+	modifyexplod{
+		id: 3;
+		scale: 0.1 + (0.025 * (time -6)), 0.1 + (0.025 * (time -6));
+		trans: addAlpha;
+		alpha: 256 - (16 * (time -6)), 256;
+	}
+}
+
+# End
+if time >= 22 {
+	removeexplod{}
+}
+
+# End
+if !numexplod {
+	destroySelf{}
+}
+
+#----- Impact -----
+
+#============================================================
+# State 8110
+#============================================================
+[StateDef 8110;
+	type: A;
+	anim: 9999;
+	velSet: 0, 0;
+]
+
+if !time {
+	# Pos
+	posSet{y: 0}
+	# FX Ground
+	explod{
+		anim: 8110;
+		id: 1;
+		posType: p1;
+		removetime: 12;
+		sprPriority: -10;
+		pausemovetime: -1;
+		supermovetime: -1;
+	}
+	# FX Back
+	explod{
+		anim: 8111;
+		id: 2;
+		posType: p1;
+		removetime: 8;
+		sprPriority: -10;
+		pausemovetime: -1;
+		supermovetime: -1;
+	}
+}
+
+# Scale
+if numexplod(1) {
+	modifyexplod{
+		id: 1;
+		scale: 0.25 + (0.03125 * time), 0.25 + (0.03125 * time);
+		trans: addAlpha;
+		alpha: 256 - (23 * time), 256;
+	}
+}
+
+# Scale
+if numexplod(2) {
+	modifyexplod{
+		id: 2;
+		scale: 0.25 + (0.03125 * time), 0.25 + (0.03125 * time);
+		trans: addAlpha;
+		alpha: 256 - (32 * time), 256;
+	}
+}
+
+# End
+if time >= 12 {
+	removeexplod{}
+}
+
+# End
+if !numexplod {
+	destroySelf{}
+}
+
+#====================<POWER CHARGE>====================
+
+#----- MAIN FX -----
+#============================================================
+# State 8330
+#============================================================
+[StateDef 8330;
+	type: A;
+	physics: N;
+	moveType: I;
+	anim: 9999;
+	ctrl: 0;
+	velSet: 0, 0;
+]
+
+# Bind
+if root, stateno = 730 {
+	bindToRoot{pos: (4 * root, const(size.xscale)), 0}
+}
+
+# Sound
+if !time {
+	playSnd{value: 0, 730; channel: 0}
+}
+
+# Sound
+playSnd{
+	value: 0, 731;
+	channel: 1;
+	lowpriority: 1;
+	volumescale: ifelse(time < 180, (time * 0.277), 50);
+}
+
+# Aura
+if !numexplod(8330) {
+	explod{
+		id: 8330;
+		anim: 8330;
+		sprPriority: 3;
+		posType: p1;
+		bindtime: -1;
+		removetime: -1;
+		scale: 0.5, 0.5;
+		pausemovetime: -1;
+		supermovetime: -1;
+		ownpal: 1;
+	}
+}
+
+# Dust
+if !(time % 6) {
+	explod{
+		anim: 8105;
+		sprPriority: -3;
+		posType: p1;
+		pos: 0, -pos y;
+		scale: 0.5, 0.5;
+		pausemovetime: -1;
+		supermovetime: -1;
+		ownpal: 1;
+	}
+}
+
+# FX
+if numexplod(8330)
+&& root, time <= 60 {
+	modifyexplod{id: 8330; scale: 0.5, 0.125}
+}
+
+# FX
+if numexplod(8330)
+&& root, time = [61, 119] {
+	modifyexplod{id: 8330; scale: 0.5, 0.1 + ((root, time - 60) * 0.00625)}
+}
+
+# FX
+if numexplod(8330)
+&& root, time >= 120 {
+	modifyexplod{id: 8330; scale: 0.5, 0.5}
+}
+
+# End
+if root, stateno != 730
+|| root, moveType = H {
+	stopsnd{channel: 0}
+	stopsnd{channel: 1}
+	removeexplod{}
+	destroySelf{}
+}
+
+#----- Particles -----
+
+#============================================================
+# State 8331
+#============================================================
+[StateDef 8331;
+	type: A;
+	physics: N;
+	moveType: I;
+	anim: 9999;
+	ctrl: 0;
+	velSet: 0, 0;
+]
+
+# Bind
+if !(time % 8) {
+	bindToRoot{pos: ceil(-140 + (random / 3.125)), ceil(130 - (random / 3.125))}
+}
+
+# Particle
+if (time % 8) = 1 {
+	explod{
+		anim: 8331;
+		sprPriority: ifelse(random < 750, 5, -1);
+		posType: p1;
+		vel: ((rootdist x + 20) / 32.0), ((rootdist y -30) / 32.0);
+		scale: ifelse(random < 500, 0.5, -0.5), ifelse(random < 500, 0.5, -0.5);
+		pausemovetime: -1;
+		supermovetime: -1;
+		ownpal: 1;
+	}
+}
+
+# End
+if root, stateno != 730 {
+	removeexplod{}
+	destroySelf{}
+}
+
+#====================<ZERO COUNTER PAUSE>====================
+
+#============================================================
+# State 8350
+#============================================================
+[StateDef 8350;
+	type: A;
+	physics: N;
+	moveType: I;
+	anim: 9999;
+	ctrl: 0;
+	velSet: 0, 0;
+]
+
+# BG PalFX
+bgPalFx{time: 1; color: 16 * time; mul: 16 * time, 16 * time, 16 * time}
+
+# Circle
+if !time {
+	explod{
+		anim: 8350;
+		id: 1;
+		sprPriority: 3;
+		posType: p1;
+		removetime: 16;
+		supermovetime: -1;
+		ownpal: 1;
+	}
+}
+
+# Scale
+if numexplod(1) {
+	modifyexplod{
+		id: 1;
+		scale: 0.0556 * (time + 1), 0.0556 * (time + 1);
+		trans: addAlpha;
+		alpha: 256 - (16 * time), 256;
+	}
+}
+
+# Lightning
+if !time {
+	explod{
+		anim: 8351;
+		id: 2;
+		sprPriority: -2;
+		posType: p1;
+		pos: 0, -pos y;
+		supermovetime: -1;
+		ownpal: 1;
+	}
+}
+
+# End
+if time >= 16 {
+	destroySelf{}
+}
+
+#========================<CUSTOM COMBO>=============================
+
+#============================================================
+# State 8400
+#============================================================
+[StateDef 8400;
+	type: A;
+	physics: N;
+	moveType: I;
+	anim: 8400;
+	ctrl: 0;
+	velSet: 0, 0;
+	sprPriority: 5;
+]
+
+# No Shadow
+assertSpecial{flag: noshadow}
+
+# BG PalFX
+if time <= 25 {
+	bgPalFx{time: 1; mul: 128, 128, 128}
+}
+
+# Rotate
+if !time {
+	angleset{value: 6 * (random % 60)}
+}
+
+# Rotate
+angleadd{value: -6}
+
+# Scale
+if time < 8 {
+	angleDraw{scale: 0.0556 * (time + 1), 0.0556 * (time + 1)}
+}
+
+# Scale
+if time >= 8 {
+	angleDraw{scale: 0.5, 0.5}
+}
+
+# Trans
+if time < 16 {
+	trans{trans: addAlpha; alpha: 256, 256}
+}
+
+# Trans
+if time >= 16 {
+	trans{trans: addAlpha; alpha: ceil(256 - 25.6 * (time -16)), 256}
+}
+
+# Lines
+if !time {
+	explod{
+		anim: 8401;
+		id: 1;
+		sprPriority: 5;
+		posType: p1;
+		facing: ifelse(random < 500, -1, 1);
+		vfacing: ifelse(random < 500, -1, 1);
+		angle: 90 * (random % 4);
+		removetime: 16;
+		supermovetime: -1;
+	}
+}
+
+# Scale
+if numexplod(1) {
+	modifyexplod{
+		id: 1;
+		scale: 2 -(0.125 * time), 2 -(0.125 * time);
+		trans: addAlpha;
+		alpha: ifelse(time < 3, 64 * (time + 1), 256), 256;
+	}
+}
+
+# Circle
+if time = 16 {
+	explod{
+		anim: 8402;
+		id: 2;
+		sprPriority: 5;
+		posType: p1;
+		removetime: 32;
+		supermovetime: -1;
+	}
+}
+
+# Scale
+if numexplod(2) {
+	modifyexplod{
+		id: 2;
+		scale: (0.1 * (time -16)), (0.1 * (time -16));
+		trans: addAlpha;
+		alpha: ceil(256 - 25.6 * (time -16)), 256;
+	}
+}
+
+if time >= 26 {
+	# Safety
+	removeexplod{}
+	# End
+	destroySelf{}
+}
+
+#========================<SUPERPAUSE FX>=============================
+
+#----- Level 1 -----
+#============================================================
+# State 8500
+#============================================================
+[StateDef 8500;
+	type: A;
+	velSet: 0, 0;
+	anim: 8500;
+	sprPriority: 5;
+]
+
+# Bind
+if !time {
+	varSet{fv: 24; value: -rootdist x}
+	varSet{fv: 25; value: -rootdist y}
+}
+
+# Bind
+bindToRoot{pos: fvar(24), fvar(25)}
+# No Shadow
+assertSpecial{flag: noshadow}
+
+# BG PalFX
+if time <= 39 {
+	bgPalFx{time: 1; color: 0; mul: 0, 0, 256}
+}
+
+# Rotate
+if !time {
+	angleset{value: 6 * (random % 60)}
+}
+
+# Rotate
+angleadd{value: -6}
+# Scale
+angleDraw{scale: (0.0177 * time) ** 2, (0.0177 * time) ** 2}
+# Trans
+trans{trans: addAlpha; alpha: 256, 256}
+
+# Lines
+if time = 0 || time = 8 || time = 16 || time = 24 {
+	explod{
+		anim: 8501;
+		id: ifelse(time = 24, 4, ifelse(time = 16, 3, ifelse(time = 8, 2, 1)));
+		sprPriority: 5;
+		posType: p1;
+		facing: ifelse(random < 500, -1, 1);
+		vfacing: ifelse(random < 500, -1, 1);
+		angle: 90 * (random % 4);
+		bindtime: -1;
+		removetime: 16;
+		supermovetime: -1;
+	}
+}
+
+# Scale
+if numexplod(1) {
+	modifyexplod{
+		id: 1;
+		scale: 1 -(0.0625 * time), 1 -(0.0625 * time);
+		trans: addAlpha;
+		alpha: ifelse(time < 3, 64 * (time + 1), 256), 256;
+	}
+}
+
+# Scale
+if numexplod(2) {
+	modifyexplod{
+		id: 2;
+		scale: 1 -(0.0625 * (time -8)), 1 -(0.0625 * (time -8));
+		trans: addAlpha;
+		alpha: ifelse((time -8) < 4, 64 * (time -8), 256), 256;
+	}
+}
+
+# Scale
+if numexplod(3) {
+	modifyexplod{
+		id: 3;
+		scale: 1 -(0.0625 * (time -16)), 1 -(0.0625 * (time -16));
+		trans: addAlpha;
+		alpha: ifelse((time -16) < 4, 64 * (time -16), 256), 256;
+	}
+}
+
+# Scale
+if numexplod(4) {
+	modifyexplod{
+		id: 4;
+		scale: 1 -(0.0625 * (time -24)), 1 -(0.0625 * (time -24));
+		trans: addAlpha;
+		alpha: ifelse((time -24) < 4, 64 * (time -24), 256), 256;
+	}
+}
+
+# Circle
+if time = 24 {
+	explod{
+		anim: 8502;
+		id: 10;
+		sprPriority: 5;
+		posType: p1;
+		facing: ifelse(random < 500, -1, 1);
+		vfacing: ifelse(random < 500, -1, 1);
+		angle: 90 * (random % 4);
+		bindtime: -1;
+		removetime: 32;
+		supermovetime: -1;
+	}
+}
+
+# Scale
+if numexplod(10) {
+	modifyexplod{
+		id: 10;
+		scale: 2 -(0.125 * (time -24)), 2 -(0.125 * (time -24));
+		trans: addAlpha;
+		alpha: ifelse((time -24) < 4, 64 * (time -24), 256), 256;
+	}
+}
+
+if time >= 40 {
+	# Safety
+	removeexplod{}
+	# End
+	destroySelf{}
+}
+
+#----- Level 2 -----
+
+#============================================================
+# State 8510
+#============================================================
+[StateDef 8510;
+	type: A;
+	velSet: 0, 0;
+	anim: 8510;
+	sprPriority: 5;
+]
+
+# Bind
+if !time {
+	varSet{fv: 24; value: -rootdist x}
+	varSet{fv: 25; value: -rootdist y}
+}
+
+# Bind
+bindToRoot{pos: fvar(24), fvar(25)}
+# No Shadow
+assertSpecial{flag: noshadow}
+
+# BG PalFX
+if time <= 39 {
+	bgPalFx{time: 1; color: 0; mul: 192, 0, 256}
+}
+
+# Rotate
+if !time {
+	angleset{value: 6 * (random % 60)}
+}
+
+# Rotate
+angleadd{value: -6}
+# Scale
+angleDraw{scale: (0.0177 * time) ** 2, (0.0177 * time) ** 2}
+# Trans
+trans{trans: addAlpha; alpha: 256, 256}
+
+# Lines
+if time = 0 || time = 8 || time = 16 || time = 24 {
+	explod{
+		anim: 8511;
+		id: ifelse(time = 24, 4, ifelse(time = 16, 3, ifelse(time = 8, 2, 1)));
+		sprPriority: 5;
+		posType: p1;
+		facing: ifelse(random < 500, -1, 1);
+		vfacing: ifelse(random < 500, -1, 1);
+		angle: 90 * (random % 4);
+		bindtime: -1;
+		removetime: 16;
+		supermovetime: -1;
+	}
+}
+
+# Scale
+if numexplod(1) {
+	modifyexplod{
+		id: 1;
+		scale: 1 -(0.0625 * time), 1 -(0.0625 * time);
+		trans: addAlpha;
+		alpha: ifelse(time < 3, 64 * (time + 1), 256), 256;
+	}
+}
+
+# Scale
+if numexplod(2) {
+	modifyexplod{
+		id: 2;
+		scale: 1 -(0.0625 * (time -8)), 1 -(0.0625 * (time -8));
+		trans: addAlpha;
+		alpha: ifelse((time -8) < 4, 64 * (time -8), 256), 256;
+	}
+}
+
+# Scale
+if numexplod(3) {
+	modifyexplod{
+		id: 3;
+		scale: 1 -(0.0625 * (time -16)), 1 -(0.0625 * (time -16));
+		trans: addAlpha;
+		alpha: ifelse((time -16) < 4, 64 * (time -16), 256), 256;
+	}
+}
+
+# Scale
+if numexplod(4) {
+	modifyexplod{
+		id: 4;
+		scale: 1 -(0.0625 * (time -24)), 1 -(0.0625 * (time -24));
+		trans: addAlpha;
+		alpha: ifelse((time -24) < 4, 64 * (time -24), 256), 256;
+	}
+}
+
+# Circle
+if time = 24 {
+	explod{
+		anim: 8512;
+		id: 10;
+		sprPriority: 5;
+		posType: p1;
+		facing: ifelse(random < 500, -1, 1);
+		vfacing: ifelse(random < 500, -1, 1);
+		angle: 90 * (random % 4);
+		bindtime: -1;
+		removetime: 32;
+		supermovetime: -1;
+	}
+}
+
+# Scale
+if numexplod(10) {
+	modifyexplod{
+		id: 10;
+		scale: 2 -(0.125 * (time -24)), 2 -(0.125 * (time -24));
+		trans: addAlpha;
+		alpha: ifelse((time -24) < 4, 64 * (time -24), 256), 256;
+	}
+}
+
+if time >= 40 {
+	# Safety
+	removeexplod{}
+	# End
+	destroySelf{}
+}
+
+#----- Level 3 -----
+
+#============================================================
+# State 8520
+#============================================================
+[StateDef 8520;
+	type: A;
+	velSet: 0, 0;
+	anim: 8520;
+	sprPriority: 5;
+]
+
+# Bind
+if !time {
+	varSet{fv: 24; value: -rootdist x}
+	varSet{fv: 25; value: -rootdist y}
+}
+
+# Bind
+bindToRoot{pos: fvar(24), fvar(25)}
+
+if time < 40 {
+	# No Shadow
+	assertSpecial{flag: globalnoshadow}
+	# Assert
+	assertSpecial{flag: nobardisplay; flag2: noBG; flag3: noFG}
+}
+
+# Rotate
+if !time {
+	angleset{value: 6 * (random % 60)}
+}
+
+# Rotate
+angleadd{value: -6}
+# Scale
+angleDraw{scale: (0.0177 * time) ** 2, (0.0177 * time) ** 2}
+# Trans
+trans{trans: addAlpha; alpha: 256, 256}
+
+# Portrait
+if !time {
+	explod{
+		anim: 8525;
+		id: 20;
+		sprPriority: -16;
+		posType: back;
+		bindtime: -1;
+		removetime: 40;
+		supermovetime: -1;
+	}
+	explod{
+		anim: 8525;
+		id: 21;
+		sprPriority: -16;
+		posType: back;
+		bindtime: -1;
+		removetime: 40;
+		supermovetime: -1;
+	}
+}
+
+# Scale
+if numexplod(20) && time < 16 {
+	modifyexplod{
+		id: 20;
+		posType: back;
+		pos: 160, ifelse((gamewidth / gameheight) > 1.55, 90, 120);
+		scale: 1 - (0.03125 * time), 1 - (0.03125 * time);
+		trans: addAlpha;
+		alpha: (8 * time), 256;
+	}
+}
+
+# Scale
+if numexplod(21) && time < 16 {
+	modifyexplod{
+		id: 21;
+		posType: back;
+		pos: 160, ifelse((gamewidth / gameheight) > 1.55, 90, 120);
+		scale: 2 - (0.09375 * time), 2 - (0.09375 * time);
+		trans: addAlpha;
+		alpha: (8 * time), 256;
+	}
+}
+
+# Scale
+if numexplod(20) && (time = [16, 32]) {
+	modifyexplod{
+		id: 20;
+		posType: back;
+		pos: 160, ifelse((gamewidth / gameheight) > 1.55, 90, 120);
+		scale: 0.5, 0.5;
+		trans: addAlpha;
+		alpha: 256, 256;
+	}
+}
+
+# Scale
+if numexplod(21) && time >= 16 {
+	removeexplod{id: 21}
+}
+
+# Scale
+if numexplod(20) && time >= 32 {
+	modifyexplod{
+		id: 20;
+		posType: back;
+		pos: 160, ifelse((gamewidth / gameheight) > 1.55, 90, 120);
+		scale: 0.5, 0.5;
+		trans: addAlpha;
+		alpha: 128 - 16 * (time -32), 256;
+	}
+}
+
+# Lines
+if time = 0 || time = 8 || time = 16 || time = 24 {
+	explod{
+		anim: 8521;
+		id: ifelse(time = 24, 4, ifelse(time = 16, 3, ifelse(time = 8, 2, 1)));
+		sprPriority: 5;
+		posType: p1;
+		facing: ifelse(random < 500, -1, 1);
+		vfacing: ifelse(random < 500, -1, 1);
+		angle: 90 * (random % 4);
+		bindtime: -1;
+		removetime: 16;
+		supermovetime: -1;
+	}
+}
+
+# Scale
+if numexplod(1) {
+	modifyexplod{
+		id: 1;
+		scale: 1 -(0.0625 * time), 1 -(0.0625 * time);
+		trans: addAlpha;
+		alpha: ifelse(time < 3, 64 * (time + 1), 256), 256;
+	}
+}
+
+# Scale
+if numexplod(2) {
+	modifyexplod{
+		id: 2;
+		scale: 1 -(0.0625 * (time -8)), 1 -(0.0625 * (time -8));
+		trans: addAlpha;
+		alpha: ifelse((time -8) < 4, 64 * (time -8), 256), 256;
+	}
+}
+
+# Scale
+if numexplod(3) {
+	modifyexplod{
+		id: 3;
+		scale: 1 -(0.0625 * (time -16)), 1 -(0.0625 * (time -16));
+		trans: addAlpha;
+		alpha: ifelse((time -16) < 4, 64 * (time -16), 256), 256;
+	}
+}
+
+# Scale
+if numexplod(4) {
+	modifyexplod{
+		id: 4;
+		scale: 1 -(0.0625 * (time -24)), 1 -(0.0625 * (time -24));
+		trans: addAlpha;
+		alpha: ifelse((time -24) < 4, 64 * (time -24), 256), 256;
+	}
+}
+
+# Circle
+if time = 24 {
+	explod{
+		anim: 8522;
+		id: 10;
+		sprPriority: 5;
+		posType: p1;
+		facing: ifelse(random < 500, -1, 1);
+		vfacing: ifelse(random < 500, -1, 1);
+		angle: 90 * (random % 4);
+		bindtime: -1;
+		removetime: 32;
+		supermovetime: -1;
+	}
+}
+
+# Scale
+if numexplod(10) {
+	modifyexplod{
+		id: 10;
+		scale: 2 -(0.125 * (time -24)), 2 -(0.125 * (time -24));
+		trans: addAlpha;
+		alpha: ifelse((time -24) < 4, 64 * (time -24), 256), 256;
+	}
+}
+
+if time >= 40 {
+	# Safety
+	removeexplod{}
+	# End
+	destroySelf{}
+}
+
+#========================<SUPER FINISH>=============================
+
+#============================================================
+# State 8600
+#============================================================
+[StateDef 8600;
+	type: A;
+	velSet: 0, 0;
+	anim: 9999;
+]
+
+# Sound
+if !time {
+	playSnd{value: 0, 8600; channel: 1}
+}
+
+# Sound
+if time <= 80 {
+	sndpan{channel: 1; abspan: ceil(sin(gametime / 20.0 * pi) * 160)}
+	assertSpecial{flag: nomusic}
+}
+
+# BG PalFX
+if time < 16
+&& !(time % 2) {
+	bgPalFx{time: 1; color: 0; mul: 192, 192, 192}
+}
+
+# BG PalFX
+if time < 16
+&& time % 2 {
+	bgPalFx{time: 1; color: 0; mul: 128, 32, 0}
+}
+
+# BG PalFX
+if time = [16, 24] {
+	bgPalFx{
+		time: 1;
+		color: 32 * (time -16);
+		mul: 128 + 8 * (time - 16), 32 + 14 * (time - 16), 32 * (time - 16);
+	}
+}
+
+# Move Name
+if !time
+&& root, map(superfinish) = 900 {
+	varSet{v: 0; value: 1}
+}
+
+# Move Name
+if !time
+&& root, map(superfinish) = [3000, 3099] {
+	varSet{v: 0; value: 2}
+}
+
+# Move Name
+if !time
+&& root, map(superfinish) = [3100, 3199] {
+	varSet{v: 0; value: 3}
+}
+
+# Move Name
+if !time
+&& root, map(superfinish) = [3200, 3299] {
+	varSet{v: 0; value: 4}
+}
+
+# MvC
+if !time {
+	explod{
+		anim: 8600;
+		id: 8600;
+		ontop: 1;
+		posType: left;
+		pos: 160, ifelse((gamewidth / gameheight) > 1.55, 90, 120);
+		scale: 0.5, 0.5 * (1.3333333 * gameheight / gamewidth);
+		bindtime: -1;
+		removetime: 32;
+		pausemovetime: -1;
+		supermovetime: -1;
+	}
+}
+
+# Fade
+if numexplod(8600) {
+	modifyexplod{id: 8600; trans: addAlpha; alpha: ifelse(time < 16, 256, 256 -32 * (time -16)), 256}
+}
+
+# Text
+if !time
+&& var(0) {
+	explod{
+		anim: 8610 + var(0);
+		id: 10;
+		ontop: 1;
+		posType: left;
+		pos: 160, ifelse((gamewidth / gameheight) > 1.55, 90, 120);
+		scale: 0.5, 0.5 * (1.3333333 * gameheight / gamewidth);
+		bindtime: -1;
+		removetime: 32;
+		pausemovetime: -1;
+		supermovetime: -1;
+	}
+	explod{
+		anim: 8610 + var(0);
+		id: 11;
+		ontop: 1;
+		posType: left;
+		pos: 160, ifelse((gamewidth / gameheight) > 1.55, 90, 120);
+		scale: 0.5, 0.5 * (1.3333333 * gameheight / gamewidth);
+		bindtime: -1;
+		removetime: 8;
+		pausemovetime: -1;
+		supermovetime: -1;
+	}
+}
+
+# Fade
+if numexplod(10) {
+	modifyexplod{
+		id: 10;
+		trans: addAlpha;
+		alpha: ifelse(time < 16, 256, 256 -32 * (time -16)), ifelse(time < 16, 0, 32 * (time -16));
+	}
+}
+
+# Fade
+if numexplod(11) {
+	modifyexplod{
+		id: 11;
+		scale: 0.5 + (0.0625 * time), (0.5 + (0.0625 * time)) * (1.3333333 * gameheight / gamewidth);
+		trans: addAlpha;
+		alpha: 256 - (32 * time), 32 * time;
+	}
+}
+
+# Circle
+if !time {
+	explod{
+		anim: 8601;
+		id: 8601;
+		sprPriority: -5;
+		posType: left;
+		pos: 160, ifelse((gamewidth / gameheight) > 1.55, 90, 120);
+		bindtime: -1;
+		removetime: 16;
+		pausemovetime: -1;
+		supermovetime: -1;
+	}
+}
+
+# Fade
+if numexplod(8601) {
+	modifyexplod{
+		id: 8601;
+		scale: (0.25 * time) * (1.3333333 * gameheight / gamewidth), (0.25 * time) * (1.3333333 * gameheight / gamewidth);
+		trans: addAlpha;
+		alpha: 256 - (16 * time), 256;
+	}
+}
+
+# Stop Shake
+if numexplod {
+	envshake{time: 1; ampl: 0}
+}
+
+# Assert
+if time < 24 {
+	assertSpecial{flag: nobardisplay}
+}
+
+# End
+if numexplod
+&& time >= 24
+&& roundState != 3 {
+	removeexplod{}
+}
+
+# End
+if time >= 24
+&& roundState != 3 {
+	destroySelf{}
+}
+
+#========================<CAMERA CONTROL>=============================
+
+#============================================================
+# State 8999
+#============================================================
+[StateDef 8999;
+	type: S;
+	velSet: 0, 0;
+	anim: 9999;
+]
+
+# Bound
+screenBound{value: 0; movecamera: 1, 1}
+
+# End
+if roundState = 2
+&& root, stateno != [3205, 3206] {
+	destroySelf{}
+}

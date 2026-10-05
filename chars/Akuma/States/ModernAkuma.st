@@ -1,0 +1,87 @@
+; ______________________
+;| Akuma by DeathScythe |
+; ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+;---------------------------------------------------------------------------
+;Initialize
+[StateDef 5900]
+type = S
+
+[State 5900, Int VarReset]
+type = VarRangeSet
+trigger1 = !RoundsExisted
+value = 0
+
+[State 5900, Float VarReset]
+type = VarRangeSet
+trigger1 = !RoundsExisted
+fvalue = 0
+
+[State 5900, Mode Detection]
+type = VarSet
+trigger1 = 1
+var(40) = 2
+ignorehitpause = 1
+
+;---------------------------------------------------------------------------
+; @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+; @@@ ONLY MODIFY BELOW THIS LINE @@@
+; @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+;---------------------------------------------------------------------------
+
+;Custom Combo / Max Mode Select
+[State 5900, Custom Combo / Max Mode Select]
+type = VarSet
+trigger1 = 1
+var(54) = 0
+;0 = custom combo
+;1 = max mode
+
+;Hit Spark
+[State 5900, Hit Spark Type]
+type = VarSet
+trigger1 = 1
+var(55) = 1
+;0 = normal hit spark (orange)
+;1 = multicolored hit spark (normal = orange, special = blue, super = purple)
+
+;AfterImage on Custom Combo
+[State 5900, CC AfterImage]
+type = VarSet
+trigger1 = 1
+var(56) = 0
+;0 = Light Blue (default PotS style)
+;1 = Purple (similar to SFA3 V-ISM)
+
+; AfterImage on EX Moves
+[State 5900, EX AfterImage]
+type = VarSet
+trigger1 = 1
+var(57) = 0
+;0 = Off
+;1 = On
+
+; Extra Super Pause sounds for LV2s and 3s
+[State 5900, Super Pause]
+type = VarSet
+trigger1 = 1
+var(59) = 1
+;0 = No (default PotS style)
+;1 = Yes (akin to Infinite style)
+
+;---------------------------------------------------------------------------
+; @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+; @@@ ONLY MODIFY ABOVE THIS LINE @@@
+; @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+;---------------------------------------------------------------------------
+
+[state 5900, Palette]
+type = Null;RemapPal
+trigger1 = 1
+source = 1, 1
+dest = 1, PalNo
+
+[State 5900, End]
+type = ChangeState
+trigger1 = 1
+value = 5901

@@ -1,0 +1,1813 @@
+;基本データ部分
+[Data]
+life              = 1000 
+power             = 3000
+attack            = 100 
+defence           = 110  
+fall.defence_up   = 20   
+liedown.time      = 45
+airjuggle         = 16      
+sparkno           = 2      
+guard.sparkno     = 2       
+KO.echo           = 0       
+volume            = 100       
+IntPersistIndex   = 50,59    
+FloatPersistIndex = 40  
+;---------------------------------------------------------------------------
+;サイズ設定
+[Size]
+xscale           = 1.21
+yscale           = 1.21   
+ground.back      = 15     
+ground.front     = 15   
+air.back         = 12    
+air.front        = 12  
+height           = 60 
+attack.dist      = 160 
+proj.attack.dist = 90 
+proj.doscale     = 0     
+head.pos         = -5, -90 
+mid.pos          = -5, -60
+shadowoffset     = 0      
+draw.offset      = 0,0      
+;---------------------------------------------------------------------------
+[Velocity]
+walk.fwd          = 4 
+walk.back         = -3  
+run.fwd           = 4.6, 0 
+run.back          = -4.5,-3.8 
+jump.neu          = 0,-8.4   
+jump.back         = -2.55  
+jump.fwd          = 2.5      
+runjump.back      = -2.55,-8.1 
+runjump.fwd       = 4,-8.1  
+airjump.neu       = 0,-8.1
+airjump.back      = -2.55 
+airjump.fwd       = 2.5 
+
+;---------------------------------------------------------------------------
+;動作設定
+[Movement]
+airjump.num     = 0 
+airjump.height  = 5 
+yaccel          = .5 
+stand.friction  = .71
+crouch.friction = .66
+
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+; Time Over
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Statedef 170]
+type        = S
+ctrl        = 0
+velset      = 0,0,0
+sprpriority = 1
+
+[State 170];---------------------------------アニメ変更
+type = ChangeAnim
+trigger1 = Time = 0 && LoseTime = 1
+value = 170
+elem  = 1
+
+[State 170 ];---------------------------------効果音
+type     = PlaySnd
+trigger1 = Anim = 170 && AnimElemTime(6) = 1
+value    = S6,20
+volume   = 300
+
+[State 170 ]
+type     = PlaySnd
+trigger1 = Anim = 170 
+trigger1 = AnimElemTime(1) = 1 || AnimElemTime(6) = 1
+value    = S3,0
+
+[State 170 ]
+type     = PlaySnd
+trigger1 = Anim = 170 && AnimElemTime(7) = 6
+value    = S0,2
+
+[State 170]
+type = AssertSpecial
+trigger1 = Anim = 170 && Time < 220
+flag = RoundNotOver
+
+
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+; DRAWGAME - Time over
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Statedef 175]
+type        = S
+ctrl        = 0
+velset      = 0,0
+sprpriority = 1
+Anim        = 175
+
+[State 175];---------------------------------アニメ変更
+type = ChangeAnim
+trigger1 = Anim = 175 && AnimTime = 0
+value = 0
+elem  = 1
+
+[State 175];---------------------------------効果音
+type = PlaySnd
+trigger1 = Anim =0 && AnimElemTime(3) = 1
+value = S3, 3
+volume = -300 
+
+[State 175];---------------------------------エフェクト
+type = Explod
+trigger1 = Anim =0 && AnimElemTime(3) = 1
+anim = 2050
+postype     = p1
+pos         = -8 ,-70  
+bindtime    = -1
+removetime  = -2
+sprpriority = 0
+supermove   = 01
+ownpal      = 1
+
+[State 175];---------------------------------効果音
+type     = PlaySnd
+trigger1 = Anim = 175 && AnimElemTime(4) = 1
+value    = S6,21
+volume   = 300
+
+[State 175]
+type     = PlaySnd
+trigger1 = Anim = 175 
+trigger1 = AnimElemTime(1) = 1 || AnimElemTime(5) = 1
+value    = S3,0
+
+[State 175]
+type     = PlaySnd
+Trigger1 = Anim = 175 && AnimElemTime(3) = 1
+value    = S5,1
+volume   = 100
+
+[State 175]
+type = Explod
+Trigger1   = Anim = 175 && AnimElemTime(3) = 1
+anim = 10193
+postype     = p1 
+pos         = 25,-110
+bindtime    = 1
+removetime  = -2
+sprpriority = 4
+shadow      = -1
+ownpal      = 1
+
+[State 175];---------------------------------無敵状態
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 1
+
+[State 175]
+type = AssertSpecial
+trigger1 = Anim = 175 && Time < 350
+flag = RoundNotOver
+
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+; Win
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Statedef 180]
+type        = S
+ctrl        = 0
+velset      = 0,0
+sprpriority = 1
+
+
+[State 180];---------------------------------勝利ポーズ
+type = VarRandom
+trigger1 = Time = 0 && MatchOver = 1
+v = 49
+range = 0,4
+
+[State 180]
+type = AssertSpecial
+trigger1 = Anim = 180 ||  Anim = 181 ||  Anim = 183
+trigger1 = Time < 320
+trigger2 = Anim = 182 && Time < 400
+trigger3 = Anim = 184 || Anim = 10184
+trigger3 = Time < 440
+flag = RoundNotOver
+
+[State 180];---------------------------------アニメ変更
+type = ChangeAnim
+trigger1 = Time = 1 && MatchOver = 1
+value = 180+Var(49)
+elem  = 1
+
+[State 180];---------------------------------効果音
+type     = PlaySnd
+trigger1 = Anim = 180 && AnimElemTime(3) = 1
+value    = S6,15
+volume   = 300
+
+[State 181]
+type     = PlaySnd
+trigger1 = Anim = 181 && AnimElemTime(4) = 1
+value    = S6,16
+volume   = 300
+
+[State 182]
+type     = PlaySnd
+trigger1 = Anim = 182 && AnimElemTime(4) = 1
+value    = S6,17
+volume   = 300
+
+[State 183]
+type     = PlaySnd
+trigger1 = Anim = 183 && AnimElemTime(5) = 1
+value    = S6,18
+volume   = 300
+
+[State 184]
+type     = PlaySnd
+trigger1 = Anim = 184 && AnimElemTime(3) = 1
+value    = S6,19
+volume   = 300
+
+[State 180]
+type     = PlaySnd
+trigger1 = Anim = 180
+trigger1 = AnimElemTime(1) = 1 || AnimElemTime(4) = 1 || AnimElemTime(7) = 1 || AnimElemTime(10) = 1
+trigger2 = Anim = 181
+trigger2 = AnimElemTime(1) = 1 || AnimElemTime(9) = 8
+trigger3 = Anim = 182
+trigger3 = AnimElemTime(1) = 1 || AnimElemTime(4) = 140
+trigger4 = Anim = 183
+trigger4 = AnimElemTime(2) = 1  || AnimElemTime(5) = 1  || AnimElemTime(8) = 1
+trigger5 = Anim = 183
+trigger5 = AnimElemTime(11) = 1 || AnimElemTime(14) = 1 || AnimElemTime(17) = 1
+trigger6 = Anim = 184
+trigger6 = AnimElemTime(1) = 1  || AnimElemTime(4) = 1  || AnimElemTime(6) = 1
+value    = S3,0
+
+[State 180]
+type     = PlaySnd
+trigger1 = Anim = 180 && AnimElemTime(13) = 1
+value    = S3,0
+volume   = -300
+
+[State 184]
+type     = PlaySnd
+triggerAll = Anim = 184
+trigger1   = AnimElemTime(8) = 1  || AnimElemTime(12) = 1  || AnimElemTime(14) = 1
+trigger2   = AnimElemTime(16) = 1 || AnimElemTime(18) = 1 || AnimElemTime(20) = 1
+trigger3   = AnimElemTime(22) = 1 || AnimElemTime(24) = 1 || AnimElemTime(26) = 1
+trigger4   = AnimElemTime(28) = 1 
+value    = S8,0
+
+[State 180]
+type     = PlaySnd
+trigger1 = Anim = 180 && AnimElemTime(11) = 8
+trigger2 = Anim = 181 && AnimElemTime(3) = 1
+trigger3 = Anim = 183 && AnimElemTime(18) = 8
+value    = S3,1
+volume   = 300
+
+[State 180]
+type     = PlaySnd
+trigger1 = Anim = 181 && AnimElemTime(5) = 1
+trigger2 = Anim = 183 && AnimElemTime(18) = 8
+trigger3 = Anim = 184 && AnimElemTime(26) = 8
+value    = S0,2
+volume   = 300
+
+[State 183]
+type     = PlaySnd
+trigger1 = Anim = 183 && AnimElemTime(18) = 8
+value    = S5,6
+volume   = 300
+
+[State 184]
+type     = PlaySnd
+trigger1 = Anim = 184 && AnimElemTime(15) = 0
+value    = S8,1
+volume   = 300
+
+[State 184]
+type     = PlaySnd
+trigger1 = Anim = 184 && AnimElemTime(26) = 8
+value    = S8,2
+volume   = 300
+
+[State 184]
+type     = PlaySnd
+trigger1 = Anim = 184 && Time = 350
+value    = S8,4
+volume   = 300
+
+[State 184]
+type     = PlaySnd
+trigger1 = Anim = 184 && Time = 396
+value    = S9,1
+volume   = 300
+
+[State 182]
+type     = PlaySnd
+Trigger1 = Anim = 182 && AnimElemTime(3) = 1
+value    = S5,1
+volume   = 100
+
+[State 180];---------------------------------エフェクト
+type = Explod
+trigger1 = Anim = 181 && AnimElemTime(2) = 8
+trigger2 = Anim = 183
+trigger2 = AnimElemTime(2) = 1  || AnimElemTime(5) = 1  || AnimElemTime(8) = 1
+trigger3 = Anim = 183
+trigger3 = AnimElemTime(11) = 1 || AnimElemTime(14) = 1 || AnimElemTime(17) = 1
+anim = 2200
+postype     = p1
+pos         = 8 ,2  
+bindtime    = 1
+removetime  = -2
+sprpriority = 3
+supermove   = 0
+ownpal      = 1
+
+[State 184]
+type = Explod
+triggerAll = Anim = 184
+trigger1   = AnimElemTime(8) = 1  || AnimElemTime(12) = 1  || AnimElemTime(14) = 1
+trigger2   = AnimElemTime(16) = 1 || AnimElemTime(18) = 1 || AnimElemTime(20) = 1
+trigger3   = AnimElemTime(22) = 1 || AnimElemTime(24) = 1 || AnimElemTime(26) = 1
+trigger4   = AnimElemTime(28) = 1 
+anim = 2200
+postype     = p1
+pos         = 8 ,2  
+bindtime    = 1
+removetime  = -2
+sprpriority = 3
+supermove   = 0
+ownpal      = 1
+
+[State 180]
+type = Explod
+trigger1 = Anim = 180 && AnimElemTime(11) = 8
+trigger2 = Anim = 181 && AnimElemTime(4) = 40
+trigger3 = Anim = 183 && AnimElemTime(18) = 8
+trigger4 = Anim = 184 && AnimElemTime(26) = 8
+trigger5 = Anim = 184 && Time = 399
+anim = 2400
+postype     = p1
+pos         = 8 ,2  
+bindtime    = 1
+removetime  = -2
+sprpriority = 3
+supermove   = 0
+ownpal      = 1
+
+[State 181]
+type = Explod
+trigger1 = Anim = 181 && AnimElem = 4
+anim = 10181
+id   = 10181
+postype     = p1
+pos         = 0 ,0  
+bindtime    = -1
+removetime  = -2
+sprpriority = 2
+supermove   = 0
+ownpal      = 1
+Scale       = 1.2,1.2
+
+[State 183]
+type = Explod
+trigger1 = Anim = 183 && AnimElemTime(18) = 8
+anim = 1780
+postype     = p1
+pos         = 0,0
+bindtime    = 1
+removetime  = -2
+sprpriority = 4
+supermove   = 0
+ownpal      = 1
+
+[State 184]
+type = Explod
+Trigger1   = Anim = 184 && AnimElemTime(26) = 8
+Trigger1   = NumExplod(3751) = 0
+anim = 3750
+ID   = 3751
+postype     = p1
+pos         = 4 ,-64
+bindtime    = -1
+removetime  = -1
+sprpriority = 4
+supermove   = 0
+ownpal      = 1
+removeongethit = 1
+
+[State 184]
+type = RemoveExplod
+Trigger1   = Anim != 184
+ID = 3751
+
+[State 182]
+type = Explod
+Trigger1   = Anim = 182 && AnimElemTime(3) = 1
+anim = 10193
+postype     = p1 
+pos         = 25,-110
+bindtime    = 1
+removetime  = -2
+sprpriority = 4
+shadow      = -1
+ownpal      = 1
+
+[State 184]
+type = Explod
+trigger1 = Anim = 184 && AnimElemTime(15) = 0
+anim = 3200
+postype     = p1
+pos         = 4,-34 
+bindtime    = 1
+removetime  = 60
+sprpriority = 3
+supermove   = 0
+ownpal      = 1
+
+[State 184]
+type = Explod
+trigger1 = Anim = 184 && Time = 194
+anim = 3200
+postype     = p1
+pos         = 4,-64 
+bindtime    = 1
+removetime  = 206
+sprpriority = 3
+supermove   = 0
+ownpal      = 1
+
+[State 184]
+type = Explod
+trigger1 = Anim = 184 && Time = 396
+anim = 3600
+postype     = p1
+pos         = 4,-64 
+bindtime    = 1
+removetime  = -2
+sprpriority = 4
+supermove   = 0
+ownpal      = 1
+
+[State 184]
+type = Explod
+trigger1 = Anim = 184 && Time = 400
+anim = 3900
+postype     = p1
+pos         = 4,-90
+bindtime    = 1
+removetime  = -2
+sprpriority = 5
+supermove   = 0
+ownpal      = 1
+
+[State 180]
+type = Explod
+trigger1 = Anim = 180 && AnimElemTime(11) = 8
+anim = 3900
+postype     = p1
+pos         = 4,-104 
+bindtime    = -1
+removetime  = -2
+sprpriority = 3
+supermove   = 0
+ownpal      = 1
+
+[State 180];---------------------------------振動
+type = EnvShake
+trigger1 = Anim = 181 && AnimElemTime(3) = 1
+time = 10
+freq = 80
+ampl = -6
+
+[State 180]
+type = EnvShake
+trigger1 = Anim = 180 && AnimElemTime(11) = 8
+trigger2 = Anim = 183 && AnimElemTime(18) = 8
+time = 20
+freq = 80
+ampl = -6
+
+[State 184]
+type = EnvShake
+triggerAll = Anim = 184
+trigger1   = AnimElemTime(8) = 1  || AnimElemTime(12) = 1  || AnimElemTime(14) = 1
+trigger2   = AnimElemTime(16) = 1 || AnimElemTime(18) = 1 || AnimElemTime(20) = 1
+trigger3   = AnimElemTime(22) = 1 || AnimElemTime(24) = 1 || AnimElemTime(26) = 1
+trigger4   = AnimElemTime(26) = 8
+time = 6
+freq = 80
+ampl = -6
+
+[State 184]
+type = EnvShake 
+trigger1   = Anim = 184 && AnimElemTime(28) = 1
+time = 7
+freq = 90
+ampl = -8
+
+[State 184]
+type = EnvShake
+trigger1 = Anim = 184 && Time = 400
+time = 24
+freq = 120
+ampl = -8
+
+[State 184];---------------------------------カラー
+type = Palfx
+trigger1 = Anim = 184 && Time = 110
+;add        =  240,130,32 
+sinadd     = 200,0,0 ,6 
+time = 290
+
+[State 182]
+type = Palfx
+trigger1 = Anim = 183 && AnimElemTime(18) = 8 
+add        = 226,226,226
+mul        = 54,54,54
+sinadd     = -226,-226,-226,5 
+color      = 0
+invertall  = 1  
+time = 8
+
+[State 184];---------------------------------アニメ変更
+type = ChangeAnim
+Trigger1   = Anim = 184 && Time = 400
+value = 10184
+elem = 1
+
+[State 184]
+type = ScreenBound
+trigger1 = Anim = 184 || Anim = 10184
+value = 1
+movecamera = 0,0
+ignorehitpause = 1
+
+[State 184];---------------------------------速度
+type = VelSet
+trigger1 = Anim = 184 || Anim = 10184
+trigger1 = Time = 400
+Y = -20
+
+[State 184]
+type = VelAdd
+trigger1 = Anim = 184 || Anim = 10184
+trigger1 = Time > 400 && Time < 441
+y = 0.5
+
+[State 184]
+type = VelSet
+trigger1 = Anim = 184 || Anim = 10184
+trigger1 = Time = 441
+y = 0
+
+[State 184];---------------------------------パーツ 腕
+type = Helper
+trigger1 = Anim = 184 || Anim = 10184
+trigger1 = Time = 400
+helpertype = normal
+name = "P-01"
+ID   = 1870
+stateno = 1870
+pos     = -20,-15
+postype = p1 
+keyctrl = 0
+ownpal  = 1
+supermovetime    = 0
+
+[State 184];---------------------------------パーツ 足
+type = Helper
+trigger1 = Anim = 184 || Anim = 10184
+trigger1 = Time = 400
+helpertype = normal
+name = "P-02"
+ID   = 1870
+stateno = 1873
+pos     = 15,0
+postype = p1 
+keyctrl = 0
+ownpal  = 1
+supermovetime    = 0
+
+[State 184];---------------------------------パーツ 肩
+type = Helper
+trigger1 = Anim = 184 || Anim = 10184
+trigger1 = Time = 400
+helpertype = normal
+name = "P-03"
+ID   = 1870
+stateno = 1876
+pos     = -30,-20
+postype = p1 
+keyctrl = 0
+ownpal  = 1
+supermovetime    = 0
+
+[State 184];---------------------------------パーツ 螺子 
+type = Helper
+trigger1 = Anim = 184 || Anim = 10184
+trigger1 = Time = 400
+helpertype = normal
+name = "P-04"
+ID   = 1870
+stateno = 1879
+pos     = -25,0
+postype = p1 
+keyctrl = 0
+ownpal  = 1
+supermovetime    = 0
+
+[State 184];---------------------------------パーツ 破片
+type = Helper
+trigger1 = Anim = 184 || Anim = 10184
+trigger1 = Time = 400
+helpertype = normal
+name = "P-05"
+ID   = 1870
+stateno = 1882
+pos     = 20,-10
+postype = p1 
+keyctrl = 0
+ownpal  = 1
+supermovetime    = 0
+
+[State 184];---------------------------------パーツ 手首
+type = Helper
+trigger1 = Anim = 184 || Anim = 10184
+trigger1 = Time = 400
+helpertype = normal
+name = "P-06"
+ID   = 1870
+stateno = 1885
+pos     = 30,-20
+postype = p1 
+keyctrl = 0
+ownpal  = 1
+supermovetime    = 0
+
+[State 184];---------------------------------パーツ 歯車
+type = Helper
+trigger1 = Anim = 184 || Anim = 10184
+trigger1 = Time = 400
+helpertype = normal
+name = "P-07"
+ID   = 1870
+stateno = 1888
+pos     = 25,0
+postype = p1 
+keyctrl = 0
+ownpal  = 1
+supermovetime    = 0
+
+;---------------------------------
+;---------------------------------
+;---------------------------------
+[State 180];---------------------------------ラウンド１
+type = VarRandom
+trigger1 = Time = 0 && MatchOver = 0
+v = 49
+range = 0,3
+
+[State 180]
+type = VarRandom
+trigger1 = Anim = 185 || Anim = 186 || Anim = 187 || Anim = 188 
+trigger1 = AnimElemTime(2) = 1
+v = 48
+range = 0,2
+
+[State 180]
+type = AssertSpecial
+trigger1 = Anim = 185 && Time < 286
+trigger2 = Anim = 186 && Time < 260
+trigger3 = Anim = 187 && Time < 280
+trigger4 = Anim = 188 && Time < 220
+flag = RoundNotOver
+
+[State 180];---------------------------------アニメ変更
+type = ChangeAnim
+trigger1 = Time = 1 && MatchOver = 0
+value = 185 +Var(49)
+elem  = 1
+
+[State 185];---------------------------------音声
+type     = PlaySnd
+trigger1 = Anim = 185 && AnimElem = 3 && Var(48) = 0
+value    = S6,9
+volume = 300
+
+[State 185]
+type     = PlaySnd
+trigger1 = Anim = 185 && AnimElem = 5 && Var(48) >= 1
+value    = S6,9+Var(48)
+volume = 300
+
+[State 186]
+type     = PlaySnd
+trigger1 = Anim = 186 && AnimElem = 3
+value    = S7,0+Var(48)
+volume = 300
+
+[State 187]
+type     = PlaySnd
+trigger1 = Anim = 187 && AnimElemTime(3) = 21
+value    = S6,12+Var(48) 
+volume = 300
+
+[State 188]
+type     = PlaySnd
+trigger1 = Anim = 188 && AnimElem = 3
+value    = S7,3+Var(48)
+volume = 300
+
+[State 180]
+type     = PlaySnd
+trigger1 = Anim = 185 || Anim = 186 || Anim = 187
+trigger1 = AnimElem = 1
+trigger2 = Anim = 185 && AnimElemTime(4) = 40
+trigger3 = Anim = 186 && AnimElemTime(3) = 30
+trigger4 = Anim = 187 && AnimElemTime(2) = 20
+trigger5 = Anim = 188 && AnimElemTime(1) = 8
+value    = S3,0
+
+[State 180]
+type     = PlaySnd
+trigger1 = Anim = 186 && AnimElemTime(5) = 1
+value    = S3,0
+volume   = -300
+
+[State 185]
+type     = PlaySnd
+trigger1 = Anim = 185 && AnimElemTime(2) = 8 
+trigger2 = Anim = 186 && AnimElemTime(3) = 30
+value    = S3,1
+
+[State 187]
+type     = PlaySnd
+trigger1 = Anim = 187 && Time = 220
+value    = S5,0
+volume   = -200
+
+[State 188]
+type     = PlaySnd
+trigger1 = Anim = 188 && AnimElemTime(2) = 20
+value    = S0,2
+volume   = 300
+
+[State 185];---------------------------------エフェクト
+type = Explod
+trigger1 = Anim = 185 && AnimElemTime(2) = 8 
+trigger2 = Anim = 186 && AnimElemTime(3) = 30 
+anim = 2200
+postype     = p1
+pos         = 8 ,2  
+bindtime    = 1
+removetime  = -2
+sprpriority = 3
+supermove   = 0
+ownpal      = 1
+
+[State 185]
+type = Explod
+trigger1 = Anim = 187 && AnimElemTime(3) = 1
+anim = 10187
+ID   = 10187
+postype     = p1
+pos         = 7 ,-92 
+bindtime    = 1
+removetime  = -1
+sprpriority = 4
+supermove   = 0
+ownpal      = 1
+
+[State 187]
+type = RemoveExplod
+trigger1 = Anim = 187 && Time >= 220
+id = 10187
+ignorehitpause = 1
+
+[State 187]
+type = Explod
+Trigger1   = Anim = 187 && Time = 220
+anim = 10191
+ID   = 10191
+postype     = p1 
+pos        = 14 ,-87
+bindtime    = -1
+removetime  = -2
+sprpriority = 4
+shadow      = -1
+supermove   = 0
+
+[State 185];---------------------------------振動
+type = EnvShake
+trigger1 = Anim = 185 && AnimElemTime(2) = 8 
+trigger2 = Anim = 186 && AnimElemTime(3) = 30
+time = 20
+freq = 80
+ampl = -6
+
+;---------------------------------
+;---------------------------------
+
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+; PREINTRO
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Statedef 190]
+type = S
+ctrl = 0
+velset = 0,0
+sprpriority = 1
+
+[State 190];---------------------------------アニメ変更
+type = ChangeAnim
+Trigger1   = Time = 0 && SelfAnimExist(190)
+value = 190
+
+[State 190];---------------------------------VAR
+type = VarRandom
+Trigger1   = Time = 0
+v = 49
+range = 0,8
+
+[State 190]
+type = ChangeState
+Trigger1 = Time = 144
+Trigger1 = ( Var(49) = 0 || Var(49) = 1 )
+value = 191
+
+[State 190]
+type = ChangeState
+Trigger1 = Time = 144
+Trigger1 = ( Var(49) = 2 || Var(49) = 3 )
+value = 192
+
+[State 190]
+type = ChangeState
+Trigger1 = Time = 144
+Trigger1 = ( Var(49) = 4 || Var(49) = 5 )
+value = 193
+
+[State 190]
+type = ChangeState
+Trigger1 = Time = 144
+Trigger1 = ( Var(49) >= 6 )
+value = 196
+
+[State 191];---------------------------------効果音
+type     = PlaySnd
+trigger1 = Anim = 190 && AnimElemTime(2) = 1 
+value    = S3,5
+
+[State 191]
+type     = PlaySnd
+trigger1 = Anim = 190
+trigger1 = AnimElemTime(9) = 1 || AnimElemTime(13) = 1 || AnimElemTime(17) = 1
+value    = S3,3
+
+[State 190];---------------------------------エフェクト
+type = Explod
+Trigger1   = Time = 1 && NumExplod(20186) = 0
+Trigger1   = ( Var(49) >= 6 )
+anim = 20186
+ID   = 20186
+postype     = p1 
+pos         = 0,0
+bindtime    = -1
+removetime  = 144
+sprpriority = 2
+shadow      = -1
+ownpal      = 1
+Scale       = 1.2,1.2     
+
+[State 190]
+type = Explod
+Trigger1   = Time = 1 && NumExplod(20187) = 0
+Trigger1   = ( Var(49) >= 6 )
+anim = 20187
+ID   = 20187
+postype     = p1 
+pos         = 0,0
+bindtime    = -1
+removetime  = 144
+sprpriority = 0
+shadow      = -1
+ownpal      = 1
+Scale       = 1.2,1.2
+
+[State 190];---------------------------------イントロタイム
+type = AssertSpecial
+Trigger1   = Time < 150
+flag = intro
+
+;=================================================================================
+; INTRO-1 - あなたの心に不安の花を咲かせましょうかねぇ～
+[Statedef 191]
+type        = S
+physics     = N 
+ctrl        = 0
+velset      = 0,0
+sprpriority = 1
+Anim        = 191
+
+[State 191];---------------------------------アニメ変更
+type = ChangeAnim
+Trigger1   = Anim = 191 && AnimTime = 0
+value = 0
+elem = 1
+
+[State 191];---------------------------------効果音
+type = PlaySnd
+trigger1 = Anim =0 && AnimElemTime(3) = 1
+value = S3, 3
+volume = -300 
+
+[State 191];---------------------------------エフェクト
+type = Explod
+trigger1 = Anim =0 && AnimElemTime(3) = 1
+anim = 2050
+postype     = p1
+pos         = -8 ,-70  
+bindtime    = -1
+removetime  = -2
+sprpriority = 0
+supermove   = 0
+ownpal      = 1
+
+[State 191];---------------------------------効果音
+type     = PlaySnd
+Trigger1 = Anim = 191 && AnimElemTime(1) = 21
+value    = S6,0
+volume = 300
+
+[State 191]
+type     = PlaySnd
+Trigger1 = Anim = 191 && AnimElemTime(2) = 1
+value    = S3,0
+volume = 100
+
+[State 191]
+type     = PlaySnd
+Trigger1 = Anim = 191 && AnimElemTime(6) = 1
+value    = S5,0
+volume = -200
+
+[State 191]
+type     = PlaySnd
+Trigger1 = Anim = 191 && AnimElemTime(3) = 6
+Trigger2 = Anim = 191 && AnimElemTime(7) = 1
+value    = S0,2
+volume = 100
+
+[State 191];---------------------------------エフェクト
+type = Explod
+Trigger1   = Anim = 191 && AnimElem = 4
+anim = 10190
+ID   = 10190
+postype     = p1 
+pos        = 60 ,-87 
+bindtime    = -1
+removetime  = -1
+sprpriority = 0
+shadow      = -1
+supermove   = 0
+
+[State 191]
+type = ModifyExplod
+trigger1 = Anim = 191 && AnimElem = 5
+ID = 10190
+postype     = p1
+pos         = 72 ,-102  
+bindtime    = -1
+
+[State 191]
+type = RemoveExplod
+trigger1 = Anim = 191 && AnimElem = 6
+id = 10190
+ignorehitpause = 1
+
+[State 191]
+type = Explod
+Trigger1   = Anim = 191 && AnimElem = 6
+anim = 10191
+ID   = 10191
+postype     = p1 
+pos        = 72 ,-102
+bindtime    = -1
+removetime  = -2
+sprpriority = 4
+shadow      = -1
+supermove   = 0
+
+[State 191];---------------------------------イントロタイム
+type = AssertSpecial
+Trigger1   = Time < 366
+flag = intro
+
+;=================================================================================
+; INTRO-2 - ふっ この勝負勝つのは あたし
+[Statedef 192]
+type        = S
+physics     = N 
+ctrl        = 0
+velset      = 0,0
+sprpriority = 1
+Anim        = 192
+
+[State 192];---------------------------------アニメ変更
+type = ChangeAnim
+Trigger1   = Anim = 192 && AnimTime = 0
+value = 0
+elem = 1
+
+[State 192];---------------------------------効果音
+type = PlaySnd
+trigger1 = Anim =0 && AnimElemTime(3) = 1
+value = S3, 3
+volume = -300 
+
+[State 192];---------------------------------エフェクト
+type = Explod
+trigger1 = Anim =0 && AnimElemTime(3) = 1
+anim = 2050
+postype     = p1
+pos         = -8 ,-70  
+bindtime    = -1
+removetime  = -2
+sprpriority = 0
+supermove   = 0
+ownpal      = 1
+
+[State 192];---------------------------------効果音
+type     = PlaySnd
+Trigger1 = Anim = 192 && AnimElemTime(2) = 1
+value    = S6,1
+volume = 300
+
+[State 192]
+type     = PlaySnd
+Trigger1 = Anim = 192 && AnimElemTime(3) = 1
+value    = S3,0
+volume = 100
+
+[State 192]
+type     = PlaySnd
+Trigger1 = Anim = 192 && AnimElemTime(6) = 1
+Trigger2 = Anim = 192 && AnimElemTime(7) = 60
+Trigger3 = Anim = 192 && AnimElemTime(8) = 90
+value    = S0,2
+volume = 100
+
+[State 192];---------------------------------イントロタイム
+type = AssertSpecial
+Trigger1   = Time < 255
+flag = intro
+
+;=================================================================================
+; INTRO-3 - あなたはブラックリスト入りです - 1
+[Statedef 193]
+type        = S
+physics     = N 
+ctrl        = 0
+velset      = 0,0
+sprpriority = 1
+Anim        = 193
+
+[State 193]
+type = ScreenBound
+trigger1 = 1
+value = 1
+movecamera = 0,0
+ignorehitpause = 1
+
+[State 193]
+type = StateTypeSet
+trigger1 = Time = 171
+type        = A
+movetype    = I
+physics     = N  
+
+[State 193];---------------------------------効果音
+type     = PlaySnd
+Trigger1 = Anim = 193 && AnimElemTime(2) = 1
+value    = S6,2
+volume = 300
+
+[State 193]
+type     = PlaySnd
+Trigger1 = Anim = 1860 && AnimElemTime(8) = 1
+value    = S6,4
+volume = 300
+
+[State 193]
+type     = PlaySnd
+Trigger1 = Anim = 193 && AnimElemTime(4) = 1
+value    = S3,0
+volume = 100
+
+[State 193]
+type     = PlaySnd
+Trigger1 = Anim = 193 && AnimElemTime(5) = 1
+value    = S0,2
+volume = 100
+
+[State 193]
+type     = PlaySnd
+Trigger1 = Anim = 193 && AnimElemTime(25) = 1
+value    = S5,1
+
+[State 193]
+type     = PlaySnd
+trigger1 = Anim = 193 && Time = 166
+value    = S9,1
+volume   = 100
+
+[State 193];---------------------------------エフェクト
+type = Explod
+Trigger1   = Anim = 193 && AnimElemTime(25) = 1
+anim = 10193
+postype     = p1 
+pos         = 35,-110
+bindtime    = 1
+removetime  = -2
+sprpriority = 4
+shadow      = -1
+ownpal      = 1
+
+[State 193]
+type = Explod
+Trigger1   = Anim = 193 && AnimElemTime(25) = 1
+anim = 3200
+postype     = p1
+pos         = 9,-64 
+bindtime    = 1
+removetime  = 20
+sprpriority = 3
+supermove   = 0
+ownpal      = 1
+
+[State 193]
+type = Explod
+Trigger1   = Anim = 193 && AnimElemTime(25) = 1
+Trigger1   = NumExplod(3752) = 0
+anim = 3750
+postype     = p1
+pos         = 4 ,-64
+bindtime    = -1
+removetime  = 20
+sprpriority = 4
+supermove   = 0
+ownpal      = 1
+removeongethit = 1
+
+[State 193]
+type = Explod
+trigger1 = Anim = 193 && Time = 170
+anim = 2400
+postype     = p1
+pos         = 8 ,2  
+bindtime    = 1
+removetime  = -2
+sprpriority = 3
+supermove   = 0
+ownpal      = 1
+
+[State 193]
+type = Explod
+trigger1 = Anim = 193 && Time = 166
+anim = 3600
+postype     = p1
+pos         = 4,-64 
+bindtime    = 1
+removetime  = -2
+sprpriority = 4
+supermove   = 0
+ownpal      = 1
+
+[State 193]
+type = Explod
+trigger1 = Anim = 193 && Time = 170
+anim = 3900
+postype     = p1
+pos         = 4,-90
+bindtime    = 1
+removetime  = -2
+sprpriority = 5
+supermove   = 0
+ownpal      = 1
+
+[State 193];---------------------------------振動
+type = EnvShake
+trigger1 = Anim = 193 && Time = 170
+time = 24
+freq = 120
+ampl = -8
+
+[State 193];---------------------------------カラー
+type = Palfx
+Trigger1   = Anim = 193 && Time = 130
+;add        =  240,130,32 
+sinadd     = 200,0,0 ,6 
+time = 40
+
+[State 193];---------------------------------アニメ変更
+type = ChangeAnim
+Trigger1   = Anim = 193 && AnimTime = 0
+value = 1860
+elem = 1
+
+[State 193];---------------------------------速度
+type = VelSet
+trigger1 = Time = 171
+Y = -20
+
+[State 193]
+type = VelAdd
+trigger1 = Time > 171 && Time < 212
+y = 0.5
+
+[State 193]
+type = VelSet
+trigger1 = Time = 212
+y = -0.1
+
+[State 193];---------------------------------パーツ 腕
+type = Helper
+trigger1 = Time = 171
+helpertype = normal
+name = "P-01"
+ID   = 1870
+stateno = 1870
+pos     = -20,-15
+postype = p1 
+keyctrl = 0
+ownpal  = 1
+supermovetime    = 0
+
+[State 193];---------------------------------パーツ 足
+type = Helper
+trigger1 = Time = 171
+helpertype = normal
+name = "P-02"
+ID   = 1870
+stateno = 1873
+pos     = 15,0
+postype = p1 
+keyctrl = 0
+ownpal  = 1
+supermovetime    = 0
+
+[State 193];---------------------------------パーツ 肩
+type = Helper
+trigger1 = Time = 171
+helpertype = normal
+name = "P-03"
+ID   = 1870
+stateno = 1876
+pos     = -30,-20
+postype = p1 
+keyctrl = 0
+ownpal  = 1
+supermovetime    = 0
+
+[State 193];---------------------------------パーツ 螺子 
+type = Helper
+trigger1 = Time = 171
+helpertype = normal
+name = "P-04"
+ID   = 1870
+stateno = 1879
+pos     = -25,0
+postype = p1 
+keyctrl = 0
+ownpal  = 1
+supermovetime    = 0
+
+[State 193];---------------------------------パーツ 破片
+type = Helper
+trigger1 = Time = 171
+helpertype = normal
+name = "P-05"
+ID   = 1870
+stateno = 1882
+pos     = 20,-10
+postype = p1 
+keyctrl = 0
+ownpal  = 1
+supermovetime    = 0
+
+[State 193];---------------------------------パーツ 手首
+type = Helper
+trigger1 = Time = 171
+helpertype = normal
+name = "P-06"
+ID   = 1870
+stateno = 1885
+pos     = 30,-20
+postype = p1 
+keyctrl = 0
+ownpal  = 1
+supermovetime    = 0
+
+[State 193];---------------------------------パーツ 歯車
+type = Helper
+trigger1 = Time = 171
+helpertype = normal
+name = "P-07"
+ID   = 1870
+stateno = 1888
+pos     = 25,0
+postype = p1 
+keyctrl = 0
+ownpal  = 1
+supermovetime    = 0
+
+[State 193];---------------------------------ステート変更
+type = ChangeState
+trigger1 = Time = 261
+value = 194
+ctrl  = 0
+
+[State 193];---------------------------------イントロタイム
+type = AssertSpecial
+Trigger1   = Time < 300
+flag = intro
+
+;===============================================================================================
+; INTRO-3 - あなたはブラックリスト入りです - 2
+[Statedef 194]
+type        = A
+movetype    = I
+physics     = N
+ctrl        = 0               
+sprpriority = 1
+Anim        = 11860
+velset      = 0,0
+
+[State 194]
+type = ScreenBound
+trigger1 = 1
+value = 1
+movecamera = 0,0
+ignorehitpause = 1
+
+[State 194];---------------------------------速度
+type = VelAdd
+trigger1 = Time >= 0 && Time < 21
+y = 0.5
+
+[State 194];---------------------------------再生命令
+type = Helper
+trigger1 = Time = 17 && NumHelper(1865) = 0
+helpertype = normal
+name = "eco"
+ID   = 1865
+stateno = 1865
+pos     = 0,0
+postype = p1 
+keyctrl = 0
+ownpal  = 1
+supermovetime    = 0
+
+[State 194];---------------------------------アニメ変更
+type = ChangeAnim
+Trigger1   = Anim = 11860 && AnimTime = 0
+value = 1822
+elem = 1
+
+[State 194]
+type = Palfx
+trigger1 = Anim = 1822 && AnimElemTime(1) = 0
+sinadd     = -255,-255,-255 ,6
+time = 39
+
+[State 194];---------------------------------速度
+type = VelSet
+trigger1 = Anim = 1822 && AnimElemTime(1) = 0
+y = 0
+
+[State 194]
+type = VelSet
+trigger1 = Anim = 1822 && AnimElemTime(2) = 6
+y = 8
+
+[State 194];---------------------------------効果音
+type     = PlaySnd
+Trigger1 = Anim = 1822 && AnimElemTime(2) = 6
+value    = S6,5
+volume = 300
+
+[State 194]
+type     = PlaySnd
+Trigger1 = Anim = 1822 && AnimElemTime(1) = 2
+value    = S8,5
+volume = 300
+
+[State 184]
+type = Explod
+trigger1 = Anim = 1822 && AnimElemTime(1) = 2
+anim = 3900
+postype     = p1
+pos         = 11,-84 
+bindtime    = 1
+removetime  = -2
+sprpriority = 4
+supermove   = 0
+ownpal      = 1
+
+[State 194];---------------------------------再生命令 - コンプリート
+type = Helper
+trigger1 = Anim = 1822 && AnimElemTime(1) = 0 && NumHelper(1866) = 0
+helpertype = normal
+name = "eco"
+ID   = 1866
+stateno = 1866
+pos     = 0,0
+postype = p1 
+keyctrl = 0
+ownpal  = 1
+supermovetime    = 0
+
+[State 194];---------------------------------ステート変更
+type = ChangeState
+trigger1 = Pos Y >= 0 && vel Y > 0
+value = 195
+ctrl  = 0
+
+[State 194];---------------------------------イントロタイム
+type = AssertSpecial
+Trigger1   = Time < 230
+flag = intro
+
+;===============================================================================================
+; INTRO-3 - あなたはブラックリスト入りです - 3
+[Statedef 195]
+type        = A
+movetype    = I
+physics     = N
+ctrl        = 0               
+sprpriority = 1
+Anim        = 195
+velset      = 0,0
+
+[State 195];---------------------------------効果音
+type     = PlaySnd
+Trigger1 = Anim = 195 && AnimElemTime(8) = 1
+value    = S6,3
+volume   = 300
+
+[State 195]
+type     = PlaySnd
+Trigger1 = Anim = 195 && Time = 0
+value    = S3,2
+volume   = 300
+
+[State 195]
+type     = PlaySnd
+Trigger1 = Anim = 195 && AnimElemTime(6) = 1
+Trigger2 = Anim = 195 && AnimElemTime(8) = 6
+Trigger3 = Anim = 195 && AnimElemTime(10) = 1
+value    = S3,0
+
+[State 195];---------------------------------アニメ変更
+type = ChangeAnim
+Trigger1   = Anim = 195 && AnimTime = 0
+value = 0
+elem = 1
+
+[State 195];---------------------------------効果音
+type = PlaySnd
+trigger1 = Anim =0 && AnimElemTime(3) = 1
+value = S3, 3
+volume = -300 
+
+[State 195];---------------------------------エフェクト
+type = Explod
+trigger1 = Anim = 0 && AnimElemTime(3) = 1
+anim = 2050
+postype     = p1
+pos         = -8 ,-70  
+bindtime    = -1
+removetime  = -2
+sprpriority = 0
+supermove   = 0
+ownpal      = 1
+
+[State 195];---------------------------------エフェクト
+type = Explod
+trigger1 = Anim = 195 && AnimElemTime(1) = 1
+anim = 3000
+postype     = p1
+pos         = 0 ,-1 
+bindtime    = 1
+removetime  = -2
+sprpriority = 0
+supermove   = 0
+ownpal      = 1
+
+[State 195]
+type = Explod
+trigger1 = Anim = 195 && AnimElemTime(1) = 1
+anim = 2400
+postype     = p1
+pos         = 8 ,2  
+bindtime    = 1
+removetime  = -2
+sprpriority = 3
+supermove   = 0
+ownpal      = 1
+
+[State 195];---------------------------------振動
+type = EnvShake 
+trigger1   = Anim = 195 && Time = 0
+time = 16
+freq = 90
+ampl = -8
+
+[State 195];---------------------------------速度
+type = PosSet
+trigger1 = Time = 0 
+y = 0
+
+[State 195];---------------------------------イントロタイム
+type = AssertSpecial
+Trigger1   = Time < 230
+flag = intro
+
+;=================================================================================
+; INTRO-4 - ランダム
+[Statedef 196]
+type        = S
+physics     = N 
+ctrl        = 0
+velset      = 0,0
+sprpriority = 1
+Anim        = 196
+
+[State 196];---------------------------------VAR
+type = VarRandom
+Trigger1   = Time = 1
+v = 49
+range = 0,2
+
+[State 196];---------------------------------アニメ変更
+type = ChangeAnim
+Trigger1   = Time = 160
+value = 10196
+elem = 1
+
+[State 196]
+type = ChangeAnim
+Trigger1   = Anim = 10196 && AnimTime = 0
+value = 0
+elem = 1
+
+[State 196];---------------------------------効果音
+type = PlaySnd
+trigger1 = Anim =0 && AnimElemTime(3) = 1
+value = S3, 3
+volume = -300 
+
+[State 196];---------------------------------エフェクト
+type = Explod
+trigger1 = Anim =0 && AnimElemTime(3) = 1
+anim = 2050
+postype     = p1
+pos         = -8 ,-70  
+bindtime    = -1
+removetime  = -2
+sprpriority = 0
+supermove   = 0
+ownpal      = 1
+
+[State 196];---------------------------------効果音
+type     = PlaySnd
+Trigger1 = Time = 29 && Var(49) != 2
+value    = S6,6+Var(49)
+volume = 300
+
+[State 196]
+type     = PlaySnd
+Trigger1 = Time = 69 && Var(49) = 2
+value    = S6,8
+volume = 300
+
+[State 196]
+type     = PlaySnd
+Trigger1 = Anim = 10196 && AnimElemTime(1) = 1
+value    = S3,0
+volume = 300
+
+[State 196]
+type     = PlaySnd
+Trigger1 =  Anim = 10196 && AnimElemTime(2) = 1
+value    = S0,2
+volume = 100
+
+[State 196];---------------------------------エフェクト
+type = Explod
+trigger1 = Anim = 10196 && AnimElemTime(1) = 1
+anim = 2400
+postype     = p1
+pos         = 8 ,2  
+bindtime    = 1
+removetime  = -2
+sprpriority = 3
+supermove   = 0
+ownpal      = 1
+
+[State 196];---------------------------------マント
+type = Helper
+trigger1 = Anim = 10196 && AnimElemTime(4) = 1
+helpertype = normal
+name = "Mant"
+ID   = 10197
+stateno = 10197
+pos     = -10,-10
+postype = p1 
+keyctrl = 0
+ownpal  = 1
+supermovetime    = 0
+
+[State 192];---------------------------------イントロタイム
+type = AssertSpecial
+Trigger1   = Time < 313
+flag = intro
+
+;=================================================================================
+; INTRO-4 - マントー
+[Statedef 10197]
+type    = A
+movetype= A
+physics = N
+ctrl   =  0
+Anim   = 10197
+
+[State 10197]
+type = SprPriority
+trigger1 = 1
+value = 0
+ignorehitpause = 1
+
+[State 10197]
+type = NotHitBy
+trigger1 = 1
+value = SCA,NA,SA,HA,NP,SP,HP,NT,ST,HT
+time = -1
+ignorehitpause = 1
+
+[State 10197];---------------------------------速度
+type = VelSet
+trigger1 = Time = 0
+X = -1.5
+Y = -3
+
+[State 10197]
+type = VelAdd
+trigger1 = Time >= 1
+Y = 0.1
+
+[State 10197]
+type = DestroySelf
+trigger1 = AnimTime = 0
+ignorehitpause = 1
+
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+; 挑発
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Statedef 199]
+type        = S
+movetype    = I
+physics     = S
+ctrl        = 0
+velset      = 0,0
+sprpriority = 1
+PowerAdd    = 200
+Anim        = 199
+
+[State 199]
+type = VarRandom
+trigger1 = Time = 1
+v = 48
+range = 0,2
+
+[State 199];---------------------------------音声
+type     = PlaySnd
+trigger1 = AnimElemTime(4) = 1 
+value    = S6,22 +var(48)
+volume   = 300
+
+[State 199]
+type = PlaySnd
+Trigger1   = AnimElemTime(1) = 1 || AnimElemTime(3) = 6 || AnimElemTime(6) = 90
+value = S3, 0
+
+[State 199]
+type = PlaySnd
+Trigger1   = AnimElemTime(3) = 6 
+value    = S0, 2
+volume   = 300
+
+[State 199]
+type = PlaySnd
+Trigger1   = AnimElemTime(3) = 6 
+value    = S3, 1
+volume   = 300
+
+[State 199];---------------------------------エフェクト
+type = Explod
+trigger1 = AnimElemTime(3) = 6 
+anim = 2200
+postype     = p1
+pos         = 8 ,2  
+bindtime    = 1
+removetime  = -2
+sprpriority = 3
+supermove   = 0
+ownpal      = 1
+
+[State 199];---------------------------------振動
+type = EnvShake
+trigger1 = AnimElemTime(3) = 6 
+time = 20
+freq = 80
+ampl = -4
+
+[State 199];---------------------------------ステート変更
+type = ChangeState
+Trigger1   = AnimTime = 0
+value = 0
+ctrl  = 1
+
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+; 通常（3ラウンド以降）
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Statedef 189]
+type     = S
+ctrl     = 0
+anim     = 189
+velset   = 0,0
+poweradd = 1000
+
+[State 189]
+type = VarRandom
+trigger1 = Time = 0
+v = 48
+range = 0,5
+
+[State 189]
+type = PlaySnd
+trigger1 = AnimElemTime(3) = 1 && var(48) = 0
+value = S6,14
+
+[State 189]
+type = PlaySnd
+trigger1 = AnimElemTime(3) = 1 && var(48) = 1
+value = S6,20
+
+[State 189]
+type = PlaySnd
+trigger1 = AnimElemTime(3) = 1 && var(48) = 2
+value = S6,24
+
+[State 189]
+type = PlaySnd
+trigger1 = AnimElemTime(3) = 1 && var(48) = 3
+value = S7,2
+
+[State 189]
+type = PlaySnd
+trigger1 = AnimElemTime(3) = 1 && var(48) = 4
+value = S7,3
+
+[State 189]
+type = PlaySnd
+trigger1 = AnimElemTime(3) = 1 && var(48) = 5
+value = S7,4
+
+[State 189]
+type     = PlaySnd
+trigger1 = Anim = 189
+trigger1 = AnimElemTime(2) = 1 || AnimElemTime(6) = 1 || AnimElemTime(10) = 1
+value    = S3,3
+
+[State 189]
+type     = PlaySnd
+trigger1 = Anim = 189
+trigger1 = AnimElemTime(11) = 90
+value    = S3,0
+
+[State 189]
+type = AssertSpecial
+trigger1 = 1
+flag = Intro
+
+[State 189]
+type = ChangeState
+trigger1 = animtime = 0
+value = 0
+
+
