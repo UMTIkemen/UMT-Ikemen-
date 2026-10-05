@@ -1,0 +1,582 @@
+;KOF 2000-Factory
+
+;--------------------------------------------------------
+[Info]
+ ;Name of the stage.
+name = "FactoryKL2024"
+displayname = "Factory/A" ;Name to display
+versiondate = 09,30,2009    ;Version date of stage (MM,DD,YYYY or X.XX)
+mugenversion = 1.0          ;Version of M.U.G.E.N stage works on (X.XX)
+author = "KenJou_Lirt"         ;Stage author name
+
+;--------------------------------------------------------
+[Camera]
+	startx=0
+	starty=0
+	boundleft= -180
+	boundright= 180
+	boundhigh= -147
+	boundlow=0
+	verticalfollow=1
+	tension=100
+	floortension=150
+
+	;;--- * v1.1 (zoom) *---
+	;;cuthigh=30
+	cutlow=10
+	;;---
+	overdrawhigh=5
+	overdrawlow=5
+	;;---
+	tensionhigh=85 ;;t_hi
+	tensionlow=25
+	;startzoom=1
+	;zoomout= 0.85 ; 1
+	;zoomin=  1    ; 1.2
+	;;--- * v1.1 (zoom) *---
+
+
+;--------------------------------------------------------
+[PlayerInfo]
+;--- Player 1 ---
+ ;Player 1 starting coordinates.
+ ;p1startx is typically -70 and p2startx is 70.
+ ;p1starty should be 0.
+p1startx = -70          ;Starting x coordinates
+p1starty = 0            ;Starting y coordinates
+p1facing = 1            ;Direction player faces: 1=right, -1=left
+
+;--- Player 2 ---
+p2startx = 70
+p2starty = 0
+p2facing = -1
+
+;--- Common ---
+ ;Don't change these values.
+leftbound  = -1000 ;Left bound (x-movement)
+rightbound =  1000 ;Right bound
+
+;--------------------------------------------------------
+[Bound]
+ ;Distance from left/right edge of screen that player can move to
+ ;Typically 15
+screenleft = 15    ;Dist from left of screen that player can move to
+screenright = 15   ;Right edge
+
+;--------------------------------------------------------
+[StageInfo]
+ ;"Ground" level where players stand at, measured in pixels from the
+ ;top of the screen.
+ ;Adjust this value to move the ground level up/down in the screen.
+ ;***
+zoffset = 218
+
+ ;Leave this at 1. It makes the players face each other
+autoturn = 1
+
+ ;Set the following to 1 to have the background reset itself between
+ ;rounds.
+resetBG = 1
+
+ ;Width and height of the local coordinate space of the stage.
+localcoord = 320, 240
+
+ ;Horizontal and vertical scaling factor for drawing.
+xscale = 1
+yscale = 1
+
+;--------------------------------------------------------
+[Shadow]
+ ;This is the shadow darkening intensity. Valid values range from
+ ;0 (lightest) to 256 (darkest). Defaults to 128 if omitted.
+intensity = 96
+
+ ;This is the shadow color given in r,g,b. Valid values for each
+ ;range from 0 (lightest) to 255 (darkest).
+ ;Defaults to 0,0,0 if omitted.
+ ;intensity and color's effects add up to give the final shadow
+ ;result.
+color = 0,0,0
+
+ ;This is the scale factor of the shadow. Use a big scale factor
+ ;to make the shadow longer. You can use a NEGATIVE scale factor
+ ;to make the shadow fall INTO the screen.
+ ;Defaults to 0.4 if omitted.
+yscale = .3
+
+ ;This parameter lets you set the range over which the shadow is
+ ;visible. The first value is the high level, and the second is
+ ;the middle level. Both represent y-coordinates of the player.
+ ;A shadow is invisible if the player is above the high level,
+ ;and fully visible if below the middle level. The shadow is
+ ;faded in between the two levels. This gives an effect of the
+ ;shadow fading away as the player gets farther away from the
+ ;ground. If omitted, defaults to no level effects (shadow is
+ ;always fully visible).
+fade.range = 0,0
+
+;--------------------------------------------------------
+[Reflection]
+ ;Intensity of reflection (from 0 to 256). Set to 0 to have no
+ ;reflection. Defaults to 0.
+intensity = 0
+
+;--------------------------------------------------------
+[Music]
+ ;Put a filename for a MOD, MP3 or MIDI here, or just leave it
+ ;blank if you don't want music. If an invalid filename is
+ ;given, then no music will play. To play CD audio, put
+ ;the track number followed by ".da". Using a track number of
+ ;0 will play a random audio track. For example, to play
+ ;track 3 from a music CD, use:
+ ;  bgmusic = 3.da
+bgmusic = sound/Stormy Saxophone (American Factory Stage).mp3
+
+;bgmloopstart = <sample number>
+;bgmloopend = <sample number>
+
+ ;Adjust the volume. 100 is for 100%.
+bgmvolume = 100
+
+;========================================================
+;--------------------------------------------------------
+; Background definition
+; ***
+;-------------------------------------
+; [BG x]
+; type = ?       "Normal"/"Parallax"  (def: "normal")
+; spriteno = ?, ? Sprite group and number: groupno, imgno  (req'd)
+; start = ?, ?   Starting location (integer)  (def: 0, 0)
+; delta = ?, ?   Change in location per camera unit moved (float)  (def: 1,1)
+; trans = ?      Transparency settings: "none"/"add"/"add1"/"sub"" (def: "none")
+; mask = ?       Masking (int): 0 - off, 1 - on  (def: 0)
+; velocity = ?, ? Velocity: x, y (float): speed background moves (def: 0, 0)
+; tile = ?, ?    Tiling: xtile, ytile (int): 0 - off, 1 - infinite,
+;                        >1 - tile that number of times  (def: 0, 0) - only for Normal BG
+; tilespacing = ?, ? Tiling: x, y (int) : space between tiles (def: 0, 0)
+;  Parallax-only:
+; xscale = ?, ?    Top xscale, bottom xscale (float)
+; width = ?, ?     Top width, bottom width (int)  (use either this or above, but not both)
+; yscalestart = ?  Starting y-scale (float, in percent)  (def: 100)
+; yscaledelta = ?  Change in y-scale per unit (float, in percent)  (def: 0)
+;-------------------------------------
+
+;-------------------------------------
+; Main background definition
+[BGdef]
+ ;Filename of sprite data
+spr = FactoryKL2024.sff
+
+ ;Set to 1 if you want to clear the screen to magenta before
+ ;drawing layer 0 (the default background). Good for spotting "holes"
+ ;in your background.
+ ;Remember to turn this off when you are done debugging the background,
+ ;because it slows down performance.
+debugbg = 0
+
+
+;----------
+; Start each background element with the following:
+; Make sure it's "[BG n]", where n is anything you like (it's only used to
+; report errors.) For example, you could use:  [BG TheFloor]
+; Specify as many as you like. This is an example of a normal background:
+
+;background
+[BG 0]
+type  = normal
+spriteno = 0, 0
+layerno = 0
+start = -100, 110
+delta = .75,.1
+mask  = 1
+tile  = 0, 0
+zoomdelta = .1
+
+;Elise
+[BG 0]
+type  = anim
+actionno = 1
+layerno = 0
+start = -100, 110
+delta = .75,.1
+mask  = 1
+tile  = 0, 0
+zoomdelta = .1
+
+;Fuego
+[BG 0]
+type  = anim
+actionno = 2
+layerno = 0
+start = -100, 110
+delta = .75,.1
+mask  = 1
+tile  = 0, 0
+zoomdelta = .1
+
+;---------------------
+;Luces
+[BG 0]
+type  = normal
+spriteno = 4, 0
+layerno = 0
+start = -100, 110
+delta = .75,.1
+mask  = 1
+tile  = 0, 0
+zoomdelta = .1
+trans = add
+alpha = 150, 256
+
+[BG 0]
+type  = normal
+spriteno = 4, 2
+layerno = 0
+start = -100, 110
+delta = .75,.1
+mask  = 1
+tile  = 0, 0
+zoomdelta = .1
+trans = add
+alpha = 150, 256
+
+[BG 0]
+type  = normal
+spriteno = 4, 3
+layerno = 0
+start = -100, 110
+delta = .75,.1
+mask  = 1
+tile  = 0, 0
+zoomdelta = .1
+trans = add
+alpha = 150, 256
+
+[BG 0]
+type  = normal
+spriteno = 4, 4
+layerno = 0
+start = -100, 110
+delta = .75,.1
+mask  = 1
+tile  = 0, 0
+zoomdelta = .1
+trans = add
+alpha = 150, 256
+
+[BG 0]
+type  = normal
+spriteno = 4, 5
+layerno = 0
+start = -100, 110
+delta = .75,.1
+mask  = 1
+tile  = 0, 0
+zoomdelta = .1
+trans = add
+alpha = 150, 256
+
+[BG 0]
+type  = normal
+spriteno = 4, 6
+layerno = 0
+start = -100, 110
+delta = .75,.1
+mask  = 1
+tile  = 0, 0
+zoomdelta = .1
+trans = add
+alpha = 150, 256
+
+[BG 0]
+type  = anim
+actionno = 3
+layerno = 0
+start = -100, 110
+delta = .75,.1
+mask  = 1
+tile  = 0, 0
+zoomdelta = .1
+;---------------------
+
+;cadenas
+[BG 0]
+type  = normal
+spriteno = 1, 9
+layerno = 0
+start = 0, 0
+delta = .851,1
+mask  = 1
+tile  = 0, 0
+;scaledelta		= -0.00012,0	
+
+;Barra1
+[BG 0]
+type  = normal
+spriteno = 1, 1
+layerno = 0
+start = -146, 212
+delta = .849,1
+mask  = 1
+tile  = 0, 0
+scaledelta		= -0.000222,0	
+
+;Wall1
+[BG 0]
+type  = normal
+spriteno = 1, 12
+layerno = 0
+start = 295, 140
+delta = .855,1
+mask  = 1
+tile  = 0, 0
+scaledelta		= -0.00001,0	
+
+;Barra2
+[BG 0]
+type  = normal
+spriteno = 1, 10
+layerno = 0
+start = -48, 212
+delta = .849,1
+mask  = 1
+tile  = 0, 0
+scaledelta		= 0.000222,0	
+
+;Wall2
+[BG 0]
+type  = normal
+spriteno = 1, 7
+layerno = 0
+start = -80, 243
+delta = .885,1
+mask  = 1
+tile  = 0, 0
+scaledelta		= -0.001222,0	
+
+;Wall3
+[BG 0]
+type  = normal
+spriteno = 1, 8
+layerno = 0
+start = -80, 243
+delta = .885,1
+mask  = 1
+tile  = 0, 0
+scaledelta		= 0.001222,0	
+
+;floor
+[BG 0]
+type  = parallax
+spriteno = 1, 0
+layerno = 0
+start = 0, 195
+delta = .755,1
+mask  = 1
+tile  = 0, 0
+xscale = .824,1.325;1.24
+scalestart = 1,1.1;32075475970096
+
+;Tuberia
+[BG 0]
+type  = normal
+spriteno = 1, 2
+layerno = 0
+start = -62, 215
+delta = .858,1
+mask  = 1
+tile  = 0, 0
+scaledelta		= -0.00288,0	
+
+;Tuberia parte frontal
+[BG 0]
+type  = normal
+spriteno = 1, 13
+layerno = 0
+start = -62, 215
+delta = .900,1
+mask  = 1
+tile  = 0, 0
+;scaledelta		= -0.00312,0	
+
+;Electric Box 1
+[BG 0]
+type  = normal
+spriteno = 1, 5
+layerno = 0
+start = -100, 193
+delta = .890,1
+mask  = 1
+tile  = 0, 0
+scaledelta		= 0.001222,0	
+
+;Electric Box 2
+[BG 0]
+type  = normal
+spriteno = 1, 4
+layerno = 0
+start = -100, 193
+delta = .890,1
+mask  = 1
+tile  = 0, 0
+scaledelta		= -0.001222,0	
+
+
+;------------------------------
+;Tuberia atras
+[BG 0]
+type  = normal
+spriteno = 1, 15
+layerno = 0
+start = -98, 109
+delta = .885,1
+mask  = 1
+tile  = 0, 0
+scaledelta		= -0.00212,0	
+
+;tuberia 2
+[BG 0]
+type  = normal
+spriteno = 1, 6
+layerno = 0
+start = -123, 138
+delta = .875,1
+mask  = 1
+tile  = 0, 0
+;scaledelta		= -0.00012,0	
+
+;---------------------------
+;Luces del Reactor
+[BG 0]
+type  = anim
+actionno = 4
+layerno = 0
+start = -120, 165
+delta = .890,1
+mask  = 1
+tile  = 0, 0
+
+;Cajas 2
+[BG 0]
+type  = normal
+spriteno = 1, 14
+layerno = 0
+start = 314, 163
+delta = .850,1
+mask  = 1
+tile  = 0, 0
+scaledelta		= 0.00152,0	
+
+;Cajas 1
+[BG 0]
+type  = normal
+spriteno = 1, 11
+layerno = 0
+start = 278, 215
+delta = .850,1
+mask  = 1
+tile  = 0, 0
+scaledelta		= -0.00152,0	
+
+[Begin Action 1]
+2,0, 0,0, 5
+2,1, 0,0, 5
+2,2, 0,0, 5
+2,3, 0,0, 5
+2,4, 0,0, 5
+2,5, 0,0, 5
+2,6, 0,0, 5
+2,7, 0,0, 5
+
+[Begin Action 2]
+3,0, 0,0, 6
+3,1, 0,0, 6
+3,2, 0,0, 6
+3,3, 0,0, 6
+3,4, 0,0, 6
+3,5, 0,0, 6
+3,6, 0,0, 6
+3,7, 0,0, 6
+
+;neblina
+[BG 0]
+type  = normal
+spriteno = 100, 0
+layerno = 1
+start = 0, 120
+delta = .0,.0
+mask  = 1
+tile  = 0, 0
+trans = add
+zoomdelta = .0
+
+
+[Begin Action 3]
+4,1, 0,0, 5, , A
+4,1, 0,0, 5, , AS250D256
+4,1, 0,0, 5, , AS245D256
+4,1, 0,0, 5, , AS240D256
+4,1, 0,0, 5, , AS235D256
+4,1, 0,0, 5, , AS230D256
+4,1, 0,0, 5, , AS225D256
+4,1, 0,0, 5, , AS220D256
+4,1, 0,0, 5, , AS215D256
+4,1, 0,0, 5, , AS210D256
+4,1, 0,0, 5, , AS205D256
+4,1, 0,0, 5, , AS200D256
+4,1, 0,0, 5, , AS195D256
+4,1, 0,0, 5, , AS190D256
+4,1, 0,0, 5, , AS185D256
+4,1, 0,0, 5, , AS180D256
+4,1, 0,0, 5, , AS175D256
+4,1, 0,0, 5, , AS170D256
+4,1, 0,0, 5, , AS165D256
+4,1, 0,0, 5, , AS160D256
+4,1, 0,0, 5, , AS155D256
+4,1, 0,0, 5, , AS150D256
+4,1, 0,0, 5, , AS145D256
+4,1, 0,0, 5, , AS140D256
+4,1, 0,0, 5, , AS135D256
+4,1, 0,0, 5, , AS130D256
+4,1, 0,0, 5, , AS125D256
+4,1, 0,0, 5, , AS120D256
+4,1, 0,0, 5, , AS115D256
+4,1, 0,0, 5, , AS110D256
+4,1, 0,0, 5, , AS105D256
+4,1, 0,0, 5, , AS100D256
+4,1, 0,0, 5, , AS105D256
+4,1, 0,0, 5, , AS110D256
+4,1, 0,0, 5, , AS115D256
+4,1, 0,0, 5, , AS120D256
+4,1, 0,0, 5, , AS125D256
+4,1, 0,0, 5, , AS130D256
+4,1, 0,0, 5, , AS135D256
+4,1, 0,0, 5, , AS140D256
+4,1, 0,0, 5, , AS145D256
+4,1, 0,0, 5, , AS150D256
+4,1, 0,0, 5, , AS155D256
+4,1, 0,0, 5, , AS160D256
+4,1, 0,0, 5, , AS165D256
+4,1, 0,0, 5, , AS170D256
+4,1, 0,0, 5, , AS175D256
+4,1, 0,0, 5, , AS180D256
+4,1, 0,0, 5, , AS185D256
+4,1, 0,0, 5, , AS190D256
+4,1, 0,0, 5, , AS195D256
+4,1, 0,0, 5, , AS200D256
+4,1, 0,0, 5, , AS205D256
+4,1, 0,0, 5, , AS210D256
+4,1, 0,0, 5, , AS215D256
+4,1, 0,0, 5, , AS220D256
+4,1, 0,0, 5, , AS225D256
+4,1, 0,0, 5, , AS230D256
+4,1, 0,0, 5, , AS235D256
+4,1, 0,0, 5, , AS240D256
+4,1, 0,0, 5, , AS245D256
+4,1, 0,0, 5, , AS250D256
+4,1, 0,0, 5, , A
+
+[Begin Action 4]
+4,7, 0,0, 5, , A
+4,7, 0,0, 5, , AS200D256
+

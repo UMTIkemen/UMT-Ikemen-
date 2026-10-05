@@ -1,0 +1,885 @@
+; Definition of Terry's stage
+; *** denotes values you should change/check for each stage.
+; The term "background" is used to mean both backgrounds and foregrounds.
+
+;--------------------------------------------------------
+[Info]
+ ;Name of the stage.
+name = "Terry, MotW round 2"
+AttachedChar = stages/terrymotw/terrymotwchar.def
+
+;--------------------------------------------------------
+[Camera]
+ ;Camera starting position: Usually 0 for both
+startx = 0
+starty = 0
+
+ ;Left and right bound of camera
+ ;You may want to fiddle a bit with these values to make sure the
+ ;background doesn't move too far or too little
+ ;***
+boundleft = -152
+boundright = 152
+
+ ;High and low bound of camera
+ ;High is a negative number. Make is more negative if you want to
+ ;camera to be able to move higher.
+ ;Low should usually be 0.
+ ;If omitted, defaults to -25 and 0 respectively
+ ;***
+boundhigh = -132
+boundlow = 0
+
+ ;This is how much the camera will move vertically towards the
+ ;highest player. Valid values are from 0 to 1. A value of 0 will mean
+ ;the camera does not move up at all. A value of 1 will makes the camera
+ ;follow the highest player.
+ ;Typically .2 for normal-sized backgrounds. You may need to pull this
+ ;value up for taller backgrounds.
+verticalfollow = .4
+
+ ;Minimum vertical distance the highest player has to be from the floor,
+ ;before the camera starts to move up to follow him. For extremely
+ ;tall stages, a floor tension of about 20-30 coupled with a
+ ;vertical-follow of .8 allows the camera to follow the action.
+floortension = 20
+
+ ;Horizontal distance player is from edge before camera starts to move
+ ;left or right. Typically 50 or 60.
+tension = 60
+
+
+;--------------------------------------------------------
+[PlayerInfo]
+;--- Player 1 ---
+ ;Player 1 starting coordinates.
+ ;p1startx is typically -70 and p2startx is 70.
+ ;p1starty and p1startz should be 0.
+p1startx = -70          ;Starting x coordinates
+p1starty = 0            ;Starting y coordinates
+p1startz = 0            ;Starting z coordinates
+p1facing = 1            ;Direction player faces: 1=right, -1=left
+
+;--- Player 2 ---
+p2startx = 70
+p2starty = 0
+p2startz = 0
+p2facing = -1
+
+;--- Common ---
+ ;Don't change these values.
+leftbound  = -1000 ;Left bound (x-movement)
+rightbound =  1000 ;Right bound
+topbound  =  0     ;Top bound (z-movement)
+botbound  =  0     ;Bottom bound
+
+;--------------------------------------------------------
+[Scaling]
+ ;No need to change these values
+topz     = 0       ;Top z-coordinate for scaling
+botz     = 50      ;Bottom z-coordinate for scaling
+topscale = 1       ;Scale to use at top
+botscale = 1.2     ;Scale to use at bottom
+
+;--------------------------------------------------------
+[Bound]
+ ;Distance from left/right edge of screen that player can move to
+ ;Typically 15
+screenleft = 30    ;Dist from left of screen that player can move to
+screenright = 30   ;Right edge
+
+;--------------------------------------------------------
+[StageInfo]
+ ;Z offset for drawing
+ ;Adjust this value to move the ground level up/down in the screen.
+ ;It's the position where the players stand at.
+ ;Up - smaller, Down - larger
+ ;***
+zoffset = 216
+
+zoffsetlink = 2
+
+ ;Leave this at 1. It makes the players face each other
+autoturn = 1
+
+ ;Set the following to 1 to have the background be reset between
+ ;rounds.
+resetBG = 0
+
+;--------------------------------------------------------
+[Shadow]
+ ;This controls the darkness of the shadow. Valid values range
+ ;from 0 (lightest) to 256 (darkest). Defaults to 128 if omitted.
+intensity = 0
+
+ ;This is the shadow color given in r,g,b. Valid values for each
+ ;range from 0 (lightest) to 255 (darkest).
+ ;Defaults to 0,0,0 if omitted.
+ ;intensity and color's effects add up to give the final shadow
+ ;result.
+color = 0,0,0
+
+ ;This is the scale factor of the shadow. Use a big scale factor
+ ;to make the shadow longer. You can use a NEGATIVE scale factor
+ ;to make the shadow fall INTO the screen.
+ ;Defaults to 0.4 if omitted.
+yscale = 0
+
+ ;This parameter lets you set the range over which the shadow is
+ ;visible. The first value is the high level, and the second is
+ ;the middle level. Both represent y-coordinates of the player.
+ ;A shadow is invisible if the player is above the high level,
+ ;and fully visible if below the middle level. The shadow is
+ ;faded in between the two levels. This gives an effect of the
+ ;shadow fading away as the player gets farther away from the
+ ;ground. If omitted, defaults to no level effects (shadow is
+ ;always fully visible).
+fade.range = -400,-100
+
+;--------------------------------------------------------
+[Reflection]
+ ;Intensity of reflection (from 0 to 256). Set to 0 to have no
+ ;reflection. Defaults to 0.
+intensity = 0
+
+;--------------------------------------------------------
+[Music]
+ ;Put a filename for a MOD, MP3 or MIDI here, or just leave it
+ ;blank if you don't want music. If an invalid filename is
+ ;given, then no music will play. To play CD audio, put
+ ;the track number followed by ".da". Using a track number of
+ ;0 will play a random audio track. For example, to play
+ ;track 3 from a music CD, use:
+ ;  bgmusic = 3.da
+bgmusic = sound/terrymotw.mp3
+
+bgmloopstart = 6547636
+bgmloopend = 9802192
+
+ ;Adjust the volume. 0 is normal, negative for softer, and
+ ;positive for louder (only for mp3, mods and CDA)
+bgvolume = 255
+
+;========================================================
+;--------------------------------------------------------
+; Background definition
+; ***
+;-------------------------------------
+; [BG x]
+; type = ?       "Normal"/"Parallax"  (def: "normal")
+; spriteno = ?, ? Sprite group and number: groupno, imgno  (req'd)
+; start = ?, ?   Starting location (integer)  (def: 0, 0)
+; delta = ?, ?   Change in location per camera unit moved (float)  (def: 1,1)
+; trans = ?      Transparency settings: "none"/"add"/"add1"/"sub"/"addalpha" (def: "none")
+; alpha = ?, ?   (only for trans=addalpha) Source,dest alpha (def: 256,0)
+; mask = ?       Masking (int): 0 - off, 1 - on  (def: 0)
+; velocity = ?, ? Velocity: x, y (float): speed background moves (def: 0, 0)
+; tile = ?, ?    Tiling: xtile, ytile (int): 0 - off, 1 - infinite,
+;                        >1 - tile that number of times  (def: 0, 0) - only for Normal BG
+; tilespacing = ?, ? Tiling: x, y (int) : space between tiles (def: 0, 0)
+;  Parallax-only:
+; xscale = ?, ?    Top xscale, bottom xscale (float)
+; width = ?, ?     Top width, bottom width (int)  (use either this or above, but not both)
+; yscalestart = ?  Starting y-scale (float, in percent)  (def: 100)
+; yscaledelta = ?  Change in y-scale per unit (float, in percent)  (def: 0)
+;-------------------------------------
+
+;-------------------------------------
+; Main background definition
+[BGdef]
+ ;Filename of sprite data
+spr = stages/terrymotw/terrymotw2.sff
+
+ ;Set to 1 if you want to clear the screen to magenta before
+ ;drawing layer 0 (the default background). Good for spotting "holes"
+ ;in your background.
+ ;Remember to turn this off when you are done debugging the background,
+ ;because it slows down performance.
+debugbg = 1
+
+;----------
+
+[BG 4]
+type  = anim
+actionno = 4
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 100
+
+[BG 41]
+type  = anim
+actionno = 41
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 101
+
+[BG 42]
+type  = anim
+actionno = 42
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 102
+
+[BG 43]
+type  = anim
+actionno = 43
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 103
+
+[BG 44]
+type  = anim
+actionno = 410
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+
+[BG 5]
+type  = anim
+actionno = 5
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 5
+
+[BG 5]
+type  = anim
+actionno = 51
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 51
+
+[BG 5]
+type  = anim
+actionno = 52
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 52
+
+[BG 5]
+type  = anim
+actionno = 53
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 53
+
+[BG 51]
+type  = anim
+actionno = 500
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 500
+
+[BG 51]
+type  = anim
+actionno = 501
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 501
+
+[BG 51]
+type  = anim
+actionno = 502
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 502
+
+[BG 51]
+type  = anim
+actionno = 503
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 503
+
+[BG 51]
+type  = anim
+actionno = 510
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 510
+
+[BG 51]
+type  = anim
+actionno = 511
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 511
+
+[BG 51]
+type  = anim
+actionno = 515
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 515
+
+[BG 6]
+type  = anim
+actionno = 6
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 6
+
+[BG 6]
+type  = anim
+actionno = 61
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 61
+
+[BG 6]
+type  = anim
+actionno = 62
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 62
+
+[BG 6]
+type  = anim
+actionno = 63
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 63
+
+[BG 6]
+type  = anim
+actionno = 64
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 64
+
+[BG 6]
+type  = anim
+actionno = 65
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 65
+
+[BG 6]
+type  = anim
+actionno = 66
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 66
+
+[BG 6]
+type  = anim
+actionno = 67
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 67
+
+[BG 6]
+type  = anim
+actionno = 600
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 600
+
+[BG 6]
+type  = anim
+actionno = 601
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 601
+
+[BG 6]
+type  = anim
+actionno = 602
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 602
+
+[BG 6]
+type  = anim
+actionno = 603
+layerno = 0                
+start = 0, 0
+delta = .80263,1
+mask  = 0
+id = 603
+
+[BG 73]
+type  = normal
+spriteno = 7,3
+layerno = 0
+start = 1706, 0
+delta = .93421,1
+mask  = 1
+id = 9
+
+[BG 73]
+type  = normal
+spriteno = 7,3
+layerno = 0
+start = -2688, 0
+delta = .93421,1
+mask  = 1
+id = 8
+
+[BG 72]
+type  = normal
+spriteno = 7,2
+layerno = 0
+tile = 7,0                
+start = -2688, 0
+delta = .93421,1
+mask  = 1
+id = 72
+
+[BG 7]
+type  = anim
+actionno = 7
+layerno = 0                
+start = 0, 0
+delta = .93421,1
+mask  = 1
+id = 7
+
+[BG 71]
+type  = anim
+actionno = 71
+layerno = 0                
+start = 0, 0
+delta = .93421,1
+mask  = 1
+id = 71
+
+[BG 3]
+type  = normal
+spriteno = 3,0
+layerno = 0                
+start = 0, 0
+delta = 1,1
+mask  = 1
+id = 4
+
+[BG 2]
+type  = normal
+spriteno = 2,0
+layerno = 0                
+start = 0, 0
+delta = 1,1
+mask  = 1
+id = 3
+
+[BG 0]
+type  = normal
+spriteno = 0,0
+layerno = 0                
+start = 0, 0
+delta = 1,1
+mask  = 1
+id = 2
+
+[BG 1]
+type  = normal
+spriteno = 1,0
+start = 0, 0
+delta = 1.06579,1.06579
+mask  = 1
+layerno = 1
+id = 1
+
+[Begin Action 4]
+4,0, 0,0, 11
+
+[Begin Action 41]
+4,1, 0,0, 11
+
+[Begin Action 42]
+4,2, 0,0, 11
+
+[Begin Action 43]
+4,3, 0,0, 11
+
+[Begin Action 7]
+7,0, 0,0, 11
+
+[Begin Action 71]
+7,1, 0,0, 11
+
+[Begin Action 410]
+4,10, 0,0, 423
+4,11, 0,0, 10
+4,12, 0,0, 10
+4,13, 0,0, 104
+4,12, 0,0, 7
+4,11, 0,0, 8
+4,10, 0,0, 455
+4,14, 0,0, 6
+4,15, 0,0, 229
+4,16, 0,0, 139
+-1,-1, 0,0, -1
+;173
+
+[Begin Action 5]
+5,3, 0,0, 11
+
+[Begin Action 51]
+5,0, 0,0, 11
+
+[Begin Action 52]
+5,1, 0,0, 11
+
+[Begin Action 53]
+5,2, 0,0, 11
+
+[Begin Action 500]
+5,13, 0,0, 11
+
+[Begin Action 501]
+5,10, 0,0, 11
+
+[Begin Action 502]
+5,11, 0,0, 11
+
+[Begin Action 503]
+5,12, 0,0, 11
+
+[Begin Action 510]
+5,20, 0,0, 11
+
+[Begin Action 511]
+5,21, 0,0, 11
+
+[Begin Action 515]
+5,25, 0,0, 11
+
+[Begin Action 6]
+6,10, 0,0, 11
+
+[Begin Action 61]
+6,10, 0,0, 11
+
+[Begin Action 62]
+6,11, 0,0, 11
+
+[Begin Action 63]
+6,12, 0,0, 11
+
+[Begin Action 64]
+6,13, 0,0, 11
+
+[Begin Action 65]
+6,14, 0,0, 11
+
+[Begin Action 66]
+6,15, 0,0, 11
+
+[Begin Action 67]
+6,16, 0,0, 11
+
+[Begin Action 600]
+6,17, 0,0, 11
+
+[Begin Action 601]
+6,18, 0,0, 11
+
+[Begin Action 602]
+6,19, 0,0, 11
+
+[Begin Action 603]
+6,20, 0,0, 11
+
+[BGCtrlDef Train]
+
+[BGCtrl Train]
+type = visible
+value = 1
+time = 0, 0, 1
+ctrlID = 100
+sctrlid = 100
+
+[BGCtrl Train]
+type = visible
+value = 1
+time = 0, 0, 1
+ctrlID = 101
+sctrlid = 101
+
+[BGCtrl Train]
+type = visible
+value = 1
+time = 0, 0, 1
+ctrlID = 102
+sctrlid = 102
+
+[BGCtrl Train]
+type = visible
+value = 1
+time = 0, 0, 1
+ctrlID = 103
+sctrlid = 103
+
+[BGCtrl Train]
+type = visible
+value = 1
+time = 0, 0, 1
+ctrlID = 7
+sctrlid = 7
+
+[BGCtrl Train]
+type = visible
+value = 1
+time = 0, 0, 1
+ctrlID = 71
+sctrlid = 71
+
+[BGCtrl Train]
+type = posset
+y = 0
+time = 0, 0, 1
+ctrlID = 1
+sctrlid = 1
+
+[BGCtrl Train]
+type = posset
+y = 0
+time = 0, 0, 1
+ctrlID = 2
+sctrlid = 2
+
+[BGCtrl Train]
+type = posset
+y = 0
+time = 0, 0, 1
+ctrlID = 3,4
+sctrlid = 4
+
+[BGCtrl Train]
+type = veladd
+x = .0156
+time = 1196, 1973
+ctrlID = 7, 71, 72
+
+[BGCtrl Train]
+type = veladd
+x = .0156
+time = 1196, 1973
+ctrlID = 8
+;481 1677
+
+[BGCtrl Train]
+type = visible
+value = 0
+time = 1973, 1973
+ctrlID = 8
+
+[BGCtrl Train]
+type = visible
+value = 1
+time = 0, 0, 1
+ctrlID = 5
+sctrlid = 5
+
+[BGCtrl Train]
+type = visible
+value = 1
+time = 0, 0, 1
+ctrlID = 51
+sctrlid = 51
+
+[BGCtrl Train]
+type = visible
+value = 1
+time = 0, 0, 1
+ctrlID = 52
+sctrlid = 52
+
+[BGCtrl Train]
+type = visible
+value = 1
+time = 0, 0, 1
+ctrlID = 53
+sctrlid = 53
+
+[BGCtrl Train]
+type = visible
+value = 1
+time = 0, 0, 1
+ctrlID = 500
+sctrlid = 500
+
+[BGCtrl Train]
+type = visible
+value = 1
+time = 0, 0, 1
+ctrlID = 501
+sctrlid = 501
+
+[BGCtrl Train]
+type = visible
+value = 1
+time = 0, 0, 1
+ctrlID = 502
+sctrlid = 502
+
+[BGCtrl Train]
+type = visible
+value = 1
+time = 0, 0, 1
+ctrlID = 503
+sctrlid = 503
+
+[BGCtrl Train]
+type = visible
+value = 1
+time = 0, 0, 1
+ctrlID = 6
+sctrlid = 6
+
+[BGCtrl Train]
+type = visible
+value = 1
+time = 0, 0, 1
+ctrlID = 61
+sctrlid = 61
+
+[BGCtrl Train]
+type = visible
+value = 1
+time = 0, 0, 1
+ctrlID = 62
+sctrlid = 62
+
+[BGCtrl Train]
+type = visible
+value = 1
+time = 0, 0, 1
+ctrlID = 63
+sctrlid = 63
+
+[BGCtrl Train]
+type = visible
+value = 1
+time = 0, 0, 1
+ctrlID = 64
+sctrlid = 64
+
+[BGCtrl Train]
+type = visible
+value = 1
+time = 0, 0, 1
+ctrlID = 65
+sctrlid = 65
+
+[BGCtrl Train]
+type = visible
+value = 1
+time = 0, 0, 1
+ctrlID = 66
+sctrlid = 66
+
+[BGCtrl Train]
+type = visible
+value = 1
+time = 0, 0, 1
+ctrlID = 67
+sctrlid = 67
+
+[BGCtrl Train]
+type = visible
+value = 0
+time = 0, 0, 1
+ctrlID = 600
+sctrlid = 600
+
+[BGCtrl Train]
+type = visible
+value = 0
+time = 0, 0, 1
+ctrlID = 601
+sctrlid = 601
+
+[BGCtrl Train]
+type = visible
+value = 0
+time = 0, 0, 1
+ctrlID = 602
+sctrlid = 602
+
+[BGCtrl Train]
+type = visible
+value = 0
+time = 0, 0, 1
+ctrlID = 603
+sctrlid = 603
+
+[BGCtrl Train]
+type = visible
+value = 0
+time = 0, 0, 1
+ctrlID = 510
+sctrlid = 510
+
+[BGCtrl Train]
+type = visible
+value = 0
+time = 0, 0, 1
+ctrlID = 511
+sctrlid = 511
+
+[BGCtrl Train]
+type = visible
+value = 0
+time = 0, 0, 1
+ctrlID = 515
+sctrlid = 515
+
+;Couple, first frame shown
+;6 12
+
+;128 inactive
+;88 active
