@@ -1,0 +1,1197 @@
+# __________________________________
+#| Lei-Lei by Phantom.of.the.Server |
+# ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#==============================================================================================
+#======================================<DARK FORCE STATES>=====================================
+#==============================================================================================
+
+#====================<DARK FORCE>====================
+
+#============================================================
+# State 4000
+#============================================================
+[StateDef 4000;
+	type: S;
+	physics: S;
+	moveType: I;
+	velSet: 0, 0;
+	sprPriority: 0;
+	ctrl: 0;
+]
+
+# Turn
+if p2dist x < 0
+&& anim != 4005 {
+	changeAnim{value: 4005}
+}
+
+# Turn
+if anim = 4005 && animElem = 1 {
+	turn{}
+}
+
+# Anim
+if (anim != 4000 && anim != 4005)
+|| (!animTime
+&& anim = 4005) {
+	changeAnim{value: 4000}
+}
+
+# Dead
+if !alive {
+	changeState{value: 5050}
+}
+
+# Crouch
+if command = "holddown" && command != "holdup" {
+	changeState{value: 4010}
+}
+
+# Walk
+if command = "holdfwd" + command = "holdback" = 1 {
+	changeState{value: 4020}
+}
+
+# Jump
+if command = "holdup" && command != "holddown" {
+	changeState{value: 4040}
+}
+
+#====================<CROUCHING>====================
+
+#============================================================
+# State 4010
+#============================================================
+[StateDef 4010;
+	type: C;
+	physics: C;
+	moveType: I;
+	velSet: 0, 0;
+	sprPriority: 0;
+	ctrl: 0;
+]
+
+# Anim
+if !time
+&& anim = 4012 {
+	changeAnim{value: 10; elem: ifelse(animElemTime(4) >= 0, 1, 4 - animElemno(0))}
+}
+
+# Anim
+if anim != 4010 {
+	changeAnim{value: 4010}
+}
+
+# Jump
+if command = "holdup" && command != "holddown" {
+	changeState{value: 4040}
+}
+
+# End
+if !animTime {
+	changeState{value: 4011}
+}
+
+#============================================================
+# State 4011
+#============================================================
+
+[StateDef 4011;
+	type: C;
+	physics: C;
+	moveType: I;
+	anim: 4011;
+	velSet: 0, 0;
+	sprPriority: 0;
+	ctrl: 0;
+]
+
+# Turn
+if p2dist x < 0
+&& anim != 4006 {
+	changeAnim{value: 4006}
+}
+
+# Turn
+if anim = 4006 && animElem = 1 {
+	turn{}
+}
+
+# Anim
+if !animTime
+&& anim = 4006 {
+	changeAnim{value: 4011}
+}
+
+# End
+if command != "holddown" {
+	changeState{value: 4012}
+}
+
+#============================================================
+# State 4012
+#============================================================
+
+[StateDef 4012;
+	type: S;
+	physics: S;
+	moveType: I;
+	velSet: 0, 0;
+	sprPriority: 0;
+	ctrl: 0;
+]
+
+# Anim
+if !time && anim = 4010 {
+	changeAnim{value: 4012; elem: 4 - animElemno(0)}
+}
+
+# Anim
+if anim != 4012 {
+	changeAnim{value: 4012}
+}
+
+# Stand
+if command = "holddown" && command != "holdup" {
+	changeState{value: 4010}
+}
+
+# Jump
+if command = "holdup" && command != "holddown" {
+	changeState{value: 4040}
+}
+
+# End
+if !animTime {
+	changeState{value: 4000}
+}
+
+#====================<WALKING>====================
+
+#============================================================
+# State 4020
+#============================================================
+[StateDef 4020;
+	type: S;
+	physics: S;
+	moveType: I;
+	sprPriority: 0;
+	ctrl: 0;
+]
+
+# Vel
+if command = "holdfwd" {
+	velSet{x: 4.17}
+}
+
+# Vel
+if command = "holdback" {
+	velSet{x: -4.43}
+}
+
+# Anim
+if vel x > 0 {
+	if (anim != 4020 && anim != 4005)
+	|| (anim = 4005 && animElemTime(1) >= 1) {
+		changeAnim{value: 4020}
+	}
+}
+
+# Anim
+if vel x < 0 {
+	if (anim != 4021 && anim != 4005)
+	|| (anim = 4005 && animElemTime(1) >= 1) {
+		changeAnim{value: 4021}
+	}
+}
+
+# Steps
+if anim = [4020, 4021]
+&& (animElem = 2 || animElem = 6) {
+	playSnd{value: 0, ifelse((animElem = 2), 103, 106)}
+}
+
+# Jump
+if command = "holdup" && command != "holddown" {
+	changeState{value: 4040}
+}
+
+# End
+if command = "holdfwd" + command = "holdback" != 1 {
+	changeState{value: 4000}
+}
+
+#===================<JUMPING>================
+
+#============================================================
+# State 4040
+#============================================================
+[StateDef 4040;
+	type: S;
+	physics: S;
+	moveType: I;
+	anim: 4040;
+	ctrl: 0;
+	velSet: 0, 0;
+	sprPriority: 1;
+	facep2: 1;
+]
+
+# Direction
+if !AIlevel {
+	varSet{
+		sysv: 1;
+		value: ifelse(!time, 0, ifelse(command = "holdfwd", 1, ifelse(command = "holdback", -1, sysvar(1))));
+	}
+}
+
+# Direction
+if AIlevel {
+	varSet{
+		sysv: 1;
+		value: ifelse((p2moveType != A || backedgebodydist <= 10), 1, ifelse((p2moveType = A), -1, 0));
+	}
+}
+
+if !animTime {
+	# Sound
+	playSnd{value: 0, 40}
+	# Dust
+	helper{
+		helpertype: normal;
+		stateno: 7100;
+		id: 7100;
+		name: "Jump Dust";
+		posType: p1;
+		ownpal: 1;
+	}
+	# Vel Normal
+	velSet{
+		x: ifelse(!sysvar(1), const(velocity.jump.neu.x), ifelse(sysvar(1) = 1, const(velocity.jump.fwd.x), const(velocity.jump.back.x)));
+		y: const(velocity.jump.y);
+	}
+	# End
+	changeState{value: 4050}
+}
+
+#============================================================
+# State 4050
+#============================================================
+
+[StateDef 4050;
+	type: A;
+	physics: N;
+	moveType: I;
+	sprPriority: 1;
+	ctrl: 0;
+]
+
+# Anim
+if !time
+&& (prevStateNo != 4500 || (anim != [4041, 4043])) {
+	changeAnim{value: ifelse(vel x >= 0, 4041, 4043)}
+}
+
+# Grounded Frame
+if time < 1 && prevStateNo = 4040 {
+	posfreeze{value: 1}
+}
+
+# Accel
+if (time >= 1 || prevStateNo != 4040)
+&& map(armorhittime) <= 0 {
+	gravity{}
+}
+
+# Land
+if vel y > 0
+&& pos y > -vel y {
+	changeState{value: 4052}
+}
+
+#============================================================
+# State 4052
+#============================================================
+
+[StateDef 4052;
+	type: S;
+	physics: S;
+	moveType: I;
+	anim: 4047;
+	velSet: 0, 0;
+	sprPriority: 1;
+	ctrl: 0;
+]
+
+# Anim
+if !time
+&& (prevStateNo != 4500 || anim != 4047) {
+	changeAnim{value: 4047}
+}
+
+# Pos
+posSet{y: 0}
+
+if !time {
+	# Sound
+	playSnd{value: 0, 52}
+	# Dust
+	explod{
+		anim: 7102;
+		sprPriority: -5;
+		posType: p1;
+		scale: 0.5, 0.5;
+		pausemovetime: -1;
+		supermovetime: -1;
+		ownpal: 1;
+	}
+}
+
+# Turn
+if (ctrl && p2dist x < 0)
+&& anim != 4005 {
+	changeAnim{value: 4005}
+}
+
+# Turn
+if anim = 4005 && animElem = 1 {
+	turn{}
+}
+
+# End
+if !animTime {
+	changeState{value: 0; ctrl: 1}
+}
+
+#=========<Dark Force Standing Light Punch>==========
+
+#============================================================
+# State 4200
+#============================================================
+[StateDef 4200;
+	type: S;
+	physics: S;
+	moveType: A;
+	velSet: 0, 0;
+	powerAdd: 0;
+	sprPriority: 1;
+	ctrl: 0;
+	facep2: 1;
+]
+
+# Damage Scaling - Add
+if !time && map(combocheck) {
+	mapAdd{map: "combototal"; value: 1}
+	mapSet{map: "combocheck"; value: 0}
+}
+
+# Anim
+if !time
+&& (prevStateNo != 4500 || anim != 4200) {
+	changeAnim{value: 4200}
+}
+
+# Sound
+if animElem = 2 {
+	playSnd{value: 1, 7}
+}
+
+# Hit
+if animElem = 3 {
+	hitdef{
+		id: stateNo;
+		attr: S, HA;
+		hitflag: MAF;
+		guardflag: M;
+		priority: 4, Hit;
+		air.juggle: 0 * (map(juggle_start) := 1 | map(juggle_increase) := 1 | map(juggle_limit) := 1);
+		damage: 50, 13;
+		getpower: 0, 0;
+		givepower: 40, 40;
+		pausetime: 10, 10;
+		animtype: Light;
+		air.animtype: Back;
+		fall.animtype: Back;
+		ground.type: Low;
+		air.type: Low;
+		ground.hittime: 1 + ifelse((prevStateNo = 4200 || prevStateNo = 230 || prevStateNo = 245), 15, 12); # + 2 * map(counterhit_buffer);
+		ground.slidetime: ifelse((prevStateNo = 4200 || prevStateNo = 230 || prevStateNo = 245), 15, 12);
+		guard.hittime: 1 + 10;
+		guard.ctrltime: 1 + 10;
+		guard.slidetime: 10;
+		air.hittime: 120;
+		ground.velocity: ifelse((prevStateNo = 4200 || prevStateNo = 230 || prevStateNo = 245), -7.51, -4.49), 0;
+		ground.cornerpush.veloff: 0;
+		air.velocity: -4.31, -7.36;
+		air.cornerpush.veloff: 0;
+		yaccel: 0.4850;
+		forcenofall: 1;
+		fall.recover: 1;
+		fall.recovertime: 120;
+		hitsound: s2, 7;
+		hitsound.channel: 2;
+		guardsound: s2, 0;
+		guardsound.channel: 2;
+		sparkno: -1 + 0 * (map(sparkno) := 8020);
+		guard.sparkno: -1 + 0 * (map(guard.sparkno) := 8000);
+		sparkxy: -10 + 0 * (map(sparkx.min) := 40) * (map(sparkx.max) := 128), map(sparky) := -32;
+	}
+}
+
+# Anim
+ignoreHitPause if anim = 4200
+&& hitpausetime
+&& (moveContact = 1 || moveReversed = 1)
+&& (animElemTime(3) >= 0 && animElemTime(4) < 0)
+&& hitpausetime <= 7 {
+	changeAnim{value: 4200; elem: 4}
+}
+
+# Idle
+if animElem = 4 {
+	stateTypeSet{moveType: I}
+}
+
+# End
+if !animTime {
+	changeState{value: 0; ctrl: 1}
+}
+
+#=========<Dark Force Standing Medium Punch>==========
+
+#============================================================
+# State 4205
+#============================================================
+[StateDef 4205;
+	type: S;
+	moveType: A;
+	physics: S;
+	anim: ifelse((p2BodyDist x <= (const(size.xscale) * 25)) && (prevStateNo != [200, 259]), 211, 4205);
+	velSet: 0, 0;
+	powerAdd: 0;
+	sprPriority: 1;
+	ctrl: 0;
+	facep2: 1;
+]
+
+# Damage Scaling - Add
+if !time && map(combocheck) {
+	mapAdd{map: "combototal"; value: 1}
+	mapSet{map: "combocheck"; value: 0}
+}
+
+# Anim
+if !time
+&& (prevStateNo != 4500 || anim != 4205) {
+	changeAnim{value: 4205}
+}
+
+# Sound
+if animElem = 3 {
+	playSnd{value: 1, 9}
+}
+
+# Hit
+if animElem = 3 || animElem = 6 || animElem = 9 {
+	hitdef{
+		id: stateNo;
+		attr: S, HA;
+		hitflag: MAF;
+		guardflag: M;
+		priority: 4, Hit;
+		air.juggle: 0 * (map(juggle_start) := 1 | map(juggle_increase) := 1 | map(juggle_limit) := 1);
+		damage: 25, 6;
+		getpower: 0, 0;
+		givepower: 40, 40;
+		pausetime: 4, 4;
+		animtype: Hard;
+		air.animtype: Back;
+		fall.animtype: Back;
+		ground.type: Low;
+		air.type: Low;
+		ground.hittime: 1 + 18;
+		ground.slidetime: 18;
+		guard.hittime: 1 + 16;
+		guard.ctrltime: 1 + 16;
+		guard.slidetime: 16;
+		air.hittime: 120;
+		ground.velocity: -4.49, 0;
+		ground.cornerpush.veloff: 0;
+		air.velocity: -4.31, -7.36;
+		air.cornerpush.veloff: 0;
+		yaccel: 0.4850;
+		forcenofall: 1;
+		fall.recover: 1;
+		fall.recovertime: 120;
+		hitsound: s2, 8;
+		hitsound.channel: 2;
+		guardsound: s2, 0;
+		guardsound.channel: 2;
+		sparkno: -1 + 0 * (map(sparkno) := 8021);
+		guard.sparkno: -1 + 0 * (map(guard.sparkno) := 8000);
+		sparkxy: -10 + 0 * (map(sparkx.min) := 80) * (map(sparkx.max) := 190), map(sparky) := -27;
+	}
+}
+
+# Idle
+if animElem = 11 {
+	stateTypeSet{moveType: I}
+}
+
+# End
+if !animTime {
+	changeState{value: 0; ctrl: 1}
+}
+
+#=========<Dark Force Standing Hard Punch>==========
+
+#============================================================
+# State 4210
+#============================================================
+[StateDef 4210;
+	type: S;
+	moveType: A;
+	physics: S;
+	velSet: 0, 0;
+	powerAdd: 0;
+	sprPriority: 1;
+	ctrl: 0;
+	facep2: 1;
+]
+
+# Damage Scaling - Add
+if !time && map(combocheck) {
+	mapAdd{map: "combototal"; value: 1}
+	mapSet{map: "combocheck"; value: 0}
+}
+
+# Anim
+if !time
+&& (prevStateNo != 4500 || anim != 4210) {
+	changeAnim{value: 4210}
+}
+
+# Sound
+if animElem = 2 {
+	playSnd{value: 1, 9}
+}
+
+# Sound
+if animElem = 5 {
+	playSnd{value: 5, 0}
+}
+
+# Hit
+if (!moveContact && !moveReversed)
+&& (animElem = 4 || animElem = 5 || animElem = 6) {
+	hitdef{
+		id: stateNo;
+		attr: S, HA;
+		hitflag: MAF;
+		guardflag: M;
+		priority: 4, Hit;
+		air.juggle: 0 * (map(juggle_start) := 1 | map(juggle_increase) := 1 | map(juggle_limit) := 1);
+		damage: 90, 23;
+		getpower: 0, 0;
+		givepower: 40, 40;
+		pausetime: 10, 10;
+		animtype: Hard;
+		air.animtype: Back;
+		fall.animtype: Back;
+		ground.type: High;
+		air.type: Low;
+		ground.hittime: 1 + 18;
+		ground.slidetime: 18;
+		guard.hittime: 1 + 16;
+		guard.ctrltime: 1 + 16;
+		guard.slidetime: 16;
+		ground.velocity: -10.52, 0;
+		ground.cornerpush.veloff: 0;
+		air.velocity: -4, -8;
+		air.cornerpush.veloff: 0;
+		yaccel: 0.4850;
+		forcenofall: 1;
+		fall.recover: 1;
+		fall.recovertime: 120;
+		forcestand: 1;
+		hitsound: s2, 9;
+		hitsound.channel: 2;
+		guardsound: s2, 0;
+		guardsound.channel: 2;
+		sparkno: -1 + 0 * (map(sparkno) := 8022);
+		guard.sparkno: -1 + 0 * (map(guard.sparkno) := 8000);
+		sparkxy: -10 + 0 * (map(sparkx.min) := 30) * (map(sparkx.max) := 170), map(sparky) := ifelse((animElem = 4), -30, ifelse((animElem = 5), -99, -122));
+	}
+}
+
+# Idle
+if animElem = 9 {
+	stateTypeSet{moveType: I}
+}
+
+# End
+if !animTime {
+	changeState{value: 0; ctrl: 1}
+}
+
+#=========<Dark Force Standing Light Kick>==========
+
+#============================================================
+# State 4215
+#============================================================
+[StateDef 4215;
+	type: S;
+	moveType: A;
+	physics: S;
+	velSet: 0, 0;
+	powerAdd: 0;
+	sprPriority: 1;
+	ctrl: 0;
+	facep2: 1;
+]
+
+# Damage Scaling - Add
+if !time && map(combocheck) {
+	mapAdd{map: "combototal"; value: 1}
+	mapSet{map: "combocheck"; value: 0}
+}
+
+# Anim
+if !time
+&& (prevStateNo != 4500 || anim != 4215) {
+	changeAnim{value: 4215}
+}
+
+if animElem = 2 {
+	# Sound
+	playSnd{value: 1, 4}
+	# Hit
+	hitdef{
+		id: stateNo;
+		attr: S, HA;
+		hitflag: MAF;
+		guardflag: M;
+		priority: 4, Hit;
+		air.juggle: 0 * (map(juggle_start) := 1 | map(juggle_increase) := 1 | map(juggle_limit) := 1);
+		damage: 40, 10;
+		getpower: 0, 0;
+		givepower: 40, 40;
+		pausetime: 10, 10;
+		animtype: Light;
+		air.animtype: Back;
+		fall.animtype: Back;
+		ground.type: Low;
+		air.type: Low;
+		ground.hittime: 1 + ifelse((prevStateNo = 245), 15, 12); # + 2 * map(counterhit_buffer);
+		ground.slidetime: ifelse((prevStateNo = 245), 15, 12);
+		guard.hittime: 1 + 13;
+		guard.ctrltime: 1 + 13;
+		guard.slidetime: 13;
+		air.hittime: 120;
+		ground.velocity: ifelse((prevStateNo = 245), -7.51, -4.49), 0;
+		ground.cornerpush.veloff: 0;
+		air.velocity: -4.31, -7.36;
+		air.cornerpush.veloff: 0;
+		yaccel: 0.4850;
+		forcenofall: 1;
+		fall.recover: 1;
+		fall.recovertime: 120;
+		hitsound: s2, 4;
+		hitsound.channel: 2;
+		guardsound: s2, 0;
+		guardsound.channel: 2;
+		sparkno: -1 + 0 * (map(sparkno) := 8010);
+		guard.sparkno: -1 + 0 * (map(guard.sparkno) := 8000);
+		sparkxy: -10 + 0 * (map(sparkx.min) := 30) * (map(sparkx.max) := 61), map(sparky) := -48;
+	}
+}
+
+# Idle
+if animElem = 3 {
+	stateTypeSet{moveType: I}
+}
+
+# End
+if !animTime {
+	changeState{value: 0; ctrl: 1}
+}
+
+#=========<Dark Force Standing Medium Kick>==========
+
+#============================================================
+# State 4220
+#============================================================
+[StateDef 4220;
+	type: S;
+	moveType: A;
+	physics: S;
+	velSet: 0, 0;
+	powerAdd: 0;
+	sprPriority: 1;
+	ctrl: 0;
+	facep2: 1;
+]
+
+# Damage Scaling - Add
+if !time && map(combocheck) {
+	mapAdd{map: "combototal"; value: 1}
+	mapSet{map: "combocheck"; value: 0}
+}
+
+# Anim
+if !time
+&& (prevStateNo != 4500 || anim != 4220) {
+	changeAnim{value: 4220}
+}
+
+# Sound
+if animElem = 2 {
+	playSnd{value: 1, 5}
+}
+
+# Hit
+if animElem = 3 {
+	hitdef{
+		id: stateNo;
+		attr: S, HA;
+		hitflag: MAF;
+		guardflag: M;
+		priority: 4, Hit;
+		air.juggle: 0 * (map(juggle_start) := 1 | map(juggle_increase) := 1 | map(juggle_limit) := 1);
+		damage: 60, 15;
+		getpower: 0, 0;
+		givepower: 40, 40;
+		pausetime: 10, 10;
+		animtype: Medium;
+		air.animtype: Back;
+		fall.animtype: Back;
+		ground.type: High;
+		air.type: Low;
+		ground.hittime: 1 + 15;
+		ground.slidetime: 15;
+		guard.hittime: 1 + 13;
+		guard.ctrltime: 1 + 13;
+		guard.slidetime: 13;
+		air.hittime: 120;
+		ground.velocity: -7.51, 0;
+		ground.cornerpush.veloff: 0;
+		air.velocity: -4.31, -7.36;
+		air.cornerpush.veloff: 0;
+		yaccel: 0.4850;
+		forcenofall: 1;
+		fall.recover: 1;
+		fall.recovertime: 120;
+		forcestand: 1;
+		hitsound: s2, 5;
+		hitsound.channel: 2;
+		guardsound: s2, 0;
+		guardsound.channel: 2;
+		sparkno: -1 + 0 * (map(sparkno) := 8011);
+		guard.sparkno: -1 + 0 * (map(guard.sparkno) := 8000);
+		sparkxy: -10 + 0 * (map(sparkx.min) := 40) * (map(sparkx.max) := 113), map(sparky) := -61;
+	}
+}
+
+# Anim
+ignoreHitPause if anim = 4220
+&& hitpausetime
+&& (moveContact = 1 || moveReversed = 1)
+&& (animElemTime(3) >= 0 && animElemTime(4) < 0)
+&& hitpausetime <= 7 {
+	changeAnim{value: 4220; elem: 4}
+}
+
+# Idle
+if animElem = 4 {
+	stateTypeSet{moveType: I}
+}
+
+# End
+if !animTime {
+	changeState{value: 0; ctrl: 1}
+}
+
+#=========<Dark Force Standing Hard Kick>==========
+
+#============================================================
+# State 4225
+#============================================================
+[StateDef 4225;
+	type: S;
+	moveType: A;
+	physics: S;
+	velSet: 0, 0;
+	powerAdd: 0;
+	sprPriority: 1;
+	ctrl: 0;
+	facep2: 1;
+]
+
+# Damage Scaling - Add
+if !time && map(combocheck) {
+	mapAdd{map: "combototal"; value: 1}
+	mapSet{map: "combocheck"; value: 0}
+}
+
+# Anim
+if !time
+&& (prevStateNo != 4500 || anim != 4225) {
+	changeAnim{value: 4225}
+}
+
+# Width
+if animElem = 3 {
+	width{player: ceil(48 * const(size.xscale)), 0}
+}
+
+if animElem = 4 {
+	# Sound
+	playSnd{value: 1, 6}
+	# Hit
+	hitdef{
+		id: stateNo;
+		attr: S, HA;
+		hitflag: MAF;
+		guardflag: M;
+		priority: 4, Hit;
+		air.juggle: 0 * (map(juggle_start) := 1 | map(juggle_increase) := 1 | map(juggle_limit) := 1);
+		damage: 80, 20;
+		getpower: 0, 0;
+		givepower: 40, 40;
+		pausetime: 10, 10;
+		animtype: Hard;
+		air.animtype: Back;
+		fall.animtype: Back;
+		ground.type: High;
+		air.type: Low;
+		ground.hittime: 1 + 18;
+		ground.slidetime: 18;
+		guard.hittime: 1 + 16;
+		guard.ctrltime: 1 + 16;
+		guard.slidetime: 16;
+		air.hittime: 120;
+		ground.velocity: -10.52, 0;
+		ground.cornerpush.veloff: 0;
+		air.velocity: -4.31, -7.36;
+		air.cornerpush.veloff: 0;
+		yaccel: 0.4850;
+		forcenofall: 1;
+		fall.recover: 1;
+		fall.recovertime: 120;
+		hitsound: s2, 9;
+		hitsound.channel: 2;
+		guardsound: s2, 0;
+		guardsound.channel: 2;
+		sparkno: -1 + 0 * (map(sparkno) := 8022);
+		guard.sparkno: -1 + 0 * (map(guard.sparkno) := 8000);
+		sparkxy: -10 + 0 * (map(sparkx.min) := 60) * (map(sparkx.max) := 144), map(sparky) := -61;
+	}
+}
+
+# Idle
+if animElem = 5 {
+	stateTypeSet{moveType: I}
+}
+
+# End
+if !animTime {
+	changeState{value: 0; ctrl: 1}
+}
+
+#=========<Dark Force Crouching Punch>==========
+
+#============================================================
+# State 4240
+#============================================================
+[StateDef 4240;
+	type: C;
+	physics: N;
+	moveType: A;
+	velSet: 0, 0;
+	powerAdd: 0;
+	sprPriority: 1;
+	ctrl: 0;
+	facep2: 1;
+]
+
+# Damage Scaling - Add
+if !time && map(combocheck) {
+	mapAdd{map: "combototal"; value: 1}
+	mapSet{map: "combocheck"; value: 0}
+}
+
+# Anim
+if !time
+&& (prevStateNo != 4500 || anim != 4240) {
+	changeAnim{value: 4240}
+}
+
+# Type
+if animElemTime(12) >= 0 {
+	stateTypeSet{physics: C}
+}
+
+# Vel
+if animElemTime(2) >= 0 && animElemTime(12) < 0 {
+	velSet{x: 4}
+}
+
+# Vel
+if animElem = 12 {
+	velSet{x: 0}
+}
+
+if animElem = 2 {
+	# Sound
+	playSnd{value: 1, 9}
+	# Hit
+	hitdef{
+		id: stateNo;
+		attr: C, HA;
+		hitflag: MAF;
+		guardflag: M;
+		priority: 4, Hit;
+		air.juggle: 0 * (map(juggle_start) := 1 | map(juggle_increase) := 1 | map(juggle_limit) := 1);
+		damage: 60, 15;
+		getpower: 0, 0;
+		givepower: 40, 40;
+		pausetime: 10, 10;
+		animtype: Hard;
+		air.animtype: Back;
+		fall.animtype: Back;
+		ground.type: Trip;
+		air.type: Low;
+		ground.hittime: 1 + 18;
+		ground.slidetime: 18;
+		guard.hittime: 1 + 16;
+		guard.ctrltime: 1 + 16;
+		guard.slidetime: 16;
+		ground.velocity: -1.0, -8.0;
+		ground.cornerpush.veloff: 0;
+		guard.velocity: -10.52;
+		guard.cornerpush.veloff: 0;
+		air.velocity: -1.0, -8.0;
+		air.cornerpush.veloff: 0;
+		yaccel: 0.695;
+		fall: 1;
+		fall.recover: 1;
+		fall.recovertime: 120;
+		hitsound: s2, 9;
+		hitsound.channel: 2;
+		guardsound: s2, 0;
+		guardsound.channel: 2;
+		sparkno: -1 + 0 * (map(sparkno) := 8022);
+		guard.sparkno: -1 + 0 * (map(guard.sparkno) := 8000);
+		sparkxy: -10 + 0 * (map(sparkx.min) := 40) * (map(sparkx.max) := 120), map(sparky) := -22;
+		down.bounce: 1;
+		fall.xvelocity: -1;
+		fall.yvelocity: -3;
+	}
+}
+
+# Faster
+if animElemTime(2) > 0 && animElemTime(8) < 0 {
+	if (map(strength) = 1 && animElemTime(2) = 2)
+	|| (map(strength) = 2 && animElemTime(2) = 7) {
+		changeAnim{value: 4240; elem: 8}
+	}
+}
+
+# Idle
+if animElem = 12 {
+	stateTypeSet{moveType: I}
+}
+
+# End
+if !animTime {
+	changeState{value: 4011}
+}
+
+#=========<Dark Force Air Punch>==========
+
+#============================================================
+# State 4260
+#============================================================
+[StateDef 4260;
+	type: A;
+	physics: N;
+	moveType: A;
+	sprPriority: 1;
+	ctrl: 0;
+]
+
+# Damage Scaling - Add
+if !time && map(combocheck) {
+	mapAdd{map: "combototal"; value: 1}
+	mapSet{map: "combocheck"; value: 0}
+}
+
+# Anim
+if !time
+&& (prevStateNo != 4500 || anim != 4260) {
+	changeAnim{value: 4260}
+}
+
+# Sound
+if animElem = 3 {
+	playSnd{value: 1, 9}
+}
+
+# Hit
+if animElem = 3 || animElem = 8 || animElem = 13 {
+	hitdef{
+		id: stateNo;
+		attr: A, HA;
+		hitflag: MAF;
+		guardflag: HA;
+		priority: 4, Hit;
+		air.juggle: 0 * (map(juggle_start) := 1 | map(juggle_increase) := 1 | map(juggle_limit) := 1);
+		damage: 30, 8;
+		getpower: 0, 0;
+		givepower: 40, 40;
+		pausetime: 4, 4;
+		animtype: Hard;
+		air.animtype: Back;
+		fall.animtype: Back;
+		ground.type: High;
+		air.type: Low;
+		ground.hittime: 1 + 12;
+		ground.slidetime: 12;
+		guard.hittime: 1 + 16;
+		guard.ctrltime: 1 + 16;
+		guard.slidetime: 16;
+		air.hittime: 120;
+		airguard.ctrltime: 1 + 16;
+		ground.velocity: -4.49, 0;
+		ground.cornerpush.veloff: 0;
+		guard.velocity: -10.52;
+		guard.cornerpush.veloff: 0;
+		air.velocity: -4.31, -7.36;
+		air.cornerpush.veloff: 0;
+		airguard.velocity: -6.00, -1.00;
+		airguard.cornerpush.veloff: 0;
+		yaccel: 0.4850;
+		forcenofall: 1;
+		fall.recover: 1;
+		fall.recovertime: 120;
+		hitsound: s2, 9;
+		hitsound.channel: 2;
+		guardsound: s2, 0;
+		guardsound.channel: 2;
+		sparkno: -1 + 0 * (map(sparkno) := 8022);
+		guard.sparkno: -1 + 0 * (map(guard.sparkno) := 8000);
+		sparkxy: -10 + 0 * (map(sparkx.min) := 26) * (map(sparkx.max) := 108), map(sparky) := -62;
+	}
+}
+
+# Type
+if animElem = 15 {
+	stateTypeSet{moveType: I}
+}
+
+# Type
+if map(armorhittime) <= 0 {
+	gravity{}
+}
+
+# Type
+if vel y > 0
+&& pos y > -vel y {
+	changeState{value: 4052}
+}
+
+#====================<ARMOR>====================
+
+#============================================================
+# State 4500
+#============================================================
+[StateDef 4500;
+	type: U;
+	physics: N;
+	moveType: H;
+]
+
+# Damage
+if !time {
+	lifeadd{value: -getHitVar(damage); kill: 1}
+}
+
+if !time
+&& alive {
+	# Flash
+	palFx{
+		time: 4;
+		add: 255, 255, 255;
+		mul: 256, 0, 0;
+		color: 0;
+	}
+	# Hittime
+	mapSet{
+		map: "armorhittime";
+		value: ifelse(getHitVar(animtype) = 0, 12, ifelse(getHitVar(animtype) = 1, 15, 18));
+	}
+	# Vel
+	mapSet{
+		map: "armorhitvel";
+		value: ifelse(getHitVar(animtype) = 0, -4.49, ifelse(getHitVar(animtype) = 1, -7.51, -10.52));
+	}
+}
+
+# End
+selfState{value: ifelse(!alive, 5000, map(armorstate))}
+
+#====================<DARK FORCE OVER>====================
+
+#============================================================
+# State 4510
+#============================================================
+[StateDef 4510;
+	type: S;
+	physics: S;
+	moveType: I;
+	ctrl: 0;
+	velSet: 0, 0;
+]
+
+# Anim
+if !time
+&& (prevStateNo != 4500 || anim != 4510) {
+	changeAnim{value: 4510}
+}
+
+# Var
+mapSet{map: "darkforce"; value: -1}
+
+# End
+if !animTime {
+	if !numHelper(6000)
+	|| time >= 300 {
+		changeState{value: 4511}
+	}
+}
+
+#============================================================
+# State 4511
+#============================================================
+
+[StateDef 4511;
+	type: S;
+	physics: S;
+	moveType: I;
+	anim: 4511;
+	ctrl: 0;
+	velSet: 0, 0;
+]
+
+# Var
+mapSet{map: "darkforce"; value: 0}
+
+# Clear hitOverride
+if !time {
+	hitOverride{time: 0; stateno: 5000}
+}
+
+# End
+if !animTime {
+	changeState{value: 0; ctrl: 1}
+}

@@ -1,0 +1,2382 @@
+;=========================< タイガーショット >=========================
+[Statedef 1050]
+type = S
+movetype = A
+physics = S
+velset = 0,0
+ctrl = 0
+anim = 1050
+poweradd = 0
+facep2 = 1
+sprpriority = 2
+
+;--- コマンド判定 ---
+[State 1050, Command Var]
+type = varset
+triggerall = var(59) <= 0
+trigger1 = time = 0
+v = 1
+value = (helper(9999),var(7) >= helper(9999),var(4))
+
+[State 1050, ChangeAnim]
+type = changeanim
+trigger1 = time = 0
+value = ifelse(var(1) = 0,1050,1051)
+
+;--- EX必殺技演出 ---
+[State 1050, Sound]
+type = playsnd
+trigger1 = time = 0
+value = s7050,0
+
+[State 1050, PalFx]
+type = palfx
+trigger1 = gametime % 3 = 0
+time = 1
+add = 0,76,224
+color = 124
+ignorehitpause = 1
+
+[State 1050, PalFx]
+type = palfx
+trigger1 = gametime % 3 = 1
+time = 1
+add = 0,46,164
+color = 256
+ignorehitpause = 1
+
+[State 1050, PowerAdd]
+type = poweradd
+trigger1 = time = 0 && fvar(2) = 0
+value = -1000
+
+[State 1050, VarAdd]
+type = varadd
+trigger1 = time = 0 && fvar(2)
+fv = 2
+value = -450
+
+;--- 効果音 ---
+[State 1050, Voice]
+type = playsnd
+trigger1 = animelem = 1
+value = s1000,0
+channel = 0
+
+[State 1050, Sound]
+type = playsnd
+trigger1 = animelem = 6
+value = s1005,0
+
+;--- 座標 ---
+[State 1050, PosAdd]
+type = posadd
+trigger1 = var(1) = 0
+trigger1 = animelem = 5
+x = 5
+
+[State 1050, PosAdd]
+type = posadd
+trigger1 = animelem = 6
+x = 10
+
+[State 1050, PosAdd]
+type = posadd
+trigger1 = var(1) = 0
+trigger1 = animelem = 9
+trigger2 = animelem = 10 || animelem = 11
+x = -5
+
+;--- エフェクト ---
+[State 1000, Explod]
+type = null;explod
+trigger1 = animelem = 7
+ID = 1005
+pos = 40,0
+postype = p1
+removeongethit = 1
+anim = 1005
+shadow = -1
+ownpal = 1
+sprpriority = 5
+ignorehitpause = 1
+persistent = 0
+
+;--- 飛び道具 ---
+[State 1050, Projectile Helper]
+type = helper
+trigger1 = var(1) = 0
+trigger1 = animelem = 6
+helpertype = normal
+name = "Yamibarai Projectile"
+ownpal = 1
+stateno = 1060
+ID = 1060
+postype = p1
+pos = 95,-95
+
+[State 1050, Projectile Helper]
+type = helper
+trigger1 = var(1) = 1
+trigger1 = animelem = 6
+helpertype = normal
+name = "Tiger Projectile"
+ownpal = 1
+stateno = 1060
+ID = 1061
+postype = p1
+pos = 85,-60
+
+;--- 攻撃判定消滅 ---
+[State 1050, StateTypeSet]
+type = statetypeset
+trigger1 = animelem = 7
+movetype = I
+
+;--- 終了 ---
+[State 1050, ChangeState]
+type = changestate
+trigger1 = animtime = 0
+value = ifelse(var(1) >= 1,11,0)
+ctrl = 1
+
+;------------------------------------------------------------
+; EXタイガーショット 飛び道具
+[Statedef 1060]
+type = S
+movetype = A
+physics = N
+velset = 0,0
+ctrl = 0
+anim = 1060
+sprpriority = 3
+
+;--- 相手PalFx ---
+[State 1060, VarSet]
+type = varset
+trigger1 = var(26) <= 0
+v = 26
+value = root,var(26)
+
+[State 1060, VarSet]
+type = varset
+trigger1 = var(27) <= 0
+v = 27
+value = root,var(27)
+
+[State 1060, VarSet]
+type = varset
+trigger1 = var(28) <= 0
+v = 28
+value = root,var(28)
+
+;--- アーマー処理 ---
+[State 1060, ChangeAnim]
+type = changeanim
+trigger1 = anim != 1060 && var(10) <= 0
+value = 1060
+elem = animelemno(0) = 0
+
+[State 1060, ChangeAnim]
+type = changeanim
+trigger1 = anim != 1061 && var(10) > 0
+value = 1062
+elem = animelemno(0) = 0
+
+[State 1060, HitBy]
+type = hitby
+trigger1 = 1
+value = SCA,AP
+time = -1
+ignorehitpause = 1 
+
+[State 1060, HitOverRide]
+type = hitoverride
+trigger1 = 1
+attr = SCA,NA,SA,NP,SP,NT,SP
+stateno = 1060
+time = -1
+slot = 0
+ignorehitpause = 1
+
+[State 1060, HitOverRide]
+type = hitoverride
+trigger1 = 1
+attr = SCA,HA,HP,HT
+stateno = 1065
+time = -1
+slot = 1
+ignorehitpause = 1
+
+;--- 速度 ---
+[State 1060, VelSet]
+type = velset
+trigger1 = time > 0
+x = 8
+
+[State 1060, VelSet]
+type = velset
+trigger1 = var(10) > 0
+x = 0
+
+;--- 半数補正 ---
+[State 1060, ComboVar]
+type = varset
+trigger1 = time = 0
+fv = 5
+value = 1
+
+[State 1060, ComboVar]
+type = varset
+trigger1 = movecontact = 1
+fv = 5
+value = fvar(5)/2
+
+[State 1060, ComboVar]
+type = varset
+trigger1 = fvar(5) < 0.125
+fv = 5
+value = 0.125
+
+;--- 攻撃判定 ---
+[State 1060, HitDef]
+type = hitdef
+trigger1 = root,var(35) = 0
+attr = S,SP
+hitflag = MAF
+guardflag = M
+affectteam = E
+priority = 4,Hit
+animtype = Hard
+ground.type = High
+damage = floor(100*root,fvar(0)*root,fvar(3)*fvar(5)),10
+getpower = 0,0
+givepower = 20,20
+pausetime = 0,12
+hitsound = -1
+guardsound = -1
+sparkno = -1
+guard.sparkno = -1
+sparkxy = -15,0
+ground.hittime = 25
+ground.slidetime = 18
+ground.velocity = -10
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -3,-6
+guard.hittime = 23
+guard.slidetime = 16
+guard.ctrltime = 23
+guard.velocity = -10
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+down.hittime = 18
+down.velocity = 0,0
+yaccel = .4
+air.fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+p1sprpriority = 3
+ID = 1060
+
+[State 1060, HitDef]
+type = hitdef
+trigger1 = root,var(35)
+attr = S,SP
+hitflag = MAF
+guardflag = MA
+affectteam = E
+priority = 4,Hit
+animtype = Hard
+ground.type = High
+damage = floor(100*root,fvar(0)*root,fvar(3)*fvar(5)),10
+getpower = 0,0
+givepower = 20,20
+pausetime = 0,12
+hitsound = -1
+guardsound = -1
+sparkno = -1
+guard.sparkno = -1
+sparkxy = -15,-70
+ground.hittime = 25
+ground.slidetime = 18
+ground.velocity = -10
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -3,-6
+guard.hittime = 23
+guard.slidetime = 16
+guard.ctrltime = 23
+guard.velocity = -10
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+down.hittime = 18
+down.velocity = 0,0
+yaccel = .4
+air.fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+p1sprpriority = 3
+ID = 1060
+
+;--- ヒット時間 ---
+[State 1060, VarSet]
+type = varset
+trigger1 = movecontact = 1 || movereversed = 1
+v = 10
+value = 5
+ignorehitpause = 1
+
+[State 1060, VarAdd]
+type = varadd
+trigger1 = var(10) > 0
+v = 10
+value = -1
+ignorehitpause = 1 
+
+;--- ヒット回数 ---
+[State 1060, VarAdd]
+type = varadd
+trigger1 = movecontact = 1 || movereversed = 1
+trigger2 = prevstateno = 5000 && time = 0
+v = 11
+value = 1
+ignorehitpause = 1
+
+;--- ヒット判定 ---
+[State 1060, VarAdd]
+type = varset
+trigger1 = movecontact = 1 || movereversed = 1
+v = 14
+value = 1
+ignorehitpause = 1
+
+[State 1060, VarAdd]
+type = varset
+trigger1 = var(10) <= 1
+v = 14
+value = 0
+ignorehitpause = 1
+
+;--- 攻撃判定消滅 ---
+[State 1060, MoveType]
+type = statetypeset
+trigger1 = root,var(0) = 0
+trigger1 = var(14) = 0
+movetype = A
+
+[State 1060, MoveType]
+type = statetypeset
+trigger1 = root,var(0)
+trigger2 = var(14)
+movetype = I
+
+;--- ヒットエフェクト ---
+[State 1060, Explod]
+type = explod
+trigger1 = movehit = 1 && numtarget
+pos = p2dist x,0
+postype = p1
+ontop = 1
+anim = 6020+(fvar(2) > 0)
+ownpal = 1
+
+[State 1060, Sound]
+type = playsnd
+trigger1 = movehit = 1 && numtarget
+value = s6010,0
+
+[State 1060, Explod]
+type = explod
+trigger1 = moveguarded = 1 && numtarget
+pos = p2dist x,0
+postype = p1
+ontop = 1
+anim = 6120
+ownpal = 1
+
+[State 1060, Sound]
+type = playsnd
+trigger1 = moveguarded = 1 && numtarget
+value = s6120,0
+
+;--- カウンター ---
+[State 1060, CounterHelper]
+type = helper
+triggerall = root,var(3)
+trigger1 = movehit = 1 && numtarget
+helpertype = normal
+name = "CounterHelper"
+size.xscale = 0.5
+size.yscale = 0.5
+stateno = 7200
+ID = 7200
+postype = left
+pos = 10,-100
+pausemovetime = 2147483647
+supermovetime = 2147483647
+ignorehitpause = 1
+
+;--- 追撃判定 ---
+[State 1060, Chain Var]
+type = parentvarset
+triggerall = numtarget
+triggerall = root,var(3) = 0
+triggerall = movehit = 1 || (moveguarded = 1 && target,statetype = A)
+trigger1 = var(11) >= 2
+v = 0
+value = 1
+ignorehitpause = 1
+
+;--- コンボ補正 ---
+[State 1060, Combo Var]
+type = parentvaradd
+triggerall = p2movetype = H
+trigger1 = movehit = 1
+fv = 0
+value = -0.05
+
+[State -2, Clipboard]
+type = displaytoclipboard
+trigger1 = 1
+text = "Hit = %d prev = %d \n"
+params = var(11),prevstateno
+ignorehitpause = 1
+
+;--- ステート変更 ---
+[State 1060, ChangeState]
+type = changestate
+trigger1 = var(11) >= 2
+;trigger1 = movecontact || movereversed
+value = 1065
+ignorehitpause = 1
+
+;--- 消滅 ---
+[State 1060, End]
+type = destroyself
+trigger1 = frontedgebodydist <= -80
+
+;---------------------------------------------------------------
+; EXタイガーショット 飛び道具 消滅
+[Statedef 1065]
+type = S
+movetype = I
+physics = N
+velset = 0,0
+ctrl = 0
+anim = 1065
+sprpriority = 3
+
+;--- 消滅 ---
+[State 1065, End]
+type = changestate
+trigger1 = animtime = 0
+value = 10100
+
+;=========================< EXタイガーアッパーカット >=========================
+[Statedef 1150]
+type = S
+movetype = A
+physics = N
+velset = 0,0
+ctrl = 0
+anim = 1150
+poweradd = 0
+facep2 = 1
+sprpriority = -2
+
+;--- EX必殺技演出 ---
+[State 1150, Sound]
+type = playsnd
+trigger1 = time = 0
+value = s7050,0
+
+[State 1150, PalFx]
+type = palfx
+trigger1 = gametime % 3 = 0
+time = 1
+add = 0,76,224
+color = 124
+ignorehitpause = 1
+
+[State 1150, PalFx]
+type = palfx
+trigger1 = gametime % 3 = 1
+time = 1
+add = 0,46,164
+color = 256
+ignorehitpause = 1
+
+[State 1150, PowerAdd]
+type = poweradd
+trigger1 = time = 0 && fvar(2) = 0
+value = -1000
+
+[State 1150, VarAdd]
+type = varadd
+trigger1 = time = 0 && fvar(2)
+fv = 2
+value = -450
+
+;--- 変数 ---
+[State 1100, Command Var]
+type = varset
+trigger1 = time = 0
+v = 1
+value = 0
+
+[State 1150, Command Var]
+type = varset
+trigger1 = time = 0 && var(41) > 0
+v = 1
+value = 10
+
+[State 1100, Command Var]
+type = varset
+trigger1 = time = 0
+v = 41
+value = 0
+
+;--- エフェクト消去 ---
+[State -2, RemoveExplod]
+type = removeexplod
+trigger1 = time = 0
+ID = 321
+
+[State -2, RemoveExplod]
+type = removeexplod
+trigger1 = time = 0
+ID = 325
+
+;--- 効果音 ---
+[State 1150, Voice]
+type = playsnd
+trigger1 = animelem = 1
+value = s1100,0+(var(47)*100)
+channel = 0
+
+[State 1150, Sound]
+type = playsnd
+trigger1 = animelem = 3
+value = s1105,0
+
+[State 1100, Sound]
+type = playsnd
+trigger1 = animelem = 3 && var(1) >= 10
+value = s1155,0
+
+;--- エフェクト ---
+[State 1150, Explod]
+type = explod
+trigger1 = animelem = 2 && var(1) >= 10
+ID = 1155
+pos = 0,0
+postype = p1
+bindtime = -1
+removetime = -2
+removeongethit = 1
+anim = 1105
+ownpal = 1
+sprpriority = 3
+ignorehitpause = 0
+
+;--- 座標 ---
+[State 1150, PosAdd]
+type = posadd
+trigger1 = animelem = 3 || animelem = 4
+x = 15
+
+;--- 速度 ---
+[State 1150, VelSet]
+type = velset
+trigger1 = animelem = 5
+x = 6
+y = -9
+
+[State 1150, VelMul]
+type = velmul
+trigger1 = animelemtime(5) >= 0
+x = 0.85
+
+[State 1150, VelAdd]
+type = veladd
+trigger1 = animelemtime(5) >= 0
+y = 0.45
+
+;--- 空中判定 ---
+[State 1150, StateTypeSet]
+type = statetypeset
+trigger1 = animelem = 5
+statetype = A
+
+;--- 無敵 ---
+[State 1150, Invincible]
+type = nothitby
+trigger1 = animelemtime(5) < 0
+value = SCA
+time = 1
+ignorehitpause = 1
+
+;--- ヒット判定リセット ---
+[State 1150, VarSet]
+type = varset
+trigger1 = animelem = 4 || animelem = 5 || animelem = 6 || animelem = 7
+trigger2 = var(1) = 10
+trigger2 = animelem = 8 || animelem = 9
+v = 14
+value = 0
+
+;--- 半数補正 ---
+[State 1150, ComboVar]
+type = varset
+trigger1 = time = 0
+fv = 5
+value = 1
+
+[State 1150, ComboVar]
+type = varset
+trigger1 = movecontact = 1
+fv = 5
+value = fvar(5)/2
+
+[State 1150, ComboVar]
+type = varset
+trigger1 = fvar(5) < 0.125
+fv = 5
+value = 0.125
+
+;--- ヒットスパーク ---
+[State 1150, VarSet]
+type = null
+trigger1 = animelemno(0) = 3
+trigger1 = var(5) := -15 || var(6) := -50
+trigger2 = animelemno(0) = 4
+trigger2 = var(5) := -15 || var(6) := -85
+
+;--- 攻撃判定 ---
+[State 1150, HitDef]
+type = hitdef
+triggerall = var(0) = 0
+triggerall = var(14) = 0
+triggerall = var(34) = 0
+triggerall = var(1) != 10
+trigger1 = animelemno(0) = [3,4]
+attr = S,SA
+hitflag = MAF
+guardflag = M
+affectteam = E
+priority = 4,Hit
+animtype = Hard
+air.animtype = Up
+ground.type = Low
+damage = floor(120*fvar(0)*fvar(3)*fvar(5)),10
+getpower = 0,0
+givepower = 20,20
+pausetime = 12,12
+hitsound = s6020,0
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = var(5),var(6)
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = -2,-12
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -2,-12
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = -10
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .6
+fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+ID = 1150
+
+[State 1150, HitDef]
+type = hitdef
+triggerall = var(0) = 0
+triggerall = var(14) = 0
+triggerall = var(34)
+triggerall = var(1) != 10
+trigger1 = animelemno(0) = [3,4]
+attr = S,SA
+hitflag = MAF
+guardflag = MA
+affectteam = E
+priority = 4,Hit
+animtype = Hard
+air.animtype = Up
+ground.type = Low
+damage = floor(120*fvar(0)*fvar(3)*fvar(5)),10
+getpower = 0,0
+givepower = 20,20
+pausetime = 12,12
+hitsound = s6020,0
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = var(5),var(6)
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = -2,-12
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -2,-12
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = -10
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .6
+fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+ID = 1150
+
+[State 1150, HitDef]
+type = hitdef
+triggerall = var(0) = 0
+triggerall = var(14) = 0
+triggerall = var(35) = 0
+triggerall = var(1) != 10
+trigger1 = animelemno(0) = [5,9]
+attr = A,SA
+hitflag = MAF
+guardflag = M
+affectteam = E
+priority = 4,Hit
+animtype = Up
+ground.type = High
+damage = floor(120*fvar(0)*fvar(3)*fvar(5)),10
+getpower = 0,0
+givepower = 20,20
+pausetime = 12,11
+hitsound = s6020,0
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = -15,-155
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = -2,-12
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -2,-12
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = -10
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .6
+fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+ID = 1150
+
+[State 1150, HitDef]
+type = hitdef
+triggerall = var(0) = 0
+triggerall = var(14) = 0
+triggerall = var(35)
+triggerall = var(1) != 10
+trigger1 = animelemno(0) = [5,9]
+attr = A,SA
+hitflag = MAF
+guardflag = MA
+affectteam = E
+priority = 4,Hit
+animtype = Up
+ground.type = High
+damage = floor(120*fvar(0)*fvar(3)*fvar(5)),10
+getpower = 0,0
+givepower = 20,20
+pausetime = 12,11
+hitsound = s6020,0
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = -15,-155
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = -2,-12
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -2,-12
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = -10
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .6
+fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+ID = 1150
+
+[State 1150, HitDef]
+type = hitdef
+triggerall = var(14) = 0
+triggerall = var(1) = 10
+trigger1 = animelemno(0) = [3,4]
+attr = S,SA
+hitflag = MAF
+guardflag = M
+affectteam = E
+priority = 4,Hit
+animtype = Hard
+air.animtype = Up
+ground.type = Low
+damage = floor(135*fvar(0)*fvar(3)*fvar(5)),10
+getpower = 0,0
+givepower = 20,20
+pausetime = 12,12
+hitsound = s6020,1
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = var(5),var(6)
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = -2,-12
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -2,-12
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = -10
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .6
+fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+envshake.time = 12
+envshake.ampl = -4
+envshake.freq = 60
+palfx.time = 55
+palfx.add = floor(var(26)),floor(var(27)),floor(var(28))
+palfx.mul = floor(var(26)),floor(var(27)),floor(var(28))
+palfx.sinadd = floor(var(26)/2),floor(var(27)/2),floor(var(28)/2),30
+ID = 1150
+
+[State 1150, HitDef]
+type = hitdef
+triggerall = var(14) = 0
+triggerall = var(1) = 10
+trigger1 = animelemno(0) = [5,9]
+attr = A,SA
+hitflag = MAF
+guardflag = M
+affectteam = E
+priority = 4,Hit
+animtype = Up
+ground.type = High
+damage = floor(135*fvar(0)*fvar(3)*fvar(5)),10
+getpower = 0,0
+givepower = 20,20
+pausetime = 8,7
+hitsound = s6020,0
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = -15,-155
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = -2,-12
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -2,-12
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = -10
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .6
+fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+palfx.time = 55
+palfx.add = floor(var(26)),floor(var(27)),floor(var(28))
+palfx.mul = floor(var(26)),floor(var(27)),floor(var(28))
+palfx.sinadd = floor(var(26)/2),floor(var(27)/2),floor(var(28)/2),30
+ID = 1150
+
+;--- ヒットエフェクト ---
+[State 1150, Sound]
+type = playsnd
+trigger1 = numtarget(1150)
+trigger1 = var(9) = 1
+trigger1 = movehit = 1
+trigger1 = var(1) >= 10
+trigger1 = animelemtime(5) < 0
+value = s6080,0
+ignorehitpause = 1
+
+[State 1150, Explod Helper]
+type = helper
+trigger1 = numtarget(1150)
+trigger1 = var(9) = 1
+trigger1 = movehit = 1
+trigger1 = var(1) >= 10
+trigger1 = animelemtime(5) < 0
+helpertype = normal
+name = "Fire"
+ownpal = 1
+stateno = 6080
+ID = 6080
+postype = p2
+pos = 0,-50
+ignorehitpause = 1
+
+[State 1150, Explod Helper]
+type = helper
+trigger1 = !numhelper(6081)
+trigger1 = movehit = 1
+trigger1 = numtarget(1150)
+trigger1 = 1+((var(29) := 1150)*0)
+trigger1 = var(1) >= 10
+helpertype = normal
+name = "Fire"
+ownpal = 1
+stateno = 6081
+ID = 6081
+postype = p2
+pos = 0,0
+ignorehitpause = 1
+
+;--- 攻撃判定消滅 ---
+[State 1150, StateTypeSet]
+type = statetypeset
+trigger1 = animelem = 10
+movetype = I
+
+;--- 追撃判定 ---
+[State 1150, Chain Var]
+type = varset
+triggerall = numtarget
+triggerall = var(3) = 0
+triggerall = var(9) = 1
+triggerall = movehit = 1 || (moveguarded = 1 && target,statetype = A)
+trigger1 = animelemtime(7) > 0 && var(1) != 10
+trigger2 = animelemtime(9) > 0 && var(1) = 10
+v = 0
+value = 1
+ignorehitpause = 1
+
+;--- 着地 ---
+[State 1150, End]
+type = changestate
+triggerall = animelemtime(5) >= 0
+trigger1 = vel y > 0 && pos y >= 0
+value = 1160
+
+;----------------------------------------------------------
+; EXタイガーアッパーカット 着地
+[Statedef 1160]
+type = S
+movetype = I
+physics = S
+velset = 0,0
+ctrl = 0
+anim = 1160
+sprpriority = 2
+
+;--- EX必殺技演出 ---
+[State 1160, PalFx]
+type = palfx
+trigger1 = gametime % 3 = 0
+time = 1
+add = 0,76,224
+color = 124
+ignorehitpause = 1
+
+[State 1160, PalFx]
+type = palfx
+trigger1 = gametime % 3 = 1
+time = 1
+add = 0,46,164
+color = 256
+ignorehitpause = 1
+
+;--- 効果音 ---
+[State 1160, Sound]
+type = playsnd
+trigger1 = time = 0
+value = s50,0
+
+;--- 座標 ---
+[State 1160, PosSet]
+type = posset
+trigger1 = time = 0
+y = 0
+
+;--- 効果音 ---
+[State 1160, Voice]
+type = playsnd
+trigger1 = animelem = 1
+value = s1150,1
+channel = 0
+
+;--- 終了 ---
+[State 1160, End]
+type = changestate
+trigger1 = animtime = 0
+value = 0
+ctrl = 1
+
+;=========================< EXタイガーニークラッシュ >=========================
+[Statedef 1250]
+type = S
+movetype = A
+physics = N
+velset = 0,0
+ctrl = 0
+anim = 1250
+poweradd = 0
+facep2 = 1
+sprpriority = 2
+
+;--- EX必殺技演出 ---
+[State 1250, Sound]
+type = playsnd
+trigger1 = time = 0
+value = s7050,0
+
+[State 1250, PalFx]
+type = palfx
+trigger1 = gametime % 3 = 0
+time = 1
+add = 0,76,224
+color = 124
+ignorehitpause = 1
+
+[State 1250, PalFx]
+type = palfx
+trigger1 = gametime % 3 = 1
+time = 1
+add = 0,46,164
+color = 256
+ignorehitpause = 1
+
+[State 1250, PowerAdd]
+type = poweradd
+trigger1 = time = 0 && fvar(2) = 0
+value = -1000
+
+[State 1250, VarAdd]
+type = varadd
+trigger1 = time = 0 && fvar(2)
+fv = 2
+value = -450
+
+;--- 効果音 ---
+[State 1250, Voice]
+type = playsnd
+trigger1 = animelem = 1
+value = s1250,0
+channel = 0
+
+[State 1250, Sound]
+type = playsnd
+trigger1 = animelem = 3
+value = s1205,0
+
+;--- 座標 ---
+[State 1250, PosAdd]
+type = posadd
+trigger1 = animelem = 3 || animelem = 4
+x = 15
+
+;--- 速度 ---
+[State 1250, VelSet]
+type = velset
+trigger1 = animelem = 4
+x = 8
+y = -8
+
+[State 1100, VelMul]
+type = velmul
+trigger1 = animelemtime(6) >= 0
+x = 0.95
+
+[State 1250, VelAdd]
+type = veladd
+trigger1 = animelemtime(4) >= 0
+y = 0.6
+
+;--- 空中判定 ---
+[State 1250, StateTypeSet]
+type = statetypeset
+trigger1 = animelem = 4
+statetype = A
+
+;--- ヒット判定リセット ---
+[State 1250, VarSet]
+type = varset
+trigger1 = animelem = 4 || animelem = 6
+v = 14
+value = 0
+
+;--- 半数補正 ---
+[State 1250, ComboVar]
+type = varset
+trigger1 = time = 0
+fv = 5
+value = 1
+
+[State 1250, ComboVar]
+type = varset
+trigger1 = movecontact = 1
+fv = 5
+value = fvar(5)/2
+
+[State 1250, ComboVar]
+type = varset
+trigger1 = fvar(5) < 0.125
+fv = 5
+value = 0.125
+
+;--- ヒットスパーク ---
+[State 1250, VarSet]
+type = null
+trigger1 = animelemno(0) = 4
+trigger1 = var(5) := -15 || var(6) := -50
+trigger2 = animelemno(0) = 5
+trigger2 = var(5) := -15 || var(6) := -80
+
+;--- 攻撃判定 ---
+[State 1250, HitDef]
+type = hitdef
+triggerall = var(0) = 0
+triggerall = var(14) = 0
+triggerall = var(34) = 0
+trigger1 = animelemno(0) = 3
+attr = S,SA
+hitflag = MAF
+guardflag = M
+affectteam = E
+priority = 4,Hit
+animtype = Hard
+ground.type = Low
+damage = floor(60*fvar(0)*fvar(3)),5
+getpower = 0,0
+givepower = 20,20
+pausetime = 6,6
+hitsound = s6020,0
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = -15,-50
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = -4,-6
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -4,-6
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = -10
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .4
+fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+ID = 1250
+
+[State 1250, HitDef]
+type = hitdef
+triggerall = var(0) = 0
+triggerall = var(14) = 0
+triggerall = var(34)
+trigger1 = animelemno(0) = 3
+attr = S,SA
+hitflag = MAF
+guardflag = MA
+affectteam = E
+priority = 4,Hit
+animtype = Hard
+ground.type = Low
+damage = floor(60*fvar(0)*fvar(3)),5
+getpower = 0,0
+givepower = 20,20
+pausetime = 6,6
+hitsound = s6020,0
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = -15,-50
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = -4,-6
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -4,-6
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = -10
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .4
+fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+ID = 1250
+
+[State 1250, HitDef]
+type = hitdef
+triggerall = var(0) = 0
+triggerall = var(14) = 0
+triggerall = var(35) = 0
+trigger1 = animelemno(0) = [4,7]
+attr = A,SA
+hitflag = MAF
+guardflag = M
+affectteam = E
+priority = 4,Hit
+animtype = Hard
+ground.type = High
+damage = floor(60*fvar(0)*fvar(3)*fvar(5)),5
+getpower = 0,0
+givepower = 20,20
+pausetime = 6,6
+hitsound = s6020,0
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = var(5),var(6)
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = -4,-6
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -4,-6
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = -10
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .4
+fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+ID = 1250
+
+[State 1250, HitDef]
+type = hitdef
+triggerall = var(0) = 0
+triggerall = var(14) = 0
+triggerall = var(35)
+trigger1 = animelemno(0) = [4,7]
+attr = A,SA
+hitflag = MAF
+guardflag = MA
+affectteam = E
+priority = 4,Hit
+animtype = Hard
+ground.type = High
+damage = floor(60*fvar(0)*fvar(3)*fvar(5)),5
+getpower = 0,0
+givepower = 20,20
+pausetime = 6,6
+hitsound = s6020,0
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = var(5),var(6)
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = -4,-6
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -4,-6
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = -10
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .4
+fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+ID = 1250
+
+;--- 攻撃判定消滅 ---
+[State 1250, StateTypeSet]
+type = statetypeset
+trigger1 = animelem = 8
+movetype = I
+
+;--- 着地 ---
+[State 1250, End]
+type = changestate
+triggerall = animelemtime(4) >= 0
+trigger1 = vel y > 0 && pos y >= 0
+value = 1260
+
+;-------------------------------------------------------------------
+; タイガーニークラッシュ 着地
+[Statedef 1260]
+type = S
+movetype = A
+physics = N
+velset = 0,0
+ctrl = 0
+anim = 1260
+sprpriority = 2
+movehitpersist = 1
+
+;--- EX必殺技演出 ---
+[State 1260, PalFx]
+type = palfx
+trigger1 = gametime % 3 = 0
+time = 1
+add = 0,76,224
+color = 124
+ignorehitpause = 1
+
+[State 1260, PalFx]
+type = palfx
+trigger1 = gametime % 3 = 1
+time = 1
+add = 0,46,164
+color = 256
+ignorehitpause = 1
+
+;--- 効果音 ---
+[State 1260, Sound]
+type = playsnd
+trigger1 = time = 0
+value = s50,0
+
+[State 1260, Sound]
+type = playsnd
+trigger1 = animelem = 1
+value = s1260,0
+channel = 0
+
+[State 1260, Sound]
+type = playsnd
+trigger1 = animelem = 3
+value = s1205,0
+
+;--- 座標 ---
+[State 1260, PosSet]
+type = posset
+trigger1 = time = 0
+y = 0
+
+;--- 速度 ---
+[State 1260, VelSet]
+type = velset
+trigger1 = animelem = 3
+x = 8
+y = -8
+
+[State 1100, VelMul]
+type = velmul
+trigger1 = animelemtime(6) >= 0
+x = 0.85
+
+[State 1260, VelAdd]
+type = veladd
+trigger1 = animelemtime(3) >= 0
+y = 0.6
+
+;--- 空中判定 ---
+[State 1260, StateTypeSet]
+type = statetypeset
+trigger1 = animelem = 3
+statetype = A
+
+;--- 攻撃判定 ---
+[State 1260, HitDef]
+type = hitdef
+triggerall = var(0) = 0
+triggerall = var(14) = 0
+triggerall = var(35) = 0
+trigger1 = animelemno(0) = [3,4]
+attr = A,SA
+hitflag = MAF
+guardflag = M
+affectteam = E
+priority = 4,Hit
+animtype = Hard
+ground.type = Low
+damage = floor(80*fvar(0)*fvar(3)),10
+getpower = 0,0
+givepower = 20,20
+pausetime = 12,12
+hitsound = s6020,0
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = -15,-70
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = -1.5,-9
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -1.5,-9
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = -10
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .5
+fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+ID = 1260
+
+[State 1260, HitDef]
+type = hitdef
+triggerall = var(0) = 0
+triggerall = var(14) = 0
+triggerall = var(35)
+trigger1 = animelemno(0) = [3,4]
+attr = A,SA
+hitflag = MAF
+guardflag = MA
+affectteam = E
+priority = 4,Hit
+animtype = Hard
+ground.type = Low
+damage = floor(80*fvar(0)*fvar(3)),10
+getpower = 0,0
+givepower = 20,20
+pausetime = 12,12
+hitsound = s6020,0
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = -15,-70
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = -1.5,-9
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -1.5,-9
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = -10
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .5
+fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+ID = 1260
+
+;--- 相手ステート ---
+[State 1260, TargetState]
+type = targetstate
+triggerall = numtarget(1260)
+triggerall = movehit = 1 && var(9) = 1
+trigger1 = 1
+ID = 1260+((var(29) := 1260)*0)
+value = ifelse(var(16) = 0,5600,5605)
+ignorehitpause = 1
+
+;--- 着地 ---
+[State 1260, End]
+type = changestate
+triggerall = animelemtime(3) >= 0
+trigger1 = vel y > 0 && pos y >= 0
+value = 1270
+
+;-------------------------------------------------------------------
+; EXタイガーニークラッシュ 着地
+[Statedef 1270]
+type = S
+movetype = I
+physics = S
+velset = 0,0
+ctrl = 0
+anim = 1270
+sprpriority = 2
+movehitpersist = 1
+
+;--- EX必殺技演出 ---
+[State 1270, PalFx]
+type = palfx
+trigger1 = gametime % 3 = 0
+time = 1
+add = 0,76,224
+color = 124
+ignorehitpause = 1
+
+[State 1270, PalFx]
+type = palfx
+trigger1 = gametime % 3 = 1
+time = 1
+add = 0,46,164
+color = 256
+ignorehitpause = 1
+
+;--- 効果音 ---
+[State 1270, Sound]
+type = playsnd
+trigger1 = time = 0
+value = s50,0
+
+;--- 座標 ---
+[State 1270, PosSet]
+type = posset
+trigger1 = time = 0
+y = 0
+
+;--- 終了 ---
+[State 1270, End]
+type = changestate
+trigger1 = animtime = 0
+value = 0
+ctrl = 1
+
+;=========================< EXタイガークロウ >=========================
+[Statedef 1350]
+type = S
+movetype = A
+physics = S
+velset = 0,0
+ctrl = 0
+anim = 1350
+poweradd = 0
+facep2 = 1
+sprpriority = 2
+
+;--- EX必殺技演出 ---
+[State 1350, Sound]
+type = playsnd
+trigger1 = time = 0
+value = s7050,0
+
+[State 1350, PalFx]
+type = palfx
+trigger1 = gametime % 3 = 0
+time = 1
+add = 0,76,224
+color = 124
+ignorehitpause = 1
+
+[State 1350, PalFx]
+type = palfx
+trigger1 = gametime % 3 = 1
+time = 1
+add = 0,46,164
+color = 256
+ignorehitpause = 1
+
+[State 1350, PowerAdd]
+type = poweradd
+trigger1 = time = 0 && fvar(2) = 0
+value = -1000
+
+[State 1350, VarAdd]
+type = varadd
+trigger1 = time = 0 && fvar(2)
+fv = 2
+value = -450
+
+;--- 効果音 ---
+[State 1350, Voice]
+type = playsnd
+trigger1 = animelem = 4 || animelem = 10
+value = s1300,0
+channel = 0
+
+[State 1350, Voice]
+type = playsnd
+trigger1 = animelem = 18
+value = s1300,1
+channel = 0
+
+[State 1350, Sound]
+type = playsnd
+trigger1 = animelem = 4 || animelem = 10 || animelem = 18
+value = s250,10
+
+;--- 座標 ---
+[State 1350, PosAdd]
+type = posadd
+trigger1 = animelem = 2 || animelem = 3 || animelem = 4
+x = 5
+
+[State 1350, PosAdd]
+type = posadd
+trigger1 = animelem = 23
+x = -5
+
+[State 1350, PosAdd]
+type = posadd
+trigger1 = animelem = 9 || animelem = 11
+x = 20
+
+[State 1350, PosAdd]
+type = posadd
+trigger1 = animelem = 7 || animelem = 17 || animelem = 18 || animelem = 19 || animelem = 20 || animelem = 21
+x = 10
+
+[State 1350, PosAdd]
+type = posadd
+trigger1 = animelem = 8 || animelem = 24 || animelem = 25 || animelem = 26
+x = -10
+
+;--- 速度 ---
+[State 1350, VelSet]
+type = null;velset
+trigger1 = animelem = 15
+x = 5
+
+[State 1350, VelSet]
+type = velmul
+trigger1 = animelemtime(16) >= 0 && animelemtime(26) < 0
+x = 0.8
+
+[State 1350, VelSet]
+type = velset
+trigger1 = animelem = 21
+x = 0
+
+;--- ヒット判定リセット ---
+[State 1350, VarSet]
+type = varset
+trigger1 = animelem = 11 || animelem = 20 || animelem = 21
+v = 14
+value = 0
+
+;--- 半数補正 ---
+[State 1350, ComboVar]
+type = varset
+trigger1 = time = 0
+fv = 5
+value = 1
+
+[State 1350, ComboVar]
+type = varset
+trigger1 = movecontact = 1
+fv = 5
+value = fvar(5)/2
+
+[State 1350, ComboVar]
+type = varset
+trigger1 = fvar(5) < 0.125
+fv = 5
+value = 0.125
+
+;--- 攻撃判定 ---
+[State 1350, HitDef]
+type = hitdef
+triggerall = var(0) = 0
+triggerall = var(14) = 0
+triggerall = var(34) = 0
+trigger1 = animelemno(0) = 5
+attr = S,SA
+hitflag = MAF
+guardflag = M
+affectteam = E
+priority = 4,Hit
+animtype = Hard
+ground.type = Low
+damage = floor(40*fvar(0)*fvar(3)),5
+getpower = 0,0
+givepower = 20,20
+pausetime = 6,6
+hitsound = s6010,1
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = -15,-35
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = -5
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -4,-6
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = -5
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .4
+air.fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+
+[State 1350, HitDef]
+type = hitdef
+triggerall = var(0) = 0
+triggerall = var(14) = 0
+triggerall = var(34)
+trigger1 = animelemno(0) = 5
+attr = S,SA
+hitflag = MAF
+guardflag = MA
+affectteam = E
+priority = 4,Hit
+animtype = Hard
+ground.type = Low
+damage = floor(40*fvar(0)*fvar(3)),5
+getpower = 0,0
+givepower = 20,20
+pausetime = 6,6
+hitsound = s6010,1
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = -15,-35
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = -5
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -4,-6
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = -5
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .4
+air.fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+
+[State 1350, HitDef]
+type = hitdef
+triggerall = var(0) = 0
+triggerall = var(14) = 0
+triggerall = var(34) = 0
+trigger1 = animelemno(0) = 11
+attr = S,SA
+hitflag = MAF
+guardflag = H
+affectteam = E
+priority = 4,Hit
+animtype = Hard
+ground.type = High
+damage = floor(40*fvar(0)*fvar(3)),5
+getpower = 0,0
+givepower = 20,20
+pausetime = 6,6
+hitsound = s6010,1
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = -15,-90
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = -5
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -4,-6
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = -5
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .4
+air.fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+
+[State 1350, HitDef]
+type = hitdef
+triggerall = var(0) = 0
+triggerall = var(14) = 0
+triggerall = var(34)
+trigger1 = animelemno(0) = 11
+attr = S,SA
+hitflag = MAF
+guardflag = HA
+affectteam = E
+priority = 4,Hit
+animtype = Hard
+ground.type = High
+damage = floor(40*fvar(0)*fvar(3)),5
+getpower = 0,0
+givepower = 20,20
+pausetime = 6,6
+hitsound = s6010,1
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = -15,-90
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = -5
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -4,-6
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = -5
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .4
+air.fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+
+[State 1350, HitDef]
+type = hitdef
+triggerall = var(0) = 0
+triggerall = var(14) = 0
+triggerall = var(34) = 0
+trigger1 = animelemno(0) = 20
+attr = S,SA
+hitflag = MAF
+guardflag = M
+affectteam = E
+priority = 4,Hit
+animtype = Hard
+ground.type = Low
+damage = floor(60*fvar(0)*fvar(3)),5
+getpower = 0,0
+givepower = 20,20
+pausetime = 6,6
+hitsound = s6020,0
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = -15,-75
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = 0
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -4,-6
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = 0
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .4
+air.fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+forcestand = 1
+
+[State 1350, HitDef]
+type = hitdef
+triggerall = var(0) = 0
+triggerall = var(14) = 0
+triggerall = var(34)
+trigger1 = animelemno(0) = 20
+attr = S,SA
+hitflag = MAF
+guardflag = MA
+affectteam = E
+priority = 4,Hit
+animtype = Hard
+ground.type = Low
+damage = floor(60*fvar(0)*fvar(3)),5
+getpower = 0,0
+givepower = 20,20
+pausetime = 6,6
+hitsound = s6020,0
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = -15,-75
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = 0
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -4,-6
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = 0
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .4
+air.fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+forcestand = 1
+
+[State 1350, HitDef]
+type = hitdef
+triggerall = var(0) = 0
+triggerall = var(14) = 0
+triggerall = var(34) = 0
+trigger1 = animelemno(0) = 21
+attr = S,SA
+hitflag = MAF
+guardflag = M
+affectteam = E
+priority = 4,Hit
+animtype = Up
+ground.type = High
+damage = floor(30*fvar(0)*fvar(3)),5
+getpower = 0,0
+givepower = 20,20
+pausetime = 12,12
+hitsound = s6020,0
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = -15,-100
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = -1,-12
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -1,-12
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = -10
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .55
+fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+ID = 1350
+
+[State 1350, HitDef]
+type = hitdef
+triggerall = var(0) = 0
+triggerall = var(14) = 0
+triggerall = var(34)
+trigger1 = animelemno(0) = 21
+attr = S,SA
+hitflag = MAF
+guardflag = MA
+affectteam = E
+priority = 4,Hit
+animtype = Up
+ground.type = High
+damage = floor(30*fvar(0)*fvar(3)),5
+getpower = 0,0
+givepower = 20,20
+pausetime = 12,12
+hitsound = s6020,0
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = -15,-100
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = -1,-12
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -1,-12
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = -10
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .55
+fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+ID = 1350
+
+;--- 相手ステート ---
+[State 1350, TargetState]
+type = targetstate
+triggerall = numtarget(1350)
+triggerall = movehit = 1 && var(9) = 1
+trigger1 = animelemtime(21) > 0 && animelemtime(22) <= 0
+value = 5640
+ID = 1350+((var(29) := 1350)*0)
+ignorehitpause = 1
+
+;--- 攻撃判定消滅
+[State 1350, StateTypeSet]
+type = statetypeset
+trigger1 = animelem = 22
+movetype = I
+
+;--- 終了 ---
+[State 1350, End]
+type = changestate
+trigger1 = animtime = 0
+value = 0
+ctrl = 1
+
+;=========================< EXタイガークロウ >=========================
+[Statedef 1350]
+type = S
+movetype = A
+physics = S
+velset = 0,0
+ctrl = 0
+anim = 1350
+poweradd = 0
+facep2 = 1
+sprpriority = 2
+
+;--- EX必殺技演出 ---
+[State 1350, Sound]
+type = playsnd
+trigger1 = time = 0
+value = s7050,0
+
+[State 1350, PalFx]
+type = palfx
+trigger1 = gametime % 3 = 0
+time = 1
+add = 0,76,224
+color = 124
+ignorehitpause = 1
+
+[State 1350, PalFx]
+type = palfx
+trigger1 = gametime % 3 = 1
+time = 1
+add = 0,46,164
+color = 256
+ignorehitpause = 1
+
+[State 1350, PowerAdd]
+type = poweradd
+trigger1 = time = 0 && fvar(2) = 0
+value = -1000
+
+[State 1350, VarAdd]
+type = varadd
+trigger1 = time = 0 && fvar(2)
+fv = 2
+value = -450
+
+;--- 効果音 ---
+[State 1350, Voice]
+type = playsnd
+trigger1 = animelem = 4
+value = s1300,0
+channel = 0
+
+[State 1350, Voice]
+type = playsnd
+trigger1 = animelem = 13
+value = s1300,1
+channel = 0
+
+[State 1350, Sound]
+type = playsnd
+trigger1 = animelem = 4 || animelem = 13
+value = s250,10
+
+;--- 座標 ---
+[State 1350, PosAdd]
+type = posadd
+trigger1 = animelem = 2
+x = 5
+
+[State 1350, PosAdd]
+type = posadd
+trigger1 = animelem = 7 || animelem = 17
+x = -5
+
+[State 1350, PosAdd]
+type = posadd
+trigger1 = animelem = 11 || animelem = 12 || animelem = 13 || animelem = 14 || animelem = 15
+x = 10
+
+[State 1350, PosAdd]
+type = posadd
+trigger1 = animelem = 18 || animelem = 19 || animelem = 20
+x = -10
+
+;--- 速度 ---
+[State 1350, VelSet]
+type = velset
+trigger1 = animelem = 10
+x = 5
+
+[State 1350, VelSet]
+type = velmul
+trigger1 = animelemtime(10) >= 0 && animelemtime(20) < 0
+x = 0.8
+
+[State 1350, VelSet]
+type = velset
+trigger1 = animelem = 15
+x = 0
+
+;--- ヒット判定リセット ---
+[State 1350, VarSet]
+type = varset
+trigger1 = animelem = 14 || animelem = 15
+v = 14
+value = 0
+
+;--- 半数補正 ---
+[State 1350, ComboVar]
+type = varset
+trigger1 = time = 0
+fv = 5
+value = 1
+
+[State 1350, ComboVar]
+type = varset
+trigger1 = movecontact = 1
+fv = 5
+value = fvar(5)/2
+
+[State 1350, ComboVar]
+type = varset
+trigger1 = fvar(5) < 0.125
+fv = 5
+value = 0.125
+
+;--- 攻撃判定 ---
+[State 1350, HitDef]
+type = hitdef
+triggerall = var(0) = 0
+triggerall = var(14) = 0
+triggerall = var(34) = 0
+trigger1 = animelemno(0) = 5
+attr = S,SA
+hitflag = MAF
+guardflag = L
+affectteam = E
+priority = 4,Hit
+animtype = Hard
+ground.type = Low
+damage = floor(60*fvar(0)*fvar(3)),5
+getpower = 0,0
+givepower = 20,20
+pausetime = 12,12
+hitsound = s6010,1
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = -15,-15
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = 0
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -4,-6
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = 0
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .4
+air.fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+
+[State 1350, HitDef]
+type = hitdef
+triggerall = var(0) = 0
+triggerall = var(14) = 0
+triggerall = var(34)
+trigger1 = animelemno(0) = 5
+attr = S,SA
+hitflag = MAF
+guardflag = LA
+affectteam = E
+priority = 4,Hit
+animtype = Hard
+ground.type = Low
+damage = floor(60*fvar(0)*fvar(3)),5
+getpower = 0,0
+givepower = 20,20
+pausetime = 12,12
+hitsound = s6010,1
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = -15,-15
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = 0
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -4,-6
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = 0
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .4
+air.fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+
+[State 1350, HitDef]
+type = hitdef
+triggerall = var(0) = 0
+triggerall = var(14) = 0
+triggerall = var(34) = 0
+trigger1 = animelemno(0) = 14
+attr = S,SA
+hitflag = MAF
+guardflag = M
+affectteam = E
+priority = 4,Hit
+animtype = Hard
+ground.type = Low
+damage = floor(30*fvar(0)*fvar(3)),5
+getpower = 0,0
+givepower = 20,20
+pausetime = 6,6
+hitsound = s6020,0
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = -15,-75
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = 0
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -4,-6
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = 0
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .4
+air.fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+forcestand = 1
+
+[State 1350, HitDef]
+type = hitdef
+triggerall = var(0) = 0
+triggerall = var(14) = 0
+triggerall = var(34)
+trigger1 = animelemno(0) = 14
+attr = S,SA
+hitflag = MAF
+guardflag = MA
+affectteam = E
+priority = 4,Hit
+animtype = Hard
+ground.type = Low
+damage = floor(30*fvar(0)*fvar(3)),5
+getpower = 0,0
+givepower = 20,20
+pausetime = 6,6
+hitsound = s6020,0
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = -15,-75
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = 0
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -4,-6
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = 0
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .4
+air.fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+forcestand = 1
+
+[State 1350, HitDef]
+type = hitdef
+triggerall = var(0) = 0
+triggerall = var(14) = 0
+triggerall = var(34) = 0
+trigger1 = animelemno(0) = 15
+attr = S,SA
+hitflag = MAF
+guardflag = M
+affectteam = E
+priority = 4,Hit
+animtype = Up
+ground.type = High
+damage = floor(60*fvar(0)*fvar(3)*fvar(5)),5
+getpower = 0,0
+givepower = 20,20
+pausetime = 12,12
+hitsound = s6020,0
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = -15,-90
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = -1,-12
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -1,-12
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = -10
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .6
+fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+ID = 1350
+
+[State 1350, HitDef]
+type = hitdef
+triggerall = var(0) = 0
+triggerall = var(14) = 0
+triggerall = var(34)
+trigger1 = animelemno(0) = 15
+attr = S,SA
+hitflag = MAF
+guardflag = MA
+affectteam = E
+priority = 4,Hit
+animtype = Up
+ground.type = High
+damage = floor(60*fvar(0)*fvar(3)*fvar(5)),5
+getpower = 0,0
+givepower = 20,20
+pausetime = 12,12
+hitsound = s6020,0
+guardsound = s6120,0
+sparkno = s6020
+guard.sparkno = s6120
+sparkxy = -15,-90
+ground.hittime = 18
+ground.slidetime = 18
+ground.velocity = -1,-12
+ground.cornerpush.veloff = 0
+air.hittime = 18
+air.velocity = -1,-12
+guard.hittime = 16
+guard.slidetime = 16
+guard.velocity = -10
+airguard.ctrltime = 999999
+airguard.velocity = -4.5,0
+yaccel = .6
+fall = 1
+fall.recover = 0
+fall.yvelocity = -3.5
+ID = 1350
+
+;--- 相手ステート ---
+[State 1350, TargetState]
+type = targetstate
+triggerall = numtarget(1350)
+triggerall = movehit = 1 && var(9) = 1
+trigger1 = animelemtime(15) > 0 && animelemtime(16) <= 0
+value = 5640
+ID = 1350+((var(29) := 1350)*0)
+ignorehitpause = 1
+
+;--- 攻撃判定消滅
+[State 1350, StateTypeSet]
+type = statetypeset
+trigger1 = animelem = 16
+movetype = I
+
+;--- 終了 ---
+[State 1350, End]
+type = changestate
+trigger1 = animtime = 0
+value = 0
+ctrl = 1

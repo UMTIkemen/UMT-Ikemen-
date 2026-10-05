@@ -1,0 +1,1341 @@
+;---------------------------------------------------------------------------
+; States that are always executed (use statedef -2)
+;---------------------------------------------------------------------------
+
+[Statedef -2]
+
+[State -2, Particle Effect]
+type = Explod
+triggerall = prevstateno = 1020 || prevstateno = 1025 || prevstateno = 2010
+triggerall = stateno = [5000,5071]
+triggerall = movetype = H
+trigger1 = !time
+anim = 1016
+pos = 15, -25
+postype = p1
+sprpriority = 2
+ownpal = 1
+
+[State -2, PlaySnd]
+type = PlaySnd
+triggerall = prevstateno = 1025 || prevstateno = 1025 || prevstateno = 2010
+triggerall = stateno = [5000,5071]
+triggerall = movetype = H
+trigger1 = !time
+value = S1020,0
+
+[State -2, RemoveExplod]
+type = RemoveExplod
+trigger1 = prevstateno = 1030 || prevstateno = 1035 || prevstateno = 2020
+trigger2 = stateno = [5000,5071]
+trigger3 = movetype = H
+id = 1022
+ignorehitpause = 1
+persistent = 1
+
+[State -2, StopSnd]
+type = StopSnd
+triggerall = prevstateno = 3010
+triggerall = stateno = [5000,5071]
+triggerall = movetype = H
+trigger1 = !time
+channel = 1
+
+[State -2, RemoveExplod]
+type = RemoveExplod
+trigger1 = prevstateno = 3010
+trigger2 = stateno = [5000,5071]
+trigger3 = movetype = H
+id = 3012
+ignorehitpause = 1
+persistent = 1
+
+[State -2, Remove chibi after palette selector]
+type = RemoveExplod
+triggerall = numhelper(12345)
+trigger1 = (command="a"||command="b"||command="c"||command="x"||command="y"||command="z"||command="start"||roundstate=2)
+id = 12347
+
+[State -2, Dizzy ''stars'']
+type = Explod
+trigger1 = Numexplod(5310) = 0 && anim = 5300
+anim = 5310
+postype = p1
+pos = 2,-75
+facing = 1
+ID = 5310
+sprpriority = 4
+removetime = -1
+ownpal = 1
+bindtime = -1
+
+[State 0, RemoveExplod]
+type = RemoveExplod
+trigger1 = anim != 5300
+id = 5310
+
+[State -2, AssertSpecial]
+type = AssertSpecial
+triggerall = stateno = [3051,3077]
+trigger1 = 1
+flag = noBG
+flag2 = noFG
+flag3 = nomusic
+
+[State -2, AssertSpecial]
+type = AssertSpecial
+triggerall = stateno = [3051,3077]
+trigger1 = 1
+flag = timerfreeze
+flag2 = globalnoshadow
+flag3 = nobardisplay
+
+[State -2, AssertSpecial]
+type = AssertSpecial
+triggerall = stateno = 3080
+trigger1 = 1
+flag = timerfreeze
+flag2 = nobardisplay
+
+[State -2, AssertSpecial]
+type = AssertSpecial
+triggerall = stateno = [3077,3076]
+trigger1 = 1
+flag = noBG
+flag2 = noFG
+flag3 = nomusic
+
+[State -2, AssertSpecial]
+type = AssertSpecial
+triggerall = stateno = [3077,3076]
+trigger1 = 1
+flag = timerfreeze
+flag2 = globalnoshadow
+flag3 = nobardisplay
+
+;----------------------------------------------
+; Super Armor for The Incredible Bulk Mom hyper
+[State -2, Helper]
+type = Helper
+triggerall = numhelper(15000) = 0
+trigger1 = stateno = 3040
+name = "Armor"
+ID = 15000
+stateno = 15000
+pos = 0,0
+postype = p1
+facing = 1
+keyctrl = 0
+ownpal = 1
+ignorehitpause = 1
+
+[State -2, Ow]
+type = LifeAdd
+trigger1 = var(43)
+trigger1 = numtarget = 0
+value = -var(43)
+persistent = 0
+
+[State -2, Reset]
+type = VarSet
+trigger1 = 1
+trigger2 = movehit
+var(43) = 0
+ignorehitpause = 1
+
+[State 0, NotHitBy]
+type = NotHitBy
+triggerall = stateno = 3040
+trigger1 = stateno != [120,155]
+trigger1 = movetype != H
+value = SCA, AT
+time = 2
+ignorehitpause = 1
+
+[State -2, PosFreeze]
+type = PosFreeze
+triggerall = movetype != H
+triggerall = alive
+triggerall = numhelper(15000) > 0
+trigger1 = helper(15000),stateno = 15001
+value = 1
+ignorehitpause = 1
+
+[State -2, ChangeAnim]
+type = ChangeAnim
+triggerall = stateno != 195
+triggerall = movetype != H
+triggerall = alive
+triggerall = numhelper(15000) > 0
+trigger1 = helper(15000),stateno = 15001
+value = anim
+elem = animelemno(0)
+;----------------------------------------------
+;Hell Dunk
+[State -2]
+type=Helper
+trigger1=numenemy&&movetype=H&&!numhelper(1422)
+trigger1=enemynear,name="Zabel"&&((enemynear,authorname="misao"&&stateno=950&&time=20)||(enemynear,authorname="Zelgadis296"&&stateno=2150&&enemynear,time=6&&enemynear,stateno=2002&&enemynear,movetype=A))
+name = "Hell Dunk"
+ID=ifelse(enemynear,authorname="misao",1422,1423)
+pos=ifelse(enemynear,authorname="misao",130,70),-ifelse(enemynear,authorname="misao",42,55)
+postype=p2
+stateno=1422
+facing=-1
+
+;================================================================================
+; ------- Cheap K.O. system By Warusaki3 --------
+;===============================================================================
+[State -2, 3]
+type = ChangeState
+trigger1 = !Alive
+trigger1 = PrevStateNo = 130 || PrevStateNo = 131 || PrevStateNo = [150,153]
+trigger1 = Stateno = [5000,5050]
+value = 5950
+
+[State -2,KO]
+type = Varset
+triggerall = StateNo = [120,159]
+trigger1 = StateType = S
+ignorehitpause = 1
+fvar(1) = 0
+
+[State -2,KO]
+type = Varset
+triggerall = StateNo = [120,159]
+trigger1 = StateType = C
+ignorehitpause = 1
+fvar(1) = 1
+
+[State -2,KO]
+type = Varset
+triggerall = StateNo = [120,159]
+trigger1 = StateType = A
+ignorehitpause = 1
+fvar(1) = 2
+
+[State -3, AssertSpecial]
+type = AssertSpecial
+trigger1 = (StateNo = [5000,5010])
+trigger1 = (PrevStateNo = [130,131]) || (PrevStateNo = [140,141]) || (PrevStateNo=[150,153])
+flag = NoKOsnd
+ignoreHitPause = 1
+
+[State -2, P2 Safe Fall]
+type= targetstate
+trigger1= numtarget=1 ;Just to prevent Simul mode shenanigans
+trigger1= target,command="recovery"
+trigger1= target,pos y>=-20 && target,vel y>0
+trigger1= target,alive && target,hitfall && target,gethitvar(fall.recover)
+trigger1= target,stateno=5030 || target,stateno=5035 || target,stateno=5050 || target,stateno=5071
+value= 5205
+ignorehitpause= 1
+
+[State -2, P2 Facing]
+type= targetfacing
+trigger1= movecontact=1 && numtarget=1
+trigger1= !(target,hitshakeover) && !(target,hitfall) && (target,time<=1)
+value= ifelse(p2dist x>=0, -1, 1)
+ignorehitpause= 1
+
+[State -2, StopSnd]
+type = StopSnd
+trigger1 = movetype = H
+channel = 10
+
+[State -2, StopSnd]
+type = StopSnd
+trigger1 = movetype = H
+channel = 20
+
+;================================================================================
+; ------- Tick Fix --------
+;===============================================================================
+[State -2, CtrlSet]
+type = CtrlSet
+;Gethits
+trigger1 = (stateno=52 || stateno=102 || stateno=107 || stateno=5120) && !animtime
+trigger2 = (stateno=5001 || stateno=5011 || stateno=151 || stateno=153) && hitover
+value = 1
+
+[State -2, CtrlSet]
+type = CtrlSet
+triggerall = !animtime
+triggerall = anim != 7990 ;To fix a bug with this anim
+;Basic moves
+trigger1 = (stateno = [200,599])
+;System moves
+trigger2 = (stateno = [310,330])
+value = 1
+
+;================================================================================
+; ------- NotHitBy fix by Caddie --------
+;===============================================================================
+[State -2, hitby]
+type = hitby
+trigger1 = life > 0
+trigger1 = stateno = 5100 || stateno = 5110 || stateno = 5120
+trigger1 = anim != 5120
+value = SCA, NA, SA, HA, NP, SP, HP, NT, ST, HT
+time = 1
+
+;================================================================================
+; ------- Cybaster Fix --------
+;===============================================================================
+[State -3, Cybaster fix]
+type = StopSnd
+trigger1 = stateno != 101
+trigger1 = stateno != 190
+trigger1 = stateno != 191
+trigger1 = stateno != 192
+trigger1 = stateno != 193
+trigger1 = stateno != 3077
+channel = 27
+
+;================================================================================
+; ------- Front corner fix --------
+;===============================================================================
+;To prevent switching sides while making combos.
+[State -2, Width]
+type = Width
+triggerall = numenemy
+trigger1 = facing != enemynear, facing
+trigger1 = movetype != H
+edge = 8,0
+ignorehitpause = 1
+
+[State -2, Damage based on hits]
+type=varset
+trigger1= numenemy
+fvar(12)= enemynear,gethitvar(hitcount)
+ignorehitpause=1
+
+[State -2, Reset var when the opponent recovers]
+type=varset
+trigger1= numenemy
+trigger1= (enemynear,movetype!=H)
+trigger2= !numenemy
+fvar(12)=0
+
+[State -2, Dampener]
+type=varset
+triggerall = stateno != [3000,3099]
+trigger1=1
+fvar(10)= cond(fvar(12)<11,cond(fvar(12)=0, 1, cond(fvar(12)=1, .9, .9**fvar(12))),.25)
+ignorehitpause=1
+
+[State -3, Attack Scale]
+type = AttackMulSet
+trigger1 = 1
+value = fvar(10)
+ignorehitpause = 1
+
+[state -2, No Clones]
+type = remappal
+triggerall=numenemy && (var(36)=[1,33]);fvar(36)=the number of pals available 
+trigger1=var(37)&&!numhelper(12345)&&matchno=1&&roundno=1
+trigger1=enemy,authorname="Shimmering Brony & Jarquin10"&&enemy,name="Nicole Watterson"&&enemy,var(36)=var(36) 
+source = 1, 1
+dest = 1, Ifelse(teamside!=1 && enemynear,Numhelper(12345)=0,enemy,var(36)+teamside,var(36))
+ignorehitpause = 1
+
+[State -2, RMP]
+type = remappal
+trigger1 = !AIlevel
+trigger1 = var(36) && roundstate < 2
+source = 1,1
+dest = 1,var(36)
+
+[State 0, VarSet]
+type = VarSet
+trigger1 = !AIlevel
+trigger1 = numhelper(12345)
+v = 36
+value = helper(12345), var(36)
+
+;---------------------------------------------------------------------------
+; Sexy K.O.
+[State -2, Sexy K.O. pic]
+type = Helper
+triggerall = var(25) = 2
+trigger1 = NumHelper(25115) = 0
+trigger1 = anim = 25030 || anim = 25035 || anim = 25100
+name = "Sexy K.O. pic"
+postype = p1
+pos = 0,0
+stateno = 25115
+id = 25115
+keyctrl = 0
+ownpal = 1
+ignorehitpause = 1
+
+[State -2, Sexy K.O.]
+type = Helper
+triggerall = var(25) = 1 || var(25) = 2
+triggerall = matchover
+triggerall = NumHelper(6969) = 0
+triggerall = prevstateno != [120,152]
+triggerall = !alive
+trigger1 = enemy,hitdefattr = SCA, SA, SP, HA, HP
+trigger2 = enemy,ProjHit = 1, < 20
+name = "Sexy KO detect"
+id = 6969
+postype = p1
+pos = 0,0
+stateno = 169
+keyctrl = 0
+ownpal = 1
+ignorehitpause = 1
+
+[State -2, Wedgie rip]
+type = Helper
+triggerall = NumHelper(987088) = 0
+triggerall = selfanimexist(987087) || selfanimexist(987090)
+triggerall = anim = 987087 || anim = 987090
+triggerall = prevstateno != 5300
+triggerall = roundno >= 2
+trigger1 = !alive
+name = "Panties"
+postype = p1
+pos = 0,0
+stateno = 987088
+id = 987088
+keyctrl = 0
+ownpal = 1
+ignorehitpause = 1
+
+[State -2, Atomic wedgie rip]
+type = Helper
+triggerall = NumHelper(987091) = 0
+triggerall = selfanimexist(987088) || selfanimexist(987092)
+triggerall = anim = 987088 || anim = 987092
+triggerall = roundno >= 2
+trigger1 = !alive
+name = "Panties"
+postype = p1
+pos = 0,0
+stateno = 987091
+id = 987091
+keyctrl = 0
+ownpal = 1
+ignorehitpause = 1
+
+[State -2, Pantsu close-up]
+type = Helper
+triggerall = var(25) = 2
+triggerall = NumHelper(25117) = 0
+trigger1 = anim = 28935 && AnimElemTime(3) = 0
+trigger2 = anim = 28937 && AnimElemTime(2) = 0
+name = "Pantsu close-up"
+postype = p1
+pos = 0,0
+stateno = 25117
+id = 25117
+keyctrl = 0
+ownpal = 1
+ignorehitpause = 1
+
+[State -2, Pantsu achivement]
+type = Helper
+triggerall = NumHelper(987187) = 0
+triggerall = selfanimexist(987087) || selfanimexist(987090)
+triggerall = anim = 987087 || anim = 987090
+triggerall = prevstateno != 5300
+triggerall = roundno >= 2
+trigger1 = !alive
+name = "Pantsu achievement"
+postype = p1
+pos = 0,0
+stateno = 987187
+id = 987187
+keyctrl = 0
+ownpal = 1
+ignorehitpause = 1
+
+[State -2, Pantsu achivement]
+type = Helper
+triggerall = NumHelper(987187) = 0
+triggerall = selfanimexist(987088) || selfanimexist(987092)
+triggerall = anim = 987088 || anim = 987092
+triggerall = prevstateno != 5300
+triggerall = roundno >= 2
+trigger1 = !alive
+name = "Pantsu achievement"
+postype = p1
+pos = 0,0
+stateno = 987187
+id = 987187
+keyctrl = 0
+ownpal = 1
+ignorehitpause = 1
+
+[State -2 Wedgied]
+type = PlaySnd
+triggerall = AnimElemTime(4) = 0
+triggerall = anim = 987087
+trigger1 = alive
+value = 5000,2+random%1
+channel = 0
+
+[State -2, Atomic Wedgied]
+type = PlaySnd
+triggerall = AnimElemTime(4) = 0
+triggerall = anim = 987088
+trigger1 = alive
+value = 5000,2+random%1
+channel = 0
+
+[State -2 Wedgied]
+type = PlaySnd
+triggerall = AnimElemTime(3) = 0
+triggerall = anim = 987090
+trigger1 = alive
+value = 5000,2+random%1
+channel = 0
+
+[State -2, Atomic Wedgied]
+type = PlaySnd
+triggerall = AnimElemTime(3) = 0
+triggerall = anim = 987092
+trigger1 = alive
+value = 5000,2+random%1
+channel = 0
+
+[State -2, Cunt punt]
+type = PlaySnd
+triggerall = time = 1
+triggerall = anim = 9108100
+trigger1 = alive
+value = 5000,2+random%1
+channel = 0
+
+[State -2, Cunt Punt]
+type = PlaySnd
+triggerall = time = 1
+triggerall = anim = 70851
+trigger1 = alive
+value = 5000,2+random%1
+channel = 0
+
+[State -2, Skirted]
+type = PlaySnd
+triggerall = AnimElemTime(4) = 0
+triggerall = anim = 28935
+trigger1 = alive
+value = 5000,0+random%3
+channel = 0
+
+[State -2, Skirted]
+type = PlaySnd
+triggerall = AnimElemTime(3) = 0
+triggerall = anim = 28937
+trigger1 = alive
+value = 5000,0+random%3
+channel = 0
+
+[State -2, Dizzy]
+type = PlaySnd
+triggerall = time = 1
+triggerall = anim = 5300
+trigger1 = alive
+value = 5300,0
+
+; ------------Juggle Code Stuff---------
+[State -2, VarSet]
+type = VarSet
+trigger1 = P2MoveType != H
+var(19) = 0
+
+[State -2, KO snd]
+type = varset
+trigger1 = stateno != 5950
+trigger1 = alive && var(20) > 0
+trigger2 = !alive && var(20) < 2
+var(20) = ifelse(alive, 0, var(20) + 1)
+ignorehitpause = 1
+
+[State -2, Remove AfterImage]
+type = AfterImageTime
+trigger1 = !hitshakeover
+trigger2 = prevstateno = 54 && movetype != I
+trigger3 = prevstateno = 55
+trigger4 = prevstateno = 100
+trigger5 = prevstateno = 105
+trigger6 = (prevstateno = [110,115])
+time = 0
+ignorehitpause = 1
+
+[State 1000: Helper]
+type = Helper
+triggerall = p2statetype != L
+triggerall = !NumHelper(12504)
+trigger1 = numhelper(1001)
+trigger1 = helper(1001), movehit
+trigger2 = numhelper(1011)
+trigger2 = helper(1011), movehit
+trigger3 = numhelper(1012)
+trigger3 = helper(1012), movehit
+trigger4 = numhelper(3001)
+trigger4 = helper(3001), movehit
+trigger5 = numhelper(3021)
+trigger5 = helper(3021), movehit
+name = "Small Expl"
+id = 12504
+pos = 0, 0 ;50
+postype = p2
+facing = 1
+stateno = 12504
+keyctrl = 0
+ownpal = 1
+persistent = 0
+ignorehitpause = 1
+
+; K.O. voice
+[State -2,AI]
+type = Varset
+trigger1 = 1
+ignorehitpause = 1
+fvar(19) = 0
+
+[State -2, AI]
+type = Varset
+trigger1 = anim = 5950 || stateno = 5950
+ignorehitpause = 1
+fvar(19) = 1
+
+[State -2, AI]
+type = Varset
+trigger1 = movetype != H
+trigger1 = roundstate = 2
+ignorehitpause = 1
+var(37) = 0
+
+[State -2, AI]
+type = Varset
+trigger1 = StateNo = 5000 || StateNo = 5010 || StateNo = 5020 || StateNo = 5070 || StateNo = 5080
+trigger1 = roundstate = 2
+trigger1 = time = 0
+ignorehitpause = 1
+var(37) = gethitvar(hitshaketime)
+
+[State -2, KO]
+type = PlaySnd
+triggerall = roundstate = [2,3]
+trigger1 = !fvar(19) && !fvar(20)
+trigger1 = Var(27) = ifelse(!var(37),1,ifelse(var(37)>20,20,var(37)))
+trigger2 = !fvar(19) && fvar(20)
+trigger2 = Var(27) = 12
+ignorehitpause = 1
+value = 110, 0
+
+[State -2, KO]
+type = PlaySnd
+triggerall = roundstate = [2,3]
+triggerall = fvar(19)
+triggerall = !alive
+trigger1 = anim = 5950 && animelemtime(1) = 2
+ignorehitpause = 1
+value = 5950, 0
+
+[State -2, KO]
+type = Varadd
+trigger1 = !alive
+ignorehitpause = 1
+var(27) = 1
+
+[State -2, KO]
+type = Varset
+trigger1 = alive
+ignorehitpause = 1
+var(27) = 0
+
+[State -2, Perfect win text]
+type = Helper
+triggerall = !numhelper(4998)
+trigger1 = winperfect
+trigger1 = roundstate = 4
+name = "Perfect"
+id = 4998
+pos = 0,0
+postype = p1
+stateno = 4998
+ownpal = 1
+supermovetime = 999999
+pausemovetime = 999999
+ignorehitpause = 1
+
+; Mario K.O.
+[State -2, Helper]
+type=Helper
+triggerall=!alive&&stateno!=5150&&time=1&&!numhelper(19311)
+trigger1=P2name="Super Mario"||P2name="SuperMario"||P2name="Super Mario 64"||P2name="Fighting Mario"||P2name="mario"||P2name="Old School Mario"||P2name="NGPC Mario"||P2name="DKmario"||P2name="Rario"||P2name="NES Super Mario"||P2name="KoopaClownCar_IWBTG"
+trigger2=P2name="nesmario"||P2name="Super Paper Mario"||P2name="NGPC Metal Mario"||P2name="Super_Mario"||P2name="MarioBros"||P2name="Strong SuperMario"||P2name="satuzinki nesmario"||P2name="seitei nesmario"||P2name="SMB1 Mario"||P2name="bowser-spaceship"
+trigger3=P2name="[Txpot's] Mario Combat Deluxe Mario"||P2name="Dr Mario"||P2name="Super.mario"||P2name="Kart Fighter Mario"||P2name="CDIMario"||P2name="Pesky Plumer Mario (Mario EMW v1)"||P2name="Paper Mario"||P2name="SSBM Mario"||P2name="Princess Daisy"
+trigger4=P2name="SSBB Mario"||P2name="[Txpot's] SSB-MetalMario"||P2name="NGPC Luigi"||P2name="Luigi"||P2name="Luigi_ver2"||P2name="Fighting Luigi"||P2name="Super Luigi"||P2name="Super_Luigi"||P2name="SuperLuigi"||P2name="MetalYoshi3"||P2name="MLSS Luigi"
+trigger5=P2name="Smb3 waluigi"||P2name="KUPPA GUNDAN"||P2name="Kart Fighter Luigi"||P2name="LuigiSMB"||P2name="Mama Luigi"||P2name="SMB2 Waluigi/NESwaluigi"||P2name="Waluigi"||P2name="Wario V3"||P2name="Wario"||P2name="Princess Daisy "||P2name="????"
+trigger6=P2name="Princess Peach Toadstool"||P2name="Kart-Fighter-Yoshi"||P2name="yoshi"||P2name="yoshiteam"||P2name="Yoshi3"||P2name="EvilPeach"||P2name="Peach"||P2name="Kinopio"||P2name="King Koopa"||P2name="Koopa"||P2name="Giga Bowser"||P2name="Bowser"
+trigger7=P2name="Baby Bowser"||P2name="Kamek the Magikoopa"||P2name="???"||P2name="????? WIGGLER"||P2name="Sexy Turtle"||P2name="Koopa Troopa"||P2name="Chomper"||P2name="DonkeyKong"||P2name="Donkey Kong"||P2name="Diddy Kong"||P2name="Hotel Mario"
+trigger8=P2name="dk"||P2name="Geno"||P2name="Jinx"||P2name="Yaridovich"||P2name="Kyasarin"||P2name="Princess Shroob"||P2name="Big Teresa"||P2name="Baby E.Gadd"||P2name="Yossy Kart Fighter"||P2name="Bowser Kart Fighter"||P2name="Koopa Troopa Kart Fighter"
+trigger9=P2name="Luigi Kart Fighter"||P2name="Yossy"||P2name="Mario Kart Fighter"||P2name="Peach Kart Fighter"||P2name="Donkey Kong Kart Fighter"||P2name="Goomba"||P2name="toad"||P2name="Bowser-KF"||P2name="bob-omb"||P2name="peach kf"||P2name="God Wario"
+trigger10=P2name="CChuck"||P2name="Toad Kart Fighter"||(P2name="bow"&&enemynear,authorname="tuki")||P2name="Smash HD Mario"||P2name="Mallow"||P2name="Fire Mario"||P2name="MvC Mario"||P2name="YouTube Poop Luigi"||P2name="MarioTH"||P2name="Bowser - YI2"
+trigger11=P2name="Myrio"||P2name="Referee mario by Jakobthecool867"||P2name="Dynamic SuperMario"||P2name="Evil Mario"||P2name="FireMarioEX"||P2name="GoldMario"||P2name="homermario"||P2name="hotelmario"||P2name="Luigi's Death Stare"||P2name="ArrangeMario"
+trigger12=P2name="Super1337Mario"||P2name="SuperXimzarno"||P2name="S.SuperMario"||P2name="Smash HD Mario - low memory"||P2name="Metal_Mario"||P2name="Gay Luigi"||P2name="Hotel Luigi"||P2name="SMW Super Luigi"||P2name="MvC Luigi"||P2name="SMB1 NES Goomba"
+trigger13=P2name="NESLUIGI V2"||P2name="Weegee from mario is missing"||P2name="WH2 Mario"||P2name="Dynamic SuperMario N"||P2name="kf-x_Mmario"||P2name="Paper Luigi"||P2name="omegal"||P2name="Strong NESMario"||P2name="SuperMarioBros"||P2name="Metal Mario"
+trigger14=P2name="SMMM"||P2name="CharaMario Super Mario Kun"||P2name="Yoshi Kart Fighter"||P2name="SuperMarioKart"||P2name="Strong Super Mario 64"||P2name="SuperLuigiKart"||P2name="CDILuigi"||P2name="SSBM Luigi"||P2name="Hammer Bro"||P2name="Red Plumber"
+trigger15=P2name="Paper Mario - Cloudy"||P2name="Paper Mario - C.Dayzee"||P2name="Paper Mario - Kooper"||P2name="Paper Mario - Lady Bow"||P2name="Paper Mario - Parakarry"||P2name="Paper Mario - Sushie"||P2name="Paper Mario - Bombette"||P2name="Mario.exe"
+trigger16=P2name="Paper Mario - Bzzap"||P2name="Paper Mario - Clubba"||P2name="Paper Mario - Gulpit"||P2name="Paper Mario - Koopatrol"||P2name="jump man"||P2name="SilverLuigi"||P2name="Mario_TB"||P2name="Wario_TB"||P2name="Melee Mario"||P2name="FueLuigi"
+trigger17=P2name="Weegee"||P2name="Paper Mario - R.S. Toad"||P2name="Cringy Mario"||P2name="Mecha_Mario_TB"||P2name="Yoshi_TB"||P2name="SuperRhys217 DX"||P2name="Yoshi from Super Mario World 2: Yoshi's Island (w/o Baby Mario)"||P2name="The Mario Plushie"
+trigger18=P2name="Hyper Neo-Kamek"||P2name="Kamek's Rival"||P2name="Rosetta"||P2name="babymario"||P2name="Yoshi DCvM"||P2name="SSBB yosshi (Yoshi)"||P2name="yossy kf"||P2name="Black Yoshi"||P2name="Red Yoshi"||P2name="FireMarioMK2"||P2name="FireMarioMK3"
+trigger19=P2name="nesmario_voice_by_syuzo"||P2name="NES Mario SUMIN Styled"||P2name="Fighting Yoshi"||P2name="Baby Bowser"||P2name="Kart Fighter Toad - Old Version - BETA"||P2name="KoopaTroopa"||P2name="nokonoko kf"||P2name="Dr. Mario"||P2name="Mister L"
+trigger20=P2name="Evil Waluigi "||P2name="Waluigi By TMF48"||P2name="Paper mario by jakobthecool867"||P2name="SMB3 Biker wario"||P2name="Wario Wario"||P2name="LUIGI SMA2"||P2name="Dr.Mario Super Smash Bros Style"||P2name="smb3mario"||P2name="Fight mario"
+trigger21=P2name="luigi from smw smas"||P2name="Waluigi II"||P2name="Pesky Wario"||P2name="drmario"||P2name="Paper Mario 64"||P2name="Luigi Segami"||P2name="rare luigi"||P2name="Mr.LV3"||P2name="Symbiote Luigi"||P2name="FireMario"||P2name="SpetsnazMario"
+trigger22=P2name="AngelLuigi"||P2name="Symboite Luigi"||P2name="Tanooki Mario"||P2name="Caix"||P2name="King Wart"||P2name="GSMario"||P2name="TFL"||P2name="Reznor"||P2name="Gombie"||P2name="Mario Mario"||P2name="Reznor Ultra"||P2name="The wario appartion"
+trigger23=P2name="WAH!"||P2name="ToonMalleo"||P2name="New Super Mario"
+name="Mario K.O."
+ID=19311
+postype=p1
+stateno=19311
+
+[State -2, helper]
+type=Helper
+triggerall=!alive&&stateno!=5150&&time=1&&!numhelper(19311)&&numenemy>=2
+trigger1=P4name="Super Mario"||P4name="SuperMario"||P4name="Super Mario 64"||P4name="Fighting Mario"||P4name="mario"||P4name="Old School Mario"||P4name="NGPC Mario"||P4name="DKmario"||P4name="Rario"||P4name="NES Super Mario"||P4name="KoopaClownCar_IWBTG"
+trigger2=P4name="nesmario"||P4name="Super Paper Mario"||P4name="NGPC Metal Mario"||P4name="Super_Mario"||P4name="MarioBros"||P4name="Strong SuperMario"||P4name="satuzinki nesmario"||P4name="seitei nesmario"||P4name="SMB1 Mario"||P4name="bowser-spaceship"
+trigger3=P4name="[Txpot's] Mario Combat Deluxe Mario"||P4name="Dr Mario"||P4name="Super.mario"||P4name="Kart Fighter Mario"||P4name="CDIMario"||P4name="Pesky Plumer Mario (Mario EMW v1)"||P4name="Paper Mario"||P4name="SSBM Mario"||P4name="Princess Daisy"
+trigger4=P4name="SSBB Mario"||P4name="[Txpot's] SSB-MetalMario"||P4name="NGPC Luigi"||P4name="Luigi"||P4name="Luigi_ver2"||P4name="Fighting Luigi"||P4name="Super Luigi"||P4name="Super_Luigi"||P4name="SuperLuigi"||P4name="MetalYoshi3"||P4name="MLSS Luigi"
+trigger5=P4name="Smb3 waluigi"||P4name="KUPPA GUNDAN"||P4name="Kart Fighter Luigi"||P4name="LuigiSMB"||P4name="Mama Luigi"||P4name="SMB2 Waluigi/NESwaluigi"||P4name="Waluigi"||P4name="Wario V3"||P4name="Wario"||P4name="Princess Daisy "||P4name="????"
+trigger6=P4name="Princess Peach Toadstool"||P4name="Kart-Fighter-Yoshi"||P4name="yoshi"||P4name="yoshiteam"||P4name="Yoshi3"||P4name="EvilPeach"||P4name="Peach"||P4name="Kinopio"||P4name="King Koopa"||P4name="Koopa"||P4name="Giga Bowser"||P4name="Bowser"
+trigger7=P4name="Baby Bowser"||P4name="Kamek the Magikoopa"||P4name="???"||P4name="????? WIGGLER"||P4name="Sexy Turtle"||P4name="Koopa Troopa"||P4name="Chomper"||P4name="DonkeyKong"||P4name="Donkey Kong"||P4name="Diddy Kong"||P4name="Hotel Mario"
+trigger8=P4name="dk"||P4name="Geno"||P4name="Jinx"||P4name="Yaridovich"||P4name="Kyasarin"||P4name="Princess Shroob"||P4name="Big Teresa"||P4name="Baby E.Gadd"||P4name="Yossy Kart Fighter"||P4name="Bowser Kart Fighter"||P4name="Koopa Troopa Kart Fighter"
+trigger9=P4name="Luigi Kart Fighter"||P4name="Yossy"||P4name="Mario Kart Fighter"||P4name="Peach Kart Fighter"||P4name="Donkey Kong Kart Fighter"||P4name="Goomba"||P4name="toad"||P4name="Bowser-KF"||P4name="bob-omb"||P4name="peach kf"||P4name="God Wario"
+trigger10=P4name="CChuck"||P4name="Toad Kart Fighter"||(P4name="bow"&&enemynear(1),authorname="tuki")||P4name="Smash HD Mario"||P4name="Mallow"||P4name="Fire Mario"||P4name="MvC Mario"||P4name="YouTube Poop Luigi"||P4name="MarioTH"||P4name="Bowser - YI2"
+trigger11=P4name="Myrio"||P4name="Referee mario by Jakobthecool867"||P4name="Dynamic SuperMario"||P4name="Evil Mario"||P4name="FireMarioEX"||P4name="GoldMario"||P4name="homermario"||P4name="hotelmario"||P4name="Luigi's Death Stare"||P4name="ArrangeMario"
+trigger12=P4name="Super1337Mario"||P4name="SuperXimzarno"||P4name="S.SuperMario"||P4name="Smash HD Mario - low memory"||P4name="Metal_Mario"||P4name="Gay Luigi"||P4name="Hotel Luigi"||P4name="SMW Super Luigi"||P4name="MvC Luigi"||P4name="SMB1 NES Goomba"
+trigger13=P4name="NESLUIGI V2"||P4name="Weegee from mario is missing"||P4name="WH2 Mario"||P4name="Dynamic SuperMario N"||P4name="kf-x_Mmario"||P4name="Paper Luigi"||P4name="omegal"||P4name="Strong NESMario"||P4name="SuperMarioBros"||P4name="Metal Mario"
+trigger14=P4name="SMMM"||P4name="CharaMario Super Mario Kun"||P4name="Yoshi Kart Fighter"||P4name="SuperMarioKart"||P4name="Strong Super Mario 64"||P4name="SuperLuigiKart"||P4name="CDILuigi"||P4name="SSBM Luigi"||P4name="Hammer Bro"||P4name="Red Plumber"
+trigger15=P4name="Paper Mario - Cloudy"||P4name="Paper Mario - C.Dayzee"||P4name="Paper Mario - Kooper"||P4name="Paper Mario - Lady Bow"||P4name="Paper Mario - Parakarry"||P4name="Paper Mario - Sushie"||P4name="Paper Mario - Bombette"||P4name="Mario.exe"
+trigger16=P4name="Paper Mario - Bzzap"||P4name="Paper Mario - Clubba"||P4name="Paper Mario - Gulpit"||P4name="Paper Mario - Koopatrol"||P4name="jump man"||P4name="SilverLuigi"||P4name="Mario_TB"||P4name="Wario_TB"||P4name="Melee Mario"||P4name="FueLuigi"
+trigger17=P4name="Weegee"||P4name="Paper Mario - R.S. Toad"||P4name="Cringy Mario"||P4name="Mecha_Mario_TB"||P4name="Yoshi_TB"||P4name="SuperRhys217 DX"||P4name="Yoshi from Super Mario World 2: Yoshi's Island (w/o Baby Mario)"||P4name="The Mario Plushie"
+trigger18=P4name="Hyper Neo-Kamek"||P4name="Kamek's Rival"||P4name="Rosetta"||P4name="babymario"||P4name="Yoshi DCvM"||P4name="SSBB yosshi (Yoshi)"||P4name="yossy kf"||P4name="Black Yoshi"||P4name="Red Yoshi"||P4name="FireMarioMK2"||P4name="FireMarioMK3"
+trigger19=P4name="nesmario_voice_by_syuzo"||P4name="NES Mario SUMIN Styled"||P4name="Fighting Yoshi"||P4name="Baby Bowser"||P4name="Kart Fighter Toad - Old Version - BETA"||P4name="KoopaTroopa"||P4name="nokonoko kf"||P4name="Dr. Mario"||P4name="Mister L"
+trigger20=P4name="Evil Waluigi "||P4name="Waluigi By TMF48"||P4name="Paper mario by jakobthecool867"||P4name="SMB3 Biker wario"||P4name="Wario Wario"||P4name="LUIGI SMA2"||P4name="Dr.Mario Super Smash Bros Style"||P4name="smb3mario"||P4name="Fight mario"
+trigger21=P4name="luigi from smw smas"||P4name="Waluigi II"||P4name="Pesky Wario"||P4name="drmario"||P4name="Paper Mario 64"||P4name="Luigi Segami"||P4name="rare luigi"||P4name="Mr.LV3"||P4name="Symbiote Luigi"||P4name="FireMario"||P4name="SpetsnazMario"
+trigger22=P4name="AngelLuigi"||P4name="Symboite Luigi"||P4name="Tanooki Mario"||P4name="Caix"||P4name="King Wart"||P4name="GSMario"||P4name="TFL"||P4name="Reznor"||P4name="Gombie"||P4name="Mario Mario"||P4name="Reznor Ultra"||P4name="The wario appartion"
+trigger23=P4name="WAH!"||P4name="ToonMalleo"||P4name="New Super Mario"
+name="Mario K.O."
+ID=19311
+postype=p1
+stateno=19311
+
+[State -2, SelfState]
+type=selfstate
+trigger1=!alive&&stateno!=5150&&time=1&&(numhelper(19311)||numhelper(19312))
+value=5150
+ctrl=0
+
+[State -2, Helper]
+type=Helper
+triggerall=!alive&&stateno!=5150&&time=1&&!numhelper(19311)&&!numhelper(19312)
+trigger1=P2name="Rockman"||P2name="Heat-Genblem"||P2name="Quick Man"||P2name="fireman"||(P2name="King"&&(enemynear,authorname="Heyakes"||enemynear,authorname="Calamix"))||P2name="CentaurMan"||P2name="KnightMan"||P2name="PlantMan"||P2name="Fake Man"
+trigger2=P2name="Volt Kraken"||(P2name="Iceman"&&(enemynear,authorname="Roberto23"||enemynear,authorname="Calamix"||enemynear,authorname="Excursion"))||(P2name="Colonel"&&enemynear,authorname="Diego Sanches & Z-Sabre User")||P2name="Elec Man"
+trigger3=P2name="Marte"||P2name="Mercury from Megaman V"||P2name="Mecha Dragon"||P2name="NES Megaman"||P2name="Rocket Tank NES"||P2name="Punk"||P2name="SunGod"||P2name="SunGod"||P2name="Duo - Megaman 8"||(P2name="knight"&&enemynear,authorname="Eloco")
+trigger4=P2name="Duo"||(P2name="Axl"&&(enemynear,authorname="cesar"||enemynear,authorname="Hunter_eXe & Emiliano David Palleres"))||P2name="Wea"||P2name="Megaman"||P2name="Megaman/Bass/Protoman by Ribeiro"||P2name="Metool"||P2name="Frozen Buffalio"
+trigger5=P2name="Yellow Devil"||P2name="METOL-SV"||P2name="Mega Man 9 Blob"||P2name="Roll_MM8_by_Zetah_y_TheMegaFBX"||P2name="B-Megaman"||P2name="Rocket Tank"||P2name="vava Mk-2"||P2name="Explose Horneck"||P2name="Sigma"||P2name="Hard Man from Megaman 3"
+trigger6=P2name="Sigma x3"||P2name="Vile"||P2name="Grenade-RMX4"||P2name="Vile-MK1"||P2name="Cyber-peacock"||P2name="DOBLE"||P2name="Dynamo"||P2name="Final Sigma W"||P2name="FrostWalrus"||P2name="Gaea Armor - Megaman/Rockman X5"||P2name="MvC2 Tron Bonne"
+trigger7=P2name="Gate"||P2name="General_by_Diego_Sanches"||P2name="Grizzly"||P2name="Guard Fish"||P2name="High Max"||P2name="Infinity Mijinion"||P2name="iris_X4"||P2name="Izzy Glow"||P2name="Jet-Stingray"||P2name="Magma-Dragoon"||P2name="Devilbat-schilt"
+trigger8=P2name="Mattrex"||P2name="Slash Beast by Diego Sanches"||P2name="spike rosered"||P2name="Storm-Owl"||P2name="Theskiver"||P2name="Blizzard Wolfang"||P2name="colonel_X4"||P2name="Slash-Beast"||P2name="Harpuia"||P2name="Burnerman - Rockman & Forte"
+trigger9=P2name="Hyleg Ourobuckle"||P2name="Tretista-Kelverian"||P2name="Kraft"||P2name="fefnir"||P2name="Blazing Flizzard from 'Megaman Zero 3'"||(P2name="Omega"&&enemynear,authorname="cesar")||P2name="Pegasolta-Ekrail"||P2name="Maverick Hunter Zero"
+trigger10=P2name="Phantomsheet"||P2name="Anubis Necromancis III"||P2name="Blaze Heatnix "||P2name="Childre Inarabitta"||P2name="Copy-X"||P2name="Deathtanz-mantisk"||P2name="Panter-Flauclaws"||P2name="Dr.Vile"||P2name="Elpizo"||P2name="Helmetless MegaMan"
+trigger11=P2name="GolemE"||P2name="polerkamrous"||P2name="techkraken"||P2name="Volteel Biblio"||P2name="Fenri-Lunaedge"||P2name="Sage Harpuia"||P2name="chronoforce"||P2name="Fistleo"||P2name="Grey"||P2name="hivolt"||P2name="Hurricaune"||P2name="Purprill"
+trigger12=P2name="Model Z"||P2name="Giro"||P2name="model Z GNR"||P2name="Football Head"||P2name="Prometheus"||P2name="Protectos"||P2name="Aile"||P2name="DroidX"||P2name="aquabeastexe"||P2name="Colonel EXE"||P2name="Diango"||P2name="Zero_by_Diego_Sanches"
+trigger13=P2name="Dream V"||P2name="dustbeastexe"||P2name="elecbeastexe"||P2name="Bowlman.Exe"||P2name="falzar"||P2name="FireMan.EXE by Neon Tiger"||P2name="Gateman"||P2name="grondbeastexe"||P2name="kingman"||P2name="Laserman.EXE"||P2name="slashbeastexe"
+trigger14=P2name="magnetmanexe"||P2name="Megaman Falzer"||P2name="Megaman Gregar"||P2name="Metalman.exe"||P2name="Mettaur EXE"||P2name="rollexe"||P2name="SolMegaman"||P2name="tengubeastexe"||P2name="Tomahawkbeast"||P2name="Solo"||P2name="RM9-FakeMan-NES"
+trigger15=P2name="Elecman-o"||P2name="Tron Bonne SxP"||P2name="Bass / Forte"||P2name="Blues"||P2name="Crashman"||(P2name="EDDIE"&&enemynear,authorname="DarkRiem")||P2name="Megaman PLUS"||P2name="FC-Rockman"||P2name="Metalman"||P2name="RM5-GyroMan-NES"
+trigger16=P2name="Roll"||(P2name="Rock"&&(enemynear,authorname="shimon"||enemynear,authorname="xed (xedarts)"))||P2name="Servbot"||P2name="Megaman - Robot Master Mayhem: Roll"||P2name="Rock Volnutt"||P2name="Rush"||P2name="Proto Man from Megaman 3"
+trigger17=P2name="Sniper Joe-01a"||P2name="Tron Bonne"||P2name="Eregion"||P2name="Mega Scorpia"||P2name="Saber Zero"||P2name="VAVA"||P2name="RMM PLAYER"||P2name="RMM BOSS"||P2name="Bifrost The Crocoroid"||P2name="RM9-ConcreteMan-NES"||P2name="Bubble Man"
+trigger18=P2name="RM9-PlugMan-NES"||P2name="ShadowMan-WW"||P2name="RM6-TomahawkMan-NES"||P2name="TornadoMan"||P2name="Needle Man from Megaman 3"||P2name="Shadow Man from Megaman 3"||P2name="Snake Man from Megaman 3"||P2name="Flameman"||P2name="Flash Man"
+trigger19=P2name="Top Man from Megaman 3"||P2name="Ring Man from Megaman 4"||P2name="Star Man from Megaman 5"||P2name="Wave Man from Megaman 5"||P2name="Air Man"||P2name="BombMan"||P2name="Coldman"||P2name="Crash Man"||P2name="CrystalMan"||P2name="fiman"
+trigger20=P2name="Diveman"||P2name="DrillMan"||P2name="elecman"||P2name="Freezeman"||P2name="Gutsman"||P2name="Heat Man"||P2name="Metal Man"||P2name="Bass"||P2name="Skullman"||P2name="Wood Man"||P2name="MegaMan X GBC"||P2name="Slashman - Power Fighter 2"
+trigger21=P2name="JunkMan-RM7"||P2name="PBRingMan"||P2name="Stone Man by Neon Tiger"||P2name="Snakeman_PB"||P2name="Blizzardman_PB"||P2name="Burstman"||P2name="Centauros Man"||P2name="Cloudman"||P2name="Crashman_PB"||P2name="Dr. Wily"||P2name="Srash Man"
+trigger22=P2name="Dive Man"||P2name="Dustman_PB"||P2name="Freezeman_PB"||P2name="Gemini Man"||P2name="Gravityman_PB"||P2name="Gyroman_PB"||P2name="Junkman"||P2name="Napalm Man"||P2name="Needleman_PB"||P2name="Jewel Man"||P2name="Magma Man"||P2name="Vent"
+trigger23=P2name="AIRMAN"||P2name="Magnet Man from Megaman: The Power Battle"||P2name="Pharaoh Man from Megaman Power and Fighters"||P2name="Plant Man"||P2name="Plug Man"||P2name="Ringman_PB"||P2name="Shade Man"||P2name="Shadow_Man_PB"||P2name="Aqua Man"
+trigger24=P2name="Skullman_MM7"||P2name="Sparkman"||P2name="Starman_PB"||P2name="Toadman_PB"||P2name="Topman_PB"||P2name="Tornado Man"||P2name="Astro Man"||P2name="Mega Man 9 Bass"||P2name="Burner Man"||P2name="Clown Man"||P2name="Woodman"||P2name="Wily"
+trigger25=P2name="FrostMan"||P2name="Grenade Man"||P2name="Magicman - Rockman & Forte"||P2name="Needle Man"||P2name="Pharaoh Man"||P2name="Protoman"||P2name="Search Man"||P2name="Skull Man"||P2name="TenguMan"||P2name="Tengu Man"||P2name="Tomahawkman_exe"
+trigger26=P2name="Megaman X"||P2name="Awakened Zero"||P2name="Black Zero"||P2name="Fourth Armor X"||P2name="Ultimate Armor Megaman/Rockman X6"||P2name="Ultimate Armor"||P2name="Zero Nightmare"||P2name="Neo X"||P2name="rockman zero"||P2name="Protoman_EXE"
+trigger27=P2name="Magicman"||P2name="Yamatoman"||P2name="Forte"||P2name="Gutsmanexe"||P2name="Gyroman.EXE"||P2name="heatmanexe"||P2name="higuresan"||P2name="kendo-man"||P2name="Blues, The Red"||P2name="Quickman"||P2name="RockManEXE"||P2name="shademanexe"
+trigger28=P2name="Shadowman Exe"||P2name="Rockman EXE wood "||P2name="Geo Stelar"||P2name="Knightman MVC"||P2name="Megaman X By ChAoTiC "||P2name="Megaman - Robot Master Mayhem: Airman"||P2name="Pocket Megaman Zero"||P2name="Shadowman"||P2name="Bomb Man"
+trigger29=P2name="Zero Virus"||P2name="fxr"||P2name="MegamanX"||P2name="MegaManEXE"||P2name="napalmman"||P2name="x"||P2name="MegaMari"||P2name="ToadMan"||P2name="Kobun 43"||P2name="Cold Man from Megaman & Forte"||P2name="Servbot Night"||P2name="Mega Man"
+trigger30=P2name="Megaman1"||P2name="Enker"||P2name="Cutman"||P2name="zero_X4"||P2name="Rhino from Rockman And Forte"||P2name="Marvel vs Capcom - Eternity of Heroes: Rockman Copy"||P2name="Turbo Man from Megaman Power and Fighters"||P2name="BLIZZARD MAN"
+trigger31=P2name="Spring Man from Megaman 7"||P2name="Dust Man"||P2name="pharohman"||P2name="ROBO-LEN"||P2name="Armored_Armadillo"||P2name="Boomer_Kuwanger"||P2name="Chill_Penguin"||P2name="Flame_Mammoth"||P2name="Launch_Octopus"||P2name="Spark_Mandrill"
+trigger32=P2name="Sting_Chameleon"||P2name="Storm_Eagle"||P2name="YellowDevil"||P2name="MEGAMAMI"||P2name="Ultimate Copy X"||P2name="Ultimate Zero"||P2name="Model Ox"||P2name="Model X"||P2name="Model zx"||P2name="Mega Man Volnutt 3D"||P2name="ZeroAnthem"
+trigger33=P2name="Magma Dragoon"||P2name="Gaea"||P2name="Metool Boss"||P2name="Ereg-1000"||P2name="Quickman.exe"||P2name="AutoBattleData"||P2name="colonel_exe"||P2name="ROCKMAN_EXE"||P2name="Alpha_Zero"||P2name="Napalmman PB/PF"||P2name="Subaru Hosikawa"
+trigger34=P2name="Sun God"||P2name="Megaman-Zero"||P2name="Nightmare-Zero"||P2name="Bad Megaman"||P2name="Sniper Joe"||P2name="OilMan"||P2name="Magma Dragoon by Gladiacloud"||P2name="commando man"||P2name="Copy ToadMan by Neon Tiger"||P2name="Hornet Man"
+trigger35=P2name="Quint"||P2name="Master-Metal-Man"||P2name="Spark Man from Megaman 3"||P2name="Mega Man por GatoSoft"||P2name="Ballade"||P2name="Blade man"||P2name="Chill man"||P2name="Concrete Man"||P2name="Cutman - Megaman/Rockman 8"||P2name="Dr Wily"
+trigger36=P2name="Cutman V Form"||P2name="Galaxy Man"||P2name="Hornet Man"||P2name="Magic Man"||P2name="Megaman Zelda"||P2name="NES Mega Man"||P2name="Nitro man"||P2name="Octopus Furnace"||P2name="Beastman_exe"||P2name="Splash Woman"||P2name="Strike man"
+trigger37=P2name="Pirateman - Rockman & Forte"||P2name="pump man"||P2name="Kunoichi Roll"||P2name="ROCKMAN ZERO 4"||P2name="ROCKMAN ZERO STAGE"||P2name="RMM2 BOSS"||P2name="Snake Man"||P2name="Shadow Man"||P2name="Burst Man"||P2name="Bass by Victor SSJ3"
+trigger38=P2name="TimeMan"||P2name="Top Man"||P2name="Hellbat Schilt"||P2name="Hyper Storm H"||P2name="Zero (Normal) Boss"||P2name="MvC2_Roll"||(P2name="SwordMan"&&enemynear,authorname="KhMaIBQ")||P2name="SigmaX2"||P2name="Enker RMM"||P2name="WindMan"
+trigger39=(P2name="Zero"&&(enemynear,authorname="Bigshowofall"||enemynear,authorname="Z Sabre User"||enemynear,authorname="N64Mario"||enemynear,authorname="RAIKOU"||enemynear,authorname="Heat team pro"||enemynear,authorname="Mr.Giang"))
+trigger40=P2name="Mini Yellow Devil"||P2name="Metonger Z RMM RELEASE"||P2name="HannyaNED?"||(P2name="Mash"&&enemynear,authorname="MabsKMK")||P2name="Crazy Truck Driver Imitating Scania V8 Sound"||P2name="MetalMan by VinceJ"||P2name="Rockman by VinceJ"
+trigger41=P2name="VAN Pookin"||P2name="Kuwagust Anchus"||P2name="Fire man"||P2name="Megaman X1 - X3"||P2name="Yellow-PiPo"||P2name="Slash Beast"||P2name="Megaman X By ChAoTiC"||P2name="Old School Megaman"||P2name="Bass by ShoShingo"||P2name="BlizzardMan"
+trigger42=P2name="Airman by Gamerduck13"||P2name="DYNAMOMAN"||P2name="Groundman"||P2name="TomahawkMan"||P2name="Dust Man PB"||P2name="FREEZE MAN"||P2name="Gyro Man"||P2name="SLASH MAN"||P2name="RM6-TomahawkMan-NES"||P2name="Turbo Man"||P2name="Solar Man"
+trigger43=P2name="shiper joe"||(P2name="ICE MAN"&&enemynear,authorname="Calamix")||P2name="Magnet Man"||P2name="Ring Man"||P2name="Star Man"||P2name="Time Man"||P2name="Dr.Wily"||P2name="Marvel vs. Capcom - Eternity of Heroes: Roll"||P2name="snakeman"
+trigger44=P2name="Shield Sheldon"||(P2name="MAC"&&enemynear,authorname="TUTIO")||(P2name="Axl"&&enemynear,authorname="Heat team pro")||P2name="D-Rex Boss EX"||P2name="Viral_Zero_By_Zetah_y_Sasuke-Sage"||P2name="Dark Dizzy"||P2name="magna centipede"
+trigger45=P2name="OVERDRIVE OSTRICH"||P2name="Nightmare X"||P2name="Nightmare Zero X1 Style"||P2name="NightmareZeroFirstArmor"||P2name="White Axl"||P2name="Zero EX"||P2name="Rangda Bangda "||P2name="BUBBLE CRAB"||P2name="CRUSH CRAWFISH"||P2name="Cut Man"
+trigger46=P2name="crystal snail"||P2name="Giant sigma W"||P2name="GRAVITY BEETLE"||P2name="Ground Scaravich"||P2name="Metalsharkplayer_by_Zetah_thenighthunter"||P2name="RAINY TURTLOID"||P2name="TOXIC SEAHORSE"||P2name="Tunnel Rhino"||P2name="Wheel Gator"
+trigger47=P2name="RMX6-Commander-Yammark"||P2name="Split mushroom"||P2name="velgualder"||P2name="Violen"||P2name="web spider"||P2name="Wire sponge"||P2name="flamestag"||P2name="Morph Moth"||P2name="Shadow Devil"||P2name="Infinity Sigma"||P2name="ID-1000"
+trigger48=(P2name="Zero"&&(enemynear,authorname="aznperson569M"||enemynear,authorname="hyuga_Arrange_By_Noir"))||P2name="MEGA MAN/ROCK MAN X6 GATE"||P2name="ZeroMVC"||P2name="MvC2_Megaman_Volnutt"||P2name="MvC2_Zero"||P2name="Iwao"||P2name="Serges"
+trigger49=P2name="Byte"||P2name="Agile"||P2name="DR. DOPPLER"||P2name="Bit"||P2name="Slash Man"||(P2name="omega"&&enemynear,authorname="ARU, aznperson569M, N64Mario")
+name="Rockman KO"
+ID=19312
+postype=p1
+stateno=19312
+supermovetime=200
+pausemovetime=200
+
+[State -2, Helper]
+type=Helper
+triggerall=!alive&&stateno!=5150&&time=1&&!numhelper(19311)&&!numhelper(19312)&&numenemy>=2
+trigger1=P4name="Rockman"||P4name="Heat-Genblem"||P4name="Quick Man"||P4name="fireman"||(P4name="King"&&(enemynear(1),authorname="Heyakes"||enemynear(1),authorname="Calamix"))||P4name="CentaurMan"||P4name="KnightMan"||P4name="PlantMan"||P4name="Fake Man"
+trigger2=P4name="Volt Kraken"||(P4name="Iceman"&&(enemynear(1),authorname="Roberto23"||enemynear(1),authorname="Calamix"||enemynear(1),authorname="Excursion"))||(P4name="Colonel"&&enemynear(1),authorname="Diego Sanches & Z-Sabre User")||P4name="Elec Man"
+trigger3=P4name="Marte"||P4name="Mercury from Megaman V"||P4name="Mecha Dragon"||P4name="NES Megaman"||P4name="Rocket Tank NES"||P4name="Punk"||P4name="SunGod"||P4name="SunGod"||P4name="Duo - Megaman 8"||(P4name="knight"&&enemynear(1),authorname="Eloco")
+trigger4=P4name="Duo"||(P4name="Axl"&&(enemynear(1),authorname="cesar"||enemynear(1),authorname="Hunter_eXe & Emiliano David Palleres"))||P4name="Wea"||P4name="Megaman"||P4name="Megaman/Bass/Protoman by Ribeiro"||P4name="Metool"||P4name="Frozen Buffalio"
+trigger5=P4name="Yellow Devil"||P4name="METOL-SV"||P4name="Mega Man 9 Blob"||P4name="Roll_MM8_by_Zetah_y_TheMegaFBX"||P4name="B-Megaman"||P4name="Rocket Tank"||P4name="vava Mk-2"||P4name="Explose Horneck"||P4name="Sigma"||P4name="Hard Man from Megaman 3"
+trigger6=P4name="Sigma x3"||P4name="Vile"||P4name="Grenade-RMX4"||P4name="Vile-MK1"||P4name="Cyber-peacock"||P4name="DOBLE"||P4name="Dynamo"||P4name="Final Sigma W"||P4name="FrostWalrus"||P4name="Gaea Armor - Megaman/Rockman X5"||P4name="MvC2 Tron Bonne"
+trigger7=P4name="Gate"||P4name="General_by_Diego_Sanches"||P4name="Grizzly"||P4name="Guard Fish"||P4name="High Max"||P4name="Infinity Mijinion"||P4name="iris_X4"||P4name="Izzy Glow"||P4name="Jet-Stingray"||P4name="Magma-Dragoon"||P4name="Devilbat-schilt"
+trigger8=P4name="Mattrex"||P4name="Slash Beast by Diego Sanches"||P4name="spike rosered"||P4name="Storm-Owl"||P4name="Theskiver"||P4name="Blizzard Wolfang"||P4name="colonel_X4"||P4name="Slash-Beast"||P4name="Harpuia"||P4name="Burnerman - Rockman & Forte"
+trigger9=P4name="Hyleg Ourobuckle"||P4name="Tretista-Kelverian"||P4name="Kraft"||P4name="fefnir"||P4name="Blazing Flizzard from 'Megaman Zero 3'"||(P4name="Omega"&&enemynear(1),authorname="cesar")||P4name="Pegasolta-Ekrail"||P4name="Maverick Hunter Zero"
+trigger10=P4name="Phantomsheet"||P4name="Anubis Necromancis III"||P4name="Blaze Heatnix "||P4name="Childre Inarabitta"||P4name="Copy-X"||P4name="Deathtanz-mantisk"||P4name="Panter-Flauclaws"||P4name="Dr.Vile"||P4name="Elpizo"||P4name="Helmetless MegaMan"
+trigger11=P4name="GolemE"||P4name="polerkamrous"||P4name="techkraken"||P4name="Volteel Biblio"||P4name="Fenri-Lunaedge"||P4name="Sage Harpuia"||P4name="chronoforce"||P4name="Fistleo"||P4name="Grey"||P4name="hivolt"||P4name="Hurricaune"||P4name="Purprill"
+trigger12=P4name="Model Z"||P4name="Giro"||P4name="model Z GNR"||P4name="Football Head"||P4name="Prometheus"||P4name="Protectos"||P4name="Aile"||P4name="DroidX"||P4name="aquabeastexe"||P4name="Colonel EXE"||P4name="Diango"||P4name="Zero_by_Diego_Sanches"
+trigger13=P4name="Dream V"||P4name="dustbeastexe"||P4name="elecbeastexe"||P4name="Bowlman.Exe"||P4name="falzar"||P4name="FireMan.EXE by Neon Tiger"||P4name="Gateman"||P4name="grondbeastexe"||P4name="kingman"||P4name="Laserman.EXE"||P4name="slashbeastexe"
+trigger14=P4name="magnetmanexe"||P4name="Megaman Falzer"||P4name="Megaman Gregar"||P4name="Metalman.exe"||P4name="Mettaur EXE"||P4name="rollexe"||P4name="SolMegaman"||P4name="tengubeastexe"||P4name="Tomahawkbeast"||P4name="Solo"||P4name="RM9-FakeMan-NES"
+trigger15=P4name="Elecman-o"||P4name="Tron Bonne SxP"||P4name="Bass / Forte"||P4name="Blues"||P4name="Crashman"||(P4name="EDDIE"&&enemynear(1),authorname="DarkRiem")||P4name="Megaman PLUS"||P4name="FC-Rockman"||P4name="Metalman"||P4name="RM5-GyroMan-NES"
+trigger16=P4name="Roll"||(P4name="Rock"&&(enemynear(1),authorname="shimon"||enemynear(1),authorname="xed (xedarts)"))||P4name="Servbot"||P4name="Megaman - Robot Master Mayhem: Roll"||P4name="Rock Volnutt"||P4name="Rush"||P4name="Proto Man from Megaman 3"
+trigger17=P4name="Sniper Joe-01a"||P4name="Tron Bonne"||P4name="Eregion"||P4name="Mega Scorpia"||P4name="Saber Zero"||P4name="VAVA"||P4name="RMM PLAYER"||P4name="RMM BOSS"||P4name="Bifrost The Crocoroid"||P4name="RM9-ConcreteMan-NES"||P4name="Bubble Man"
+trigger18=P4name="RM9-PlugMan-NES"||P4name="ShadowMan-WW"||P4name="RM6-TomahawkMan-NES"||P4name="TornadoMan"||P4name="Needle Man from Megaman 3"||P4name="Shadow Man from Megaman 3"||P4name="Snake Man from Megaman 3"||P4name="Flameman"||P4name="Flash Man"
+trigger19=P4name="Top Man from Megaman 3"||P4name="Ring Man from Megaman 4"||P4name="Star Man from Megaman 5"||P4name="Wave Man from Megaman 5"||P4name="Air Man"||P4name="BombMan"||P4name="Coldman"||P4name="Crash Man"||P4name="CrystalMan"||P4name="fiman"
+trigger20=P4name="Diveman"||P4name="DrillMan"||P4name="elecman"||P4name="Freezeman"||P4name="Gutsman"||P4name="Heat Man"||P4name="Metal Man"||P4name="Bass"||P4name="Skullman"||P4name="Wood Man"||P4name="MegaMan X GBC"||P4name="Slashman - Power Fighter 2"
+trigger21=P4name="JunkMan-RM7"||P4name="PBRingMan"||P4name="Stone Man by Neon Tiger"||P4name="Snakeman_PB"||P4name="Blizzardman_PB"||P4name="Burstman"||P4name="Centauros Man"||P4name="Cloudman"||P4name="Crashman_PB"||P4name="Dr. Wily"||P4name="Srash Man"
+trigger22=P4name="Dive Man"||P4name="Dustman_PB"||P4name="Freezeman_PB"||P4name="Gemini Man"||P4name="Gravityman_PB"||P4name="Gyroman_PB"||P4name="Junkman"||P4name="Napalm Man"||P4name="Needleman_PB"||P4name="Jewel Man"||P4name="Magma Man"||P4name="Vent"
+trigger23=P4name="AIRMAN"||P4name="Magnet Man from Megaman: The Power Battle"||P4name="Pharaoh Man from Megaman Power and Fighters"||P4name="Plant Man"||P4name="Plug Man"||P4name="Ringman_PB"||P4name="Shade Man"||P4name="Shadow_Man_PB"||P4name="Aqua Man"
+trigger24=P4name="Skullman_MM7"||P4name="Sparkman"||P4name="Starman_PB"||P4name="Toadman_PB"||P4name="Topman_PB"||P4name="Tornado Man"||P4name="Astro Man"||P4name="Mega Man 9 Bass"||P4name="Burner Man"||P4name="Clown Man"||P4name="Woodman"||P4name="Wily"
+trigger25=P4name="FrostMan"||P4name="Grenade Man"||P4name="Magicman - Rockman & Forte"||P4name="Needle Man"||P4name="Pharaoh Man"||P4name="Protoman"||P4name="Search Man"||P4name="Skull Man"||P4name="TenguMan"||P4name="Tengu Man"||P4name="Tomahawkman_exe"
+trigger26=P4name="Megaman X"||P4name="Awakened Zero"||P4name="Black Zero"||P4name="Fourth Armor X"||P4name="Ultimate Armor Megaman/Rockman X6"||P4name="Ultimate Armor"||P4name="Zero Nightmare"||P4name="Neo X"||P4name="rockman zero"||P4name="Protoman_EXE"
+trigger27=P4name="Magicman"||P4name="Yamatoman"||P4name="Forte"||P4name="Gutsmanexe"||P4name="Gyroman.EXE"||P4name="heatmanexe"||P4name="higuresan"||P4name="kendo-man"||P4name="Blues, The Red"||P4name="Quickman"||P4name="RockManEXE"||P4name="shademanexe"
+trigger28=P4name="Shadowman Exe"||P4name="Rockman EXE wood "||P4name="Geo Stelar"||P4name="Knightman MVC"||P4name="Megaman X By ChAoTiC "||P4name="Megaman - Robot Master Mayhem: Airman"||P4name="Pocket Megaman Zero"||P4name="Shadowman"||P4name="Bomb Man"
+trigger29=P4name="Zero Virus"||P4name="fxr"||P4name="MegamanX"||P4name="MegaManEXE"||P4name="napalmman"||P4name="x"||P4name="MegaMari"||P4name="ToadMan"||P4name="Kobun 43"||P4name="Cold Man from Megaman & Forte"||P4name="Servbot Night"||P4name="Mega Man"
+trigger30=P4name="Megaman1"||P4name="Enker"||P4name="Cutman"||P4name="zero_X4"||P4name="Rhino from Rockman And Forte"||P4name="Marvel vs Capcom - Eternity of Heroes: Rockman Copy"||P4name="Turbo Man from Megaman Power and Fighters"||P4name="BLIZZARD MAN"
+trigger31=P4name="Spring Man from Megaman 7"||P4name="Dust Man"||P4name="pharohman"||P4name="ROBO-LEN"||P4name="Armored_Armadillo"||P4name="Boomer_Kuwanger"||P4name="Chill_Penguin"||P4name="Flame_Mammoth"||P4name="Launch_Octopus"||P4name="Spark_Mandrill"
+trigger32=P4name="Sting_Chameleon"||P4name="Storm_Eagle"||P4name="YellowDevil"||P4name="MEGAMAMI"||P4name="Ultimate Copy X"||P4name="Ultimate Zero"||P4name="Model Ox"||P4name="Model X"||P4name="Model zx"||P4name="Mega Man Volnutt 3D"||P4name="ZeroAnthem"
+trigger33=P4name="Magma Dragoon"||P4name="Gaea"||P4name="Metool Boss"||P4name="Ereg-1000"||P4name="Quickman.exe"||P4name="AutoBattleData"||P4name="colonel_exe"||P4name="ROCKMAN_EXE"||P4name="Alpha_Zero"||P4name="Napalmman PB/PF"||P4name="Subaru Hosikawa"
+trigger34=P4name="Sun God"||P4name="Megaman-Zero"||P4name="Nightmare-Zero"||P4name="Bad Megaman"||P4name="Sniper Joe"||P4name="OilMan"||P4name="Magma Dragoon by Gladiacloud"||P4name="commando man"||P4name="Copy ToadMan by Neon Tiger"||P4name="Hornet Man"
+trigger35=P4name="Quint"||P4name="Master-Metal-Man"||P4name="Spark Man from Megaman 3"||P4name="Mega Man por GatoSoft"||P4name="Ballade"||P4name="Blade man"||P4name="Chill man"||P4name="Concrete Man"||P4name="Cutman - Megaman/Rockman 8"||P4name="Dr Wily"
+trigger36=P4name="Cutman V Form"||P4name="Galaxy Man"||P4name="Hornet Man"||P4name="Magic Man"||P4name="Megaman Zelda"||P4name="NES Mega Man"||P4name="Nitro man"||P4name="Octopus Furnace"||P4name="Beastman_exe"||P4name="Splash Woman"||P4name="Strike man"
+trigger37=P4name="Pirateman - Rockman & Forte"||P4name="pump man"||P4name="Kunoichi Roll"||P4name="ROCKMAN ZERO 4"||P4name="ROCKMAN ZERO STAGE"||P4name="RMM2 BOSS"||P4name="Snake Man"||P4name="Shadow Man"||P4name="Burst Man"||P4name="Bass by Victor SSJ3"
+trigger38=P4name="TimeMan"||P4name="Top Man"||P4name="Hellbat Schilt"||P4name="Hyper Storm H"||P4name="Zero (Normal) Boss"||P4name="MvC2_Roll"||(P4name="SwordMan"&&enemynear(1),authorname="KhMaIBQ")||P4name="SigmaX2"||P4name="Enker RMM"||P4name="WindMan"
+trigger39=(P4name="Zero"&&(enemynear(1),authorname="Bigshowofall"||enemynear(1),authorname="Z Sabre User"||enemynear(1),authorname="N64Mario"||enemynear(1),authorname="RAIKOU"||enemynear(1),authorname="Heat team pro"||enemynear(1),authorname="Mr.Giang"))
+trigger40=P4name="Mini Yellow Devil"||P4name="Metonger Z RMM RELEASE"||P4name="HannyaNED?"||(P4name="Mash"&&enemynear(1),authorname="MabsKMK")||P4name="Crazy Truck Driver Imitating Scania V8 Sound"||P4name="MetalMan by VinceJ"||P4name="Rockman by VinceJ"
+trigger41=P4name="VAN Pookin"||P4name="Kuwagust Anchus"||P4name="Fire man"||P4name="Megaman X1 - X3"||P4name="Yellow-PiPo"||P4name="Slash Beast"||P4name="Megaman X By ChAoTiC"||P4name="Old School Megaman"||P4name="Bass by ShoShingo"||P4name="BlizzardMan"
+trigger42=P4name="Airman by Gamerduck13"||P4name="DYNAMOMAN"||P4name="Groundman"||P4name="TomahawkMan"||P4name="Dust Man PB"||P4name="FREEZE MAN"||P4name="Gyro Man"||P4name="SLASH MAN"||P4name="RM6-TomahawkMan-NES"||P4name="Turbo Man"||P4name="Solar Man"
+trigger43=P4name="shiper joe"||(P4name="ICE MAN"&&enemynear(1),authorname="Calamix")||P4name="Magnet Man"||P4name="Ring Man"||P4name="Star Man"||P4name="Time Man"||P4name="Dr.Wily"||P4name="Marvel vs. Capcom - Eternity of Heroes: Roll"||P4name="snakeman"
+trigger44=P4name="Shield Sheldon"||(P4name="MAC"&&enemynear(1),authorname="TUTIO")||(P4name="Axl"&&enemynear(1),authorname="Heat team pro")||P4name="D-Rex Boss EX"||P4name="Viral_Zero_By_Zetah_y_Sasuke-Sage"||P4name="Dark Dizzy"||P4name="magna centipede"
+trigger45=P4name="OVERDRIVE OSTRICH"||P4name="Nightmare X"||P4name="Nightmare Zero X1 Style"||P4name="NightmareZeroFirstArmor"||P4name="White Axl"||P4name="Zero EX"||P4name="Rangda Bangda "||P4name="BUBBLE CRAB"||P4name="CRUSH CRAWFISH"||P4name="Cut Man"
+trigger46=P4name="crystal snail"||P4name="Giant sigma W"||P4name="GRAVITY BEETLE"||P4name="Ground Scaravich"||P4name="Metalsharkplayer_by_Zetah_thenighthunter"||P4name="RAINY TURTLOID"||P4name="TOXIC SEAHORSE"||P4name="Tunnel Rhino"||P4name="Wheel Gator"
+trigger47=P4name="RMX6-Commander-Yammark"||P4name="Split mushroom"||P4name="velgualder"||P4name="Violen"||P4name="web spider"||P4name="Wire sponge"||P4name="flamestag"||P4name="Morph Moth"||P4name="Shadow Devil"||P4name="Infinity Sigma"||P4name="ID-1000"
+trigger48=(P4name="Zero"&&(enemynear(1),authorname="aznperson569M"||enemynear(1),authorname="hyuga_Arrange_By_Noir"))||P4name="MEGA MAN/ROCK MAN X6 GATE"||P4name="ZeroMVC"||P4name="MvC2_Megaman_Volnutt"||P4name="MvC2_Zero"||P4name="Iwao"||P4name="Serges"
+trigger49=P4name="Byte"||P4name="Agile"||P4name="DR. DOPPLER"||P4name="Bit"||P4name="Slash Man"||(P4name="omega"&&enemynear(1),authorname="ARU, aznperson569M, N64Mario")
+name="Rockman KO"
+ID=19312
+postype=p1
+stateno=19312
+supermovetime=200
+pausemovetime=200
+
+[State -2, SelfState]
+type=selfstate
+trigger1=!alive&&stateno!=5150&&time=1&&(numhelper(19311)||numhelper(19312))
+value=5150
+ctrl=0
+
+;---------------------------------------------------------------------------
+; States that are executed when in self's state file (use statedef -3)
+;---------------------------------------------------------------------------
+
+[Statedef -3]
+
+[State -3, Parry Detection]
+type = Helper
+triggerAll = RoundState = 2 && !NumHelper(765)
+triggerAll = (MoveType = I && ctrl) || (StateNo = [760, 762]) || StateNo = 5120
+triggerAll = (command != "rlsfwd" && command != "rlsback" && command != "rlsup" && command != "rlsdown") || AILevel
+trigger1 = !AILevel && (StateType = S || StateType = C || StateNo = 5120) && (command = "fwd" || command = "down")
+trigger2 = !AILevel && StateType = A && command = "fwd"
+trigger3 = AILevel && (StateNo != [760,762]) && InGuardDist && Random < 50
+trigger4 = AILevel && (StateNo = [760,762]) && Time = 14 && Random < 667
+stateNo = 765
+ID = 765
+name = "Parry Detection"
+posType = P1
+pauseMoveTime = 65535
+superMoveTime = 65535
+
+[State -3, Parry Attacks]
+type = ChangeState
+trigger1 = (StateNo != [760,762]) && NumHelper(765)
+trigger1 = Helper(765), StateNo = 766
+value = ifElse((Helper(765), Anim = 767), 762, ifElse((Helper(765), Anim = 766), 761, 760))
+ignoreHitPause = 1
+
+[State -3, Parry Projectiles]
+type = HitOverride
+trigger1 = (StateNo != [760,762]) && NumHelper(765)
+trigger1 = !(Helper(765), var(0)) && (Helper(765), Anim = 765)
+attr = SA, AP
+stateNo = 760
+slot = 0
+time = 1
+ignoreHitPause = 1
+
+[State -3, Parry Projectiles]
+type = HitOverride
+trigger1 = (StateNo != [760,762]) && NumHelper(765)
+trigger1 = !(Helper(765), var(0)) && (Helper(765), Anim = 766)
+attr = C, AP
+stateNo = 761
+slot = 0
+time = 1
+ignoreHitPause = 1
+
+[State -3, Parry Projectiles]
+type = HitOverride
+trigger1 = (StateNo != [760,762]) && NumHelper(765)
+trigger1 = !(Helper(765), var(0)) && (Helper(765), Anim = 767)
+attr = SCA, AP
+stateNo = 762
+slot = 0
+time = 1
+ignoreHitPause = 1
+
+[State -3, Special Finish]
+type = Helper
+triggerall = !numhelper(6902)
+triggerall = WinKO
+trigger1 = StateNo = [3000,3900]
+trigger2 = StateNo = [10000,10900]
+name = "SpecialFinish"
+id = 6902
+pos = -100,-200
+postype = back
+facing = 0
+stateno = 6902
+keyctrl = 0
+ownpal = 1
+supermovetime = 99999999
+pausemovetime = 99999999
+ignorehitpause = 1
+size.xscale = 0.50
+size.yscale = 0.50
+
+;================================================================================
+; ------- Roundstate stance management by Scal --------
+;===============================================================================
+
+[State -3, NoWalk]
+type = AssertSpecial
+trigger1 = RoundState > 2
+flag = noWalk
+
+;-------------------------------------------------------------------------------
+[State -3, Prevent Undergound Juggles]
+type= targetbind
+trigger1= movehit=1
+trigger1= numtarget=1 && numenemy
+trigger1= (target,time<=1) && (target,ID=enemynear,ID)
+trigger1= !(target,hitshakeover) && (target, hitfall) && (target, pos y>0)
+pos= ceil(p2dist x), ceil(-pos y)
+ignorehitpause= 1
+
+[State -3, Variable Height]
+type= playerpush
+triggerall= statetype=A && movetype!=H && numenemy
+triggerall= p2bodydist x = [-(enemynear,const(size.ground.back) + enemynear,const(size.ground.front)), 0]; checks if both characters are within each other's width
+trigger1= p2statetype=S
+trigger1= p2dist y >= (enemynear,const(size.height) - 22)
+trigger2= p2statetype=C
+trigger2= p2dist y >= (enemynear,const(size.height) - 48)
+trigger3= p2statetype=L
+trigger3= p2dist y >= 11
+value= 0
+ignorehitpause= 1
+
+;----------------------------------
+; Custom Cornerpush System by PotS
+;----------------------------------
+[State -2, Superpause Check]
+type = null;VarAdd
+trigger1 = Var(9)
+var(9) = -1
+
+[State -3, Corner Push Reset]; Reset
+type= varset
+trigger1= fvar(5)
+trigger1= numtarget
+trigger1= (target, hitover) || (target, gethitvar(hitshaketime) > 0 && target, time <= 0)
+fvar(5)= 0
+
+[State -3, Corner Push Initial Vel]; Get initial velocity
+type= varset
+trigger1= movecontact=1 && numtarget
+fvar(5) = (target, gethitvar(xvel))
+ignorehitpause= 1
+
+[State -3, Corner Push Apply]; Apply corner push
+type= posadd
+triggerall = fvar(5)
+triggerall = (statetype = S || statetype = C) && numtarget
+triggerall = !hitpausetime && (target, gethitvar(hitshaketime) <= 0)
+triggerall = (target, statetype = S || target, statetype = C) && !(target, gethitvar(yvel)) && !(target, hitfall); See note below
+trigger1 = target, frontedgebodydist <= abs(target, vel x)
+trigger1 = (target, gethitvar(xvel) * target, facing) > 0
+trigger2 = target, backedgebodydist <= abs(target, vel x)
+trigger2 = (target, gethitvar(xvel) * target, facing) < 0
+x = ifelse(target, frontedgebodydist <= 0, -1, 1) * (target, facing) * fvar(5)
+
+[State -2, Freeze Pos During Superpause]
+type = null;PosFreeze
+trigger1 = Var(9)
+value = 1
+
+[State -3, Corner Push Friction]; Apply friction to the velocity
+type= varset
+trigger1= numtarget
+trigger1= target, gethitvar(hitshaketime) <= 0
+fvar(5) = fvar(5)*0.85
+
+[State -2, Hit Count Reset]
+type = varset
+trigger1= P2MoveType != H
+fvar(6) = 0
+ignorehitpause = 1
+
+[State -2, Hit Count Scaling]
+type = varset
+triggerall = numtarget
+trigger1 = target,gethitvar(hitcount)
+fvar(6) = target,gethitvar(hitcount)
+ignorehitpause = 1
+
+[State -2, Midair Jump Reset]
+type = varset
+trigger1 = statetype != A
+var(6) = 0
+
+[State -3, Hurt Sound];Taken from Warusaki.
+type = PlaySnd
+triggerall = var(24) = 0    ;English voice
+triggerall = Random < 500
+triggerall = Time = 1
+triggerall = Alive
+trigger1 = StateNo = 5000 || StateNo = 5010 || StateNo = 5020 || StateNo = 5070 || StateNo = 5100
+value = S5000,ifElse(StateNo = 5100||GetHitVar(animtype) = 1,0+(random%2),ifElse(GetHitVar(animtype) = 2,2+(random%2),2+(random%2)))
+channel = 0
+
+[State -3, Hurt Sound];Taken from Warusaki.
+type = PlaySnd
+triggerall = var(24) = 1    ;Spanish voice
+triggerall = Random < 500
+triggerall = Time = 1
+triggerall = Alive
+trigger1 = StateNo = 5000 || StateNo = 5010 || StateNo = 5020 || StateNo = 5070 || StateNo = 5100
+value = S5001,ifElse(StateNo = 5100||GetHitVar(animtype) = 1,0+(random%2),ifElse(GetHitVar(animtype) = 2,2+(random%2),2+(random%2)))
+channel = 0
+
+;----------------------------------------------------------------------------------------------
+; State -3 / Guard Crush System / var(11) : Guard Crush Variable
+;----------------------------------------------------------------------------------------------
+
+[State -3, Light Hit Guard]
+type = VarAdd
+triggerall = var(11) > 0
+trigger1 = stateno = 5001
+trigger1 = anim = 5000
+trigger2 = stateno = 5001
+trigger2 = anim = 5010
+trigger3 = stateno = 5011
+trigger3 = anim = 5020 
+persistent = 0
+var(11) = -1
+ignorehitpause = 1
+
+[State -3, Medium Hit Guard]
+type = VarAdd
+triggerall = var(11) > 0
+trigger1 = stateno = 5001
+trigger1 = anim = 5001
+trigger2 = stateno = 5001
+trigger2 = anim = 5011
+trigger3 = stateno = 5011
+trigger3 = anim = 5021 
+persistent = 0
+var(11) = -3
+ignorehitpause = 1
+
+[State -3, Strong Hit Guard]
+type = VarAdd
+triggerall = var(11) > 0
+trigger1 = stateno = 5001
+trigger1 = anim = 5002
+trigger2 = stateno = 5001
+trigger2 = anim = 5012
+trigger3 = stateno = 5011
+trigger3 = anim = 5022 
+persistent = 0
+var(11) = -6
+ignorehitpause = 1
+
+[State -3, Fall Hit Guard]
+type = VarAdd
+trigger1 = var(11) > 0
+trigger1 = PrevStateNo = 5050
+persistent = 0
+var(11) = -10
+ignorehitpause = 1
+
+[State -3, Special Add]
+type = VarAdd ; Add when hitshaketime had at lease 15 ticks - Heavy Guard
+triggerall = GetHitVar(hitshaketime) = 15
+trigger1 = stateno = 150
+trigger2 = stateno = 151
+trigger3 = stateno = 152
+var(11) = 6
+ignorehitpause = 1
+
+[State -3, Special Add 2]
+type = Varadd ; Add when hitshaketime had at lease 12 ticks - Medium Guard
+triggerall = GetHitVar(hitshaketime) = 12
+trigger1 = stateno = 150
+trigger2 = stateno = 151
+trigger3 = stateno = 152
+var(11) = 4
+ignorehitpause = 1
+
+[State -3, Special Add 3]
+type = Varadd ; Add when hitshaketime had at lease 8 ticks - Light Guard
+triggerall = GetHitVar(hitshaketime) = 8
+trigger1 = stateno = 150
+trigger2 = stateno = 151
+trigger3 = stateno = 152
+var(11) = 2
+ignorehitpause = 1
+
+[State -3, Guard Crush]
+type = ChangeState ; Change To Guard Crush When Var(11) Limits Are Reached.
+trigger1 = var(11) >= 150
+value = 9000
+ctrl = 0
+ignorehitpause = 1
+
+[State -3, Guard Crush]
+type = ChangeState ; Change To Guard Crush When Var(11) Limits Are Reached.
+triggerall = statetype = A
+trigger1 = var(11) >= 150
+value = 9001
+ctrl = 0
+ignorehitpause = 1
+
+[State -3, VelAdd]
+type = Veladd
+triggerall = (!AIlevel && command = "holdfwd" || AIlevel && (backedgedist < ceil(frontedgedist/4) || backedgedist <= 50))
+triggerall = prevstateno = 54
+trigger1 = stateno = 50
+x = 0.05
+
+[State -3, VelAdd]
+type = Veladd
+triggerall = (!AIlevel && command = "holdback" || AIlevel && (backedgedist > frontedgedist || frontedgedist >= 50))
+triggerall = prevstateno = 54
+trigger1 = stateno = 50
+x = -0.05
+
+; AI Walk
+[Statedef 19]
+type    = S
+physics = S
+sprpriority = 0
+ctrl = 0
+
+[State 20, 1]
+type = VelSet
+trigger1 = command = "holdfwd"
+x = const(velocity.walk.fwd.x)
+
+[State 20, 2]
+type = VelSet
+trigger1 = command = "holdback"
+x = const(velocity.walk.back.x)
+
+[State 19, CtrlSet]
+type = CtrlSet
+trigger1 = time >= 15
+trigger2 = inguarddist
+value = 1
+ignorehitpause = 1
+
+[State 19, 1]
+type = VelSet
+triggerall = (random <= 333-233*(enemy,backedgedist <= 20)*(AILevel**2)/64)
+triggerall = numenemy
+triggerall = (enemy,stateno != 5120 || enemy,prevstateno != 5120)
+trigger1 = p2bodydist x >= 180 && !inguarddist
+trigger2 = p2bodydist x >= 150 && p2movetype = A
+trigger3 = enemy,vel x <= 0
+trigger4 = p2statetype = L && p2bodydist x >= 120
+trigger5 = backedgedist <= 90
+trigger6 = (enemy,ctrl = 0 || enemy,stateno >= 1000) && enemy,movetype = I
+x = const(velocity.walk.fwd.x)
+
+[State 19, 2]
+type = VelSet
+triggerall = (random <= 500+250*(enemy,stateno = 5120 || (p2dist x = [0,100]) && (enemy,ctrl || inguarddist || enemy,vel x >= 3))*(AILevel**2)/64)
+triggerall = numenemy
+trigger1 = (enemy,stateno = 5120 || enemy,prevstateno = 5120)
+trigger2 = p2bodydist x < 75
+trigger3 = enemy,vel x >= 3
+trigger4 = (inguarddist || enemy,movetype = A)
+trigger5 = frontedgedist <= 90
+trigger6 = enemy,stateno = [5110,5120]
+x = const(velocity.walk.back.x)
+
+[State 19, AI Jump]
+type = changestate
+triggerall = var(25) = 0
+triggerall = (random < 25*(AILevel**2)/64) && numenemy
+trigger1 = inguarddist
+trigger2 = p2dist x < 0
+trigger3 = p2dist x = [45,60]
+trigger4 = enemy,statetype = A
+trigger5 = enemy,stateno = [5110,5120]
+trigger6 = frontedgedist <= 75
+trigger7 = backedgedist <= 75
+value = 39
+
+[State 19, 2]
+type = VelSet
+triggerall = (random <= 20*(AILevel**2)/64)
+trigger1 = P2bodydist x <= 75
+trigger2 = time >= 120
+x = 0
+
+[state 19, 3]
+type = ChangeAnim
+triggerall = vel x > 0
+trigger1 = Anim != 20 && Anim != 5
+trigger2 = Anim = 5 && AnimTime = 0
+value = 20
+
+[state 19, 4]
+type = ChangeAnim
+triggerall = vel x < 0
+trigger1 = Anim != 21 && Anim != 5
+trigger2 = Anim = 5 && AnimTime = 0
+value = 21
+
+[state 19, ChangeState]
+type = ChangeState
+triggerall = (random < 25*(AILevel**2)/64)
+Trigger1 = p2statetype != L
+Trigger1 = p2bodydist x <= 0
+Trigger2 = p2statetype = L
+trigger2 = p2bodydist x <= 60
+trigger3 = p2bodydist x >= 180
+trigger4 = backedgedist <= 25 && !inguarddist
+trigger5 = vel x = 0
+value = cond((p2bodydist x >= 90 && p2statetype = L || p2bodydist x >= 180 && enemy,movetype != H || (var(25) = [18,24]) && (p2dist x = [100,240])),100,0)
+ignorehitpause = 1
+ctrl = 1
+
+[state 19, ChangeState]
+type = ChangeState
+triggerall = !var(25)
+triggerall = backedgedist >= 90
+triggerall = (random < 50*(AILevel**2)/64)
+Trigger1 = p2dist x <= 120 && inguarddist && prevstateno != 106
+Trigger2 = p2bodydist x <= 180 && var(25) = 2
+Trigger3 = frontedgedist <= 75
+value = 105
+ignorehitpause = 1
+
+[state 19, ChangeState]
+type = ChangeState
+triggerall = (random <= 25*(AILevel**2)/64) && numenemy
+triggerall = NumExplod(10381) = 0
+triggerall = numhelper(33333333)
+triggerall = PlayerIDExist(helper(33333333),var(3))
+triggerall = (var(25) != [18,24])
+trigger1 = PlayerID(helper(33333333),var(3)),p2dist x = [90,180] 
+trigger2 = PlayerID(helper(33333333),var(3)),vel x = [0.1,15]
+trigger3 = numhelper(8000)
+trigger3 = helper(8000),var(2) = 1 && inguarddist
+trigger4 = enemy,stateno = [5110,5120]
+trigger5 = frontedgedist <= 50
+value = cond(random%2,39,54)
+ignorehitpause = 1
+
+;---------------------------------------------------------------------------
+; AI Jump
+[Statedef 39]
+type    = S
+physics = S
+anim = 40
+ctrl = 0
+sprpriority = 1
+facep2 = 1
+
+[State 40, 2]
+type = PlaySnd
+trigger1 = !animtime
+value = 40,0
+
+[State 100, FX]
+type = Explod
+trigger1 = !Time
+anim = 8200
+postype = p1
+pos = 0,0
+sprpriority = 2
+scale = 0.50,0.50
+ownpal = 1
+
+[State 40, 1]
+type = VarSet
+trigger1 = Time = 0
+sysvar(1) = 0
+
+[State 40, 2]
+type = VarSet
+trigger1 = command = "holdfwd"
+sysvar(1) = 1
+
+[State 40, 3]
+type = VarSet
+trigger1 = command = "holdback"
+sysvar(1) = -1
+
+[State 40, 4]
+type = VelSet
+trigger1 = AnimTime = 0
+x = cond(sysvar(1)=0, const(velocity.jump.neu.x), cond(sysvar(1)=1, const(velocity.jump.fwd.x), const(velocity.jump.back.x)))
+y = const(velocity.jump.y)*0.76
+
+[State 40, 5]
+type = VelSet
+trigger1 = AnimTime = 0
+trigger1 = prevstateno = 100 ;RUN_FWD
+trigger1 = sysvar(1) = 1
+x = const(velocity.runjump.fwd.x)
+
+[State 40, 6]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 50
+ctrl = 1

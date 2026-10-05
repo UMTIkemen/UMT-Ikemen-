@@ -1,0 +1,2069 @@
+;-----------------------------------------------------------------------------------
+;///////////////////////////////////////////////////////////////////////////////////
+; 基本動作
+;///////////////////////////////////////////////////////////////////////////////////
+;-----------------------------------------------------------------------------------
+;---------------立ち
+[statedef 0]
+sprpriority=0
+[state ]
+type=changeanim
+trigger1=anim
+value=0
+[state ]
+type=selfstate
+trigger1=roundstate=2&&!(var(1)&131072)
+trigger1=command="holdback"
+value=130
+[state ]
+type=turn
+trigger1=(var(1):=var(1)+4*(facing*(enemynear(!enemynear,alive&&numenemy>1&&enemynear(numenemy>1),alive),pos x-pos x)<0))&4
+;---------------屈み
+[statedef 10]
+type=c
+[state ]
+type=selfstate
+trigger1=!animtime||anim=11
+value=11
+[state ]
+type=selfstate
+trigger1=command!="holddown"
+value=12
+[state ]
+type=changeanim
+trigger1=anim!=10
+value=10
+[state ]
+type=selfstate
+trigger1=roundstate=2&&!(var(1)&131072)
+trigger1=command="holdback"
+value=130
+[state ]
+type=turn
+trigger1=(var(1):=var(1)+4*(facing*(enemynear(!enemynear,alive&&numenemy>1&&enemynear(numenemy>1),alive),pos x-pos x)<0))&4
+[statedef 11]
+type=c
+[state ]
+type=changeanim
+trigger1=anim!=11
+value=11
+[state ]
+type=selfstate
+trigger1=command!="holddown"
+value=12
+[state ]
+type=selfstate
+trigger1=roundstate=2&&!(var(1)&131072)
+trigger1=command="holdback"
+value=130
+[state ]
+type=turn
+trigger1=(var(1):=var(1)+4*(facing*(enemynear(!enemynear,alive&&numenemy>1&&enemynear(numenemy>1),alive),pos x-pos x)<0))&4
+[statedef 12]
+[state ]
+type=changeanim
+trigger1=anim!=12
+value=12
+[state ]
+type=changestate
+trigger1=!animtime
+value=0
+[state ]
+type=selfstate
+trigger1=roundstate=2&&!(var(1)&131072)
+trigger1=command="holdback"
+value=130
+[state ]
+type=turn
+trigger1=(var(1):=var(1)+4*(facing*(enemynear(!enemynear,alive&&numenemy>1&&enemynear(numenemy>1),alive),pos x-pos x)<0))&4
+;-----------歩行
+[statedef 20]
+[state ]
+type=posadd
+trigger1=anim=[20,21]
+x=1.5*(1-2*(command="holdback"))
+[state ]
+type=changeanim
+trigger1=anim!=20
+trigger1=command="holdfwd"
+trigger2=anim!=21
+trigger2=command="holdback"
+value=20+(command="holdback")
+[state ]
+type=changeanim
+trigger1=fvar(4)<0
+trigger1=animelem=11,>=0
+value=anim
+elem=1
+[state ]
+type=changeanim
+trigger1=fvar(4)>=0
+trigger1=animelem=11,<0
+value=anim
+elem=11
+[state ]
+type=selfstate
+trigger1=command!="holdfwd"&&command!="holdback"
+value=0
+[state ]
+type=selfstate
+trigger1=roundstate=2&&!(var(1)&131072)
+trigger1=command="holdback"
+value=130
+[state ]
+type=turn
+trigger1=(var(1):=var(1)+4*(facing*(enemynear(!enemynear,alive&&numenemy>1&&enemynear(numenemy>1),alive),pos x-pos x)<0))&4
+;-----------ジャンプ
+[statedef 40]
+[state ]
+type=changeanim
+trigger1=anim!=40
+value=40
+[state ]
+type=varset
+trigger1=animelem=1
+sysfvar(0)=0
+[state ]
+type=explod
+trigger1=animelem=1
+id=40
+anim=6040
+scale=.5,.5
+pos=0,0
+removetime=-2
+sprpriority=1
+ownpal=1
+trans=add
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=playsnd
+trigger1=animelem=1
+value=s40,0
+[state ]
+type=hitby
+trigger1=1
+value=sac,aa,ap
+[state ]
+type=varadd
+trigger1=animelem=1
+var(1)=-(var(1)&32)-(var(1)&64)
+[state ]
+type=varadd
+trigger1=command="holdfwd"||command="holdback"
+trigger1=1||var(1):=var(1)-(var(1)&32)-(var(1)&64)
+var(1)=32+32*(command="holdback")
+[state ]
+type=varset
+trigger1=!animtime
+trigger1=var(1)&(32+64)
+;trigger2=var(1)&32
+sysfvar(0)=ifelse(var(1)&32,3.9,-2.7)
+[state ]
+type=varset
+trigger1=!animtime
+;trigger2=var(1)&32
+sysfvar(4)=-11
+[state ]
+type=selfstate
+trigger1=!animtime
+;trigger2=var(1)&32
+value=50
+;-----------HJ
+[statedef 41]
+[state ]
+type=changeanim
+trigger1=anim!=40
+value=40
+[state ]
+type=varset
+trigger1=animelem=1
+sysfvar(0)=0
+[state ]
+type=explod
+trigger1=animelem=1
+id=40
+anim=6040
+scale=.5,.5
+pos=0,0
+removetime=-2
+sprpriority=1
+ownpal=1
+trans=add
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=playsnd
+trigger1=animelem=1
+trigger1=var(1)%256
+trigger1=random%8=0
+value=s41,10
+volume=256
+channel=0
+[state ]
+type=playsnd
+trigger1=animelem=1
+value=s41,0
+[state ]
+type=afterimage
+trigger1=animelem=1
+time=30
+length=6
+palContrast=0,0,256
+timegap=1
+framegap=2
+trans=add
+[state ]
+type=varadd
+trigger1=!(var(1)&8)
+var(1)=8
+[state ]
+type=varadd
+trigger1=!(var(1)&16)&&var(1)&256
+var(1)=16
+[state ]
+type=hitby
+trigger1=1
+value=sac,aa,ap
+[state ]
+type=varadd
+trigger1=animelem=1
+var(1)=-(var(1)&32)-(var(1)&64)
+[state ]
+type=varadd
+trigger1=command="holdfwd"||command="holdback"
+trigger1=1||var(1):=var(1)-(var(1)&32)-(var(1)&64)
+var(1)=32+32*(command="holdback")
+[state ]
+type=varset
+trigger1=!animtime
+trigger1=var(1)&(32+64)
+sysfvar(0)=ifelse(var(1)&32,3.9,-2.7)
+[state ]
+type=varset
+trigger1=!animtime
+sysfvar(4)=-15.5
+[state ]
+type=selfstate
+trigger1=!animtime
+value=50
+;-----------空中ジャンプ
+[statedef 45]
+type=a
+[state ]
+type=changeanim
+trigger1=anim!=40
+value=40
+[state ]
+type=turn
+trigger1=animelem=1
+trigger1=(var(1):=var(1)+4*(facing*(enemynear(!enemynear,alive&&numenemy>1&&enemynear(numenemy>1),alive),pos x-pos x)<0))&4
+[state ]
+type=varset
+trigger1=animelem=1
+sysfvar(0)=0
+[state ]
+type=playsnd
+trigger1=animelem=1
+value=s40,0
+[state ]
+type=varadd
+trigger1=!(var(1)&8)
+var(1)=8
+[state ]
+type=varadd
+trigger1=!(var(1)&16)
+var(1)=16
+[state ]
+type=varadd
+trigger1=animelem=1
+var(1)=-(var(1)&32)-(var(1)&64)
+[state ]
+type=varadd
+trigger1=command="holdfwd"||command="holdback"
+trigger1=1||var(1):=var(1)-(var(1)&32)-(var(1)&64)
+var(1)=32+32*(command="holdback")
+[state ]
+type=varset
+trigger1=!animtime
+trigger1=var(1)&(32+64)
+sysfvar(0)=ifelse(var(1)&32,3.9,-2.7)
+[state ]
+type=varset
+trigger1=!animtime
+sysfvar(4)=-10
+[state ]
+type=selfstate
+trigger1=!animtime
+value=50
+;-----------三角ジャンプ
+[statedef 46]
+type=a
+[state ]
+type=changeanim
+trigger1=anim!=46
+value=46
+[state ]
+type=varset
+trigger1=animelem=1
+sysfvar(0)=0
+[state ]
+type=playsnd
+trigger1=animelem=1
+value=s40,0
+[state ]
+type=varadd
+trigger1=!(var(1)&8)
+var(1)=8
+[state ]
+type=varadd
+trigger1=!(var(1)&16)
+var(1)=16
+[state ]
+type=varset
+trigger1=!animtime
+sysfvar(0)=3.9
+[state ]
+type=varset
+trigger1=!animtime
+sysfvar(4)=-10
+[state ]
+type=selfstate
+trigger1=!animtime
+value=50
+;-----------キャンセル空中ジャンプ
+[statedef 47]
+type=a
+[state ]
+type=changeanim
+trigger1=anim!=40
+value=40
+[state ]
+type=turn
+trigger1=animelem=1
+trigger1=(var(1):=var(1)+4*(facing*(enemynear(!enemynear,alive&&numenemy>1&&enemynear(numenemy>1),alive),pos x-pos x)<0))&4
+[state ]
+type=varset
+trigger1=animelem=1
+sysfvar(0)=0
+[state ]
+type=playsnd
+trigger1=animelem=1
+value=s40,0
+[state ]
+type=varadd
+trigger1=!(var(1)&8)
+var(1)=8
+[state ]
+type=varadd
+trigger1=animelem=1
+var(1)=-(var(1)&32)-(var(1)&64)
+[state ]
+type=varadd
+trigger1=command="holdfwd"||command="holdback"
+trigger1=1||var(1):=var(1)-(var(1)&32)-(var(1)&64)
+var(1)=32+32*(command="holdback")
+[state ]
+type=varset
+trigger1=!animtime
+trigger1=var(1)&(32+64)
+sysfvar(0)=ifelse(var(1)&32,3.9,-2.7)
+[state ]
+type=varset
+trigger1=!animtime
+sysfvar(4)=-10
+[state ]
+type=selfstate
+trigger1=!animtime
+value=50
+;----------空中ニュートラル
+[statedef 50]
+type=a
+[state ]
+type=changeanim
+trigger1=(anim!=[40,43])&&anim!=[45,46]
+value=42
+elem=10
+[state ]
+type=changeanim
+trigger1=anim!=[41,43]
+value=41+(sysfvar(0)>0)+2*(sysfvar(0)<0)
+;elem=(anim!=40)*8
+[state ]
+type=selfstate
+trigger1=sysfvar(4)>=0
+trigger1=pos y>=0
+value=52
+[state ]
+type=varset
+trigger1=var(1)&256
+trigger1=command="holdfwd"||command="holdback"
+sysfvar(0)=ifelse(command="holdback",-4.5,4.5)
+[state ]
+type=turn
+trigger1=var(1)&8&&!(var(1)&16)||var(1)&256
+trigger1=(var(1):=var(1)+4*(facing*(enemynear(!enemynear,alive&&numenemy>1&&enemynear(numenemy>1),alive),pos x-pos x)<0))&4
+[state ]
+type=selfstate
+trigger1=roundstate=2&&!(var(1)&131072)
+trigger1=command="holdback"
+value=130
+[statedef 51]
+type=a
+[state ]
+type=selfstate
+trigger1=1
+value=50
+;----------着地
+[statedef 52]
+[state ]
+type=changeanim
+trigger1=anim!=47
+value=47
+[state ]
+type=explod
+trigger1=animelem=1
+id=47
+anim=6047
+scale=.5,.5
+pos=0,0
+removetime=-2
+sprpriority=1
+ownpal=1
+trans=add
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=playsnd
+trigger1=animelem=1
+value=s52,0
+[state ]
+type=changestate
+trigger1=!animtime
+value=0
+;--------ダッシュ
+[statedef 100]
+movetype=a
+sprpriority=1
+[state ]
+type=changeanim
+trigger1=anim!=100
+value=100
+[state ]
+type=attackdist
+trigger1=1
+value=0
+[state ]
+type=explod
+trigger1=animelem=2,=1
+id=100
+anim=6100
+scale=.5,.5
+pos=0,0
+removetime=-2
+sprpriority=1
+ownpal=1
+[state ]
+type=playsnd
+trigger1=animelem=2,=1||animelem=5
+value=s100,0
+[state ]
+type=varadd
+trigger1=animelem=1,>0&&animelem=3,<0
+sysfvar(2)=1.5
+[state ]
+type=varset
+trigger1=sysfvar(2)>18
+sysfvar(2)=18
+[state ]
+type=changeanim
+trigger1=animelem=3
+value=anim
+elem=2
+[state ]
+type=changeanim
+trigger1=animelem=1,>0&&animelem=3,<0
+trigger1=command!="holdfwd"
+value=anim
+elem=3
+[state ]
+type=selfstate
+trigger1=!animtime
+value=0
+;-----------バックステップ
+[statedef 105]
+sprpriority=1
+[state ]
+type=changeanim
+trigger1=anim!=105
+value=105
+[state ]
+type=playsnd
+trigger1=animelem=1
+value=s200,1
+[state ]
+type=hitby
+trigger1=1
+value=
+[state ]
+type=varset
+trigger1=animelem=2
+sysfvar(4)=-4
+[state ]
+type=posadd
+trigger1=animelem=2,>=0
+x=-5
+[state ]
+type=changestate
+trigger1=animelem=2,>0
+trigger1=pos y>=0
+value=106
+[Statedef 106]
+[state ]
+type=changeanim
+trigger1=anim!=106
+value=106
+[state ]
+type=explod
+trigger1=animelem=1
+id=47
+anim=6047
+scale=.5,.5
+pos=0,0
+removetime=-2
+sprpriority=1
+ownpal=1
+trans=add
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=selfstate
+trigger1=!animtime
+value=0
+;------------空中ダッシュ
+[statedef 110]
+type=a
+movetype=a
+[state ]
+type=changeanim
+trigger1=anim!=110
+value=110
+[state ]
+type=attackdist
+trigger1=1
+value=0
+[state ]
+type=playsnd
+trigger1=animelem=1
+value=s110,0
+[state ]
+type=varadd
+trigger1=!(var(1)&16)
+var(1)=16
+[state ]
+type=varset
+trigger1=1
+sysfvar(0)=6
+[state ]
+type=varset
+trigger1=1
+sysfvar(4)=0
+[state ]
+type=turn
+trigger1=!animtime
+trigger1=(var(1):=var(1)+4*(facing*(enemynear(!enemynear,alive&&numenemy>1&&enemynear(numenemy>1),alive),pos x-pos x)<0))&4
+[state ]
+type=changestate
+trigger1=!animtime
+value=50
+;-------------------空中バックダッシュ
+[statedef 115]
+type=a
+[state ]
+type=changeanim
+trigger1=anim!=115
+value=115
+[state ]
+type=playsnd
+trigger1=animelem=1
+value=s110,0
+[state ]
+type=varadd
+trigger1=!(var(1)&16)
+var(1)=16
+[state ]
+type=varset
+trigger1=1
+sysfvar(0)=-3.5
+[state ]
+type=varset
+trigger1=1
+sysfvar(4)=0
+[state ]
+type=turn
+trigger1=!animtime
+trigger1=(var(1):=var(1)+4*(facing*(enemynear(!enemynear,alive&&numenemy>1&&enemynear(numenemy>1),alive),pos x-pos x)<0))&4
+[state ]
+type=changestate
+trigger1=!animtime
+value=50
+;--------------------------ガード動作
+;-------------ガード入力
+[statedef 130]
+type=u
+[state ]
+type=varadd
+trigger1=1
+fvar(14)=-1
+[state ]
+type=changeanim
+triggerall=inguarddist||anim=[130,152]
+trigger1=statetype!=a
+trigger1=anim!=130&&command!="holddown"||anim!=131&&command="holddown"
+trigger2=statetype=a&&anim!=132
+value=ifelse(statetype=a,132,130+(command="holddown"))
+elem=1+(anim=[150,152])
+[state ]
+type=statetypeset
+trigger1=anim=130
+statetype=s
+[state ]
+type=selfstate
+triggerall=anim=[130,132]
+trigger1=command!="holdback"
+trigger2=!inguarddist
+value=(anim=131)*11+(anim=132)*50
+[state ]
+type=statetypeset
+trigger1=anim=132
+trigger1=var(1)&32768
+trigger1=enemynear,hitdefattr=sac,at=0
+statetype=s
+;-----------オラガ不可対応
+[state ]
+type=statetypeset
+triggerall=anim=132
+trigger1=enemynear,name="kenshiro"
+trigger1=enemynear,authorname="Drowin hokuto"
+trigger1=enemynear,stateno=1015
+trigger2=enemynear,name="kenshiro"
+trigger2=enemynear,authorname="Cameron"
+trigger2=enemynear,stateno=1020
+trigger3=enemynear,name="kenshiro"
+trigger3=enemynear,authorname="SAIKEI"
+trigger3=enemynear,stateno=1100
+trigger4=enemynear,name="raoh ATL"
+trigger4=enemynear,authorname="ataru"
+trigger4=enemynear,stateno=2200
+trigger5=enemynear,name="raoh"
+trigger5=enemynear,authorname="shikkoku"||enemynear,authorname="bat"
+trigger5=enemynear,stateno=3000
+trigger6=enemynear,name="raoh"
+trigger6=enemynear,authorname="Drowin hokuto"
+trigger6=enemynear,stateno=2000
+trigger7=enemynear,name="TOKI"
+trigger7=enemynear,authorname="Drowin hokuto"
+trigger7=enemynear,stateno=2010
+trigger8=enemynear,name="TOKI"
+trigger8=enemynear,authorname="Ts"
+trigger8=enemynear,stateno=3100
+trigger9=enemynear,name="TOKI-(NERICYA)"
+trigger9=enemynear,authorname="NERICYA"
+trigger9=enemynear,stateno=2100
+statetype=a
+[state ]
+type=statetypeset
+trigger1=anim=131
+statetype=c
+[state ]
+type=turn
+trigger1=statetype!=a
+trigger1=(var(1):=var(1)+4*(facing*(enemynear(!enemynear,alive&&numenemy>1&&enemynear(numenemy>1),alive),pos x-pos x)<0))&4
+[state ]
+type=ctrlset
+trigger1=1
+value=1
+;--------------ガード硬直
+[statedef 150]
+type=u
+movetype=h
+[state ]
+type=changeanim
+trigger1=anim!=[150,152]
+value=150+(statetype=c||anim=131)+(statetype=a||anim=132)*2
+[state ]
+type=changeanim
+trigger1=statetype!=a
+trigger1=command="holdback"
+trigger1=anim!=150&&command!="holddown"||anim!=151&&command="holddown"
+value=150+(command="holddown")
+[state ]
+type=statetypeset
+trigger1=anim=150
+statetype=s
+[state ]
+type=statetypeset
+trigger1=anim=151
+statetype=c
+[state ]
+type=velset
+trigger1=1
+x=0
+y=0
+[state ]
+type=varadd
+trigger1=!time
+trigger1=var(1):=var(1)-(var(1)&33554432)||1
+trigger1=fvar(14)>0
+trigger1=fvar(14):=0||1
+var(1)=33554432
+[state ]
+type=explod
+trigger1=!time
+trigger1=var(1)&33554432
+id=6130
+anim=6130
+scale=.5,.5
+removetime=-2
+pos=20,-80
+sprpriority=3
+ownpal=1
+trans=add
+[state ]
+type=palfx
+trigger1=!time
+trigger1=var(1)&33554432
+add=256,256,256
+time=8
+[state ]
+type=playsnd
+trigger1=!time
+trigger1=random%10=0||!!(var(1)&33554432)&&random%6=0
+value=150,!!(var(1)&33554432)
+channel=27
+volume=255
+lowpriority=1
+[state ]
+type=playsnd
+trigger1=!time
+trigger1=var(1)&33554432
+value=120,10
+volume=255
+[state ]
+type=selfstate
+trigger1=hitshakeover
+value=151
+[state ]
+type=statetypeset
+trigger1=anim=152
+trigger1=var(1)&32768
+trigger1=enemynear,hitdefattr=sac,at=0
+statetype=s
+;-----------オラガ不可対応
+[state ]
+type=statetypeset
+triggerall=anim=152
+trigger1=enemynear,name="kenshiro"
+trigger1=enemynear,authorname="Drowin hokuto"
+trigger1=enemynear,stateno=1015
+trigger2=enemynear,name="kenshiro"
+trigger2=enemynear,authorname="Cameron"
+trigger2=enemynear,stateno=1020
+trigger3=enemynear,name="kenshiro"
+trigger3=enemynear,authorname="SAIKEI"
+trigger3=enemynear,stateno=1100
+trigger4=enemynear,name="raoh ATL"
+trigger4=enemynear,authorname="ataru"
+trigger4=enemynear,stateno=2200
+trigger5=enemynear,name="raoh"
+trigger5=enemynear,authorname="shikkoku"||enemynear,authorname="bat"
+trigger5=enemynear,stateno=3000
+trigger6=enemynear,name="raoh"
+trigger6=enemynear,authorname="Drowin hokuto"
+trigger6=enemynear,stateno=2000
+trigger7=enemynear,name="TOKI"
+trigger7=enemynear,authorname="Drowin hokuto"
+trigger7=enemynear,stateno=2010
+trigger8=enemynear,name="TOKI"
+trigger8=enemynear,authorname="Ts"
+trigger8=enemynear,stateno=3100
+trigger9=enemynear,name="TOKI-(NERICYA)"
+trigger9=enemynear,authorname="NERICYA"
+trigger9=enemynear,stateno=2200
+statetype=a
+[statedef 151]
+type=u
+movetype=h
+[state ]
+type=changeanim
+trigger1=statetype!=a
+trigger1=command="holdback"
+trigger1=anim!=150&&command!="holddown"||anim!=151&&command="holddown"
+value=150+(command="holddown")
+[state ]
+type=statetypeset
+trigger1=anim=150
+statetype=s
+[state ]
+type=statetypeset
+trigger1=anim=151
+statetype=c
+[state ]
+type=velmul
+trigger1=statetype!=a
+x=.8
+[state ]
+type=veladd
+trigger1=statetype=a
+y=.6
+[state ]
+type=hitvelset
+trigger1=!time
+trigger1=!(var(1)&33554432)
+x=1
+[state ]
+type=velset
+trigger1=!time
+trigger1=fvar(15)>0
+trigger1=!(var(1)&33554432)
+x=vel x*2
+[state ]
+type=velset
+triggerall=statetype!=a
+trigger1=time=gethitvar(slidetime)
+trigger2=hitover
+x=0
+[state ]
+type=varset
+trigger1=!time
+sysfvar(0)=vel x*(statetype=a)
+[state ]
+type=varset
+trigger1=1
+sysfvar(4)=vel y
+[state ]
+type=selfstate
+trigger1=statetype=a
+trigger1=pos y>0&&vel y>0
+value=52
+[state ]
+type=selfstate
+trigger1=statetype!=a
+trigger1=gethitvar(hittime)-5*(var(1)&33554432&&fvar(15)<=0)+fvar(15)*(fvar(15)>0)<=0
+trigger2=statetype=a
+trigger2=time=gethitvar(ctrltime)-5*(fvar(14)>0&&fvar(15)<=0)+fvar(15)*(fvar(15)>0)
+value=130
+[state ]
+type=statetypeset
+trigger1=anim=152
+trigger1=var(1)&32768
+trigger1=enemynear,hitdefattr=sac,at=0
+statetype=s
+;-----------オラガ不可対応
+[state ]
+type=statetypeset
+triggerall=anim=152
+trigger1=enemynear,name="kenshiro"
+trigger1=enemynear,authorname="Drowin hokuto"
+trigger1=enemynear,stateno=1015
+trigger2=enemynear,name="kenshiro"
+trigger2=enemynear,authorname="Cameron"
+trigger2=enemynear,stateno=1020
+trigger3=enemynear,name="kenshiro"
+trigger3=enemynear,authorname="SAIKEI"
+trigger3=enemynear,stateno=1100
+trigger4=enemynear,name="raoh ATL"
+trigger4=enemynear,authorname="ataru"
+trigger4=enemynear,stateno=2200
+trigger5=enemynear,name="raoh"
+trigger5=enemynear,authorname="shikkoku"||enemynear,authorname="bat"
+trigger5=enemynear,stateno=3000
+trigger6=enemynear,name="raoh"
+trigger6=enemynear,authorname="Drowin hokuto"
+trigger6=enemynear,stateno=2000
+trigger7=enemynear,name="TOKI"
+trigger7=enemynear,authorname="Drowin hokuto"
+trigger7=enemynear,stateno=2010
+trigger8=enemynear,name="TOKI"
+trigger8=enemynear,authorname="Ts"
+trigger8=enemynear,stateno=3100
+trigger9=enemynear,name="TOKI-(NERICYA)"
+trigger9=enemynear,authorname="NERICYA"
+trigger9=enemynear,stateno=2200
+statetype=a
+[statedef 120]
+type=u
+[state ]
+type=selfstate
+trigger1=1
+value=130
+[statedef 131]
+type=u
+[state ]
+type=selfstate
+trigger1=1
+value=130
+[statedef 132]
+type=u
+[state ]
+type=selfstate
+trigger1=1
+value=130
+[Statedef 140]
+type=u
+[state ]
+type=selfstate
+trigger1=1
+value=130
+[statedef 152]
+type=u
+[state ]
+type=selfstate
+trigger1=1
+value=150
+[statedef 153]
+type=u
+[state ]
+type=selfstate
+trigger1=1
+value=150
+;movetype=h
+[state ]
+type=changeanim
+trigger1=anim!=5016
+value=5016
+[state ]
+type=velset
+trigger1=!hitshakeover
+x=0
+y=0
+[state ]
+type=posset
+trigger1=1
+y=0
+[state ]
+type=velset
+trigger1=hitshakeover
+x=-9
+[state ]
+type=playerpush
+trigger1=1
+value=0
+[state ]
+type=posset
+trigger1=hitshakeover
+trigger1=backedgebodydist<=5||frontedgebodydist<=5
+y=-10
+[state ]
+type=changestate
+trigger1=hitshakeover
+trigger1=backedgebodydist<=5||frontedgebodydist<=5
+value=30761
+[statedef 154]
+type=u
+[state ]
+type=selfstate
+trigger1=1
+value=150
+[statedef 155]
+type=u
+[state ]
+type=selfstate
+trigger1=1
+value=150
+;/////////////////////////////////////////////////////////////////////////////////
+; ダウン追い討ち
+;/////////////////////////////////////////////////////////////////////////////////
+;-----------------足払いダウン
+[statedef 35070]
+type=a
+movetype=h
+[state ]
+type=changeanim 
+trigger1=1
+value=5070
+[state ]
+type=velset
+trigger1=1
+x=0
+y=0
+[state ]
+type=hitfallset
+trigger1=1
+value=1
+[state ]
+type=changestate
+trigger1=hitshakeover
+value=35071
+[statedef 35071]
+type=a
+movetype=h
+[state ]
+type=hitvelset
+trigger1=!time
+x=1
+y=1
+[state ]
+type=veladd
+trigger1=1
+y=gethitvar(yaccel)
+[state ]
+type=changestate
+trigger1=vel y>0
+trigger1=pos y>=15
+value=30766
+[statedef 35100]
+type=a
+movetype=h
+[state ]
+type=hitvelset
+trigger1=hitshakeover&&time>=10
+x=1
+persistent=0
+[state ]
+type=velset
+trigger1=hitshakeover&&time>=10
+y=4;gethitvar(yvel)+15
+persistent=0
+[state ]
+type=posset
+trigger1=!time
+trigger1=pos y>0
+y=0
+[state ]
+type=posfreeze
+trigger1=!hitshakeover||time<10
+[state ]
+type=changeanim
+trigger1=!hitshakeover
+value=5030
+[state ]
+type=changeanim
+trigger1=selfanimexist(5035)
+trigger1=anim=5030
+trigger1=hitshakeover
+trigger1=!animtime
+value=5035
+[state ]
+type=changeanim
+trigger1=anim=[5030,5035]
+trigger1=!animtime
+value=5050
+[state ]
+type=veladd
+trigger1=hitshakeover
+y=getHitVar(yaccel)
+[state ]
+type=selfstate
+trigger1=hitshakeover&&time>=10
+trigger1=pos y>0
+trigger1=vel y>0
+value=5100
+;---------------バウンド
+[statedef 35110]
+type=a
+movetype=h
+[state ]
+type=changeanim
+trigger1=!time
+value=5100+(anim%10)*(selfanimexist(5110+anim%10))
+[state ]
+type=envshake
+trigger1=!time
+time=9
+ampl=9
+freq=60
+phase=90
+[state ]
+type=defencemulset
+trigger1=1
+value=1
+[state ]
+type=nothitby
+trigger1=1
+value=
+[state ]
+type=posset
+trigger1=!time
+y=0
+[state ]
+type=veladd
+trigger1=time
+y=.5
+[state ]
+type=changeanim
+trigger1=anim=[5100,5102]
+trigger1=!animtime
+trigger2=vel y>=-3
+trigger2=pos y>=0
+value=5110+(anim%10)*(selfanimexist(5110+anim%10))
+[state ]
+type=selfstate
+trigger1=vel y>=-3
+trigger1=pos y>=0
+value=5110
+;---------------バウンド
+[statedef 5100]
+type=l
+movetype=h
+[state ]
+type=changeanim
+trigger1=!time
+value=5100+(anim%10)*(selfanimexist(5110+anim%10))
+[state ]
+type=explod
+trigger1=time=2
+id=34002
+anim=34002
+scale=.5,.5
+removetime=-2
+pos=0,0
+sprpriority=-2
+ownpal=1
+trans=add
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=playsnd
+trigger1=time=2
+value=s5100,0
+[state ]
+type=envshake
+trigger1=time=2
+time=9
+ampl=9
+freq=60
+phase=90
+[state ]
+type=defencemulset
+trigger1=1
+value=1
+[state ]
+type=nothitby
+trigger1=1
+value=
+[state ]
+type=velset
+trigger1=!time
+y=-vel y*.275
+[state ]
+type=posset
+trigger1=!time
+y=0
+[state ]
+type=veladd
+trigger1=time
+y=.6
+[state ]
+type=varset
+trigger1=!time
+sysvar(0)=1
+[state ]
+type=varset
+trigger1=!time
+trigger1=vel y>=-3
+sysvar(0)=0
+[state ]
+type=changeanim
+trigger1=anim=[5100,5102]
+trigger1=!animtime
+trigger2=vel y>=-3
+trigger2=pos y>=0
+value=5110+(anim%10)*(selfanimexist(5110+anim%10))
+[state ]
+type=selfstate
+trigger1=vel y>=-3
+trigger1=pos y>=0
+value=5110
+[statedef 5110]
+type=l
+movetype=h
+[state ]
+type=changeanim
+trigger1=anim=[5100,5102]
+trigger1=!animtime
+trigger2=anim!=[5100,5102]
+trigger2=anim!=[5110,5112]
+value=5110+(anim%10)*(selfanimexist(5110+anim%10))
+[state ]
+type=hitfalldamage
+trigger1=!time
+[state ]
+type=posset
+trigger1=1
+y=0
+[state ]
+type=envshake
+trigger1=!time
+trigger1=!sysvar(0)
+time=9
+ampl=9
+freq=60
+phase=90
+[state ]
+type=playsnd
+trigger1=!time
+trigger1=!sysvar(0)
+value=s5100,0
+[state ]
+type=explod
+trigger1=!time
+trigger1=!sysvar(0)
+id=34002
+anim=34002
+scale=.5,.5
+removetime=-2
+pos=0,0
+sprpriority=-2
+ownpal=1
+trans=add
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=velset
+trigger1=1
+x=0
+y=0
+[state ]
+type=changestate
+triggerall=!alive
+trigger1=!animtime
+trigger2=sysvar(0)
+trigger3=anim=[5110,5119]
+value=5150
+[state ]
+type=varset
+trigger1=!time
+trigger1=!sysvar(0)
+sysvar(0)=0
+[statedef 5200]
+type=a
+[state ]
+type=changeanim
+trigger1=anim!=5200
+value=5200
+[state ]
+type=varset
+trigger1=1
+sysfvar(0)=0
+[state ]
+type=playsnd
+trigger1=1
+value=s5200,0
+[state ]
+type=playsnd
+trigger1=random%5=0
+value=s5200,10
+volume=256
+channel=0
+[state ]
+type=palfx
+trigger1=1
+time=8
+add=255,255,255
+volume=255
+[state ]
+type=helper
+trigger1=1
+id=6027
+stateno=6027
+pos=0,-120
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=varadd
+trigger1=!(var(1)&8)
+var(1)=8
+[state ]
+type=varadd
+trigger1=!(var(1)&16)
+var(1)=16
+[state ]
+type=varadd
+trigger1=1
+var(1)=-(var(1)&32)-(var(1)&64)
+[state ]
+type=varadd
+trigger1=command="holdfwd"||command="holdback"
+trigger1=1||var(1):=var(1)-(var(1)&32)-(var(1)&64)
+var(1)=32+32*(command="holdback")
+[state ]
+type=varset
+trigger1=1
+trigger1=var(1)&(32+64)
+sysfvar(0)=ifelse(var(1)&32,3.9,-2.7)
+[state ]
+type=varset
+trigger1=1
+sysfvar(4)=-9
+[state ]
+type=posset
+trigger1=pos y>-20
+y=-20
+[state ]
+type=selfstate
+trigger1=1
+value=5201
+[statedef 5201]
+type=a
+[state ]
+type=changeanim
+trigger1=anim!=5201
+value=5201
+[state ]
+type=nothitby
+trigger1=animelem=1,<=8
+value=sac
+[state ]
+type=changeanim
+trigger1=!animtime
+value=42
+elem=9
+[state ]
+type=selfstate
+trigger1=anim=42
+value=50
+[statedef 5210]
+[state ]
+type=selfstate
+trigger1=1
+value=5200
+;--------------------ガークラ
+[statedef 5004]
+type=u
+[state ]
+type=changeanim
+trigger1=anim!=5004
+value=5004
+[state ]
+type=superpause
+trigger1=animelem=1,>=0&&animelem=2,<0
+time=2
+movetime=2
+darken=0
+anim=-1
+p2defmul=1
+[state ]
+type=varset
+trigger1=animelem=2,<0
+sysfvar(0)=0
+[state ]
+type=varset
+trigger1=animelem=2,<0
+sysfvar(1)=0
+[state ]
+type=varset
+trigger1=animelem=2,<0
+sysfvar(2)=0
+[state ]
+type=varset
+trigger1=animelem=2,<0
+sysfvar(3)=0
+[state ]
+type=varset
+trigger1=animelem=2,<0
+sysfvar(4)=0
+[state ]
+type=hitvelset
+trigger1=statetype=a
+trigger1=animelem=2
+x=1
+[state ]
+type=varset
+trigger1=statetype=a
+trigger1=animelem=2
+sysfvar(0)=vel x
+[state ]
+type=explod
+trigger1=animelem=1
+id=6180
+anim=6180
+scale=.5,.5
+removetime=-2
+pos=10,-80
+sprpriority=4
+ownpal=1
+trans=add
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=explod
+trigger1=animelem=1
+trigger1=teamside=1
+id=34052
+anim=34052
+scale=.5,.5
+postype=left
+pos=40,100
+bindtime=-1
+removetime=-2
+sprpriority=-2
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=explod
+trigger1=animelem=1
+trigger1=teamside=2
+id=34052
+anim=34052
+scale=.5,.5
+postype=left
+pos=270,100
+bindtime=-1
+removetime=-2
+sprpriority=-2
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=playsnd
+trigger1=animelem=1
+value=s5004,0
+volume=256
+[state ]
+type=selfstate
+trigger1=!animtime
+value=0
+[Statedef 5000]
+type    = S
+movetype= H
+physics = N
+velset = 0,0
+
+[State 5000, 1] ;Anim for HIT_LIGHT to HIT_HARD
+type = ChangeAnim
+trigger1 = Time = 0
+trigger1 = GetHitVar(animtype) != [3,5]
+value = ifelse((GetHitVar(groundtype) = 1),5000,5000) + GetHitVar(animtype)
+
+[State 5000, 2] ;Anim for HIT_BACK
+type = ChangeAnim
+trigger1 = Time = 0
+trigger1 = GetHitVar(animtype) = [3,5]
+value = 5030
+
+[State 5000, 3] ;Anim for HIT_UP/HIT_DIAGUP (only if it exists)
+type = ChangeAnim
+trigger1 = Time = 0
+trigger1 = (GetHitVar(animtype) = [4,5]) && (SelfAnimExist(5047 + GetHitVar(animtype)))
+value = 5047 + GetHitVar(animtype) ;5051 - 4 + type
+
+[State 5000, 4] ;Freeze anim
+type = ChangeAnim
+trigger1 = Time > 0
+value = anim
+
+[State 5000, 5] ;State type gets set to aerial if getting hit up
+type = StateTypeSet
+trigger1 = Time = 0
+trigger1 = GetHitVar(yvel) != 0 || GetHitVar(fall)
+trigger2 = Pos Y != 0
+statetype = a
+
+[State 5000, 6]
+type = ChangeState
+trigger1 = HitShakeOver
+trigger1 = GetHitVar(yvel) = 0 && !GetHitVar(fall)
+value = 5001 ;HITG_SLIDE
+
+[State 5000, 7]
+type = ChangeState
+trigger1 = HitShakeOver
+value = 5030
+
+;---------------------------------------------------------------------------
+; HITG_SLIDE
+[Statedef 5001]
+type    = S
+movetype= H
+physics = S
+
+[State 5001, 1]
+type = HitVelSet
+trigger1 = Time = 0
+x = 1
+
+[State 5001, 2]
+type = ChangeAnim
+trigger1 = AnimTime = 0
+value = 5005 + GetHitVar(animtype) + (GetHitVar(groundtype)=2)*10
+
+[State 5001, 3] ;Stop sliding back
+type = VelMul
+trigger1 = Time >= GetHitVar(slidetime)
+x = .6
+
+[State 5001, 4]
+type = VelSet
+trigger1 = HitOver
+x = 0
+
+[State 5001, 5]
+type = DefenceMulSet
+trigger1 = HitOver
+value = 1
+
+[State 5001, 6]
+type = ChangeState
+trigger1 = HitOver
+value = 0
+ctrl = 1
+
+;---------------------------------------------------------------------------
+; HITC_SHAKE
+[Statedef 5010]
+type    = C
+movetype= H
+physics = N
+velset = 0,0
+
+[State 5010, 1] ;Anim for HIT_LIGHT to HIT_HARD
+type = ChangeAnim
+trigger1 = Time = 0
+trigger1 = GetHitVar(animtype) != [3,5]
+value = 5020 + GetHitVar(animtype)
+
+[State 5010, 2] ;Anim for HIT_BACK
+type = ChangeAnim
+trigger1 = Time = 0
+trigger1 = GetHitVar(animtype) = [3,5]
+value = 5030
+
+[State 5010, 3] ;Anim for HIT_UP/HIT_DIAGUP (only if it exists)
+type = ChangeAnim
+trigger1 = Time = 0
+trigger1 = (GetHitVar(animtype) = [4,5]) && (SelfAnimExist(5047 + GetHitVar(animtype)))
+value = 5047 + GetHitVar(animtype) ;5051 - 4 + type
+
+[State 5010, 4] ;Freeze anim
+type = ChangeAnim
+trigger1 = Time > 0
+value = anim
+
+[State 5010, 5] ;State type gets set to aerial if getting hit up
+type = StateTypeSet
+triggerall = Time = 0
+trigger1 = GetHitVar(yvel) != 0 || GetHitVar(fall)
+trigger2 = Pos Y != 0
+statetype = a
+
+[State 5010, 6]
+type = ChangeState
+trigger1 = HitShakeOver
+trigger1 = GetHitVar(yvel) = 0 && !GetHitVar(fall)
+value = 5011 ;HITC_SLIDE
+
+[State 5010, 7]
+type = ChangeState
+trigger1 = HitShakeOver
+value = 5030
+
+;---------------------------------------------------------------------------
+; HITC_SLIDE
+[Statedef 5011]
+type    = C
+movetype= H
+physics = C
+
+[State 5011, 1]
+type = HitVelSet
+trigger1 = Time = 0
+x = 1
+
+[State 5011, 2]
+type = ChangeAnim
+trigger1 = AnimTime = 0
+value = 5025 + GetHitVar(animtype)
+
+[State 5011, 3] ;Stop sliding back
+type = VelMul
+trigger1 = Time >= GetHitVar(slidetime)
+x = .6
+
+[State 5011, 4]
+type = VelSet
+trigger1 = HitOver
+x = 0
+
+[State 5011, 5]
+type = DefenceMulSet
+trigger1 = HitOver
+value = 1
+
+[State 5011, 6]
+type = ChangeState
+trigger1 = HitOver
+value = 11
+ctrl = 1
+
+;---------------------------------------------------------------------------
+; HITA_SHAKE
+[Statedef 5020]
+type    = A
+movetype= H
+physics = N
+velset = 0,0
+
+[State 5020, 1] ;Anim for HIT_LIGHT to HIT_HARD
+type = ChangeAnim
+trigger1 = Time = 0
+trigger1 = GetHitVar(animtype) != [3,5]
+value = ifelse((GetHitVar(airtype) = 1),5000,5010) + GetHitVar(animtype)
+
+[State 5020, 2] ;Anim for HIT_BACK
+type = ChangeAnim
+trigger1 = Time = 0
+trigger1 = GetHitVar(animtype) = [3,5]
+value = 5030
+
+[State 5020, 3] ;Anim for HIT_UP/HIT_DIAGUP (only if it exists)
+type = ChangeAnim
+trigger1 = Time = 0
+trigger1 = (GetHitVar(animtype) = [4,5]) && (SelfAnimExist(5047 + GetHitVar(animtype)))
+value = 5047 + GetHitVar(animtype) ;5051 - 4 + type
+
+[State 5020, 4] ;Freeze anim
+type = ChangeAnim
+trigger1 = Time > 0
+value = anim
+
+[State 5020, 5]
+type = ChangeState
+trigger1 = HitShakeOver
+value = 5030
+
+;---------------------------------------------------------------------------
+; HITA_UP (initial going up)
+[Statedef 5030]
+type    = A
+movetype= H
+physics = N
+ctrl = 0
+
+[State 5030, 1]
+type = VelAdd;Gravity
+trigger1 = 1
+y = GetHitVar(yaccel)
+
+[State 5030, 2]
+type = HitVelSet
+trigger1 = Time = 0
+x = 1
+y = 1
+
+[State 5030, 3]
+type = ChangeState
+triggerall = !HitFall
+trigger1 = HitOver
+trigger2 = Vel Y > 0    ;Hit ground
+trigger2 = Pos Y >= 10  ;.
+value = 5040 ;HITA_RECOV
+
+[State 5030, 4]
+type = ChangeState
+triggerall = HitFall
+trigger1 = HitOver
+trigger2 = Vel Y > 0    ;Hit ground
+trigger2 = Pos Y >= 10  ;.
+value = 5050 ;HITA_FALL
+
+[State 5030, 5]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 5035 ;HITA_UP (transition)
+
+;---------------------------------------------------------------------------
+; HITA_UP_T (transition)
+[Statedef 5035]
+type    = A
+movetype= H
+physics = N
+
+[State 5035, 1]
+type = ChangeAnim
+trigger1 = Time = 0
+trigger1 = SelfAnimExist(5035)
+trigger1 = Anim != [5051,5059] ;Not if in hit up anim
+trigger1 = Anim != 5090 ;Not if hit off ground anim
+value = 5035
+
+[State 5035, 2]
+type = VelAdd
+trigger1 = 1
+y = GetHitVar(yaccel)
+
+[State 5035, 3]
+type = ChangeState
+triggerall = !HitFall
+trigger1 = HitOver  ;Hit is over
+trigger2 = AnimTime = 0 ;Animation over
+trigger3 = Vel Y > 0    ;Hit ground
+trigger3 = Pos Y >= 10  ;.
+trigger4 = Time = 0     ;No transition anim
+trigger4 = Anim != 5035 ;.
+value = 5040 ;HITA_RECOV
+
+[State 5035, 4]
+type = ChangeState
+triggerall = HitFall
+trigger1 = HitOver  ;Hit is over
+trigger2 = AnimTime = 0 ;Anim is over
+trigger3 = Vel Y > 0    ;Hit ground
+trigger3 = Pos Y >= 10  ;.
+trigger4 = Time = 0     ;No transition anim
+trigger4 = Anim != 5035 ;.
+value = 5050 ;HITA_FALL
+
+;---------------------------------------------------------------------------
+; HITA_RECOV (recovering in air, not falling)
+[Statedef 5040]
+type    = A
+movetype= H
+physics = N
+
+[State 5040, 1]
+type = ChangeState
+trigger1 = !Alive
+value = 5050
+
+[State 5040, 2]
+type = ChangeAnim
+trigger1 = AnimTime = 0
+trigger1 = Anim != 5040
+trigger2 = Time = 0
+trigger2 = Anim != 5035
+value = 5040
+
+[State 5040, 3]
+type = CtrlSet
+trigger1 = HitOver
+value = 1
+
+[State 5040, 4]
+type = StateTypeSet
+trigger1 = HitOver
+movetype = I
+
+[State 5040, 5]
+type = VelAdd
+trigger1 = 1
+y = GetHitVar(yaccel)
+
+[State 5040, 6]
+type = ChangeState
+trigger1 = Vel Y > 0
+trigger1 = Pos Y >= 0
+value = 52 ;JUMPLAND
+
+;---------------------------------------------------------------------------
+; HITA_FALL (knocked up, falling)
+[Statedef 5050]
+type    = A
+movetype= H
+physics = N
+
+[State 5050, 1] ;Change anim when done with transition
+type = ChangeAnim
+trigger1 = AnimTime = 0
+trigger1 = Anim = 5035
+trigger2 = Time = 0     ;If no transition anim
+trigger2 = Anim != 5035
+trigger2 = (Anim != [5051, 5059]) && (Anim != [5061, 5069])
+trigger2 = Anim != 5090 ;Not if hit off ground anim
+value = 5050
+
+[State 5050, 2] ;Coming down anim
+type = ChangeAnim
+trigger1 = anim = [5050,5059]
+trigger1 = Vel Y >= ifelse(anim = 5050, 1, 0)
+trigger1 = SelfAnimExist(anim+10)
+value = anim+10
+persistent = 0
+
+[State 5050, 3] ;Gravity
+type = VelAdd
+trigger1 = 1
+y = GetHitVar(yaccel)
+
+[State 5050, 6]
+type = ChangeState
+trigger1 = Vel Y > 0
+trigger1 = Pos Y >= ifelse((anim = [5051,5059]) || (anim = [5061,5069]), 0, 25)
+value = 5100 ;HIT_BOUNCE
+
+;---------------------------------------------------------------------------
+; HIT_TRIP (shaking)
+[Statedef 5070]
+type    = A
+movetype= H
+physics = N
+velset = 0,0
+
+[State 5070, 1]
+type = ChangeAnim 
+trigger1 = 1
+value = 5070
+
+[State 5070, 2]
+type = ChangeState
+trigger1 = HitShakeOver
+value = 5071
+
+;---------------------------------------------------------------------------
+; HIT_TRIP2 (fall through air)
+[Statedef 5071]
+type    = A
+movetype= H
+physics = N
+
+[State 5071, 1]
+type = HitVelSet
+trigger1 = Time = 0
+x = 1
+y = 1
+
+[State 5071, 2] ;Acceleration
+type = VelAdd
+trigger1 = 1
+y = GetHitVar(yaccel)
+
+[State 5071, 3] ;Hit ground
+type = Changeanim
+trigger1 = Vel Y > 0
+trigger1 = Pos Y >= 15
+value = 5161
+
+[State 5071, 3] ;Hit ground
+type = ChangeState
+trigger1 = Vel Y > 0
+trigger1 = Pos Y >= 15
+value = 5110
+
+;---------------------------------------------------------------------------
+; HITL_SHAKE
+[Statedef 5080]
+type    = L
+movetype= H
+physics = N
+velset = 0,0
+
+[State 5080, 1] ;Set default anim
+type = VarSet
+trigger1 = time = 0
+sysvar(2) = ifelse (GetHitVar(yvel) = 0, 5080, 5090)
+
+[State 5080, 2]
+type = VarAdd
+trigger1 = time = 0
+trigger1 = (anim = [5081,5089]) || (anim = [5111,5119])
+trigger1 = SelfAnimExist(sysvar(2) + (anim % 10))
+sysvar(2) = anim % 10
+
+[State 5080, 3] ;If 5090 doesn't exist, default to 5030
+type = VarSet
+trigger1 = time = 0
+trigger1 = sysvar(2) = 5090
+trigger1 = !SelfAnimExist(5090)
+sysvar(2) = 5030
+
+[State 5080, 3] ;Freeze
+type = ChangeAnim
+trigger1 = 1
+value = sysvar(2)
+
+[State 5080, 4]
+type = ChangeState
+trigger1 = HitShakeOver
+trigger1 = GetHitVar(yvel) = 0
+value = 5081 ;HITL_SLIDE
+
+[State 5080, 5]
+type = ChangeState
+trigger1 = HitShakeOver
+trigger1 = GetHitVar(yvel) != 0
+value = 5030 ;HITA_UP
+
+;---------------------------------------------------------------------------
+; HITL_SLIDE
+[Statedef 5081]
+type    = L
+movetype= H
+physics = C
+
+[State 5081, 1]
+type = HitVelSet
+trigger1 = Time = 0
+x = 1
+
+[State 5081, 2]
+type = VelSet
+trigger1 = HitOver
+x = 0
+
+[State 5081, 3] ;Don't show hit ground frame
+type = VarSet
+trigger1 = Time = 0
+sysvar(0) = 1
+
+[State 5081, 4]
+type = ChangeState
+trigger1 = HitOver
+value = 5110 ;HIT_LIEDOWN
+
+;---------------------------------------------------------------------------
+; HIT_BOUNCE (bounce into air)
+[Statedef 5101]
+type    = L
+movetype= H
+physics = N
+
+[State 5101, 1] ;Coming hit ground anim (normal)
+type = ChangeAnim
+triggerall = time = 0
+trigger1 = anim != [5101,5109]
+trigger2 = !SelfAnimExist(5160 + (anim % 10))
+value = 5160
+
+[State 5101, 2] ;Coming hit ground anim (for hit up)
+type = ChangeAnim
+triggerall = time = 0
+trigger1 = anim = [5101,5109]
+trigger1 = SelfAnimExist(5160 + (anim % 10))
+value = 5160 + (anim % 10)
+
+[State 5101, 3]
+type = null;HitFallVel
+trigger1 = Time = 0
+
+[State 5101, 4]
+type = null;PosSet
+trigger1 = Time = 0
+y = 20
+
+[State 5101, 5] ;Acceleration
+type = VelAdd
+trigger1 = 1
+y = .7
+
+[State 5101, 6] ;Hit ground
+trigger1 = Vel Y > 0
+trigger1 = Pos Y >= 12
+trigger2=time=0
+type = ChangeState
+value = 5110
+[Statedef 5120]
+type    = L
+movetype= I
+physics = N
+[State 5110, 9] ;For hit up type
+type = ChangeAnim
+triggerall= time=0
+triggerall = anim = [5171,5179]
+triggerall = SelfAnimExist(5110 + (anim % 10))
+trigger1 = 1
+value = 5110 + (anim % 10)
+[State 5110, 10] ;For normal
+type = ChangeAnim
+triggerall=time=0
+triggerall=Anim != [5111,5119]
+trigger1=1
+value=5110
+[State 5120, 1a] ;Get up anim (normal)
+type = ChangeAnim
+triggerall = time = 0
+trigger1 = anim != [5111,5119]
+trigger2 = !SelfAnimExist(5120 + (anim % 10))
+value = 5120
+[State 5120, 1b] ;Get up anim (for hit up/diag-up)
+type = ChangeAnim
+triggerall = time = 0
+trigger1 = anim = [5111,5119]
+trigger1 = SelfAnimExist(5120 + (anim % 10))
+value = 5120 + (anim % 10)
+[State 5120, 2]
+type = VelSet
+trigger1 = Time = 0
+x = 0
+[State 5120, 3]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 1
+[State 5120, 4]
+type = HitFallSet
+trigger1 = AnimTime = 0
+value = 1
+[State 5120, 7]
+type = selfState
+trigger1 = AnimTime = 0
+value = 0
+ctrl = 1
+[State 5120, 6]
+type = NotHitBy
+trigger1 = AnimTime = 0
+value2 = SCA
+time = 1
+[Statedef 5150]
+type    = L
+movetype= H
+physics = N
+sprpriority = -3
+[State 5150, 1] ;Normal anim
+type = ChangeAnim
+triggerall = Time = 0
+triggerall = SelfAnimExist(5140)
+trigger1 = (anim != [5111,5119]) && (anim != [5171,5179])
+trigger2 = !SelfAnimExist(5140 + (anim % 10))
+value = 5140
+[State 5150, 3] ;Hit up type anim
+type = ChangeAnim
+trigger1 = Time = 0
+trigger1 = (anim = [5111,5119]) || (anim = [5171,5179])
+trigger1 = SelfAnimExist(5140 + (anim % 10))
+value = 5140 + (anim % 10)
+[State 5150, 4] ;Match over anim
+type = ChangeAnim
+persistent = 0
+;trigger1 = Time = 0
+trigger1 = MatchOver = 1
+trigger1 = Anim = [5140,5149]
+trigger1 = SelfAnimExist(anim+10)
+value = anim+10
+[State 5150, 5] ;Switch to 5110 if liedead anim does not exist
+type = ChangeAnim
+trigger1 = Time = 0
+trigger1 = Anim != [5140,5159]
+trigger1 = Anim != [5110,5119]
+value = 5110
+[State 5150, 6] ;Friction
+type = VelMul
+trigger1 = 1
+x = 0.85
+[State 5150, 7] ;Friction
+type = VelSet
+trigger1 = Vel x < .05
+persistent = 0
+x = 0
+[State 5150, 8]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 1
+[Statedef 5500]
+type = S
+ctrl = 0
+anim = 5300
+velset = 0,0
+[State 5500, 1]
+type = ChangeAnim
+trigger1 = time = 0
+trigger1 = SelfAnimExist(5500)
+value = 5500
+[Statedef 5900]
+type = S
+[State 5900, 3] ;Intro for round 1
+type = ChangeState
+trigger1 = roundno = 1
+value = 190

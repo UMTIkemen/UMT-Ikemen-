@@ -1,0 +1,312 @@
+
+;=========================< ステータス >=========================
+[Data]
+;体力 デフォルト1000
+life              = 1000
+;ゲージ上限 デフォルト5000
+power             = 5000
+;攻撃倍率 デフォルト100
+attack            = 90
+防御倍率 デフォルト100
+defence           = 100
+
+;以下は基本いじらない
+fall.defence_up   = 50
+liedown.time      = 60
+airjuggle         = 15
+sparkno           = 2
+guard.sparkno     = 40
+KO.echo           = 0
+volume            = 0
+IntPersistIndex   = 0
+FloatPersistIndex = 0
+
+[Size]
+xscale           = 1
+yscale           = 1
+ground.back      = 15
+ground.front     = 15
+air.back         = 12
+air.front        = 12
+height           = 60
+attack.dist      = 160
+proj.attack.dist = 90
+proj.doscale     = 1
+head.pos         = 0,-90
+mid.pos          = 0,-60
+shadowoffset     = 0
+draw.offset      = 0,0
+
+[Velocity]
+walk.fwd     = 3
+walk.back    = -3
+run.fwd      = 7
+run.back     = -9,-6
+jump.neu     = 0,-10
+jump.fwd     = 3.5
+jump.back    = -3.5
+runjump.fwd  = 5,-10
+runjump.back = -5,-10
+airjump.neu  = 0,-8
+airjump.fwd  = 3
+airjump.back = -3
+
+[Movement]
+airjump.num     = 0
+airjump.height  = 35
+yaccel          = .6
+stand.friction  = .85
+crouch.friction = .82
+
+;=========================< config >=========================
+[Statedef 5900]
+type = S
+
+;--- 変数リセット ---
+[State 5900, VarRangeSet]
+type = varrangeset
+trigger1 = roundsexisted = 0
+value = 0
+
+[State 5900, VarRangeSet]
+type = varrangeset
+trigger1 = roundsexisted = 0
+fvalue = 0
+
+;以上はいじらない
+;以下設定項目
+
+;--- モード ---
+;設定方法
+;trigger1 = root,palno = (1)←パレット番号
+;trigger1 = var(30) := (0)←ここに入力
+; 0で表モード (Normal Mode)
+; 1で裏モード (EX Mode)
+
+[State 10000, Style]
+type = null
+triggerall = roundsexisted = 0
+triggerall = time = 0
+trigger1 = palno = 1
+trigger1 = var(49) := 0
+trigger2 = palno = 2
+trigger2 = var(49) := 0
+trigger3 = palno = 3
+trigger3 = var(49) := 0
+trigger4 = palno = 4
+trigger4 = var(49) := 0
+trigger5 = palno = 5
+trigger5 = var(49) := 0
+trigger6 = palno = 6
+trigger6 = var(49) := 0
+trigger7 = palno = 7
+trigger7 = var(49) := 1
+trigger8 = palno = 8
+trigger8 = var(49) := 1
+trigger9 = palno = 9
+trigger9 = var(49) := 1
+trigger10 = palno = 10
+trigger10 = var(49) := 1
+trigger11 = palno = 11
+trigger11 = var(49) := 1
+trigger12 = palno = 12
+trigger12 = var(49) := 1
+
+;デフォルト
+;1~6P 表
+;7~12P 裏
+
+;--- 先行入力受付時間 必殺技 ---
+[State 10000, Precede Input Time]
+type = varset
+trigger1 = time = 0
+v = 32
+value = 6
+; value = フレーム数
+; デフォルト6
+
+;--- 先行入力 受付時間 超必殺技 ---
+[State 10000, Precede Input Time]
+type = varset
+trigger1 = time = 0
+v = 33
+value = 12
+; value = フレーム数
+; デフォルト12
+
+;--- 地上技・超必殺技空中ガード ---
+[State 10000, Air Guard]
+type = varset
+trigger1 = time = 0
+v = 34
+value = 0
+; 0で不能、その他で可能
+; デフォルト0
+
+;--- 空中技・飛び道具空中ガード ---
+[State 10000, Air Guard]
+type = varset
+trigger1 = time = 0
+v = 35
+value = 1
+; 0で不能、その他で可能
+; デフォルト1
+
+;--- 空中ガード可否 ---
+[State 10000, Air Guard]
+type = varset
+trigger1 = time = 0
+v = 36
+value = 1
+; 0で不能、その他で可能
+; デフォルト1
+
+;--- 画面点滅 ---
+[State 10000, Flash]
+type = varset
+trigger1 = time = 0
+v = 37
+value = 1
+; 0で点滅しない、1で点滅
+; デフォルト1
+
+
+
+;以下はいじらない
+;--- モード判定 ---
+[State -2, VarSet]
+type = varset
+trigger1 = 1;var(15) != 1
+v = 15
+value = 1
+
+;--- パワーMAXゲージ x座標 ---
+[State 10000, Power MAX Gauge Pos X]
+type = varset
+trigger1 = time = 0
+v = 30
+value = 0
+;value = の数だけ移動
+
+;--- パワーMAXゲージ y座標 ---
+[State 10000, Power MAX Gauge Pos Y]
+type = varset
+trigger1 = time = 0
+v = 31
+value = 0
+; value = の数だけ移動
+
+[State 10000, Power MAX Gauge Pos Y]
+type = varset
+trigger1 = var(18) = 1
+trigger1 = ID < partner,ID
+trigger1 = time = 0
+v = 31
+value = -10
+; パートナーが同製作者時
+
+;--- イントロ ---
+[State 5900, ChangeState]
+type = changeState
+trigger1 = roundsexisted = 0
+trigger2 = enemy,teammode = turns
+value = 190
+
+;=========================< コンフィグ >=========================
+[Statedef 10000]
+anim = 9999
+ctrl = 0
+
+;以上はいじらない
+
+
+;以下設定項目
+
+;--- ゲージ増加倍率 ---
+[State 10000, Air Guard]
+type = parentvarset
+trigger1 = 1
+fv = 4
+value = 1.25                  *root,fvar(0)
+; 攻撃ヒット時、必殺技使用時のゲージ増加量
+; デフォルト1.25
+
+
+;--- 相手燃焼時Pal ---
+;リセット ※弄らない
+[State 10000, Reset]
+type = null
+trigger1 = parent,var(26) >= 0
+trigger1 = var(26) := -1
+trigger2 = parent,var(27) >= 0
+trigger2 = var(26) := -1
+trigger3 = parent,var(28) >= 0
+trigger3 = var(26) := -1
+
+
+;設定方法
+;trigger1 = root,palno = (1)←パレット番号
+;trigger1 = var(26) := (30) || var(27) := (150) || var(28) := (210)
+;　　　　　　　 　 R(赤)↑            G(緑)↑             B(青)↑
+
+
+;燃焼
+[State 10000, Fire]
+type = null
+triggerall = 1
+trigger1 = root,palno = 1
+trigger1 = var(26) := 240 || var(27) := 150 || var(28) := 60
+trigger2 = root,palno = 2
+trigger2 = var(26) := 240 || var(27) := 150 || var(28) := 60
+trigger3 = root,palno = 3
+trigger3 = var(26) := 240 || var(27) := 150 || var(28) := 60
+trigger4 = root,palno = 4
+trigger4 = var(26) := 240 || var(27) := 150 || var(28) := 60
+trigger5 = root,palno = 5
+trigger5 = var(26) := 240 || var(27) := 150 || var(28) := 60
+trigger6 = root,palno = 6
+trigger6 = var(26) := 240 || var(27) := 150 || var(28) := 60
+trigger7 = root,palno = 7
+trigger7 = var(26) := 240 || var(27) := 150 || var(28) := 60
+trigger8 = root,palno = 8
+trigger8 = var(26) := 240 || var(27) := 150 || var(28) := 60
+trigger9 = root,palno = 9
+trigger9 = var(26) := 240 || var(27) := 150 || var(28) := 60
+trigger10 = root,palno = 10
+trigger10 = var(26) := 240 || var(27) := 150 || var(28) := 60
+trigger11 = root,palno = 11
+trigger11 = var(26) := 240 || var(27) := 150 || var(28) := 60
+trigger12 = root,palno = 12
+trigger12 = var(26) := 240 || var(27) := 150 || var(28) := 60
+
+;代入 ※弄らない
+[State 10000, Red]
+type = parentvarset
+trigger1 = 1
+v = 26
+value = var(26)
+
+[State 10000, Green]
+type = parentvarset
+trigger1 = 1
+v = 27
+value = var(27)
+
+[State 10000, Blue]
+type = parentvarset
+trigger1 = 1
+v = 28
+value = var(28)
+
+;--- AIレベル ---
+;AI常時起動
+[State 10000, AI]
+type = varset
+trigger1 = time = 0
+var(50) = -1
+ignorehitpause = 1
+; 0で通常時
+; 1で常時on
+; -1で常時off
+; デフォルト0
+

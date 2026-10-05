@@ -1,0 +1,1689 @@
+[Statedef -3]
+
+[State , AIフラグセット]
+type = VarSet
+triggerall =  var(59) <= 0
+triggerall = Alive
+triggerall = RoundState = [1,2]
+trigger1  = Command = "AI0"  || Command = "AI1"  || Command = "AI2"
+trigger2  = Command = "AI3"  || Command = "AI4"  || Command = "AI5"
+trigger3  = Command = "AI6"  || Command = "AI7"  || Command = "AI8"
+trigger4  = Command = "AI9"  || Command = "AI10" || Command = "AI11"
+trigger5  = Command = "AI12" || Command = "AI13" || Command = "AI14"
+trigger6  = Command = "AI15" || Command = "AI16" || Command = "AI17"
+trigger7  = Command = "AI18" || Command = "AI19" || Command = "AI20"
+trigger8  = Command = "AI21" || Command = "AI22" || Command = "AI23"
+trigger9  = Command = "AI24" || Command = "AI25" || Command = "AI26"
+trigger10 = Command = "AI27" || Command = "AI28" || Command = "AI29"
+trigger11 = Command = "AI30" || Command = "AI31" || Command = "AI32"
+trigger12 = Command = "AI33" || Command = "AI34" || Command = "AI35"
+trigger13 = Command = "AI36" || Command = "AI37" || Command = "AI38"
+trigger14 = Command = "AI39" || Command = "AI40" || Command = "AI41"
+trigger15 = Command = "AI42" || Command = "AI43" || Command = "AI44"
+trigger16 = Command = "AI45" || Command = "AI46" || Command = "AI47"
+trigger17 = Command = "AI48" || Command = "AI49" || Command = "AI50"
+trigger18 = 1
+var(59) = 0
+;         ↑を変える
+
+
+
+;スペルカード選択
+[State 0, VarSet]
+type = VarSet
+trigger1 = roundsexisted = 0
+trigger1 = roundstate = 0
+trigger1 = !var(10)
+v = 10
+value = 4
+;       ↑を変える
+
+;1・・・・・・・・・憑依剥奪「スレイブロバー」
+;2・・・・・・・・・貧符「超貧乏玉」
+;3・・・・・・・・・「クイーンオブバブル」
+;上記以外・・・ランダム
+
+
+
+;怪奇ゲージX軸位置
+[State 0, VarSet]
+type = VarSet
+trigger1 = 1
+v = 50
+value = 0     ;1P側・・・正数で右に移動、負数で左に移動
+              ;2P側・・・正数で左に移動、負数で右に移動
+
+;怪奇ゲージY軸位置
+[State 0, VarSet]
+type = VarSet
+trigger1 = 1
+v = 51
+value = 0     ;正数で下に移動、負数で上に移動
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;■■■■■ここからAI■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+[State 0, ChangeState]
+type = ChangeState
+triggerall = var(59) > 0
+triggerall = statetype != A
+TriggerAll = enemynear(var(58)),Alive
+triggerall = Inguarddist
+triggerall = stateno != [120,155]
+trigger1 = ctrl
+value = 120
+
+;「80'sのエクストーショナー」
+[State -1, ]
+type = ChangeState
+value = 2500
+triggerall = var(59) > 0
+triggerall = fvar(8) >= 1.0
+triggerall = fvar(10) >= 2.0
+triggerall = statetype != A
+triggerall = enemynear(var(58)),statetype = A
+triggerall = enemynear(var(58)),movetype = H
+triggerall = enemynear(var(58)),stateno != [120,155]
+triggerall = enemynear(var(58)),Life <= 600
+TriggerAll=1||fvar(0):=18-enemynear(var(58)),GetHitVar(HitShakeTime) ;発生フレーム数値
+TriggerAll=1||fvar(1):=EnemyNear(var(58)),Vel X ;速度を代入
+TriggerAll=1||fvar(1):=Floor(fvar(1)*fvar(0)*(1-(facing=enemynear(var(58)),facing)*2)) ;速度×時間
+TriggerAll=1||fvar(1):=fvar(1)*(EnemyNear(var(58)),Vel X > 0||EnemyNear(var(58)),BackEdgeDist >5)
+TriggerAll=1||fvar(1):=fvar(1)*(EnemyNear(var(58)),Vel X < 0||EnemyNear(var(58)),FrontEdgeDist>5)
+triggerall = var(55)-fvar(1) = [0,35]
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=1||fvar(4):=fvar(4)-Floor(Vel Y*fvar(0));速度×時間
+TriggerAll=var(56)+fvar(4) = [-56+var(53),!((enemynear(var(58)),anim = [5051,5059])||(enemynear(var(58)),anim = [5061,5069]))*24]
+triggerall = ctrl||stateno = [120,130]
+trigger1 = enemynear(var(58)),GetHitVar(HitTime) > 18
+
+;「80'sのエクストーショナー」
+[State -1, ]
+type = ChangeState
+value = 2500
+triggerall = var(59) > 0
+triggerall = fvar(8) >= 1.0
+triggerall = fvar(10) >= 2.0
+triggerall = statetype != A
+triggerall = enemynear(var(58)),statetype != A
+triggerall = enemynear(var(58)),Life <= 600
+TriggerAll=1||fvar(0):=18 ;発生フレーム数値
+TriggerAll=1||fvar(1):=EnemyNear(var(58)),Vel X ;速度を代入
+TriggerAll=1||fvar(1):=Floor(fvar(1)*fvar(0)*(1-(facing=enemynear(var(58)),facing)*2)) ;速度×時間
+TriggerAll=1||fvar(1):=fvar(1)*(EnemyNear(var(58)),Vel X > 0||EnemyNear(var(58)),BackEdgeDist >5)
+TriggerAll=1||fvar(1):=fvar(1)*(EnemyNear(var(58)),Vel X < 0||EnemyNear(var(58)),FrontEdgeDist>5)
+triggerall = var(55)-fvar(1) = [0,35]
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=1||fvar(4):=fvar(4)-Floor(Vel Y*fvar(0));速度×時間
+TriggerAll=var(56)+fvar(4) = [-56,0]
+triggerall = ctrl||stateno = [120,130]
+trigger1 = enemynear(var(58)),MoveType = I&&enemynear(var(58)),stateno > 105
+trigger1 = !(enemynear(var(58)),prevstateno = 5110||enemynear(var(58)),prevstateno = 5120)
+trigger1 = enemynear(var(58)),animtime = -18
+trigger2 = enemynear(var(58)),MoveType = A
+trigger2 = enemynear(var(58)),animtime <= -18
+
+;「クイーンオブバブル」
+[State -1, ]
+type = ChangeState
+value = 2300
+triggerall = var(59) > 0
+triggerall = var(10) = 3||var(10) = 30
+triggerall = fvar(10) >= 1.2
+triggerall = var(11)
+triggerall = var(16) >= 100;スタン値
+triggerall = statetype != L
+triggerall = enemynear(var(58)),movetype = H
+triggerall = enemynear(var(58)),stateno = [226,227]
+TriggerAll=1||fvar(0):=30 ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+triggerall = var(55)-fvar(1) = [0,70]
+triggerall = var(56) = [-230,90]
+trigger1 = stateno = 221&&movehit
+
+;「クイーンオブバブル」
+[State -1, ]
+type = ChangeState
+value = 2300
+triggerall = var(59) > 0
+triggerall = var(10) = 3||var(10) = 30
+triggerall = fvar(10) >= 1.2
+triggerall = var(11)
+triggerall = var(16) >= 100;スタン値
+triggerall = statetype != L
+triggerall = enemynear(var(58)),movetype = H
+triggerall = enemynear(var(58)),stateno = [226,227]
+TriggerAll=1||fvar(0):=30 ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+triggerall = var(55)-fvar(1) = [0,130]
+triggerall = var(56) = [-230,90]
+triggerall = stateno = 221&&movehit
+trigger1 = enemynear(var(58)),Life < Ifelse(fvar(9)-0.4>0.25,50*fvar(9)+50*(7*(2*fvar(9)-0.35)/2)+250*(fvar(9)-0.4),0)
+trigger2 = enemynear(var(58)),Life < Ifelse(fvar(9)-0.35>0.25,50*fvar(9)+50*(6*(2*fvar(9)-0.3)/2)+62,0)
+trigger3 = enemynear(var(58)),Life < Ifelse(fvar(9)-0.3 >0.25,50*fvar(9)+50*(5*(2*fvar(9)-0.25)/2)+74,0)
+trigger4 = enemynear(var(58)),Life < Ifelse(fvar(9)-0.25>0.25,50*fvar(9)+50*(4*(2*fvar(9)-0.25)/2)+86,0)
+trigger5 = enemynear(var(58)),Life < Ifelse(fvar(9)-0.2 >0.25,50*fvar(9)+50*(3*(2*fvar(9)-0.25)/2)+98,0)
+trigger6 = enemynear(var(58)),Life < Ifelse(fvar(9)-0.15>0.25,50*fvar(9)+50*(2*(2*fvar(9)-0.25)/2)+110,0)
+trigger7 = enemynear(var(58)),Life < Ifelse(fvar(9)-0.1 >0.25,50*fvar(9)+50*(1*(2*fvar(9)-0.25)/2)+122,0)
+trigger8 = enemynear(var(58)),Life < Ifelse(fvar(9)-0.05>0.25,50*fvar(9)+146,0)
+trigger9 = fvar(9)-0.05 <= 0.25
+trigger9 = enemynear(var(58)),Life < 158
+
+;「クイーンオブバブル」
+[State -1, ]
+type = ChangeState
+value = 2300
+triggerall = var(59) > 0
+triggerall = var(10) = 3||var(10) = 30
+triggerall = fvar(10) >= 1.2
+triggerall = var(11)
+triggerall = statetype != L
+triggerall = enemynear(var(58)),movetype = H
+TriggerAll=1||fvar(0):=30 ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+triggerall = var(55)-fvar(1) = [0,70]
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=var(56)+fvar(4) = [-230+var(53),Ifelse(Pos Y>-230,floor(-Pos Y),-229)]
+trigger1 = stateno = 241&&movehit
+
+;貧符「超貧乏玉」
+[State -1, ]
+type = ChangeState
+value = 2200
+triggerall = var(59) > 0
+triggerall = var(10) = 2||var(10) = 20
+triggerall = fvar(10) >= 1.4
+triggerall = var(11)
+triggerall = statetype != L
+triggerall = enemynear(var(58)),movetype = H
+TriggerAll=1||fvar(0):=13+(var(55)/(4+enemynear(var(58)),Vel X)) ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+triggerall = var(55)-fvar(1) = [0,114]
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=var(56)-110+fvar(4)+Floor(1*fvar(0)) = [-228+var(53),-92-var(53)]
+triggerall=enemynear(var(58)),GetHitVar(HitShakeTime)+enemynear(var(58)),GetHitVar(HitTime) > fvar(0)
+trigger1 = stateno = 310&&movehit
+
+;貧符「超貧乏玉」
+[State -1, ]
+type = ChangeState
+value = 2200
+triggerall = var(59) > 0
+triggerall = var(10) = 2||var(10) = 20
+triggerall = fvar(10) >= 1.4
+triggerall = var(11)
+triggerall = statetype != A
+triggerall = enemynear(var(58)),statetype != L
+TriggerAll=1||fvar(0):=13+((var(55)+110)/(4+enemynear(var(58)),Vel X)) ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+triggerall = var(55)-fvar(1) > 0
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=var(56)-110+fvar(4)+Floor(1.2*fvar(0)) = [-228+var(53),!((enemynear(var(58)),anim = [5051,5059])||(enemynear(var(58)),anim = [5061,5069]))*24]
+triggerall=Ifelse(enemynear(var(58)),statetype=S,enemynear(var(58)),const(size.head.pos.y) < -110+Floor(1.2*fvar(0)),Ifelse(enemynear(var(58)),statetype=C,enemynear(var(58)),const(size.mid.pos.y) < -110+Floor(1.2*fvar(0)),1))
+triggerall=enemynear(var(58)),statetype=A&&enemynear(var(58)),Pos Y+fvar(4)<0||enemynear(var(58)),statetype!=A
+triggerall = ctrl
+trigger1 = enemynear(var(58)),movetype = H
+trigger1 = enemynear(var(58)),stateno = 1502
+trigger1 = 60-enemynear(var(58)),time = fvar(0)
+trigger2 = enemynear(var(58)),movetype = H
+trigger2 = enemynear(var(58)),GetHitVar(HitShakeTime)+enemynear(var(58)),GetHitVar(HitTime) > fvar(0)
+
+;貧符「超貧乏玉」
+[State -1, ]
+type = ChangeState
+value = 2200
+triggerall = var(59) > 0
+triggerall = var(10) = 2||var(10) = 20
+triggerall = fvar(10) >= 1.4
+triggerall = var(11)
+triggerall = statetype != A
+triggerall = enemynear(var(58)),statetype != L
+TriggerAll=1||fvar(0):=13+Ifelse(var(55)>110,(var(55)/(4+enemynear(var(58)),Vel X)),0) ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+triggerall = var(55)-fvar(1) > 0
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=var(56)+fvar(4) >= -280+45+fvar(0)-13;-228
+TriggerAll=var(56)+fvar(4) >= -110+45+fvar(0)-13
+triggerall = ctrl||(stateno = 600||stateno = 610||stateno = 630||stateno = 1100||stateno = 1400)&&animelem = 5,>0||stateno = 620&&animelem = 4,>0||stateno = 1200&&animelem = 7,>0
+triggerall = enemynear(var(58)),stateno = [120,155]
+trigger1 = NumProjID(600)||NumProjID(601)||NumProjID(602)
+trigger2 = NumProjID(603)||NumProjID(604)||NumProjID(605)
+trigger3 = NumProjID(606)
+trigger4 = NumProjID(650)||NumProjID(651)||NumProjID(652)
+trigger5 = NumProjID(653)||NumProjID(654)||NumProjID(655)
+trigger6 = NumProjID(656)
+trigger7 = NumProjID(610)||NumProjID(611)||NumProjID(612)
+trigger8 = NumProjID(613)||NumProjID(615)||NumProjID(616)
+trigger9 = NumProjID(616)
+trigger10 = NumProjID(660)||NumProjID(661)||NumProjID(662)
+trigger11 = NumProjID(663)||NumProjID(664)||NumProjID(665)
+trigger12 = NumProjID(666)
+trigger13 = NumProjID(620)
+trigger14 = NumProjID(630)||NumProjID(631)||NumProjID(632)
+trigger15 = NumProjID(633)||NumProjID(634)||NumProjID(635)
+trigger16 = NumProjID(636)
+trigger17 = NumProjID(680)||NumProjID(681)||NumProjID(682)
+trigger18 = NumProjID(683)||NumProjID(684)||NumProjID(685)
+trigger19 = NumProjID(686)
+trigger20 = NumProjID(3500)||NumProjID(3501)||NumProjID(3502)
+trigger21 = NumProjID(3503)||NumProjID(3504)||NumProjID(3505)
+trigger22 = NumProjID(3506)||NumProjID(3507)
+
+;憑依剥奪「スレイブロバー」
+[State -1, ]
+type = ChangeState
+value = 2100
+triggerall = var(59) > 0
+triggerall = var(10) = 1||var(10) = 10
+triggerall = fvar(10) >= 1.0
+triggerall = var(11)
+triggerall = enemynear(var(58)),Life <= abs(floor((-250*Ifelse(fvar(9)<0.25,0.25,fvar(9))*const(data.attack)/100.0))*0.5)
+triggerall = statetype != L
+triggerall = enemynear(var(58)),statetype != L
+triggerall = enemynear(var(58)),movetype = H
+TriggerAll=1||fvar(0):=20+(var(55)/(10+enemynear(var(58)),Vel X)) ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+triggerall = var(55)-fvar(1) = [0,200]
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=var(56)+fvar(4) = [-66+var(53),Ifelse(enemynear(var(58)),statetype=A,!((enemynear(var(58)),anim = [5051,5059])||(enemynear(var(58)),anim = [5061,5069]))*24,-var(53)*(statetype=A))]
+triggerall = enemynear(var(58)),GetHitVar(HitShakeTime)+enemynear(var(58)),GetHitVar(HitTime) > fvar(0)
+trigger1 = (stateno = [210,211])&&movehit
+trigger2 = (stateno = [220,221])&&movehit
+trigger3 = stateno = 230&&movehit
+trigger4 = (stateno = [240,241])&&animelem = 6,>0&&movehit
+trigger5 = stateno = 300&&movehit
+trigger6 = stateno = 310&&movehit
+trigger7 = stateno = 320&&movehit
+trigger8 = stateno = 330&&movehit
+trigger9 = stateno = 600&&animelem = 5,>0
+trigger10 = stateno = 610&&animelem = 5,>0
+trigger11 = stateno = 620&&animelem = 4,>0
+trigger12 = stateno = 630&&animelem = 5,>0
+trigger13 = stateno = 1100&&animelem = 5,>0
+trigger14 = stateno = 1200&&animelem = 7,>0
+trigger15 = stateno = 1400&&animelem = 5,>0
+
+;憑依剥奪「スレイブロバー」
+[State -1, ]
+type = ChangeState
+value = 2100
+triggerall = var(59) > 0
+triggerall = var(10) = 1||var(10) = 10
+triggerall = fvar(10) >= 1.0
+triggerall = var(11)
+triggerall = statetype != L
+triggerall = enemynear(var(58)),statetype != L
+triggerall = enemynear(var(58)),movetype = H
+TriggerAll=1||fvar(0):=20+(var(55)/(10+enemynear(var(58)),Vel X)) ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+triggerall = var(55)-fvar(1) = [0,200]
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=var(56)+fvar(4) = [-66+var(53),Ifelse(enemynear(var(58)),statetype=A,!((enemynear(var(58)),anim = [5051,5059])||(enemynear(var(58)),anim = [5061,5069]))*24,-var(53)*(statetype=A))]
+trigger1 = var(16) >= 90;スタン値
+trigger1 = stateno = 211&&movehit
+trigger2 = var(16) >= 100;スタン値
+trigger2 = stateno = 221&&movehit
+trigger3 = var(16) >= 100;スタン値
+trigger3 = stateno = 230&&movehit
+trigger4 = var(16) >= 100;スタン値
+trigger4 = (stateno = [240,241])&&animelem = 5,>0&&movehit
+trigger5 = prevstateno = 300
+trigger5 = stateno = 330&&movehit
+trigger6 = var(16) >= 100;スタン値
+trigger6 = stateno = 330&&movehit
+
+;憑依剥奪「スレイブロバー」
+[State -1, ]
+type = ChangeState
+value = 2100
+triggerall = var(59) > 0
+triggerall = var(10) = 1||var(10) = 10
+triggerall = fvar(10) >= 1.0
+triggerall = var(11)
+triggerall = var(16) >= 100;スタン値
+triggerall = statetype != L
+triggerall = enemynear(var(58)),statetype != L
+triggerall = enemynear(var(58)),movetype = H
+TriggerAll=1||fvar(0):=20+(var(55)/(10+enemynear(var(58)),Vel X)) ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+triggerall = var(55)-fvar(1) = [0,200]
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=var(56)+fvar(4) = [-66+var(53),Ifelse(enemynear(var(58)),statetype=A,!((enemynear(var(58)),anim = [5051,5059])||(enemynear(var(58)),anim = [5061,5069]))*24,-var(53)*(statetype=A))]
+triggerall = ctrl
+trigger1 = enemynear(var(58)),GetHitVar(HitShakeTime)+enemynear(var(58)),GetHitVar(HitTime) > fvar(0)
+
+;憑依剥奪「スレイブロバー」
+[State -1, ]
+type = ChangeState
+value = 2100
+triggerall = var(59) > 0
+triggerall = var(10) = 1||var(10) = 10
+triggerall = fvar(10) >= 1.0
+triggerall = var(11)
+triggerall = var(16) < 100;スタン値
+triggerall = statetype != L
+triggerall = enemynear(var(58)),movetype != H
+triggerall = enemynear(var(58)),Life <= 100
+triggerall = enemynear(var(58)),statetype = S||enemynear(var(58)),statetype = C
+TriggerAll=1||fvar(0):=20+(var(55)/(10+enemynear(var(58)),Vel X)) ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+triggerall = var(55)-fvar(1) = [0,200]
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=var(56)+fvar(4) = [-66+var(53),Ifelse(enemynear(var(58)),statetype=A,!((enemynear(var(58)),anim = [5051,5059])||(enemynear(var(58)),anim = [5061,5069]))*24,-var(53)*(statetype=A))]
+triggerall = enemynear(var(58)),animtime <= fvar(0)
+trigger1 = ctrl
+
+;ジャンプ
+[State 0, ChangeState]
+type = ChangeState
+value = 40
+triggerall = var(59) > 0
+triggerall = var(16) < 100;スタン値
+;triggerall = var(10) = 2||var(10) = 20
+;triggerall = fvar(10) >= 1.4
+;triggerall = var(11)
+triggerall = statetype = S
+TriggerAll = enemynear(var(58)),StateType=A
+TriggerAll = enemynear(var(58)),MoveType=H
+TriggerAll = enemynear(var(58)),Alive
+triggerall = var(55) > 0
+triggerall = var(56) < 0
+triggerall = 1||var(54):= 1;ジャンプ暴発阻止解除
+trigger1 = stateno = 1400&&animelemtime(9) >= 1
+
+;チャージバックステップ
+[State -1, ]
+type = ChangeState
+value = 600
+triggerall = var(59) > 0
+triggerall = statetype != L
+triggerall = var(15) >= 25
+triggerall = var(16) < 100;スタン値
+TriggerAll = enemynear(var(58)),StateType!=L
+TriggerAll = enemynear(var(58)),MoveType=H
+TriggerAll = enemynear(var(58)),Alive
+trigger1 = stateno = 310&&movehit
+
+;散財アッパー
+[State -1, ]
+type = ChangeState
+value = 1400
+triggerall = var(59) > 0
+triggerall = var(15) > 25;霊力
+triggerall = var(16) < 100;スタン値
+triggerall = var(10) = 2||var(10) = 20
+triggerall = fvar(10) >= 1.4
+triggerall = var(11)
+triggerall = statetype != A
+TriggerAll = enemynear(var(58)),StateType!=L
+TriggerAll = enemynear(var(58)),MoveType=H
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+TriggerAll=1||fvar(0):=11 ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));1
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));2
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));3
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));4
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));5
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));6
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));7
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));8
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));9
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));10
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));11
+TriggerAll=1||fvar(1):=fvar(1)-(fvar(3))*(EnemyNear(var(58)),BackEdgeDist>5+fvar(3))*(EnemyNear(var(58)),ID<ID&&!(EnemyNear(var(58)),MoveType!=A&&MoveType=A))||(EnemyNear(var(58)),MoveType=A&&MoveType!=A);補正分の減算
+triggerall = var(55)-fvar(1) = [0,78]
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=1||fvar(4):=fvar(4)-Floor(Vel Y*fvar(0));速度×時間
+TriggerAll=var(56)+fvar(4) = [-420+var(53),0]
+trigger1 = stateno = 200&&movehit
+trigger2 = stateno = 210&&movehit
+
+;チャネルのバッグ
+[State -1, ]
+type = ChangeState
+value = 1300
+triggerall = var(59) > 0
+triggerall = var(15) > 25;霊力
+triggerall = var(16) < 100;スタン値
+triggerall = statetype != A
+TriggerAll = enemynear(var(58)),StateType!=L
+TriggerAll = enemynear(var(58)),MoveType=H
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+TriggerAll=Ifelse(enemynear(var(58)),GetHitVar(HitShakeTime)>0,1,10-enemynear(var(58)),Vel X>0)
+TriggerAll=1||fvar(0):=Ifelse(enemynear(var(58)),GetHitVar(HitShakeTime)>15+(var(55)/10),15+(var(55)/10),15+(var(55)/(10-enemynear(var(58)),Vel X))-enemynear(var(58)),GetHitVar(HitShakeTime)) ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));1
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));2
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));3
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));4
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));5
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));6
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));7
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));8
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));9
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));10
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));11
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));12
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));13
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));14
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));15
+TriggerAll=1||fvar(1):=fvar(1)-(fvar(3))*(EnemyNear(var(58)),BackEdgeDist>5+fvar(3))*(EnemyNear(var(58)),ID<ID&&!(EnemyNear(var(58)),MoveType!=A&&MoveType=A))||(EnemyNear(var(58)),MoveType=A&&MoveType!=A);補正分の減算
+triggerall = var(55)-fvar(1) > 0
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=1||fvar(4):=fvar(4)-Floor(Vel Y*fvar(0));速度×時間
+TriggerAll=var(56)+fvar(4) = [-60+var(53),0]
+TriggerAll=Ifelse(enemynear(var(58)),statetype!=A,enemynear(var(58)),const(size.head.pos.y)<-50,1)
+triggerall = enemynear(var(58)),GetHitVar(HitShakeTime)+enemynear(var(58)),GetHitVar(HitTime) > fvar(0)
+trigger1 = ctrl 
+trigger2 = stateno = 250&&movehit
+trigger3 = stateno = 600&&animelem = 5,>0
+trigger3 = ProjHitTime(600) = 0||ProjHitTime(601) = 0||ProjHitTime(602) = 0||ProjHitTime(603) = 0||ProjHitTime(604) = 0||ProjHitTime(605) = 0||ProjHitTime(606) = 0
+trigger4 = stateno = 620&&animelem = 4,>0
+
+;チャネルのバッグ
+[State -1, ]
+type = ChangeState
+value = 1300
+triggerall = var(59) > 0
+triggerall = var(15) > 25;霊力
+triggerall = var(16) < 100;スタン値
+triggerall = statetype != A
+TriggerAll = enemynear(var(58)),StateType!=L
+TriggerAll = enemynear(var(58)),MoveType=H
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+triggerall = var(55) > 0
+triggerall = var(56) = [-60,0]
+trigger1 = var(57)
+trigger1 = var(16) = [15,59]
+trigger1 = stateno = 211&&movehit
+trigger2 = stateno = 221&&movehit
+
+;チャネルのバッグ
+[State -1, ]
+type = ChangeState
+value = 1300
+triggerall = var(59) > 0
+triggerall = var(15) > 25;霊力
+triggerall = var(16) < 100;スタン値
+triggerall = statetype = A
+TriggerAll = enemynear(var(58)),StateType!=L
+TriggerAll = enemynear(var(58)),MoveType=H
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+TriggerAll=1||fvar(0):=11 ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));1
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));2
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));3
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));4
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));5
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));6
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));7
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));8
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));9
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));10
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));11
+TriggerAll=1||fvar(1):=fvar(1)-(fvar(3))*(EnemyNear(var(58)),BackEdgeDist>5+fvar(3))*(EnemyNear(var(58)),ID<ID&&!(EnemyNear(var(58)),MoveType!=A&&MoveType=A))||(EnemyNear(var(58)),MoveType=A&&MoveType!=A);補正分の減算
+triggerall = var(55)-fvar(1) = [0,78]
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=1||fvar(4):=fvar(4)-Floor(Vel Y*fvar(0));速度×時間
+TriggerAll=var(56)+fvar(4) = [-40+var(53),Ifelse(enemynear(var(58)),statetype=A,!((enemynear(var(58)),anim = [5051,5059])||(enemynear(var(58)),anim = [5061,5069]))*24,-var(53)*(statetype=A))]
+triggerall = enemynear(var(58)),GetHitVar(HitShakeTime)+enemynear(var(58)),GetHitVar(HitTime) < fvar(0)
+trigger1 = (stateno = [240,241])&&movecontact&&animelem = 5,>0
+
+;キャンセル6B
+[State -1, ]
+type = ChangeState
+value = 620
+triggerall = var(59) > 0
+triggerall = var(15) > 25;霊力
+triggerall = statetype != A
+TriggerAll = enemynear(var(58)),StateType!=A
+TriggerAll = enemynear(var(58)),MoveType=H
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+trigger1 = stateno = 210&&movecontact
+trigger2 = var(16) < 40;スタン値
+trigger2 = var(57)
+trigger2 = stateno = 211&&movehit
+
+;DA
+[State -1, ]
+type = ChangeState
+value = 250
+triggerall = var(59) > 0
+triggerall = var(15) > 25;霊力
+triggerall = var(16) < 100;スタン値
+triggerall = statetype != A
+TriggerAll = enemynear(var(58)),StateType!=L
+TriggerAll = enemynear(var(58)),MoveType=H
+triggerall = enemynear(var(58)),stateno != [120,155]
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+TriggerAll=1||fvar(0):=10 ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));1
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));2
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));3
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));4
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));5
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));6
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));7
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));8
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));9
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));10
+TriggerAll=1||fvar(1):=fvar(1)-(fvar(3))*(EnemyNear(var(58)),BackEdgeDist>5+fvar(3))*(EnemyNear(var(58)),ID<ID&&!(EnemyNear(var(58)),MoveType!=A&&MoveType=A))||(EnemyNear(var(58)),MoveType=A&&MoveType!=A);補正分の減算
+triggerall = var(55)-fvar(1) =[0,160]
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=1||fvar(4):=fvar(4)-Floor(Vel Y*fvar(0));速度×時間
+TriggerAll=var(56)+fvar(4) = [-66+var(53),-25+Ifelse(enemynear(var(58)),statetype=A,!((enemynear(var(58)),anim = [5051,5059])||(enemynear(var(58)),anim = [5061,5069]))*24,-var(53)*(statetype=A))]
+triggerall = Numtarget(310)||Numtarget(600)
+trigger1 = stateno = 100&&animelemno(0) = 2
+
+;J6A
+[State -1, ]
+type = ChangeState
+value = 310
+triggerall = var(59) > 0
+triggerall = statetype = A
+TriggerAll = enemynear(var(58)),StateType=A
+TriggerAll = enemynear(var(58)),MoveType=H
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+TriggerAll=1||fvar(0):=9 ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));1
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));2
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));3
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));4
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));5
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));6
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));7
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));8
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));9
+TriggerAll=1||fvar(1):=fvar(1)-(fvar(3))*(EnemyNear(var(58)),BackEdgeDist>5+fvar(3))*(EnemyNear(var(58)),ID<ID&&!(EnemyNear(var(58)),MoveType!=A&&MoveType=A))||(EnemyNear(var(58)),MoveType=A&&MoveType!=A);補正分の減算
+TriggerAll=var(55)-fvar(1) = [0,66+Vel X*9];P2BodyDist X
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=1||fvar(4):=fvar(4)-Floor((Vel Y*fvar(0))+(const(movement.yaccel)*((fvar(0)*(fvar(0)-1))/2)))
+TriggerAll=var(56)+var(53)+fvar(4) = [-66,-24]
+triggerall=Pos Y+Floor((Vel Y*fvar(0))+(const(movement.yaccel)*((fvar(0)*(fvar(0)-1))/2))) < 0
+trigger1 = stateno = 300&&movehit
+
+;JA
+[State -1, ]
+type = ChangeState
+value = 300
+triggerall = var(59) > 0
+triggerall = statetype = A
+TriggerAll = enemynear(var(58)),StateType=A
+TriggerAll = enemynear(var(58)),MoveType=H
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+TriggerAll=1||fvar(0):=8 ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));1
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));2
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));3
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));4
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));5
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));6
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));7
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));8
+TriggerAll=1||fvar(1):=fvar(1)-(fvar(3))*(EnemyNear(var(58)),BackEdgeDist>5+fvar(3))*(EnemyNear(var(58)),ID<ID&&!(EnemyNear(var(58)),MoveType!=A&&MoveType=A))||(EnemyNear(var(58)),MoveType=A&&MoveType!=A);補正分の減算
+TriggerAll=var(55)-fvar(1) = [0,42+Vel X*8];P2BodyDist X
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=1||fvar(4):=fvar(4)-Floor((Vel Y*fvar(0))+(const(movement.yaccel)*((fvar(0)*(fvar(0)-1))/2)))
+TriggerAll=var(56)+var(53)+fvar(4) = [-80,-52]
+triggerall=Pos Y+Floor((Vel Y*fvar(0))+(const(movement.yaccel)*((fvar(0)*(fvar(0)-1))/2))) < 0
+trigger1 = ctrl
+
+;JA（固め）
+[State -1, ]
+type = ChangeState
+value = 300
+triggerall = var(59) > 0
+triggerall = statetype = A
+TriggerAll = enemynear(var(58)),StateType=S||enemynear(var(58)),StateType=C
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+TriggerAll=1||fvar(0):=8 ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));1
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));2
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));3
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));4
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));5
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));6
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));7
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));8
+TriggerAll=1||fvar(1):=fvar(1)-(fvar(3))*(EnemyNear(var(58)),BackEdgeDist>5+fvar(3))*(EnemyNear(var(58)),ID<ID&&!(EnemyNear(var(58)),MoveType!=A&&MoveType=A))||(EnemyNear(var(58)),MoveType=A&&MoveType!=A);補正分の減算
+TriggerAll=var(55)-fvar(1) = [0,42];P2BodyDist X
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=var(56)+fvar(4) = [-70,56]
+TriggerAll=enemynear(var(58)),const(size.head.pos.y) < -56
+triggerall=Pos Y+Floor((Vel Y*fvar(0))+(const(movement.yaccel)*((fvar(0)*(fvar(0)-1))/2))) < 0
+trigger1 = ctrl
+
+;J6A
+[State -1, ]
+type = ChangeState
+value = 310
+triggerall = var(59) > 0
+triggerall = statetype = A
+TriggerAll = enemynear(var(58)),StateType=S||enemynear(var(58)),StateType=C
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+TriggerAll=1||fvar(0):=9 ;発生フレーム数値
+TriggerAll=1||fvar(1):=EnemyNear(var(58)),Vel X ;速度を代入
+TriggerAll=1||fvar(1):=Floor(fvar(1)*fvar(0)*(1-(facing=enemynear(var(58)),facing)*2)) ;速度×時間
+TriggerAll=1||fvar(1):=fvar(1)*(EnemyNear(var(58)),Vel X > 0||EnemyNear(var(58)),BackEdgeDist >5)
+TriggerAll=1||fvar(1):=fvar(1)*(EnemyNear(var(58)),Vel X < 0||EnemyNear(var(58)),FrontEdgeDist>5)
+TriggerAll=1||fvar(1):=fvar(1)-(fvar(3))*(EnemyNear(var(58)),BackEdgeDist>5+fvar(3))*(EnemyNear(var(58)),ID<ID&&!(EnemyNear(var(58)),MoveType!=A&&MoveType=A))||(EnemyNear(var(58)),MoveType=A&&MoveType!=A);補正分の減算
+TriggerAll=var(55)-fvar(1) = [0,45];P2BodyDist X
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=var(56)+fvar(4) = [-63,24]
+TriggerAll=enemynear(var(58)),const(size.head.pos.y) < -24
+triggerall=Pos Y+Floor((Vel Y*fvar(0))+(const(movement.yaccel)*((fvar(0)*(fvar(0)-1))/2))) < 0
+trigger1 = ctrl
+
+;ダッシュJ6A追撃
+[State -1, ]
+type = ChangeState
+value = 100
+triggerall = var(59) > 0
+triggerall = var(15) > 25;霊力
+triggerall = var(16) < 100;スタン値
+triggerall = statetype = A
+TriggerAll = enemynear(var(58)),StateType!=L
+TriggerAll = enemynear(var(58)),MoveType=H
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+triggerall = stateno != 100
+TriggerAll=1||fvar(0):=13 ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));1
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));2
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));3
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));4
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));5
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));6
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));7
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));8
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));9
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));10
+triggerall = var(55)-fvar(1) =[0,160]
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=var(56)+var(53)+fvar(4) = [-66,-25*enemynear(var(58)),statetype=A]
+triggerall = Numtarget(600)
+trigger1 = stateno = 600&&animelem = 6,>0
+
+;ダッシュJ6A追撃
+[State -1, ]
+type = ChangeState
+value = 100
+triggerall = var(59) > 0
+triggerall = var(15) > 25;霊力
+triggerall = var(16) < 100;スタン値
+triggerall = statetype != A
+TriggerAll = enemynear(var(58)),StateType!=L
+TriggerAll = enemynear(var(58)),MoveType=H
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+triggerall = stateno != 100
+TriggerAll=1||fvar(0):=13 ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));1
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));2
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));3
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));4
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));5
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));6
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));7
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));8
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));9
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));10
+triggerall = var(55)-fvar(1) =[0,160]
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=var(56)+var(53)+fvar(4) = [-66,-25*enemynear(var(58)),statetype=A]
+triggerall = Numtarget(310)
+trigger1 = ctrl||stateno = [21,22]
+
+;ジュリ扇ブーメラン
+[State 0, ChangeState]
+type = ChangeState
+value = 1100
+triggerall = var(59) > 0
+triggerall = var(15) > 25;霊力
+triggerall = statetype = A
+triggerall = enemynear(var(58)),stateno = [120,155]
+TriggerAll = enemynear(var(58)),Alive
+triggerall = enemynear(var(58)),Life > 100
+triggerall = !Inguarddist
+TriggerAll=1||fvar(0):=14 ;発生フレーム数値
+TriggerAll=1||fvar(1):=EnemyNear(var(58)),Vel X ;速度を代入
+TriggerAll=1||fvar(1):=Floor(fvar(1)*fvar(0)*(1-(facing=enemynear(var(58)),facing)*2)) ;速度×時間
+TriggerAll=1||fvar(1):=fvar(1)*(EnemyNear(var(58)),Vel X > 0||EnemyNear(var(58)),BackEdgeDist >5)
+TriggerAll=1||fvar(1):=fvar(1)*(EnemyNear(var(58)),Vel X < 0||EnemyNear(var(58)),FrontEdgeDist>5)
+triggerall = var(55)-fvar(1) = [0,300]
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=var(56)+var(53)+fvar(4) > -40
+triggerall = stateno = 610&&animelem = 6,>0
+trigger1 = ProjGuardedTime(610) = [0,10]
+trigger2 = ProjGuardedTime(611) = [0,10]
+trigger3 = ProjGuardedTime(612) = [0,10]
+trigger4 = ProjGuardedTime(613) = [0,10]
+trigger5 = ProjGuardedTime(614) = [0,10]
+trigger6 = ProjGuardedTime(615) = [0,10]
+trigger7 = ProjGuardedTime(616) = [0,10]
+
+;ダッシュキャンセル（固め）
+[State -1, ]
+type = ChangeState
+value = 100
+triggerall = var(59) > 0
+triggerall = var(16) < 100;スタン値
+triggerall = statetype = A
+TriggerAll = enemynear(var(58)),StateType!=A
+TriggerAll = enemynear(var(58)),MoveType=H
+TriggerAll = enemynear(var(58)),StateNo = [120,155]
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+triggerall = stateno = 610&&animelem = 6,>0
+trigger1 = ProjGuardedTime(610) = [0,10]
+trigger2 = ProjGuardedTime(611) = [0,10]
+trigger3 = ProjGuardedTime(612) = [0,10]
+trigger4 = ProjGuardedTime(613) = [0,10]
+trigger5 = ProjGuardedTime(614) = [0,10]
+trigger6 = ProjGuardedTime(615) = [0,10]
+trigger7 = ProjGuardedTime(616) = [0,10]
+
+;キャンセルB（固め）
+[State -1, ]
+type = ChangeState
+value = 610
+triggerall = var(59) > 0
+triggerall = var(15) > 25;霊力
+triggerall = var(16) < 100;スタン値
+triggerall = statetype = A
+TriggerAll = enemynear(var(58)),StateType!=A
+TriggerAll = enemynear(var(58)),MoveType=H
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+trigger1 = stateno = 241&&moveguarded = 3
+
+;キャンセル8A（固め）
+[State -1, ]
+type = ChangeState
+value = 241
+triggerall = var(59) > 0
+triggerall = var(16) < 100;スタン値
+triggerall = statetype != A
+TriggerAll = enemynear(var(58)),StateType!=A
+TriggerAll = enemynear(var(58)),MoveType=H
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+TriggerAll=1||fvar(0):=12 ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));1
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));2
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));3
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));4
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));5
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));6
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));7
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));8
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));9
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));10
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));11
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));12
+TriggerAll=1||fvar(1):=fvar(1)-(fvar(3))*(EnemyNear(var(58)),BackEdgeDist>5+fvar(3))*(EnemyNear(var(58)),ID<ID&&!(EnemyNear(var(58)),MoveType!=A&&MoveType=A))||(EnemyNear(var(58)),MoveType=A&&MoveType!=A);補正分の減算
+TriggerAll=var(55)-fvar(1) = [0,110];P2BodyDist X
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=var(56)+fvar(4) = [-84,0]
+TriggerAll=EnemyNear(var(58)),Const(Size.Head.Pos.Y) < -10
+trigger1 = stateno = 211&&moveguarded
+
+;キャンセル8A
+[State -1, ]
+type = ChangeState
+value = 241
+triggerall = var(59) > 0
+triggerall = var(16) > 20;スタン値
+triggerall =(var(10) = 1||var(10) = 10)&&fvar(10) >= 1.0 ||(var(10) = 3||var(10) = 30)&&fvar(10) >= 1.2
+triggerall = var(11)
+triggerall = statetype != A
+TriggerAll = enemynear(var(58)),StateType!=L
+TriggerAll = enemynear(var(58)),MoveType=H
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+TriggerAll=1||fvar(0):=12 ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));1
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));2
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));3
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));4
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));5
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));6
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));7
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));8
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));9
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));10
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));11
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));12
+TriggerAll=1||fvar(1):=fvar(1)-(fvar(3))*(EnemyNear(var(58)),BackEdgeDist>5+fvar(3))*(EnemyNear(var(58)),ID<ID&&!(EnemyNear(var(58)),MoveType!=A&&MoveType=A))||(EnemyNear(var(58)),MoveType=A&&MoveType!=A);補正分の減算
+TriggerAll=var(55)-fvar(1) = [0,110];P2BodyDist X
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=var(56)+var(53)+fvar(4) = [-90,0]
+trigger1 = stateno = 211&&movehit
+
+;8A
+[State -1, ]
+type = null;ChangeState
+value = 240
+triggerall = var(59) > 0
+triggerall = var(16) < 100;スタン値
+triggerall = statetype != A
+TriggerAll = enemynear(var(58)),StateType=A
+TriggerAll = enemynear(var(58)),MoveType=H
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+TriggerAll=1||fvar(0):=9 ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+TriggerAll=1||fvar(1):=fvar(1)-(fvar(3))*(EnemyNear(var(58)),BackEdgeDist>5+fvar(3))*(EnemyNear(var(58)),ID<ID&&!(EnemyNear(var(58)),MoveType!=A&&MoveType=A))||(EnemyNear(var(58)),MoveType=A&&MoveType!=A);補正分の減算
+TriggerAll=var(55)-fvar(1) = [0,30];P2BodyDist X
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=var(56)+var(53)+fvar(4) = [-50,0]
+trigger1 = ctrl||stateno = [20,21]
+
+;攻勢憑依
+[State -1, ]
+type = ChangeState
+value = 650
+triggerall = var(59) > 0
+triggerall = var(15) < 25;霊力
+triggerall = var(16) < 100;スタン値
+triggerall = statetype != L
+triggerall = fvar(8) >= 0.5
+triggerall = enemynear(var(58)),Alive
+TriggerAll=1||fvar(0):=1 ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));1
+TriggerAll=1||fvar(1):=fvar(1)-(fvar(3))*(EnemyNear(var(58)),BackEdgeDist>5+fvar(3))*(EnemyNear(var(58)),ID<ID&&!(EnemyNear(var(58)),MoveType!=A&&MoveType=A))||(EnemyNear(var(58)),MoveType=A&&MoveType!=A);補正分の減算
+TriggerAll=var(55)-fvar(1) = [0,30];P2BodyDist X
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=var(56)+var(53)+fvar(4) = [-98,0]
+trigger1 = stateno = 211&&movehit
+trigger2 = stateno = 221&&movecontact
+trigger3 = stateno = 230&&movecontact
+trigger4 = (stateno = [240,241])&&animelem = 5,>0&&movecontact
+trigger5 = stateno = 250&&movecontact
+
+;キャンセル6A
+[State -1, ]
+type = ChangeState
+value = 221
+triggerall = var(59) > 0
+triggerall = var(16) < 100;スタン値
+triggerall = statetype != A
+TriggerAll = enemynear(var(58)),StateType!=L
+TriggerAll = enemynear(var(58)),MoveType=H
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+TriggerAll=1||fvar(0):=13 ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));1
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));2
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));3
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));4
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));5
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));6
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));7
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));8
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));9
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));10
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));11
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));12
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));13
+TriggerAll=1||fvar(1):=fvar(1)-(fvar(3))*(EnemyNear(var(58)),BackEdgeDist>5+fvar(3))*(EnemyNear(var(58)),ID<ID&&!(EnemyNear(var(58)),MoveType!=A&&MoveType=A))||(EnemyNear(var(58)),MoveType=A&&MoveType!=A);補正分の減算
+TriggerAll=var(55)-fvar(1) = [0,107];P2BodyDist X
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=var(56)+var(53)+fvar(4) = [-98,0]
+trigger1 = stateno = 211&&movehit
+
+;キャンセル遠A
+[State -1, ]
+type = ChangeState
+value = 211
+triggerall = var(59) > 0
+triggerall = var(16) < 100;スタン値
+triggerall = statetype != A
+TriggerAll = enemynear(var(58)),StateType!=L
+TriggerAll = enemynear(var(58)),MoveType=H
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+TriggerAll=1||fvar(0):=9 ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));1
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));2
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));3
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));4
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));5
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));6
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));7
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));8
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));9
+TriggerAll=1||fvar(1):=fvar(1)-(fvar(3))*(EnemyNear(var(58)),BackEdgeDist>5+fvar(3))*(EnemyNear(var(58)),ID<ID&&!(EnemyNear(var(58)),MoveType!=A&&MoveType=A))||(EnemyNear(var(58)),MoveType=A&&MoveType!=A);補正分の減算
+TriggerAll=var(55)-fvar(1) = [0,88];P2BodyDist X
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=var(56)+var(53)+fvar(4) = [-63,0]
+trigger1 = stateno = 201&&movecontact
+
+;キャンセルA
+[State -1, ]
+type = ChangeState
+value = 201
+triggerall = var(59) > 0
+triggerall = var(16) < 100;スタン値
+triggerall = statetype != A
+TriggerAll = enemynear(var(58)),StateType!=L
+TriggerAll = enemynear(var(58)),MoveType=H
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+TriggerAll=1||fvar(0):=6 ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));1
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));2
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));3
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));4
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));5
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));6
+TriggerAll=1||fvar(1):=fvar(1)-(fvar(3))*(EnemyNear(var(58)),BackEdgeDist>5+fvar(3))*(EnemyNear(var(58)),ID<ID&&!(EnemyNear(var(58)),MoveType!=A&&MoveType=A))||(EnemyNear(var(58)),MoveType=A&&MoveType!=A);補正分の減算
+TriggerAll=var(55)-fvar(1) = [0,50];P2BodyDist X
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=var(56)+var(53)+fvar(4) = [-70,0]
+trigger1 = stateno = 200&&movecontact
+
+;組み技
+[State -1, ]
+type = ChangeState
+value = 500
+triggerall = var(59) > 0
+triggerall = var(16) < 100;スタン値
+triggerall = statetype != A
+triggerall = P2bodydist X <= 0
+triggerall = var(55) > 0
+triggerall = enemynear(var(58)),statetype = S||enemynear(var(58)),statetype = C
+triggerall = ctrl||stateno = [21,22]
+trigger1 = enemynear(var(58)),stateno = [120,155]
+trigger1 = enemynear(var(58)),HitSHakeOver
+trigger1 = enemynear(var(58)),HitOver
+
+;A（固め）
+[State -1, ]
+type = ChangeState
+value = 200
+triggerall = var(59) > 0
+triggerall = var(16) < 100;スタン値
+triggerall = statetype != A
+TriggerAll = enemynear(var(58)),StateType!=L
+TriggerAll = enemynear(var(58)),MoveType=H
+TriggerAll = enemynear(var(58)),stateno = [120,155]
+TriggerAll = enemynear(var(58)),Alive
+triggerall = enemynear(var(58)),Life <= 100
+triggerall = !Inguarddist
+TriggerAll=1||fvar(0):=6 ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));1
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));2
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));3
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));4
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));5
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));6
+TriggerAll=1||fvar(1):=fvar(1)-(fvar(3))*(EnemyNear(var(58)),BackEdgeDist>5+fvar(3))*(EnemyNear(var(58)),ID<ID&&!(EnemyNear(var(58)),MoveType!=A&&MoveType=A))||(EnemyNear(var(58)),MoveType=A&&MoveType!=A);補正分の減算
+TriggerAll=var(55)-fvar(1) = [0,50];P2BodyDist X
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=var(56)+var(53)+fvar(4) = [-70,0]
+trigger1 = ctrl||stateno = [20,21]
+
+;遠A
+[State -1, ]
+type = ChangeState
+value = 200
+triggerall = var(59) > 0
+triggerall = var(16) < 100;スタン値
+triggerall = statetype != A
+TriggerAll = enemynear(var(58)),StateType!=L
+TriggerAll = enemynear(var(58)),MoveType=H
+TriggerAll = enemynear(var(58)),stateno != [120,155]
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+TriggerAll=1||fvar(0):=8 ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));1
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));2
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));3
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));4
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));5
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));6
+TriggerAll=1||fvar(1):=fvar(1)-(fvar(3))*(EnemyNear(var(58)),BackEdgeDist>5+fvar(3))*(EnemyNear(var(58)),ID<ID&&!(EnemyNear(var(58)),MoveType!=A&&MoveType=A))||(EnemyNear(var(58)),MoveType=A&&MoveType!=A);補正分の減算
+TriggerAll=var(55)-fvar(1) = [51,91];P2BodyDist X
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=var(56)+var(53)+fvar(4) = [-63,0]
+trigger1 = enemynear(var(58)),GetHitVar(HitTime) >= 8;Numtarget(1300)
+trigger1 = ctrl||stateno = [20,21]
+
+;A
+[State -1, ]
+type = ChangeState
+value = 200
+triggerall = var(59) > 0
+triggerall = var(16) < 100;スタン値
+triggerall = statetype != A
+TriggerAll = enemynear(var(58)),StateType!=L
+TriggerAll = enemynear(var(58)),MoveType=H
+TriggerAll = enemynear(var(58)),stateno != [120,155]
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+TriggerAll=1||fvar(0):=6 ;発生フレーム数値
+TriggerAll=1||fvar(1):=0&&fvar(3):=(EnemyNear(var(58)),GetHitVar(XVel))*(EnemyNear(var(58)),Facing)
+TriggerAll=1||fvar(2):=IfElse((EnemyNear(var(58)),StateType=A||EnemyNear(var(58)),MoveType!=H),1,Ifelse((EnemyNear(var(58)),StateType = S),(EnemyNear(var(58)),Const(Movement.Stand.Friction)),(EnemyNear(var(58)),Const(Movement.Crouch.Friction))))
+TriggerAll=1||fvar(3):=IfElse(enemynear,movetype=h&&(enemynear(var(58)),gethitvar(hitshaketime)||(enemynear(var(58)),vel X=0&&enemynear,vel y=0)),fvar(3),EnemyNear(var(58)),Vel X*IfElse((Pos X<=EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),1,-1))
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));1
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));2
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));3
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));4
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));5
+TriggerAll=1||fvar(1):=fvar(1)+(fvar(3):=fvar(3)*fvar(2))*Ifelse(facing!=EnemyNear(var(58)),facing,EnemyNear(var(58)),BackEdgeDist>5+fvar(1),EnemyNear(var(58)),FrontEdgeDist>5+fvar(1));6
+TriggerAll=1||fvar(1):=fvar(1)-(fvar(3))*(EnemyNear(var(58)),BackEdgeDist>5+fvar(3))*(EnemyNear(var(58)),ID<ID&&!(EnemyNear(var(58)),MoveType!=A&&MoveType=A))||(EnemyNear(var(58)),MoveType=A&&MoveType!=A);補正分の減算
+TriggerAll=var(55)-fvar(1) = [0,50];P2BodyDist X
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=var(56)+var(53)+fvar(4) = [-70,0]
+trigger1 = enemynear(var(58)),GetHitVar(HitTime) >= 6;Numtarget(1300)
+trigger1 = ctrl||stateno = [20,21]
+
+;A
+[State -1, ]
+type = ChangeState
+value = 200
+triggerall = var(59) > 0
+triggerall = statetype != A
+TriggerAll = enemynear(var(58)),StateType=S||enemynear(var(58)),StateType=C
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+TriggerAll=1||fvar(0):=8 ;発生フレーム数値
+TriggerAll=1||fvar(1):=EnemyNear(var(58)),Vel X ;速度を代入
+TriggerAll=1||fvar(1):=Floor(fvar(1)*fvar(0)*(1-(facing=enemynear(var(58)),facing)*2)) ;速度×時間
+TriggerAll=1||fvar(1):=fvar(1)*(EnemyNear(var(58)),Vel X > 0||EnemyNear(var(58)),BackEdgeDist >5)
+TriggerAll=1||fvar(1):=fvar(1)*(EnemyNear(var(58)),Vel X < 0||EnemyNear(var(58)),FrontEdgeDist>5)
+triggerall = var(55)-fvar(1) = [0,50]
+triggerall = var(56) = [-70,0]
+triggerall = ctrl||stateno = [20,21]
+trigger1 = enemynear(var(58)),MoveType = I
+trigger1 = enemynear(var(58)),stateno <= 105
+trigger2 = enemynear(var(58)),MoveType != H
+trigger2 = enemynear(var(58)),animtime = [-7,-6]
+
+;遠A
+[State -1, ]
+type = ChangeState
+value = 210
+triggerall = var(59) > 0
+triggerall = statetype != A
+TriggerAll = enemynear(var(58)),StateType=S||enemynear(var(58)),StateType=C
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+TriggerAll=1||fvar(0):=8 ;発生フレーム数値
+TriggerAll=1||fvar(1):=EnemyNear(var(58)),Vel X ;速度を代入
+TriggerAll=1||fvar(1):=Floor(fvar(1)*fvar(0)*(1-(facing=enemynear(var(58)),facing)*2)) ;速度×時間
+TriggerAll=1||fvar(1):=fvar(1)*(EnemyNear(var(58)),Vel X > 0||EnemyNear(var(58)),BackEdgeDist >5)
+TriggerAll=1||fvar(1):=fvar(1)*(EnemyNear(var(58)),Vel X < 0||EnemyNear(var(58)),FrontEdgeDist>5)
+triggerall = var(55)-fvar(1) = [0,88]
+triggerall = var(56) = [-20,0]
+triggerall = ctrl||stateno = [20,21]
+trigger1 = enemynear(var(58)),MoveType = I
+trigger1 = enemynear(var(58)),stateno <= 105
+trigger2 = enemynear(var(58)),MoveType != H
+trigger2 = enemynear(var(58)),animtime = [-11,-9]
+
+;組み技
+[State -1, ]
+type = ChangeState
+value = 500
+triggerall = var(59) > 0
+triggerall = var(16) < 100;スタン値
+triggerall = statetype != A
+triggerall = P2bodydist X = [-10,30]
+triggerall = enemynear(var(58)),statetype = S||enemynear(var(58)),statetype = C
+triggerall = ctrl||stateno = [21,22]
+trigger1 = enemynear(var(58)),movetype = A
+trigger1 = enemynear(var(58)),animtime <= -4
+
+;散財アッパー
+[State -1, ]
+type = ChangeState
+value = 1400
+triggerall = var(59) > 0
+triggerall = var(15) > 25;霊力
+triggerall = statetype != A
+TriggerAll = enemynear(var(58)),Stateno = 5110
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+TriggerAll=1||fvar(0):=11 ;発生フレーム数値
+TriggerAll=1||fvar(1):=EnemyNear(var(58)),Vel X ;速度を代入
+TriggerAll=1||fvar(1):=Floor(fvar(1)*fvar(0)*(1-(facing=enemynear(var(58)),facing)*2)) ;速度×時間
+TriggerAll=1||fvar(1):=fvar(1)*(EnemyNear(var(58)),Vel X > 0||EnemyNear(var(58)),BackEdgeDist >5)
+TriggerAll=1||fvar(1):=fvar(1)*(EnemyNear(var(58)),Vel X < 0||EnemyNear(var(58)),FrontEdgeDist>5)
+triggerall = var(55)-fvar(1) = [0,60]
+triggerall = var(56) = [-420,0]
+triggerall = !Numhelper(1415)
+trigger1 = ctrl||stateno = [20,21]
+
+;「クイーンオブバブル」
+[State -1, ]
+type = ChangeState
+value = 2300
+triggerall = var(59) > 0
+triggerall = var(10) = 3||var(10) = 30
+triggerall = fvar(10) >= 1.2
+triggerall = var(11)
+triggerall = statetype != L
+triggerall = var(55) = [0,130]
+triggerall = var(56) = [-110,90]
+trigger1 = enemynear(var(58)),stateno = [120,131]
+trigger1 = enemynear(var(58)),Life < 100
+trigger1 = stateno = 600&&animelem = 5,>0
+trigger2 = enemynear(var(58)),stateno = 5110
+trigger2 = enemynear(var(58)),Life < 300
+trigger2 = stateno = 1400&&animelem = 5,>0
+
+;スペルカード宣言
+[State -1, ]
+type = ChangeState
+value = 2000
+triggerall = var(59) > 0
+triggerall = (var(10)=1||var(10)=10)&&fvar(10)>=1||(var(10)=2||var(10)=20)&&fvar(10)>=1.4||(var(10)=3||var(10)=30)&&fvar(10)>=1.2
+triggerall = !var(11)
+triggerall = !(Numtarget(2100)||Numtarget(2200)||Numtarget(2300))
+triggerall = statetype != A
+triggerall = enemynear(var(58)),Alive
+triggerall = enemynear(var(58)),Life > 250||var(52)||(var(10)=2||var(10)=20)
+triggerall = ctrl
+trigger1 = enemynear(var(58)),statetype = L
+trigger1 = enemynear(var(58)),stateno = [5100,5110]
+trigger1 = enemynear(var(58)),time = [0,10]
+trigger2 = enemynear(var(58)),statetype != L
+trigger2 = enemynear(var(58)),movetype = H
+trigger2 = (enemynear(var(58)),stateno = [225,227])||(enemynear(var(58)),stateno = [1500,1501])||(enemynear(var(58)),stateno = [1503,1505])
+trigger2 = var(16) >= 100
+trigger3 = enemynear(var(58)),statetype != L
+trigger3 = enemynear(var(58)),movetype = H
+trigger3 = enemynear(var(58)),stateno = 1502
+trigger3 = enemynear(var(58)),time < 13||var(55) > 200
+trigger3 = var(16) >= 100
+
+;隙ケア
+[State -1, ]
+type = ChangeState
+value = 40
+triggerall = var(59) > 0
+triggerall = statetype = S
+triggerall = enemynear(var(58)),movetype = A
+trigger1 = stateno = 600||stateno = 630
+trigger1 = animelemtime(8) >= 7
+trigger2 = stateno = 610
+trigger2 = animelemtime(7) >= 4
+trigger2 = stateno = 620
+trigger2 = animelemtime(7) >= 7
+trigger3 = stateno = 1100
+trigger3 = animelemtime(6) >= 14
+trigger4 = stateno = 1300
+trigger4 = anim = 1300
+trigger4 = animelemtime(7) >= 5
+trigger5 = stateno = 1400
+trigger5 = animelemtime(8) >= 18
+
+;下降
+[State 0, ChangeState]
+type = ChangeState
+value = 42
+triggerall = var(59) > 0
+triggerall = statetype = A
+TriggerAll = enemynear(var(58)),Alive
+triggerall = stateno = 1100&&animelemtime(6) >= 14
+trigger1 = Numhelper(1110)
+trigger1 = helper(1110),var(1) >= 4
+trigger2 = Numhelper(1110)
+trigger2 = helper(1110),frontedgedist < -50
+trigger3 = Numhelper(1110)
+trigger3 = helper(1110),frontedgedist >= -50
+trigger3 = abs(helper(1110),rootdist X) > var(55)
+trigger4 = Inguarddist
+
+;ジュリ扇ブーメラン
+[State 0, ChangeState]
+type = ChangeState
+value = 1100
+triggerall = var(59) > 0
+triggerall = var(15) > 25;霊力
+triggerall = statetype = A
+triggerall = enemynear(var(58)),stateno = [120,155]
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+TriggerAll=1||fvar(0):=14 ;発生フレーム数値
+TriggerAll=1||fvar(1):=EnemyNear(var(58)),Vel X ;速度を代入
+TriggerAll=1||fvar(1):=Floor(fvar(1)*fvar(0)*(1-(facing=enemynear(var(58)),facing)*2)) ;速度×時間
+TriggerAll=1||fvar(1):=fvar(1)*(EnemyNear(var(58)),Vel X > 0||EnemyNear(var(58)),BackEdgeDist >5)
+TriggerAll=1||fvar(1):=fvar(1)*(EnemyNear(var(58)),Vel X < 0||EnemyNear(var(58)),FrontEdgeDist>5)
+triggerall = var(55)-fvar(1) = [121,300]
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=1||fvar(4):=fvar(4)-Floor(Vel Y*fvar(0));速度×時間
+TriggerAll=var(56)+var(53)+fvar(4) > -40
+trigger1 = ctrl
+trigger1 = projcontacttime(2210) != [0,6]
+trigger2 = stateno = 600&&animelem = 5,>0
+
+;B
+[State 0, ChangeState]
+type = ChangeState
+value = 600
+triggerall = var(59) > 0
+triggerall = var(15) > 25;霊力
+triggerall = statetype = A
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+TriggerAll=1||fvar(0):=14 ;発生フレーム数値
+TriggerAll=1||fvar(1):=EnemyNear(var(58)),Vel X ;速度を代入
+TriggerAll=1||fvar(1):=Floor(fvar(1)*fvar(0)*(1-(facing=enemynear(var(58)),facing)*2)) ;速度×時間
+TriggerAll=1||fvar(1):=fvar(1)*(EnemyNear(var(58)),Vel X > 0||EnemyNear(var(58)),BackEdgeDist >5)
+TriggerAll=1||fvar(1):=fvar(1)*(EnemyNear(var(58)),Vel X < 0||EnemyNear(var(58)),FrontEdgeDist>5)
+triggerall = var(55)-fvar(1) = [61,300]
+TriggerAll = Pos Y < -50
+triggerall = ctrl
+trigger1 = enemynear(var(58)),stateno = 5120
+trigger1 = enemynear(var(58)),animtime <= -14
+trigger2 = enemynear(var(58)),stateno = 1502
+trigger2 = enemynear(var(58)),movetype = H
+trigger2 = enemynear(var(58)),time <= 40
+
+;ジャンプ
+[State 0, ChangeState]
+type = ChangeState
+value = 40
+triggerall = var(59) > 0
+triggerall = statetype = S
+triggerall = var(55) > 120
+triggerall = 1||var(54):= 1
+triggerall = ctrl||stateno = 21
+trigger1 = enemynear(var(58)),stateno = 5120
+trigger2 = enemynear(var(58)),stateno = 1502
+trigger2 = enemynear(var(58)),movetype = H
+
+;前進
+[State 0, ChangeState]
+type = ChangeState
+value = Ifelse(var(55)>100,100,20)
+triggerall = var(59) > 0
+triggerall = statetype != L
+triggerall = stateno != 20
+triggerall = var(55) > 100
+triggerall = ctrl||stateno = 21
+trigger1 = Numhelper(2210)
+trigger1 = enemynear(var(58)),stateno = [120,155]
+
+;ダッシュ
+;１ループで80ほど進む、空中は120くらい　多分
+[State 0, ChangeState]
+type = ChangeState
+value = 100
+triggerall = var(59) > 0
+triggerall = var(16) >= 100;スタン値
+triggerall = stateno != 100
+triggerall = statetype = S&&var(55) > 140||statetype = A&&var(55) > 180
+triggerall = ctrl||stateno = 21
+trigger1 = enemynear(var(58)),stateno = [5100,5110]
+trigger2 = enemynear(var(58)),stateno = [1500,1502]
+trigger2 = enemynear(var(58)),movetype = H
+
+;ダッシュ
+[State 0, ChangeState]
+type = ChangeState
+value = 100
+triggerall = var(59) > 0
+triggerall = statetype = S
+triggerall = enemynear(var(58)),stateno = [120,155]
+triggerall = stateno != 100
+triggerall = var(55) > 140
+triggerall = ctrl||stateno = 21
+trigger1 = NumProjID(3800) = 0||NumProjID(3801) = 0||NumProjID(3802) = 0
+trigger2 = NumProjID(3803) = 0||NumProjID(3804) = 0||NumProjID(3805) = 0
+trigger3 = NumProjID(3806) = 0||NumProjID(3807) = 0||NumProjID(3808) = 0
+
+;後退
+[State 0, ChangeState]
+type = ChangeState
+value = 21
+triggerall = var(59) > 0
+triggerall = var(16) >= 100;スタン値
+triggerall = statetype = S
+triggerall = stateno != 21
+triggerall = var(55) < 40
+triggerall = ctrl||stateno = 20
+trigger1 = enemynear(var(58)),stateno = [5100,5110]
+trigger2 = enemynear(var(58)),stateno = [1500,1502]
+trigger2 = enemynear(var(58)),movetype = H
+
+;前進
+[State 0, ChangeState]
+type = ChangeState
+value = 20
+triggerall = var(59) > 0
+triggerall = var(16) >= 100;スタン値
+triggerall = statetype = S
+triggerall = stateno != 20
+triggerall = var(55) > 60
+triggerall = ctrl||stateno = 21
+trigger1 = enemynear(var(58)),stateno = [5100,5110]
+trigger2 = enemynear(var(58)),stateno = [1500,1502]
+trigger2 = enemynear(var(58)),movetype = H
+
+;散財アッパー
+[State -1, ]
+type = ChangeState
+value = 1400
+triggerall = var(59) > 0
+triggerall = var(15) > 25;霊力
+triggerall = var(16) < 100;スタン値
+triggerall = statetype != A
+TriggerAll = enemynear(var(58)),StateType!=L
+TriggerAll = enemynear(var(58)),MoveType!=H
+TriggerAll = enemynear(var(58)),Alive
+TriggerAll=1||fvar(0):=11 ;発生フレーム数値
+TriggerAll=1||fvar(1):=EnemyNear(var(58)),Vel X ;速度を代入
+TriggerAll=1||fvar(1):=Floor(fvar(1)*fvar(0)*(1-(facing=enemynear(var(58)),facing)*2)) ;速度×時間
+TriggerAll=1||fvar(1):=fvar(1)*(EnemyNear(var(58)),Vel X > 0||EnemyNear(var(58)),BackEdgeDist >5)
+TriggerAll=1||fvar(1):=fvar(1)*(EnemyNear(var(58)),Vel X < 0||EnemyNear(var(58)),FrontEdgeDist>5)
+triggerall = var(55)-fvar(1) = [0,61]
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=1||fvar(4):=fvar(4)-Floor(Vel Y*fvar(0));速度×時間
+TriggerAll=var(56)+var(53)+fvar(4) = [-67,0]
+triggerall = stateno = 600&&animelem = 5,>0
+trigger1 = enemynear(var(58)),statetype = A
+trigger2 = enemynear(var(58)),statetype != A
+trigger2 = enemynear(var(58)),animtime < -11 
+
+;完全憑依姉妹
+[State -1, ]
+type = ChangeState
+value = 800
+triggerall = var(59) > 0
+triggerall = var(15) > 75;霊力
+triggerall = statetype != L
+TriggerAll = enemynear(var(58)),Statetype != L
+TriggerAll = enemynear(var(58)),Stateno = [120,155]
+TriggerAll = enemynear(var(58)),Alive
+triggerall = Numhelper(3000)
+triggerall = !(helper(3000),stateno = 3760||helper(3000),stateno = 3880)
+triggerall = (Pos X-helper(3000),Pos X)*Facing*-1 <= 0
+TriggerAll=1||fvar(0):=113 ;発生フレーム数値
+TriggerAll=1||fvar(1):=EnemyNear(var(58)),Vel X ;速度を代入
+TriggerAll=1||fvar(1):=Floor(fvar(1)*fvar(0)*(1-(facing=enemynear(var(58)),facing)*2)) ;速度×時間
+TriggerAll=1||fvar(1):=fvar(1)*(EnemyNear(var(58)),Vel X > 0||EnemyNear(var(58)),BackEdgeDist >5)
+TriggerAll=1||fvar(1):=fvar(1)*(EnemyNear(var(58)),Vel X < 0||EnemyNear(var(58)),FrontEdgeDist>5)
+triggerall = var(55)-fvar(1) > 100
+TriggerAll=1||fvar(4):=Ifelse(enemynear(Var(58)),movetype=H,EnemyNear(var(58)),GetHitVar(yaccel),EnemyNear(var(58)),const(Movement.Yaccel))
+TriggerAll=1||fvar(4):=Floor((EnemyNear(var(58)),Vel Y*fvar(0))+(fvar(4)*((fvar(0)*(fvar(0)-1))/2)));速度×時間
+TriggerAll=1||fvar(4):=fvar(4)*(EnemyNear(var(58)),StateType = A) ;相手が地上なら0に
+TriggerAll=1||fvar(4):=fvar(4)-Floor(Vel Y*fvar(0));速度×時間
+TriggerAll=EnemyNear(var(58)),Pos Y-helper(3000),Pos Y+var(53)+fvar(4) = [-200,20]
+trigger1 = stateno = 600&&animelem = 5,>0
+trigger2 = stateno = 610&&animelem = 5,>0
+trigger3 = stateno = 620&&animelem = 4,>0
+trigger4 = stateno = 630&&animelem = 5,>0
+
+;B
+[State 0, ChangeState]
+type = ChangeState
+value = 600
+triggerall = var(59) > 0
+triggerall = var(15) > 75;霊力
+triggerall = statetype = S
+TriggerAll = enemynear(var(58)),Statetype != L
+TriggerAll = enemynear(var(58)),Alive
+triggerall = !Inguarddist
+TriggerAll=1||fvar(0):=14 ;発生フレーム数値
+TriggerAll=1||fvar(1):=EnemyNear(var(58)),Vel X ;速度を代入
+TriggerAll=1||fvar(1):=Floor(fvar(1)*fvar(0)*(1-(facing=enemynear(var(58)),facing)*2)) ;速度×時間
+TriggerAll=1||fvar(1):=fvar(1)*(EnemyNear(var(58)),Vel X > 0||EnemyNear(var(58)),BackEdgeDist >5)
+TriggerAll=1||fvar(1):=fvar(1)*(EnemyNear(var(58)),Vel X < 0||EnemyNear(var(58)),FrontEdgeDist>5)
+triggerall = var(55)-fvar(1) = [120,300]
+triggerall = !(NumProjID(600)||NumProjID(601)||NumProjID(602)||NumProjID(603)||NumProjID(604)||NumProjID(605)||NumProjID(606)||NumProjID(607))
+trigger1 = ctrl||stateno = [20,21]
+
+;バックステップ
+[State -1, ]
+type = ChangeState
+value = 105
+triggerall = var(59) > 0
+triggerall = statetype != L
+triggerall = Inguarddist
+trigger1 = stateno = 700&&animelem = 3,>0
+
+;溜め射撃
+[State -1, ]
+type = ChangeState
+value = 750
+triggerall = var(59) > 0
+triggerall = statetype != L
+triggerall = !Inguarddist
+trigger1 = stateno = 1||stateno = 25
+
+;チャージバックステップ
+[State -1, ]
+type = ChangeState
+value = 600
+triggerall = var(59) > 0
+triggerall = statetype != L
+triggerall = var(15) >= 25
+triggerall = enemynear(var(58)),movetype = A
+trigger1 = (stateno = [200,201])&&!movecontact&&animelem = 3,>0
+trigger2 = (stateno = [210,211])&&!movecontact&&animelem = 4,>0
+trigger3 = (stateno = [220,221])&&!movecontact&&animelem = 5,>0
+trigger4 = stateno = 230&&!movecontact&&animelem = 5,>0
+trigger5 = (stateno = [240,241])&&!movecontact&&animelem = 5,>0
+trigger6 = stateno = 300&&!movecontact&&animelem = 3,>0
+trigger7 = stateno = 310&&!movecontact&&animelem = 4,>0
+trigger8 = stateno = 320&&!movecontact&&animelem = 5,>0
+trigger9 = stateno = 330&&!movecontact&&animelem = 4,>0
+
+;試合後位置調整
+[State -1, ]
+type = ChangeState
+value = 100
+triggerall = var(59) = -155
+triggerall = roundstate = 3
+triggerall = statetype = S
+triggerall = backedgedist < 50
+trigger1 = ctrl
+
+;試合後位置調整
+[State -1, ]
+type = ChangeState
+value = 105
+triggerall = var(59) = -155
+triggerall = roundstate = 3
+triggerall = statetype = S
+triggerall = frontedgedist < 50
+trigger1 = ctrl
+
+[State 0, VarRandom]
+type = VarRandom
+trigger1 = roundsexisted = 0
+trigger1 = roundstate = 0
+trigger1 = var(10) != [1,3]
+v = 10
+range = 1,3
+
+[State 0, VarSet]
+type = VarSet
+trigger1 = roundstate > 2
+trigger1 = var(59)
+v = 59
+value = -155
+

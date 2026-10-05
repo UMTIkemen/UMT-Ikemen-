@@ -1,0 +1,1346 @@
+;=========================< 常時監視-2 >=========================
+[Statedef -2]
+
+;--- デバッグ ---
+[State -2, Clipboard]
+type = displaytoclipboard
+trigger1 = 1
+text = "AI = %d Chain = %d Attack = %f Combo = %f Cancel = %d \n"
+params = var(59),var(0),fvar(3),fvar(0),(var(10) || var(11) || var(12))
+ignorehitpause = 1
+
+[State -2, Clipboard]
+type = appendtoclipboard
+trigger1 = 1
+text =  "Life = %d Power = %d P2X = %f P2Y = %f \n"
+params = life,power,p2bodydist x,p2dist y
+ignorehitpause = 1
+
+;--- 喰らい判定 ---
+[State -2, NoJuggleCheck]
+type = assertspecial
+trigger1 = 1
+flag = nojugglecheck
+ignorehitpause = 1
+
+[State -2, Chain Var]
+type = varset
+triggerall = var(0)
+trigger1 = p2movetype != H
+trigger2 = p2statetype = L
+v = 0
+value = 0
+
+[State -2, HitDef]
+type = hitdef
+trigger1 = var(0) = 1
+attr = S,NA
+hitflag = 
+
+;--- ヒット硬直時間 ---
+[State -2, HitPause Var]
+type = varadd
+trigger1 = movecontact = 1
+v = 9
+value = 1
+ignorehitpause = 1
+
+[State -2, HitPause Var]
+type = varset
+trigger1 = movecontact != 1
+v = 9
+value = 0
+ignorehitpause = 1
+
+;--- ヒット判定 ---
+[State -2, HitPause Var]
+type = varset
+trigger1 = movecontact = 1
+trigger2 = movereversed = 1
+v = 14
+value = 1
+ignorehitpause = 1
+
+[State -2, HitPause Var]
+type = varset
+trigger1 = movetype = I
+trigger2 = !movecontact && !movereversed
+v = 14
+value = 0
+ignorehitpause = 1
+
+;--- イントロ用変数 ---
+;リセット
+[State -2, VarSet]
+type = varset
+trigger1 = var(2)
+trigger1 = roundstate <= 2
+v = 2
+value = 0
+
+;VS 庵
+[State -2, VarSet]
+type = varset
+triggerall = var(2) != 1
+trigger1 = p2name = "Iori" || p4name = "Iori"
+trigger2 = p2name = "Yagami Iori" || p4name = "Yagami Iori"
+trigger3 = p2name = "YagamiIori" || p4name = "YagamiIori"
+trigger4 = p2name = "Iori Yagami" || p4name = "Iori Yagami"
+trigger5 = p2name = "IoriYagami" || p4name = "IoriYagami"
+trigger6 = p2name = "ioriXI" || p4name = "ioriXI"; 別府氏 XI仕様
+trigger7 = p2name = "iorinbc" || p4name = "iorinbc"; 別府氏 NBC仕様
+trigger8 = p2name = "cvsiori" || p4name = "cvsiori"; H”氏 CVS2仕様
+trigger9 = p2name = "Yagami-AKOF" || p4name = "Yagami-AKOF"; jin氏 AKOF八神
+trigger10 = p2name = "d-Yagami" || p4name = "d-Yagami"; jin氏 力を失った八神
+trigger11 = p2name = "F-Iori Yagami" || p4name = "F-Iori d-Yagami"; Vans氏 02UM爪庵
+v = 2
+value = 1
+
+;VS 暴走庵
+[State -2, VarSet]
+type = varset
+triggerall = var(2) != 5
+trigger1 = p2name = "Orochi Iori" || p4name = "Orochi Iori"
+trigger2 = p2name = "Orochi_Iori" || p4name = "Orochi_Iori"
+trigger3 = p2name = "OrochiIori" || p4name = "OrochiIori"
+trigger4 = p2name = "iori_ex" || p4name = "iori_ex";H”氏 CVS2仕様
+trigger5 = numenemy
+trigger5 = enemy(0),name = "cvsiori" && enemy(0),authorname = "H”" && enemy(0),var(29) = 1
+trigger6 = numenemy = 2
+trigger6 = enemy(1),name = "cvsiori" && enemy(1),authorname = "H”" && enemy(1),var(29) = 1
+trigger7 = numenemy
+trigger7 = enemy(0),name = "Iori Yagami" && enemy(0),authorname = "Soy Sauce" && enemy(0),var(15) = 1
+trigger8 = numenemy = 2
+trigger8 = enemy(1),name = "Iori Yagami" && enemy(1),authorname = "Soy Sauce" && enemy(1),var(15) = 1
+v = 2
+value = 5
+
+;VS 日本チーム(紅丸)
+[State -2, VarSet]
+type = varset
+triggerall = var(2) != 2
+trigger1 = p2name = "Benimaru" || p4name = "Benimaru"
+trigger2 = p2name = "NikaidoBenimaru" || p4name = "NikaidoBenimaru"
+trigger3 = p2name = "Nikaido Benimaru" || p4name = "Nikaido Benimaru"
+trigger4 = p2name = "BenimaruNikaido" || p4name = "BenimaruNikaido"
+trigger5 = p2name = "Benimaru Nikaido" || p4name = "Benimaru Nikaido"
+trigger6 = p2name = "cvsbenimaru" || p4name = "cvsbenimaru"; 悪咲3号氏 CVS2仕様
+v = 2
+value = 6
+
+;VS 日本チーム(大門)
+[State -2, VarSet]
+type = varset
+triggerall = var(2) != 2
+trigger1 = p2name = "Daimon" || p4name = "Daimon"
+trigger2 = p2name = "DaimonGoro" || p4name = "DaimonGoro"
+trigger3 = p2name = "Daimon Goro" || p4name = "Daimon Goro"
+trigger4 = p2name = "GoroDaimon" || p4name = "GoroDaimon"
+trigger5 = p2name = "Goro Daimon" || p4name = "Goro Daimon"
+trigger6 = p2name = "Goro" || p4name = "Goro"
+v = 2
+value = 2
+
+;VS 日本チーム(真吾)
+[State -2, VarSet]
+type = varset
+triggerall = var(2) != 2
+trigger1 = p2name = "Shingo" || p4name = "Shingo"
+trigger2 = p2name = "YabukiShingo" || p4name = "YabukiShingo"
+trigger3 = p2name = "Yabuki Shingo" || p4name = "Yabuki Shingo"
+trigger4 = p2name = "ShingoYabuki" || p4name = "ShingoYabuki"
+trigger5 = p2name = "Shingo Yabuki" || p4name = "Shingo Yabuki"
+trigger6 = p2name = "shingoXI" || p4name = "shingoXI";別府氏 XI仕様
+trigger7 = p2name = "M_Shingo" || p4name = "M_Shingo";MDK氏 アレンジ仕様
+v = 2
+value = 7
+
+;VS K'
+[State -2, VarSet]
+type = varset
+triggerall = var(2) != 3
+trigger1 = p2name = "K'" || p4name = "K'"
+trigger2 = p2name = "K´" || p4name = "K´"
+trigger3 = p2name = "k" || p4name = "k"
+trigger4 = p2name = "k'XI" || p4name = "k'XI";別府氏 XI仕様
+v = 2
+value = 3
+
+;VS リュウ
+[State -2, VarSet]
+type = varset
+triggerall = var(2) != 4
+trigger1 = p2name = "Ryu" || p4name = "Ryu"
+trigger2 = p2name = "SF2'リュウ" || p4name = "SF2'リュウ";MASA@DAS氏 ストⅡ'仕様
+trigger3 = p2name = "MvC2 Ryu By Kamekaze" || p4name = "MvC2 Ryu By Kamekaze"; Kamekaze氏 MvC2仕様
+trigger4 = p2name = "Ryu_Sf3_Marvel" || p4name = "Ryu_Sf3_Marvel"; KAZ氏 スト3+MvC仕様
+trigger5 = p2name = "cvsryu" || p4name = "cvsryu";悪咲3号氏 CvS2仕様
+trigger6 = p2name = "svcryu" || p4name = "svcryu";悪咲3号氏 SvC仕様
+trigger7 = p2name = "The Fighter" || p4name = "The Fighter"; ケージュ氏 アレンジ仕様
+v = 2
+value = 4
+
+;VS 武器持ち(KUSANAGI)
+[State -2, VarSet]
+type = varset
+triggerall = var(2) != 9
+triggerall = name = "KUSANAGI"
+trigger1 = p2name = "Chang Koehan" || p4name = "Chang Koehan"
+trigger2 = p2name = "Chang_Koehan" || p4name = "Chang_Koehan"
+trigger3 = p2name = "ChangKoehan" || p4name = "ChangKoehan"
+trigger4 = p2name = "Chang" || p4name = "Chang"
+trigger5 = p2name = "cvsChang" || p4name = "cvsChang"
+trigger6 = p2name = "Choi Bounge" || p4name = "Choi Bounge"
+trigger7 = p2name = "Choi_Bounge" || p4name = "Choi_Bounge"
+trigger8 = p2name = "ChoiBounge" || p4name = "ChoiBounge"
+trigger9 = p2name = "Choi" || p4name = "Choi"
+trigger10 = p2name = "Billy Kane" || p4name = "Billy Kane"
+trigger11 = p2name = "Billy_Kane" || p4name = "Billy_Kane"
+trigger12 = p2name = "BillyKane" || p4name = "BillyKane"
+trigger13 = p2name = "Billy" || p4name = "Billy"
+trigger14 = p2name = "Mr.BIG" || p4name = "Mr.BIG"
+trigger15 = p2name = "Mr BIG" || p4name = "Mr BIG"
+trigger16 = p2name = "MrBIG" || p4name = "MrBIG"
+v = 2
+value = 9
+
+[State -2, VarSet]
+type = varset
+triggerall = var(2) != 9
+triggerall = name = "KUSANAGI"
+trigger1 = p2name = "Whip" || p4name = "Whip"
+trigger2 = p2name = "Foxy" || p4name = "Foxy"
+trigger3 = p2name = "Elisabeth Branctorche" || p4name = "Elisabeth Branctorche"
+trigger4 = p2name = "Elisabeth_Branctorche" || p4name = "Elisabeth_Branctorche"
+trigger5 = p2name = "ElisabethBranctorche" || p4name = "ElisabethBranctorche"
+trigger6 = p2name = "Elisabeth" || p4name = "Elisabeth"
+trigger7 = p2name = "Shion" || p4name = "Shion"
+v = 2
+value = 9
+
+;VS 炎使い 京(KUSANAGI)
+[State -2, VarSet]
+type = varset
+triggerall = var(2) != 8
+triggerall = name = "KUSANAGI"
+trigger1 = p2name = "Kyo" || p4name = "Kyo"
+trigger2 = p2name = "Kyo Kusanagi" || p4name = "Kyo Kusanagi"
+trigger3 = p2name = "Kyo_Kusanagi" || p4name = "Kyo_Kusanagi"
+trigger4 = p2name = "KyoKusanagi" || p4name = "KyoKusanagi"
+trigger5 = p2name = "Kusanagi Kyo" || p4name = "Kusanagi Kyo"
+trigger6 = p2name = "Kusanagi_Kyo" || p4name = "Kusanagi_Kyo"
+trigger7 = p2name = "KusanagiKyo" || p4name = "KusanagiKyo"
+trigger8 = p2name = "kyo98UM" || p4name = "kyo98UM"; '98UM仕様
+trigger9 = p2name = "kyo99" || p4name = "kyo99"; 別府氏 '99仕様
+trigger10 = p2name = "kyoXI" || p4name = "kyoXI"; 別府氏 XI仕様
+trigger11 = p2name = "kyoXI_EX" || p4name = "kyoXI_EX"; 別府氏 XI仕様EX
+trigger12 = p2name = "kyonbc" || p4name = "kyonbc"; 別府氏 NBC仕様
+trigger13 = p2name = "kyoAkof" || p4name = "kyoAkof"; 別府氏 AKOF仕様
+trigger14 = p2name = "kyoAkof-NE" || p4name = "kyoAkof-NE"; hork氏 AKOFネスツ仕様
+trigger15 = p2name = "cvskyo" || p4name = "cvskyo"; 悪咲3号氏 CvS仕様
+v = 2
+value = 8
+
+VS K9999(KUSANAGI)
+[State -2, VarSet]
+type = varset
+triggerall = var(2) != 10
+triggerall = name = "KUSANAGI"
+trigger1 = p2name = "K9999" || p4name = "K9999"
+v = 2
+value = 10
+
+;--- パートナー判別 ---
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name  = "Ryo Sakazaki"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = partner,var(15) = 0
+trigger1 = var(17) != 1
+v = 17
+value = 1
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name  = "Ryo Sakazaki"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = partner,var(15) = 1
+trigger1 = var(17) != 2
+v = 17
+value = 2
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name  = "Robert Garcia"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = partner,var(15) = 0
+trigger1 = var(17) != 3
+v = 17
+value = 3
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name  = "Robert Garcia"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = partner,var(15) = 1
+trigger1 = var(17) != 4
+v = 17
+value = 4
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name  = "Takuma Sakazaki"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = var(17) != 5
+v = 17
+value = 5
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name  = "Mr.KARATE"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = var(17) != 6
+v = 17
+value = 6
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name  = "Terry Bogard"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = var(17) != 7
+v = 17
+value = 7
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name  = "Andy Bogard"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = var(17) != 8
+v = 17
+value = 8
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name  = "Joe Higahi"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = var(17) != 9
+v = 17
+value = 9
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name  = "Geese Howard"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = var(17) != 10
+v = 17
+value = 10
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name  = "Mr.BIG"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = var(17) != 11
+v = 17
+value = 11
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name = "Wolfgang Krauser"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = var(17) != 12
+v = 17
+value = 12
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name  = "Dan Hibiki"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = var(17) != 13
+v = 17
+value = 13
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name  = "Kyo Kusanagi"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = partner,var(15) = 0
+trigger1 = var(17) != 14
+v = 17
+value = 14
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name  = "Kyo Kusanagi"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = partner,var(15) = 1
+trigger1 = var(17) != 114
+v = 17
+value = 114
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name  = "Kyo Kusanagi"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = partner,var(15) = 2
+trigger1 = var(17) != 214
+v = 17
+value = 214
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name  = "Clone Kyo"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = var(17) != 15
+v = 17
+value = 15
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name  = "KUSANAGI"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = var(17) != 115
+v = 17
+value = 115
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name  = "Kim Kaphwan"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = var(17) != 18
+v = 17
+value = 18
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name  = "Ryuji Yamazaki"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = var(17) != 19
+v = 17
+value = 19
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name  = "Ryu"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = var(17) != 20
+v = 17
+value = 20
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name  = "Ken Masters"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = partner,var(15) = 0
+trigger1 = var(17) != 21
+v = 17
+value = 21
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name  = "Ken Masters"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = partner,var(15) = 1
+trigger1 = var(17) != 22
+v = 17
+value = 22
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name  = "Guile"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = var(17) != 23
+v = 17
+value = 23
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name = "Vega"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = var(17) != 24
+v = 17
+value = 24
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name  = "Iori Yagami"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = partner,var(15) = 0
+trigger1 = var(17) != 25
+v = 17
+value = 25
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,name  = "Iori Yagami"
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = partner,var(15) = 1
+trigger1 = var(17) != 125
+v = 17
+value = 125
+
+[State -2, VarSet]
+type = varset
+triggerall = numpartner
+trigger1 = partner,authorname  = "Soy Sauce"
+trigger1 = var(18) != 1
+v = 18
+value = 1
+
+[State -2, VarSet]
+type = varset
+trigger1 = numpartner
+v = 19
+value = partner,alive
+
+;--- 最終決戦神技 ---
+[State -2, ChangeState]
+type = ChangeState
+triggerall = numpartner
+triggerall = var(17) = 25 || var(17) = 125
+triggerall = partner,stateno = 4620 && partner,time >= 18
+triggerall = statetype != A
+trigger1 = ctrl || stateno = 100 || (stateno = [120,139])
+trigger2 = var(11) = 1
+value = 4601
+
+;--- コンボ補正 ---
+[State -2, Combo Var]
+type = varset
+trigger1 = p2movetype != H
+fv = 0
+value = 1
+
+[State -2, Combo Var]
+type = varadd
+triggerall = p2movetype = H
+triggerall = stateno != 800
+triggerall = stateno != 850
+triggerall = stateno != 2121
+triggerall = stateno != 1180
+triggerall = stateno != [1700,1799]
+triggerall = !(stateno = 2750 && var(15) = 3 && var(49) = 2)
+triggerall = stateno != [4000,4099]
+triggerall = stateno != [4500,4559]
+triggerall = stateno != [4700,4799]
+trigger1 = movehit = 1
+fv = 0
+value = -0.05
+
+[State -2, Combo Var]
+type = varset
+trigger1 = stateno = [4000,4999]
+trigger1 = !((stateno = [4400,4499]) && var(15) = 3 && var(49) = 0)
+trigger1 = !((stateno = [4700,4799]) && var(15) = 3 && var(49) = 0)
+trigger1 = fvar(0) < 0.5
+fv = 0
+value = 0.5
+
+[State -2, Combo Var]
+type = varset
+triggerall = fvar(0) < 0.4
+trigger1 = stateno = [3000,3999]
+trigger2 = ((stateno = [4400,4499]) && var(15) = 3 && var(49) = 0)
+trigger3 = ((stateno = [4700,4799]) && var(15) = 3 && var(49) = 0)
+fv = 0
+value = 0.4
+
+[State -2, Combo Var]
+type = varset
+trigger1 = fvar(0) < 0.2
+fv = 0
+value = 0.2
+
+;--- パワーMAX ---
+[State -2, PowerMAX Var]
+type = varadd
+trigger1 = sysfvar(2) = 0
+trigger1 = fvar(2)
+fv = 2
+value = -1
+
+[State -2, PowerMAX Var]
+type = varset
+trigger1 = fvar(2) <= 0
+trigger2 = !alive
+trigger3 = roundstate < 2
+fv = 2
+value = 0
+
+[State -2, PalFX]
+type = palfx
+trigger1 = sysfvar(2) = 0
+trigger1 = gametime%3 = 1 && fvar(2)
+trigger1 = movetype != H
+time = 1
+add = 80,80,60
+ignorehitpause = 1
+
+[State -2, PalFX]
+type = palfx
+trigger1 = sysfvar(2) = 0
+trigger1 = gametime%3 = 2 && fvar(2)
+trigger1 = movetype != H
+time = 1
+add = 40,40,30
+ignorehitpause = 1
+
+[State -2, Helper]
+type = helper
+trigger1 = !numhelper(8000)
+trigger1 = roundstate = 2
+trigger1 = helper(10001),var(30)
+helpertype = normal
+name = "Power MAX Gauge"
+ownpal = 1
+stateno = 10000
+ID = 8000
+postype = back
+pos = 0,0
+facing = 1
+supermovetime = 999999
+pausemovetime = 999999
+
+;--- カウンター ---
+[State -2, Counter Var]
+type = varset
+trigger1 = var(3) = 0 && p2movetype = A
+v = 3
+value = 2
+
+[State -2, Counter Var]
+type = varadd
+trigger1 = var(3) && p2movetype != A
+v = 3
+value = -1
+
+[State -2, Counter Var]
+type = varset
+trigger1 = var(3) < 0
+v = 3
+value = 0
+
+[State -2, Counter Helper]
+type = helper
+triggerall = var(3)
+triggerall = var(9) = 1
+triggerall = p2movetype = H && numtarget
+triggerall = stateno != [3200,3299]
+trigger1 = movehit = 1
+helpertype = normal
+name = "Counter Helper"
+size.xscale = 0.5
+size.yscale = 0.5
+stateno = 7100
+ID = 7100
+postype = left
+pos = 10,-100
+pausemovetime = 2147483647
+supermovetime = 2147483647
+ignorehitpause = 1
+
+;--- 基本攻撃力 ---
+[State -2, Attack Var]
+type = varset
+trigger1 = 1
+fv = 3
+value = 1
+
+;パワーMAX
+[State -2, Attack Var]
+type = varset
+trigger1 = fvar(2)
+fv = 3
+value = fvar(3)*1.2
+
+;カウンター
+[State -2, Attack Var]
+type = varset
+trigger1 = var(3)
+fv = 3
+value = fvar(3)*1.2
+
+
+;ダウン追撃
+[State -2, Attack Var]
+type = VarSet
+trigger1 = p2movetype = H
+trigger1 = p2statetype = L || enemynear,gethitvar(fallcount) > 0 || var(25)
+fv = 3
+value = 0.67*fvar(3)/(enemynear,const(data.fall.defence_mul)**(enemynear,gethitvar(fallcount)))
+
+;--- スロー処理 ---
+[State -2, Slow]
+type = pause
+triggerall = roundstate = 2
+trigger1 = var(4) && (time%2) = 0
+time = 1
+
+[State -2, Slow Var]
+type = varadd
+trigger1 = var(4)
+v = 4
+value = -1
+
+[State -2, Slow Var]
+type = varset
+trigger1 = var(4) < 0
+v = 4
+value = 0
+
+;--- KOヘルパー ---
+[State -2, Helper]
+type = helper
+trigger1 = !numhelper(7800)
+trigger1 = roundstate = 2
+helpertype = normal
+name = "KO"
+ownpal = 1
+stateno = 7800
+ID = 7800
+postype = back
+pos = 0,0
+facing = 1
+supermovetime = 999999
+pausemovetime = 999999
+ignorehitpause = 1
+
+;--- 飛び道具発射可能 ---
+[State -2, VarSet]
+type = varset
+trigger1 = var(20)
+v = 20
+value = 0
+
+[State -2, VarSet]
+type = varset
+triggerall = var(20) = 0
+trigger1 = numhelper(1610)
+trigger1 = helper(1610),stateno = 1610
+trigger2 = numhelper(1660)
+trigger2 = helper(1660),stateno = 1660
+trigger3 = numhelper(2610)
+trigger3 = helper(2610),stateno = 1610
+v = 20
+value = 1
+
+;--- 当て投げ制限 ---
+[State -2, VarSet]
+type = varset
+trigger1 = fvar(7) != 6
+trigger1 = p2movetype = H || p2stateno = 5120
+fv = 7
+value = 6
+
+[State -2, VarAdd]
+type = varadd
+trigger1 = fvar(7) > 0
+trigger1 = p2movetype != H && p2stateno != 5120
+fv = 7
+value = -1
+
+[State -2, VarSet]
+type = varset
+trigger1 = fvar(7) < 0
+fv = 7
+value = 0
+
+;--- 
+[State -2]
+type = null;varset
+trigger1 = stateno != 20 && stateno != 40
+v = 57
+value = 0
+
+;--- ダッシュ音ストップ ---
+[State -2, StopSnd]
+type = stopsnd
+trigger1 = stateno != 100
+trigger1 = stateno != 1700
+trigger1 = stateno != 4700
+channel = 1
+ignorehitpause = 1
+
+[State -2, StopSnd]
+type = stopsnd
+trigger1 = stateno != 3200
+trigger1 = stateno != 3800
+trigger1 = stateno != 4721
+channel = 2
+ignorehitpause = 1
+
+;--- 残像 ---
+[State -2, AfterImageTime]
+type = afterimagetime
+trigger1 = sysvar(1) = 2 || sysvar(1) = -2
+trigger1 = (vel y < 0 && statetype = A) || stateno = 40
+trigger1 = movetype != H
+time = 2
+ignorehitpause = 1
+
+;--- 空中ガード ---
+[State -2, Air Guard]
+type = assertspecial
+trigger1 = var(36) = 0
+flag = noairguard
+ignorehitpause = 1
+
+;--- 無式勝利 ---
+[State -2, VarSet]
+type = varset
+trigger1 = roundstate = 2
+trigger1 = var(42)
+v = 42
+value = 0
+
+[State -2, VarSet]
+type = varset
+triggerall = winko
+trigger1 = stateno = [3300,3399]
+trigger2 = stateno = [3750,3799]
+trigger3 = stateno = [4000,4299]
+trigger4 = stateno = [4500,4599]
+trigger5 = stateno = [4800,4899]
+v = 42
+value = 1
+
+;--- 喰らいボイス ---
+[State -2, Voice]
+type = playsnd
+triggerall = alive
+triggerall = gethitvar(animtype) = 0
+triggerall = random < 500
+triggerall = time = 1
+trigger1 = stateno = 5000 || stateno = 5010 || stateno = 5020 || stateno = 5070 || stateno = 5080
+value = s5000,0
+channel = 0
+
+[State -2, Voice]
+type = playsnd
+triggerall = alive
+triggerall = gethitvar(animtype) = 1
+triggerall = random < 500
+triggerall = time = 1
+trigger1 = stateno = 5000 || stateno = 5010 || stateno = 5020 || stateno = 5070 || stateno = 5080
+value = s5000,10
+channel = 0
+
+[State -2, Voice]
+type = playsnd
+triggerall = alive
+triggerall = gethitvar(animtype) = 2
+triggerall = random < 500
+triggerall = time = 1
+trigger1 = stateno = 5000 || stateno = 5010 || stateno = 5020 || stateno = 5070 || stateno = 5080
+value = s5000,20
+channel = 0
+
+[State -2, Voice]
+type = playsnd
+triggerall = alive
+triggerall = random < 500
+triggerall = time = 1
+trigger1 = stateno = 5100
+value = s5000,30
+channel = 0
+
+;--- ガードクラッシュ ---
+[State -2, GC Helper]
+type = helper
+triggerall = !numhelper(7110)
+triggerall = p2movetype = H && numtarget
+trigger1 = numtarget(var(29))
+trigger1 = target(var(29)),stateno = 5701
+helpertype = normal
+name = "GC Helper"
+size.xscale = 0.5
+size.yscale = 0.5
+stateno = 7110
+ID = 7110
+postype = left
+pos = 10,-100
+pausemovetime = 2147483647
+supermovetime = 2147483647
+ignorehitpause = 1
+
+;--- 滑り込みダウン効果音 ---
+[State -2, Sound]
+type = playsnd
+triggerall = !numhelper(7000) && !numhelper(7010) && !numhelper(7020)
+triggerall = numtarget(var(29))
+triggerall = target(var(29)),movetype = H
+trigger1 = target(var(29)),stateno = 945 || target(var(29)),stateno = 5713
+trigger1 = target(var(29)),time = 1
+value = s8000,1
+
+;--- 相手ダウン ---
+[State -2, Sound]
+type = playsnd
+triggerall = !numhelper(7000) && !numhelper(7010) && !numhelper(7020)
+triggerall = numtarget(var(29))
+triggerall = target(var(29)),movetype = H
+trigger1 = target(var(29)),stateno = 5612 || target(var(29)),stateno = 1177
+trigger1 = target(var(29)),time = 1
+value = s6210,0
+
+[State -2, Explod]
+type = explod
+triggerall = !numhelper(7000) && !numhelper(7010) && !numhelper(7020)
+triggerall = numtarget(var(29))
+triggerall = target(var(29)),movetype = H
+trigger1 = target(var(29)),stateno = 5612
+trigger1 = target(var(29)),time = 1
+pos = 0,0
+postype = p2
+sprpriority = 5
+anim = 6210
+ownpal = 1
+
+[State -2, Explod]
+type = explod
+triggerall = !numhelper(7000) && !numhelper(7010) && !numhelper(7020)
+triggerall = numtarget(var(29))
+triggerall = target(var(29)),movetype = H
+trigger1 = target(var(29)),movetype = H
+trigger1 = target(var(29)),stateno = 5612
+trigger1 = target(var(29)),time = 1
+pos = 0,0
+postype = p2
+sprpriority = -5
+anim = 6215
+ownpal = 1
+
+[State -2, Explod]
+type = explod
+triggerall = !numhelper(7000) && !numhelper(7010) && !numhelper(7020)
+triggerall = numtarget(var(29))
+triggerall = target(var(29)),movetype = H
+trigger1 = target(var(29)),stateno = 1177
+trigger1 = target(var(29)),time = 1
+pos = 0,0
+postype = p2
+sprpriority = 5
+anim = 6220
+ownpal = 1
+
+[State -2, Explod]
+type = explod
+triggerall = !numhelper(7000) && !numhelper(7010) && !numhelper(7020)
+triggerall = numtarget(var(29))
+triggerall = target(var(29)),movetype = H
+trigger1 = target(var(29)),movetype = H
+trigger1 = target(var(29)),stateno = 1177
+trigger1 = target(var(29)),time = 1
+pos = 0,0
+postype = p2
+sprpriority = -5
+anim = 6225
+ownpal = 1
+
+;--- ダウン追撃判定 ---
+[State -2, Stun Var]
+type = varset
+trigger1 = p2movetype != H && var(25)
+v = 25
+value = 0
+
+;--- 相手判別 ---
+;リョウ
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 1
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Ryo Sakazaki"
+trigger1 = enemynear,var(15) = 0
+v = 22
+value = 1
+
+;二代目Mr.KARATE
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 2
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Ryo Sakazaki"
+trigger1 = enemynear,var(15) = 1
+v = 22
+value = 2
+
+;ロバート
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 3
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Robert Garcia"
+trigger1 = enemynear,var(15) = 0
+v = 22
+value = 3
+
+;EXロバート
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 4
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Robert Garcia"
+trigger1 = enemynear,var(15) = 1
+v = 22
+value = 4
+
+;タクマ
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 5
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Takuma Sakazaki"
+v = 22
+value = 5
+
+;Mr.KARATE
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 6
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Mr.KARATE"
+v = 22
+value = 6
+
+;テリー
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 7
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Terry Bogard"
+v = 22
+value = 7
+
+;アンディ
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 8
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Andy Bogard"
+v = 22
+value = 8
+
+;ジョー
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 9
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Joe Higashi"
+v = 22
+value = 9
+
+;ギース
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 10
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Geese Howard"
+v = 22
+value = 10
+
+;Mr.BIG
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 11
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Mr.BIG"
+v = 22
+value = 11
+
+;クラウザー
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 12
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Wolfgang Krauser"
+v = 22
+value = 12
+
+;ダン
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 13
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Dan Hibiki"
+v = 22
+value = 13
+
+;クラシック京
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 14
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Kyo Kusanagi"
+trigger1 = enemynear,var(15) = 1
+v = 22
+value = 14
+
+;ネスツ京
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 114
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Kyo Kusanagi"
+trigger1 = enemynear,var(15) = 1
+v = 22
+value = 114
+
+;ネスツ京
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 214
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Kyo Kusanagi"
+trigger1 = enemynear,var(15) = 2
+v = 22
+value = 214
+
+;クローン京
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 15
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Clone Kyo"
+v = 22
+value = 15
+
+;KUSANAGI
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 15
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "KUSANAGI"
+v = 22
+value = 115
+
+;紅丸
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 16
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Benimaru Nikaido"
+v = 22
+value = 16
+
+;キム
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 18
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Kim Kaphwan"
+v = 22
+value = 18
+
+;山崎
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 19
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Ryuji Yamazaki"
+v = 22
+value = 19
+
+;リュウ
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 20
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Ryu"
+v = 22
+value = 20
+
+;ケン
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 21
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Ken Masters"
+trigger1 = enemynear,var(15) = 0
+v = 22
+value = 21
+
+;洗脳ケン
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 22
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Ken Masters"
+trigger1 = enemynear,var(15) = 1
+v = 22
+value = 22
+
+;ガイル
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 23
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Guile"
+v = 23
+value = 23
+
+;ベガ
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 24
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Vega"
+v = 22
+value = 24
+
+;庵
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 25
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Iori Yagami"
+trigger1 = enemynear,var(15) = 0
+v = 22
+value = 25
+
+;暴走庵
+[State -2, VarSet]
+type = varset
+triggerall = var(22) != 125
+trigger1 = enemynear,authorname = "Soy Sauce"
+trigger1 = enemynear,name = "Iori Yagami"
+trigger1 = enemynear,var(15) = 1
+v = 22
+value = 125
+
+;--- 先行入力ヘルパー ---
+[State -2, Command Helper]
+type = helper
+trigger1 = !numhelper(9999)
+trigger1 = !ishelper
+trigger1 = alive
+helpertype = normal
+name = "commandhelper"
+stateno = 9999
+ID = 9999
+postype = p1
+pos = 0,0
+keyctrl = 1
+pausemovetime = 2147483647
+supermovetime = 2147483647
+
+;--- コンフィグヘルパー ---
+[State -2, Config Helper]
+type = helper
+trigger1 = !numhelper(10001)
+trigger1 = !ishelper
+helpertype = normal
+name = "Config Helper"
+stateno = 10000
+ID = 10001
+postype = p1
+pos = 0,0
+pausemovetime = 2147483647
+supermovetime = 2147483647
+
+;=========================< 常時監視-3 >=========================
+[Statedef -3]
+
+;--- 画面端ヒットバック ---
+[State -3, VarSet]
+type = varset
+trigger1 = numtarget
+trigger1 = target,statetype = S || target,statetype = C
+trigger1 = movecontact = 1
+trigger1 = hitdefattr = SCA,AA || stateno = 3050
+fv = 6
+value = target,gethitvar(xvel)
+
+[State -3, VarSet]
+type = varset
+trigger1 = numtarget
+trigger1 = fvar(6)
+trigger1 = !numhelper(7000) && !numhelper(7010) && !numhelper(7020)
+trigger1 = target,hitshakeover
+fv = 6
+value = fvar(6)*0.85
+
+[State -3, PosAdd]
+type = posadd
+trigger1 = fvar(6)
+trigger1 = numtarget
+trigger1 = !numhelper(7000) && !numhelper(7010) && !numhelper(7020)
+trigger1 = statetype = S || statetype = C
+trigger1 = target,statetype = S || target,statetype = C
+trigger1 = target,backedgebodydist <= 0 || target,frontedgebodydist <= 0
+trigger1 = target,hitshakeover
+trigger1 = fvar(6)*facing > 0
+x = -fvar(6)*facing
+
+;--- ワイヤーダメージ判定 ---
+[State -3, Wire Var]
+type = varset
+trigger1 = numtarget(var(29))
+trigger1 = target(var(29)),stateno = [5600,5604]
+v = 16
+value = 1
+
+[State -3, Wire Var]
+type = varset
+trigger1 = p2movetype != H
+v = 16
+value = 0
+
+[State -3, Helper]
+type = helper
+triggerall = !numhelper(5604)
+trigger1 = numtarget(var(29))
+trigger1 = target(var(29)),stateno = 5600
+trigger2 = p2stateno = 5600
+trigger2 = stateno = 4210
+helpertype = normal
+name = "Wire Damage"
+stateno = 5604
+ID = 5604
+postype = p1
+pos = 0,0
+facing = 1
+
+[State -3, PosAdd]
+type = posset
+triggerall = !numhelper(7000) && !numhelper(7010) && !numhelper(7020)
+triggerall = numhelper(5604)
+trigger1 = facing = 1 && helper(5604),facing = 1
+trigger1 = pos x > helper(5604),pos x
+trigger2 = facing = -1 && helper(5604),facing = -1
+trigger2 = pos x < helper(5604),pos x
+x = helper(5604),pos x
+
+;--- 画面端めくり防止 ---
+[State -3, CornerPush]
+type = width
+triggerall = movetype != H
+trigger1 = enemynear, backedgedist < 10
+trigger2 = enemynear, frontedgedist < 10
+edge = 10

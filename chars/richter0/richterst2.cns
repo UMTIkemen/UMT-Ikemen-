@@ -1,0 +1,1486 @@
+;---------------------------------------------------------------
+;援護（マリア、登場）
+[Statedef 2200]
+type = S
+movetype = I
+physics = N
+anim = 2200
+velset = 2.8,0
+ctrl = 0
+
+[State 3000]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+
+[State 3000]
+type = HitOverride
+trigger1 = time = 0
+attr = SCA,AA,AT,AP
+slot = 0
+stateno = 2205
+time = -1
+
+[State 3000]
+type = ChangeState
+trigger1 = time = 100
+value = 2201
+
+;---------------------------------------------------------------------------
+;援護（マリア攻撃）
+[Statedef 2201]
+type = S
+movetype = I
+physics = S
+anim = 2201
+velset = 0,0
+ctrl = 0
+
+[State pos]
+type = posset
+trigger1 = time = 0
+y = 0
+
+[State snd]
+type = PlaySnd
+trigger1 = AnimElem = 2
+value = 2200,0
+
+[State 3000]
+type = HitOverride
+trigger1 = time = 0
+attr = SCA,AA,AT,AP
+slot = 0
+stateno = 2205
+time = -1
+
+[State 7001, Rice o' Roni]
+type = Helper
+trigger1 = AnimElem = 2
+helpertype = Normal
+ID = 2500
+name = "bard"
+postype = p1
+pos = 0,-35
+stateno = 2500
+pausemovetime = 99999999999
+size.xscale = 1.5
+size.yscale = 1.5
+ownpal = 1
+keyctrl = 0
+
+[State end]
+type = ChangeState
+trigger1 = time = 60
+value = 2202
+
+;---------------------------------------------------------------
+;鳥
+[Statedef 2500]
+type    = A
+movetype= A
+physics = N
+juggle  = 6
+anim = 2500
+ctrl = 0
+sprpriority = 2
+
+[State 7, 1] ;
+type = HitDef
+trigger1 = animelem = 1
+attr = A, NP
+damage   = 5,0
+getpower  = 0
+animtype = light
+guardflag = MA
+hitflag = MAF
+pausemovetime = 2
+pausetime = 1,1
+sparkno = -1
+guard.sparkno = S1500
+guardsound = s1500,0
+hitsound = s2200,2
+ground.type = low
+ground.slidetime = 2             
+ground.hittime  = 4
+ground.velocity = -3, 0
+air.animtype = Back
+air.velocity = -3,0
+air.juggle = 3
+air.fall = 1
+palfx.time = 2
+palfx.sinadd = 240,240,240,1
+palfx.add = 220,220,220
+
+[State 200]
+type = Explod
+trigger1 = MoveGuarded = 1
+anim = 1510
+id = 1510
+postype = p2
+scale = 1.0,1.0
+vel = 0,-1
+facing = ifelse(facing=1,-1,1)
+removetime = -2
+ownpal = 1
+pos = 0, -55
+sprpriority = 5
+pausemovetime = 9999999
+supermovetime = 9999999
+
+[State 7004]
+type = Velset
+trigger1 = time = 0
+x = 7
+
+[State 7004]
+type = Veladd
+trigger1 = time = 3
+y = -1
+
+[State 7004]
+type = Veladd
+trigger1 = time = 20
+y = 1.4
+
+[State 7004]
+type = Veladd
+trigger1 = time >= 7 && time <= 33
+x = -0.4
+
+[State 7001, 3]
+type = DestroySelf
+trigger1 = time = 57
+
+;---------------------------------------------------------------------------
+;援護（マリア、ポーズ）
+[Statedef 2202]
+type = S
+movetype = I
+physics = S
+anim = 2202
+velset = 0,0
+ctrl = 0
+
+[State 3000]
+type = HitOverride
+trigger1 = time = 0
+attr = SCA,AA,AT,AP
+slot = 0
+stateno = 2205
+time = -1
+
+[State pos]
+type = posset
+trigger1 = time = 0
+y = 0
+
+[State end]
+type = ChangeState
+trigger1 = animtime = 0
+value = 2203
+
+;---------------------------------------------------------------
+;援護（マリア、撤退する！）
+[Statedef 2203]
+type = S
+movetype = I
+physics = N
+anim = 2203
+velset = 0,0
+ctrl = 0
+
+[State 2203]
+type = PlayerPush
+trigger1 = 1
+value = 0
+
+[State vel]
+type = velset
+trigger1 = BackEdgeBodyDist >= 160
+trigger1 = animelem = 1
+x = 3
+y = 0
+
+[State turn]
+type = Turn
+trigger1 = BackEdgeBodyDist >= 160
+trigger1 = animelem = 1
+
+[State vel]
+type = velset
+trigger1 = BackEdgeBodyDist < 160
+trigger1 = animelem = 1
+x = -3
+y = 0
+
+[State 2203]
+type = HitOverride
+trigger1 = time = 0
+attr = SCA,AA,AT,AP
+slot = 0
+stateno = 2205
+time = -1
+
+[State end]
+type = DestroySelf
+trigger1 = time = 80
+
+;------------------------------------------------------------------
+;マリア攻撃受ける
+[Statedef 2205]
+type = A
+movetype = H
+physics = N
+anim = 2204
+ctrl = 0
+
+[State 7015, 2]
+type = PalFX
+trigger1 = time = 0
+palcolor = 256
+add = 100,-20,-20
+sinadd = 40,-20,-20,8
+palinvertall = 1
+time = 45
+
+[State vel]
+type = veladd
+trigger1 = 1
+y = GetHitVar(yaccel)
+
+[State 3005]
+type = HitVelSet
+trigger1 = time = 0
+x = 3
+y = -4
+
+;[State 2205]
+;type = HitVelSet
+;trigger1 = time = 0
+;x = 1
+;y = 1
+
+;[State 2205]
+;type = Veladd
+;trigger1 = time = 0
+;x = 5
+;y = -7
+
+[State 2205]
+type = PlaySnd
+trigger1 = time = 0
+value = 2200,5
+
+[State 2205]
+type = ChangeState
+trigger1 = pos y >= 10 && vel y > 0
+value = 2206
+
+[Statedef 2206]
+type = L
+movetype = H
+physics = N
+anim = 2205
+velset = 0,0
+
+[State pos]
+type = posset
+trigger1 = time = 0
+y = 0
+
+[State snd]
+type = PlaySnd
+trigger1 = time = 0
+value = 2200,1
+
+[State 2206]
+type = Explod
+trigger1 = time = 0
+anim = f60
+
+;[State 2206]
+;type = ParentVarAdd
+;trigger1 = time = 50
+;v = 12
+;value = 1
+
+[State 2206]
+type = ChangeState
+;trigger1 = parent,var(12) < 2
+trigger1 = time = 30
+value = 2207
+
+;マリア起き上がり
+[Statedef 2207]
+type = L
+movetype = H
+physics = N
+anim = 2206
+
+[State 3007]
+type = ChangeState
+trigger1 = animtime = 0
+value = 2203
+
+;---------------------------------------------------------------
+;援護（マリア、登場其の二）
+[Statedef 2210]
+type = S
+movetype = I
+physics = N
+anim = 2200
+velset = 2.8,0
+ctrl = 0
+
+[State 3000]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+
+[State 3000]
+type = HitOverride
+trigger1 = time = 0
+attr = SCA,AA,AT,AP
+slot = 0
+stateno = 2205
+time = -1
+
+[State 3000]
+type = ChangeState
+trigger1 = time = 80
+value = 2211
+
+;---------------------------------------------------------------------------
+;援護（マリア攻撃）
+[Statedef 2211]
+type = S
+movetype = I
+physics = S
+anim = 2201
+velset = 0,0
+ctrl = 0
+
+[State pos]
+type = posset
+trigger1 = time = 0
+y = 0
+
+[State snd]
+type = PlaySnd
+trigger1 = time = 2
+value = 2200,3
+
+[State 3000]
+type = HitOverride
+trigger1 = time = 0
+attr = SCA,AA,AT,AP
+slot = 0
+stateno = 2205
+time = -1
+
+[State 7001, Rice o' Roni]
+type = Helper
+trigger1 = AnimElem = 2
+helpertype = Normal
+ID = 2510
+name = "dragon"
+postype = p1
+pos = -8,-20
+stateno = 2510
+pausemovetime = 99999999999
+size.xscale = 1.5
+size.yscale = 1.5
+ownpal = 1
+keyctrl = 0
+
+[State end]
+type = ChangeState
+trigger1 = time = 20
+value = 2202
+
+;---------------------------------------------------------------
+;ドラゴン
+[Statedef 2510]
+type    = A
+movetype= A
+physics = N
+juggle  = 6
+anim = 2510
+ctrl = 0
+sprpriority = 2
+
+[State 7, 1] ;
+type = HitDef
+trigger1 = animelem = 1
+attr = A, SP
+damage   = 80,40
+getpower  = 0
+animtype = light
+guardflag = MA
+hitflag = MAF
+pausemovetime = 10
+pausetime = 0,10
+sparkno = -1
+guard.sparkno = S1500
+guardsound = s1500,0
+hitsound = s2200,2
+ground.type = low
+ground.slidetime = 10
+ground.hittime  = 10
+ground.velocity = -7,-4
+air.animtype = Back
+air.velocity = -7,-2
+air.juggle = 3
+air.fall = 1
+palfx.time = 4
+palfx.sinadd = 240,240,240,2
+palfx.add = 220,220,220
+
+[State 200]
+type = Explod
+trigger1 = MoveGuarded = 1
+anim = 1510
+id = 1510
+postype = p2
+scale = 1.0,1.0
+vel = 0,-1
+facing = ifelse(facing=1,-1,1)
+removetime = -2
+ownpal = 1
+pos = 0, -55
+sprpriority = 5
+pausemovetime = 9999999
+supermovetime = 9999999
+
+[State 7004]
+type = Velset
+trigger1 = time = 0
+x = -3
+
+[State 7004]
+type = Veladd
+trigger1 = time = 1
+y = -4
+
+[State 7004]
+type = Veladd
+trigger1 = time = 14
+y = 4
+
+[State 7004]
+type = Veladd
+trigger1 = time >= 2 && time <= 50
+x = 0.4
+
+[State 7001, 3]
+type = DestroySelf
+trigger1 = time = 80
+
+;---------------------------------------------------------------
+;援護（マリア、登場其の三）
+[Statedef 2220]
+type = S
+movetype = I
+physics = N
+anim = 2200
+velset = 2.8,0
+ctrl = 0
+
+[State 3000]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+
+[State 3000]
+type = HitOverride
+trigger1 = time = 0
+attr = SCA,AA,AT,AP
+slot = 0
+stateno = 2205
+time = -1
+
+[State 3000]
+type = ChangeState
+trigger1 = time = 91
+value = 2221
+
+;---------------------------------------------------------------------------
+;援護（マリア攻撃）
+[Statedef 2221]
+type = S
+movetype = I
+physics = S
+anim = 2220
+velset = 0,0
+ctrl = 0
+
+[State pos]
+type = posset
+trigger1 = time = 0
+y = 0
+
+[State snd]
+type = PlaySnd
+trigger1 = AnimElem = 2
+value = 2200,6
+
+[State snd]
+type = PlaySnd
+trigger1 = AnimElem = 2
+value = 2200,7
+
+[State 3000]
+type = HitOverride
+trigger1 = time = 0
+attr = SCA,AA,AT,AP
+slot = 0
+stateno = 2205
+time = -1
+
+[State 7001, Rice o' Roni]
+type = Helper
+trigger1 = time = 7
+helpertype = Normal
+ID = 2520
+name = "onpu1"
+postype = p1
+pos = 10,-45
+stateno = 2520
+pausemovetime = 99999999999
+size.xscale = 1.5
+size.yscale = 1.5
+ownpal = 1
+keyctrl = 0
+
+[State 7001, Rice o' Roni]
+type = Helper
+trigger1 = time = 11
+helpertype = Normal
+ID = 2522
+name = "onpu2"
+postype = p1
+pos = 10,-45
+stateno = 2522
+pausemovetime = 99999999999
+size.xscale = 1.5
+size.yscale = 1.5
+ownpal = 1
+keyctrl = 0
+
+[State 7001, Rice o' Roni]
+type = Helper
+trigger1 = time = 15
+helpertype = Normal
+ID = 2524
+name = "onpu3"
+postype = p1
+pos = 10,-45
+stateno = 2524
+pausemovetime = 99999999999
+size.xscale = 1.5
+size.yscale = 1.5
+ownpal = 1
+keyctrl = 0
+
+[State 7001, Rice o' Roni]
+type = Helper
+trigger1 = time = 19
+helpertype = Normal
+ID = 2520
+name = "onpu1"
+postype = p1
+pos = 10,-45
+stateno = 2520
+pausemovetime = 99999999999
+size.xscale = 1.5
+size.yscale = 1.5
+ownpal = 1
+keyctrl = 0
+
+[State 7001, Rice o' Roni]
+type = Helper
+trigger1 = time = 23
+helpertype = Normal
+ID = 2522
+name = "onpu2"
+postype = p1
+pos = 10,-45
+stateno = 2522
+pausemovetime = 99999999999
+size.xscale = 1.5
+size.yscale = 1.5
+ownpal = 1
+keyctrl = 0
+
+[State 7001, Rice o' Roni]
+type = Helper
+trigger1 = time = 27
+helpertype = Normal
+ID = 2524
+name = "onpu3"
+postype = p1
+pos = 10,-45
+stateno = 2524
+pausemovetime = 99999999999
+size.xscale = 1.5
+size.yscale = 1.5
+ownpal = 1
+keyctrl = 0
+
+[State end]
+type = ChangeState
+trigger1 = time = 70
+value = 2202
+
+;---------------------------------------------------------------
+;音符
+[Statedef 2520]
+type    = A
+movetype= A
+physics = N
+juggle  = 6
+anim = 2520
+ctrl = 0
+sprpriority = 2
+
+[State 7, 1] ;
+type = HitDef
+trigger1 = animelem = 1
+attr = A, SP
+damage   = 25,7
+getpower  = 0
+animtype = light
+guardflag = MA
+hitflag = MAF
+pausemovetime = 30
+pausetime = 0,30
+sparkno = -1
+guard.sparkno = S1500
+guardsound = s1500,0
+hitsound = s2200,2
+ground.type = low
+ground.slidetime = 10
+ground.hittime  = 10
+ground.velocity = -5,0
+air.animtype = Back
+air.velocity = -5,0
+air.juggle = 3
+air.fall = 1
+palfx.time = 4
+palfx.sinadd = 240,240,240,2
+palfx.add = 220,220,220
+
+[State 200]
+type = Explod
+trigger1 = MoveGuarded = 1
+anim = 1510
+id = 1510
+postype = p2
+scale = 1.0,1.0
+vel = 0,-1
+facing = ifelse(facing=1,-1,1)
+removetime = -2
+ownpal = 1
+pos = 0, -55
+sprpriority = 5
+pausemovetime = 9999999
+supermovetime = 9999999
+
+[State 7004]
+type = Velset
+trigger1 = time = 0
+x = 3
+
+[State 7004]
+type = Veladd
+trigger1 = time = 1
+y = -1
+
+[State 7004]
+type = Veladd
+trigger1 = time = 10
+y = 1
+
+[State 7004]
+type = Veladd
+trigger1 = time = 19
+y = -1
+
+[State 7004]
+type = Veladd
+trigger1 = time = 28
+y = 1
+
+[State 7001, 3]
+type = ChangeState
+trigger1 = time = 45
+value = 2521
+
+;---------------------------------------------------------------
+;音符(消える)
+[Statedef 2521]
+type    = A
+movetype= A
+physics = N
+juggle  = 6
+anim = 2521
+ctrl = 0
+sprpriority = 2
+
+[State 7004]
+type = Velset
+trigger1 = time = 0
+x = 3
+
+[State 7004]
+type = Veladd
+trigger1 = time = 1
+y = -1
+
+[State 7004]
+type = Veladd
+trigger1 = time = 18
+y = 1
+
+[State 7001, 3]
+type = DestroySelf
+trigger1 = Animtime = 0
+
+;---------------------------------------------------------------
+;音符
+[Statedef 2522]
+type    = A
+movetype= A
+physics = N
+juggle  = 6
+anim = 2522
+ctrl = 0
+sprpriority = 2
+
+[State 7, 1] ;
+type = HitDef
+trigger1 = animelem = 1
+attr = A, SP
+damage   = 25,7
+getpower  = 0
+animtype = light
+guardflag = MA
+hitflag = MAF
+pausemovetime = 30
+pausetime = 0,30
+sparkno = -1
+guard.sparkno = S1500
+guardsound = s1500,0
+hitsound = s2200,2
+ground.type = low
+ground.slidetime = 10
+ground.hittime  = 10
+ground.velocity = -5,0
+air.animtype = Back
+air.velocity = -5,0
+air.juggle = 3
+air.fall = 1
+palfx.time = 4
+palfx.sinadd = 240,240,240,2
+palfx.add = 220,220,220
+
+[State 200]
+type = Explod
+trigger1 = MoveGuarded = 1
+anim = 1510
+id = 1510
+postype = p2
+scale = 1.0,1.0
+vel = 0,-1
+facing = ifelse(facing=1,-1,1)
+removetime = -2
+ownpal = 1
+pos = 0, -55
+sprpriority = 5
+pausemovetime = 9999999
+supermovetime = 9999999
+
+[State 7004]
+type = Velset
+trigger1 = time = 0
+x = 3
+
+[State 7004]
+type = Veladd
+trigger1 = time = 1
+y = -1
+
+[State 7004]
+type = Veladd
+trigger1 = time = 10
+y = 1
+
+[State 7004]
+type = Veladd
+trigger1 = time = 19
+y = -1
+
+[State 7004]
+type = Veladd
+trigger1 = time = 28
+y = 1
+
+[State 7001, 3]
+type = ChangeState
+trigger1 = time = 45
+value = 2523
+
+;---------------------------------------------------------------
+;音符(消える)
+[Statedef 2523]
+type    = A
+movetype= A
+physics = N
+juggle  = 6
+anim = 2523
+ctrl = 0
+sprpriority = 2
+
+[State 7004]
+type = Velset
+trigger1 = time = 0
+x = 3
+
+[State 7004]
+type = Veladd
+trigger1 = time = 1
+y = -1
+
+[State 7004]
+type = Veladd
+trigger1 = time = 18
+y = 1
+
+[State 7001, 3]
+type = DestroySelf
+trigger1 = Animtime = 0
+
+;---------------------------------------------------------------
+;音符
+[Statedef 2524]
+type    = A
+movetype= A
+physics = N
+juggle  = 6
+anim = 2524
+ctrl = 0
+sprpriority = 2
+
+[State 7, 1] ;
+type = HitDef
+trigger1 = animelem = 1
+attr = A, SP
+damage   = 25,7
+getpower  = 0
+animtype = light
+guardflag = MA
+hitflag = MAF
+pausemovetime = 30
+pausetime = 0,30
+sparkno = -1
+guard.sparkno = S1500
+guardsound = s1500,0
+hitsound = s2200,2
+ground.type = low
+ground.slidetime = 10
+ground.hittime  = 10
+ground.velocity = -5,0
+air.animtype = Back
+air.velocity = -5,0
+air.juggle = 3
+air.fall = 1
+palfx.time = 4
+palfx.sinadd = 240,240,240,2
+palfx.add = 220,220,220
+
+[State 200]
+type = Explod
+trigger1 = MoveGuarded = 1
+anim = 1510
+id = 1510
+postype = p2
+scale = 1.0,1.0
+vel = 0,-1
+facing = ifelse(facing=1,-1,1)
+removetime = -2
+ownpal = 1
+pos = 0, -55
+sprpriority = 5
+pausemovetime = 9999999
+supermovetime = 9999999
+
+[State 7004]
+type = Velset
+trigger1 = time = 0
+x = 3
+
+[State 7004]
+type = Veladd
+trigger1 = time = 1
+y = -1
+
+[State 7004]
+type = Veladd
+trigger1 = time = 10
+y = 1
+
+[State 7004]
+type = Veladd
+trigger1 = time = 19
+y = -1
+
+[State 7004]
+type = Veladd
+trigger1 = time = 28
+y = 1
+
+[State 7001, 3]
+type = ChangeState
+trigger1 = time = 45
+value = 2525
+
+;---------------------------------------------------------------
+;音符(消える)
+[Statedef 2525]
+type    = A
+movetype= A
+physics = N
+juggle  = 6
+anim = 2525
+ctrl = 0
+sprpriority = 2
+
+[State 7004]
+type = Velset
+trigger1 = time = 0
+x = 3
+
+[State 7004]
+type = Veladd
+trigger1 = time = 1
+y = -1
+
+[State 7004]
+type = Veladd
+trigger1 = time = 18
+y = 1
+
+[State 7001, 3]
+type = DestroySelf
+trigger1 = Animtime = 0
+
+
+;---------------------------------------------------------------------------
+;援護（アルカード攻撃）
+[Statedef 2300]
+type = S
+movetype = I
+physics = S
+anim = 2300
+velset = 0,0
+ctrl = 0
+
+[State 3000]
+type = HitOverride
+trigger1 = time = 0
+attr = SCA,AA,AT,AP
+slot = 0
+stateno = 2405
+time = -1
+
+[State pos]
+type = posset
+trigger1 = time = 0
+y = 0
+
+[State snd]
+type = PlaySnd
+trigger1 = time = 0
+trigger2 = time = 211
+value = 51,0
+
+[State snd]
+type = PlaySnd
+trigger1 = AnimElem = 12
+value = 2300,1
+
+[State exp, *]
+type = Explod
+trigger1 = time = 0
+trigger2 = time = 211
+anim = 2302
+ID = 2302
+pos = 0,0
+postype = p1
+scale = 0,0
+sprpriority = 2
+ownpal = 1
+Persistent = 6
+bindtime = 40
+pausemovetime = -1
+ontop = 1
+
+[State var, *]
+type = varset
+trigger1 = time = 0
+trigger2 = time = 211
+fvar(25) = 0
+
+[State var, *]
+type = varadd
+trigger1 = time = [13,25]
+trigger2 = time = [223,235]
+fvar(25) = 0.0470
+
+[State var, *]
+type = varadd
+trigger1 = time = [44,60]
+trigger2 = time = [253,268]
+fvar(25) = -0.0470
+
+[State var, *]
+type = varset
+trigger1 = time = 0
+trigger2 = time = 211
+fvar(26) = 0
+
+[State var, *]
+type = varadd
+trigger1 = time = [1,26]
+trigger2 = time = [211,236]
+fvar(26) = 0.0250
+
+[State exp, *]
+type = modifyexplod
+trigger1 = 1
+ID = 2302
+scale = 0.1+fvar(25),0.1+fvar(26)
+
+[State 7, 1]
+type = Projectile
+trigger1 = AnimElem = 12
+attr = A, SP
+ProjID = 2301
+Projanim = 2301
+Projremanim = 2303
+Projhitanim = 2303
+Projcancelanim = 2303
+Projremove = 1
+Projremovetime = 100
+projedgebound = 510
+projstagebound = 510
+projheightbound = -500,1
+Offset = -23,-42
+Velocity = 5,0
+Accel = 0,0
+damage = 47, 3
+Projemisstime = 1
+Projepriority = 1
+animtype = light
+air.animtype = back
+hitflag = MAFP
+guardflag = MA
+;fall.animtype = back
+fall = 1
+air.fall = 1
+pausetime = 0,9
+guard.pausetime = 0,9
+sparkno = S1500
+guard.sparkno = S1500
+sparkxy = 15,0
+hitsound = S2300,0
+guardsound = s1500,0
+ground.type = low
+ground.slidetime = 9
+ground.hittime  = 9
+guard.slidetime = 7
+guard.hittime = 7
+ground.velocity = -5,-2
+;ground.velocity = -5,-2             
+airguard.velocity = -3,-2     
+guard.velocity = -8
+airguard.velocity = -3,-2
+air.type = trip                  
+air.velocity = -5,-2
+air.hittime = 9
+palfx.time = 12
+palfx.sinadd = 140,50,-40,7
+palfx.add = 50,-40,-130
+pausemovetime = 99999999999
+getpower = 50,50
+sprpriority = 1
+fall.recovertime = 8
+p2facing = 1
+yaccel = .45
+fall.yvelocity = -4
+
+[State 7, 1]
+type = Projectile
+trigger1 = AnimElem = 12
+attr = A, SP
+ProjID = 2301
+Projanim = 2301
+Projremanim = 2303
+Projhitanim = 2303
+Projcancelanim = 2303
+Projremove = 1
+Projremovetime = 100
+projedgebound = 510
+projstagebound = 510
+projheightbound = -500,1
+Offset = -23,-42
+Velocity = 5,0.8
+Accel = 0,0
+damage = 47, 3
+Projemisstime = 1
+Projepriority = 1
+animtype = light
+air.animtype = back
+hitflag = MAFP
+guardflag = MA
+;fall.animtype = back
+fall = 1
+air.fall = 1
+pausetime = 0,9
+guard.pausetime = 0,9
+sparkno = S1500
+guard.sparkno = S1500
+sparkxy = 15,0
+hitsound = S2300,0
+guardsound = s1500,0
+ground.type = low
+ground.slidetime = 9
+ground.hittime  = 9
+guard.slidetime = 7
+guard.hittime = 7
+ground.velocity = -5,-2
+;ground.velocity = -5,-2             
+airguard.velocity = -3,-2     
+guard.velocity = -8
+airguard.velocity = -3,-2
+air.type = trip                  
+air.velocity = -5,-2
+air.hittime = 9
+palfx.time = 12
+palfx.sinadd = 140,50,-40,7
+palfx.add = 50,-40,-130
+pausemovetime = 99999999999
+getpower = 30,30
+sprpriority = 1
+fall.recovertime = 8
+p2facing = 1
+yaccel = .45
+fall.yvelocity = -4
+
+[State 7, 1]
+type = Projectile
+trigger1 = AnimElem = 12
+attr = A, SP
+ProjID = 2301
+Projanim = 2301
+Projremanim = 2303
+Projhitanim = 2303
+Projcancelanim = 2303
+Projremove = 1
+Projremovetime = 100
+projedgebound = 510
+projstagebound = 510
+projheightbound = -500,1
+Offset = -23,-42
+Velocity = 5,-0.8
+Accel = 0,0
+damage = 47, 3
+Projemisstime = 1
+Projepriority = 1
+animtype = light
+air.animtype = back
+hitflag = MAFP
+guardflag = MA
+;fall.animtype = back
+fall = 1
+air.fall = 1
+pausetime = 0,9
+guard.pausetime = 0,9
+sparkno = S1500
+guard.sparkno = S1500
+sparkxy = 15,0
+hitsound = S2300,0
+guardsound = s1500,0
+ground.type = low
+ground.slidetime = 9
+ground.hittime  = 9
+guard.slidetime = 7
+guard.hittime = 7
+ground.velocity = -5,-2
+;ground.velocity = -5,-2             
+airguard.velocity = -3,-2     
+guard.velocity = -8
+airguard.velocity = -3,-2
+air.type = trip                  
+air.velocity = -5,-2
+air.hittime = 9
+palfx.time = 12
+palfx.sinadd = 140,50,-40,7
+palfx.add = 50,-40,-130
+pausemovetime = 99999999999
+getpower = 40,40
+sprpriority = 1
+fall.recovertime = 8
+p2facing = 1
+yaccel = .45
+fall.yvelocity = -4
+
+[State 7001, 3]
+type = DestroySelf
+trigger1 = Animtime = 0
+
+;---------------------------------------------------------------
+;援護（アルカード登場）
+[Statedef 2400]
+type = S
+movetype = A
+physics = S
+anim = 2400
+velset = 0,0
+ctrl = 0
+
+[State 3000]
+type = HitOverride
+trigger1 = time = 0
+attr = SCA,AA,AT,AP
+slot = 0
+stateno = 2405
+time = -1
+
+[State 200, 1]
+type = velset
+trigger1 = GameTime%15 = 1
+x = 10
+
+[State 200, 1]
+type = velset
+trigger1 = GameTime%15 = 4
+x = 8
+
+[State 200, 1]
+type = PlaySnd
+trigger1 = GameTime%15 = 1
+value = 2400, 0
+channel = 0
+
+[State 7001, 2]
+type = HitDef
+trigger1 = 1
+attr = S, SA
+damage = 45, 1
+animtype = back
+air.animtype = back            
+guardflag = MA
+hitflag = MAF
+pausemovetime = 5
+priority = 1
+pausetime = 0, 14
+sparkno = S1500
+guard.sparkno = S1500
+sparkxy = 0,-47
+hitsound = s2300,0
+guardsound = s1500,0
+ground.type = trip
+ground.slidetime = 7
+ground.hittime  = 7
+ground.velocity = 0,-5
+airguard.velocity = 0,-5
+down.velocity = -6,-0.5
+air.type = trip
+air.velocity = 0,-5
+air.hittime = 7
+getpower = 0,0
+palfx.time = 5
+palfx.sinadd = 100,100,0,2
+palfx.add = 80,-40,-40
+guard.kill = 0
+sprpriority = 1
+fall.recover = 0
+p2facing = 1
+yaccel = .45
+fall.yvelocity = -4
+
+[State 200]
+type = Explod
+trigger1 = MoveGuarded = 1
+anim = 1510
+id = 1510
+postype = p2
+scale = 1.0,1.0
+vel = 0,-1
+facing = ifelse(facing=1,-1,1)
+removetime = -2
+ownpal = 1
+pos = 0, -55
+sprpriority = 5
+pausemovetime = 9999999
+supermovetime = 9999999
+
+[State 7001, 3]
+type = DestroySelf
+trigger1 = time = 210
+
+;------------------------------------------------------------------
+;アルカード攻撃受ける
+[Statedef 2405]
+type = A
+movetype = H
+physics = N
+anim = 2401
+ctrl = 0
+
+[State 7015, 2]
+type = PalFX
+trigger1 = time = 0
+palcolor = 256
+add = 100,-20,-20
+sinadd = 40,-20,-20,8
+palinvertall = 1
+time = 45
+
+[State vel]
+type = veladd
+trigger1 = 1
+y = GetHitVar(yaccel)
+
+[State 3005]
+type = HitVelSet
+trigger1 = time = 0
+x = 3
+y = -4
+
+[state 7800,1]
+type = varrandom
+trigger1 = time = 0
+v = 16
+range = 0,3
+
+[State 200,1]
+type = playsnd
+trigger1 = AnimElem = 1
+value = 2410,var(16)
+
+[State 2405]
+type = ChangeState
+trigger1 = pos y >= 10 && vel y > 0
+value = 2406
+
+[Statedef 2406]
+type = L
+movetype = H
+physics = N
+anim = 2402
+velset = 0,0
+
+[State pos]
+type = posset
+trigger1 = time = 0
+y = 0
+
+[State snd]
+type = PlaySnd
+trigger1 = time = 0
+value = 2400,1
+
+[State snd]
+type = PlaySnd
+trigger1 = time = 10
+value = 2420,0
+
+[State 2206]
+type = Explod
+trigger1 = time = 0
+anim = f60
+
+[State 2206]
+type = ChangeState
+trigger1 = Animtime = 0
+value = 2407
+
+;アルカード起き上がり
+[Statedef 2407]
+type = L
+movetype = H
+physics = N
+anim = 2403
+
+[State 3007]
+type = ChangeState
+trigger1 = animtime = 0
+value = 2408
+
+;アルカード撤退
+[Statedef 2408]
+type = L
+movetype = H
+physics = N
+anim = 2404
+
+[State snd]
+type = PlaySnd
+trigger1 = time = 0
+value = 51,0
+
+[State exp, *]
+type = Explod
+trigger1 = time = 0
+anim = 2302
+ID = 2302
+pos = 0,0
+postype = p1
+scale = 0,0
+sprpriority = 2
+ownpal = 1
+Persistent = 6
+bindtime = 40
+supermovetime = -1
+pausemovetime = -1
+ontop = 1
+
+[State var, *]
+type = varset
+trigger1 = time = 0
+fvar(25) = 0
+
+[State var, *]
+type = varadd
+trigger1 = time = [13,25]
+fvar(25) = 0.0470
+
+[State var, *]
+type = varadd
+trigger1 = time = [44,60]
+fvar(25) = -0.0470
+
+[State var, *]
+type = varset
+trigger1 = time = 0
+trigger2 = time = 211
+fvar(26) = 0
+
+[State var, *]
+type = varadd
+trigger1 = time = [1,26]
+fvar(26) = 0.0250
+
+[State exp, *]
+type = modifyexplod
+trigger1 = 1
+ID = 2302
+scale = 0.1+fvar(25),0.1+fvar(26)
+
+[State 7001, 3]
+type = DestroySelf
+trigger1 = Animtime = 0
+

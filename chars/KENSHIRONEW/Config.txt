@@ -1,0 +1,4606 @@
+[statedef -3]
+[state ]
+////////////////////////////////////////////////////////////////////////////////////
+------------------------------------------------------------------------------------
+ コンフィグ
+------------------------------------------------------------------------------------
+////////////////////////////////////////////////////////////////////////////////////
+------------------------------------------------------------------------------------
+
+★AIレベル
+
+trigger1=var(58):=5
+
+	↑1～5で設定できます。
+
+★常時AIスイッチ
+
+trigger2=0
+	↑1にすると常にAIが起動します。0にすると通常通りです。
+
+★魚住モード
+
+trigger3=0
+	1: on  0: off
+trigger3=var(53):= 80
+	空中ヒット数指定
+
+★簡易表示モード
+
+trigger4=0
+	↑オーラゲージと文字表示を消して、
+	ブーストゲージ（光沢なし）と死兆星ゲージの表示のみとなります。
+	処理が重いときなどに。
+
+★チーム戦用七星ゲージ回復設定
+
+trigger5=fvar(21):=3
+	↑チーム戦時ラウンドごとの七星ゲージの回復量を設定します。
+	ただし、0以下を設定しても必ず1は回復し、8以上を設定しても必ず7個までしか回復しません。
+
+★死兆星点灯モード
+
+trigger6=0
+	↑1にすると最初から死兆星が点灯した状態になります。
+
+★フルゲージモード
+
+trigger7=0
+	↑1にすると常にオーラゲージとブーストゲージが最大になります。	
+
+--------------------------------------------------------------------------------
+魚住モード概要
+
+無条件で空中ヒット数を指定した分だけ稼いだ状態になります。
+ただし、コンボ補正などには影響がないため、基本的にはバスケ用になります。
+プレイヤー操作時のみ有効です。
+
+一発目の地上ヒットのみ、通常の浮きになります。
+蛇>ジャンプキャンセルJAなどで浮かせて遊んでください。
+注意としては空中ヒット数が蓄積された状態のため、ノックバックも大きくなっています。
+一度バウンドさせればダウン追撃となりノックバックがなくなります。
+2Dとグレイブはノックバックが起こらない仕様のため、2D>グレイブでも簡単にバスケができます。
+
+ヒット数目安：
+ 百烈（最低：２５～、推奨：２７～）
+ ドリブル（最低：３２～、推奨：４０～）
+ バスケ（最低：６０～、推奨：８０～）
+
+※最低値よりも低い数値でもできる可能性はありますがその分シビアになり落としやすいです。
+　推奨の数値なら比較的刻みやすいです。
+
+------------------------------------------------------------------------------------
+レベル概要
+
+ Lv1 - 種籾レベル
+ Lv2 - モヒカンレベル
+  ガードが甘かったりぶっぱなしをするなど。
+  かなり弱い。
+
+ Lv3 - 修羅レベル
+  ガードが固めになってくる。
+  低ダJBなどの崩しが強力になってくる。
+  コンボも安定してくる。
+  無想を使うようになる。
+  ブーストを無駄使いすることがある。
+
+ Lv4 - 修羅上位レベル
+  ガードが固い。
+  コンボは大体完走。
+  暴れが強くなる。
+  ガーキャン狩りを狙う。
+  無想をよく狙う。
+  ドリブルを狙う。
+
+ Lv5 - 対AI
+  オートガードシステム。
+  コンボは基本的に完走。技の当たり方によっては落とすこともある。
+  フレーム単位で暴れを狙う。
+  超反応昇竜切り返し。
+  超反応無想。
+
+------------------------------------------------------------------------------------
+====================================================================================
+////////////////////////////////////////////////////////////////////////////////////
+ AI
+////////////////////////////////////////////////////////////////////////////////////
+====================================================================================
+------------------------------------------------------------------------------------
+------------使用変数
+v59=AI
+	1=AIon
+	2=AIoff
+	4=下段ガード
+	8=オーラガード
+	16=
+	32=
+	64=中段判定
+	128=ガード認識
+	256=1ラウンド取得
+	512=move～
+	1024=リバサフラグ
+	2048=ドリブルルート
+	4096=溜めバニ
+v58=AIレベル
+v57=AIコマンド出力
+v56=AI連携
+	コンボ
+v55=ID
+v54=ニュートラルカウント
+v53=魚住ヒット数
+v52=発生
+v51=発生フレーム
+v50=
+v49=
+v48~v29=stateno v28~v8=time
+
+fv39=enemynear,bodydist x
+fv38=enemynear,bodydist y
+fv37=ステージ端距離前
+fv36=ステージ端距離後ろ
+fv35=バウンド速度
+fv34=敵速度x
+fv33=手出し厳禁
+fv32=中段記憶
+fv31=中段記憶2
+fv30=中段記憶3
+fv29=中段記憶4
+
+trigger1=0
+trigger2=!(var(59)&3)&&numhelper(2)
+trigger2=var(59):=var(59)+1&&0
+trigger3=0
+trigger4=fvar(20):=1&&0
+trigger5=0
+trigger6=fvar(1):=0&&0
+trigger7=fvar(2):=555
+type=powerset
+value=powermax
+[state ]
+type=null
+trigger1=var(58)>5
+trigger1=var(58):=5
+trigger2=var(58)<1
+trigger2=var(58):=1
+;-------初期化
+[state ]
+type=varadd
+trigger1=!roundstate
+trigger1=!time
+fvar(1)=1+floor(fvar(21)-1)*(!enemy,roundsexisted)*(fvar(21)>1)
+[state ]
+type=varset
+trigger1=roundsexisted
+trigger1=!roundstate
+trigger1=var(1)&8388608
+trigger2=fvar(1)>=7
+trigger3=!roundstate
+trigger3=var(1)&268435456
+fvar(1)=7
+[state ]
+type=varrangeset
+trigger1=!roundsexisted
+trigger1=!roundstate
+trigger1=stateno=5900
+value=0
+persistent=0
+[state ]
+type=varrangeset
+trigger1=!roundsexisted
+trigger1=!roundstate
+trigger1=stateno=5900
+fvalue=0
+persistent=0
+[state ]
+type=varset
+trigger1=!roundstate
+var(1)=0
+[state ]
+type=varset
+trigger1=!roundstate
+fvar(4)=0
+[state ]
+type=varset
+trigger1=!roundstate
+var(8)=0
+[state ]
+type=varset
+trigger1=!roundsexisted
+trigger1=!roundstate
+fvar(1)=7
+[state ]
+type=helper
+triggerall=!numhelper(2)
+trigger1=1
+id=2
+stateno=2
+keyctrl=1
+supermovetime=999999
+pausemovetime=999999
+[state ]
+type=varset
+trigger1=numenemy
+var(55)=enemynear(!enemynear,alive&&numenemy>1&&enemynear(numenemy>1),alive),id
+[state ]
+type=null
+triggerall=numenemy
+triggerall=1||fvar(38):=pos y-playerid(var(55)),pos y
+triggerall=1||fvar(39):=facing*(playerid(var(55)),pos x-pos x-facing*ifelse(playerid(var(55)),statetype!=a,const(size.ground.front),const(size.air.front)))
+trigger1=facing!=playerid(var(55)),facing&&fvar(39)>=0||facing=playerid(var(55)),facing&&fvar(39)<0
+trigger1=fvar(39):=fvar(39)-(1-2*(fvar(39)<0))*ifelse(playerid(var(55)),statetype!=a,playerid(var(55)),const(size.ground.front),playerid(var(55)),const(size.air.front))||1
+trigger2=fvar(39):=fvar(39)-(1-2*(fvar(39)<0))*ifelse(playerid(var(55)),statetype!=a,playerid(var(55)),const(size.ground.back),playerid(var(55)),const(size.air.back))
+[state ]
+type=varset
+trigger1=var(54):=var(54)+1
+trigger1=movetype!=i||animelem=1,<=1&&time<=1
+var(54)=0
+[state ]
+type=null
+trigger1=numhelper(2)
+trigger1=1||fvar(37):=ifelse(facing=1,helper(2),var(51),helper(2),var(50))-ceil(helper(2),rootdist x)
+trigger1=1||fvar(36):=helper(2),var(50)+helper(2),var(51)-fvar(37)
+trigger1=1||fvar(34):=(1-2*(playerid(var(55)),facing*(pos x-playerid(var(55)),pos x)<0))*playerid(var(55)),vel x*(playerid(var(55)),statetype=a)
+[state ]
+type=varadd
+triggerall=!(var(59)&3)
+triggerall=numhelper(2)
+trigger1=command="AI0"||command="AI1"||command="AI2"||command="AI3"||command="AI4"
+trigger2=command="AI5"||command="AI6"||command="AI7"||command="AI8"||command="AI9"
+trigger3=command="AI10"||command="AI11"||command="AI12"||command="AI13"||command="AI14"
+trigger4=command="AI15"||command="AI16"||command="AI17"||command="AI18"||command="AI19"
+trigger5=command="AI20"||command="AI21"||command="AI22"||command="AI23"||command="AI24"
+trigger6=command="AI25"||command="AI26"||command="AI27"||command="AI28"||command="AI29"
+trigger7=command="AI30"||command="AI31"||command="AI32"||command="AI33"||command="AI34"
+trigger8=command="AI35"||command="AI36"||command="AI37"||command="AI38"||command="AI39"
+trigger9=command="AI40"||command="AI41"||command="AI42"||command="AI43"||command="AI34"
+trigger10=command="AI45"||command="AI46"||command="AI47"||command="AI48"||command="AI49"||command="AI50"
+trigger11=helper(2),var(59)=1
+var(59)=2
+[state ]
+type=varadd
+trigger1=!(var(59)&3)
+trigger1=numhelper(2)
+trigger1=helper(2),var(59)=-1
+var(59)=2
+[state ]
+type=null
+triggerall=var(51):=0||1
+trigger1=var(48)
+trigger1=var(48)=playerid(var(55)),anim
+trigger1=var(51):=28
+trigger2=var(47)
+trigger2=var(47)=playerid(var(55)),anim
+trigger2=var(51):=27
+trigger3=var(46)
+trigger3=var(46)=playerid(var(55)),anim
+trigger3=var(51):=26
+trigger4=var(45)
+trigger4=var(45)=playerid(var(55)),anim
+trigger4=var(51):=25
+trigger5=var(44)
+trigger5=var(44)=playerid(var(55)),anim
+trigger5=var(51):=24
+trigger6=var(43)
+trigger6=var(43)=playerid(var(55)),anim
+trigger6=var(51):=23
+trigger7=var(42)
+trigger7=var(42)=playerid(var(55)),anim
+trigger7=var(51):=22
+trigger8=var(41)
+trigger8=var(41)=playerid(var(55)),anim
+trigger8=var(51):=21
+trigger9=var(40)
+trigger9=var(40)=playerid(var(55)),anim
+trigger9=var(51):=20
+trigger10=var(39)
+trigger10=var(39)=playerid(var(55)),anim
+trigger10=var(51):=19
+trigger11=var(38)
+trigger11=var(38)=playerid(var(55)),anim
+trigger11=var(51):=18
+trigger12=var(37)
+trigger12=var(37)=playerid(var(55)),anim
+trigger12=var(51):=17
+trigger13=var(36)
+trigger13=var(36)=playerid(var(55)),anim
+trigger13=var(51):=16
+trigger14=var(35)
+trigger14=var(35)=playerid(var(55)),anim
+trigger14=var(51):=15
+trigger15=var(34)
+trigger15=var(34)=playerid(var(55)),anim
+trigger15=var(51):=14
+trigger16=var(33)
+trigger16=var(33)=playerid(var(55)),anim
+trigger16=var(51):=13
+trigger17=var(32)
+trigger17=var(32)=playerid(var(55)),anim
+trigger17=var(51):=12
+trigger18=var(31)
+trigger18=var(31)=playerid(var(55)),anim
+trigger18=var(51):=11
+trigger19=var(30)
+trigger19=var(30)=playerid(var(55)),anim
+trigger19=var(51):=10
+trigger20=var(29)
+trigger20=var(29)=playerid(var(55)),anim
+trigger20=var(51):=9
+[state ]
+type=varset
+trigger1=var(51)
+var(52)=playerid(var(55)),time-var(var(51))
+[state ]
+type=varadd
+trigger1=var(59):=var(59)-(var(59)&128)||1
+trigger1=numhelper(2)&&facing*(playerid(var(55)),pos x-pos x)<=120
+var(59)=128*!!helper(2),var(57)
+[state ]
+type=varadd
+triggerall=!(var(59)&256)
+trigger1=roundstate>2
+trigger1=win
+trigger2=0
+var(59)=256
+[state ]
+type=varadd
+trigger1=playerid(var(55)),animelem=1,<=1
+trigger2=playerid(var(55)),time<=1
+trigger3=!playerid(var(55)),animtime
+var(59)=-(var(59)&512)
+[state ]
+type=varadd
+triggerall=!(var(59)&512)
+trigger1=playerid(var(55)),movecontact
+trigger2=playerid(var(55)),movereversed
+trigger3=playerid(var(55)),hitpausetime>0
+var(59)=512
+[state ]
+type=varadd
+trigger1=anim!=760
+var(59)=-(var(59)&4096)
+[state ]
+type=varset
+trigger1=var(0)<=0
+trigger2=var(57)<0
+var(57)=0
+[state ]
+type=null
+triggerall=0
+triggerall=command="c"
+trigger1=numhelper(2)
+trigger1=!(var(59)&1)
+trigger1=1||var(59):=var(59)+1
+trigger1=1||var(59):=var(59)-(var(59)&2)
+trigger2=!(var(59)&2)
+trigger2=1||var(59):=var(59)+2
+trigger2=1||var(59):=var(59)-(var(59)&1)
+[state ]
+type=varset
+trigger1=0
+trigger2=0
+trigger2=command="start"
+fvar(2)=555
+[state ]
+type=varset
+trigger1=0
+trigger1=command="start"
+fvar(1)=0
+[state ]
+type=varset
+trigger1=0
+var(57)=-1
+//////////////////////////////////////////////////////////////////////////////////
+ movetype=a
+//////////////////////////////////////////////////////////////////////////////////
+タッグ用強有情
+[state ]
+type=varset
+var(57)=1200
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=var(58)>2
+triggerall=statetype!=a
+triggerall=numenemy>1
+triggerall=(facing*(enemynear,pos x-pos x)>0||!enemynear,alive)&&(facing*(enemynear(1),pos x-pos x)>0||enemynear(1),alive)
+triggerall=enemynear,pos x>=-120&&enemynear(1),pos x>=-120
+triggerall=enemynear,movetype=a||enemynear(1),movetype=a
+triggerall=(enemynear,anim=[200,899])||(enemynear(1),anim=[200,899])
+triggerall=facing*(enemynear,pos x-pos x)<=50&&facing*(enemynear(1),pos x-pos x)<=50
+triggerall=fvar(38)<=90
+triggerall=playerid(var(55)),time>=30||(prevstateno=[5000,5270])||(prevstateno=[150,155])||var(58)>4
+triggerall=random<=100*var(58)||var(58)>4
+triggerall=playerid(var(55)),time>=10+5*(5-var(58))||var(58)>4
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800||movecontact&&((anim=[200,235])||anim=[400,430])
+受身
+[state ]
+type=varset
+var(57)=5202-(fvar(36)<=90)
+triggerall=var(59)&1
+triggerall=var(58)>1
+triggerall=!var(57)
+trigger1=movetype=h
+trigger1=hitfall
+trigger1=canrecover
+trigger1=alive
+trigger1=pos y<=-15
+trigger1=random<=40*var(58)
+ガーキャン狩り6B
+[state ]
+type=varset
+var(57)=ifelse(playerid(var(55)),animtime>=-24,1200,710)
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),prevstateno=[150,155]
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),movetype=a
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=fvar(39)<=65
+triggerall=random<=60*(var(58)-2)||var(58)>4
+triggerall=var(0)<=1
+trigger1=movecontact
+trigger1=(anim=[200,235])||anim=[400,430]
+trigger2=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+JA
+[state ]
+type=varset
+var(57)=600
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=var(58)>2
+triggerall=var(51)
+triggerall=var(52)<=-3
+triggerall=statetype=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),movetype!=h
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=sysfvar(4)>=0||playerid(var(55)),statetype=a
+triggerall=pos y+sysfvar(4)*3+.6*4*4/2<0
+triggerall=fvar(39)-sysfvar(0)*4-fvar(34)*4<=50
+triggerall=fvar(38)-sysfvar(4)*4-.6*4*4/2-helper(2),fvar(3)=[0,100]
+triggerall=playerid(var(55)),stateno>=200&&(var(51)||playerid(var(55)),anim=[200,899])
+triggerall=random<=100*(var(58)-2)||var(58)>4
+trigger1=anim=41||anim=110
+trigger2=movecontact&&anim=610&&var(0)<=1
+JD
+[state ]
+type=varset
+var(57)=630
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=var(58)>2
+triggerall=statetype=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),movetype!=h
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=pos y+sysfvar(4)*6+.6*6*6/2<0
+triggerall=fvar(39)-fvar(34)*6-sysfvar(0)*6<=70
+triggerall=var(51)&&var(52)<=-6
+triggerall=anim=41||anim=110||movecontact&&anim=[600,610]
+triggerall=playerid(var(55)),statetype=a
+triggerall=random<=100*(var(58)-2)||var(58)>4
+triggerall=playerid(var(55)),stateno>=200&&(var(51)||playerid(var(55)),anim=[200,899])
+trigger1=fvar(38)-sysfvar(4)*6-.6*6*6/2-helper(2),fvar(6)=[30,100]
+移動ブースト
+[state ]
+type=varset
+var(57)=800
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=var(58)>3
+triggerall=statetype!=a
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),movetype!=h
+triggerall=playerid(var(55)),movetype=a||!playerid(var(55)),ctrl&&enemynear,stateno>=200||var(51)
+trigger1=fvar(2)>=185||var(1)&128&&fvar(2)>37
+trigger1=(anim=[200,205])||(anim=[400,410])||anim=235
+trigger1=animelem=1,=1
+trigger1=fvar(39)>=30+(anim=235)*50
+D暴れ
+[state ]
+type=null;varset
+var(57)=230
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),statetype!=a||fvar(38)-helper(2),fvar(3)=[10,80]
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),movetype!=h
+triggerall=facing*(playerid(var(55)),pos x-pos x)=[-60,0]
+triggerall=playerid(var(55)),movetype=a||!playerid(var(55)),ctrl
+triggerall=playerid(var(55)),stateno>=200&&(var(51)||playerid(var(55)),anim=[200,899])
+triggerall=random<=20*var(58)*var(58)&&var(58)>2||var(58)<=2&&random<=30||(var(58)>3||playerid(var(55)),time>=20)&&random>=400||var(58)>4&&var(51)
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800||(anim=[200,230])||anim=[400,430]
+trigger1=playerid(var(55)),hitdefattr=sac,aa,at,ap=0
+trigger1=!var(51)
+trigger1=(playerid(var(55)),time=[20,40])&&playerid(var(55)),time-animtime<=100||anim=800||(anim=[200,230])||anim=[400,430]
+trigger2=var(58)>3
+trigger2=var(51)
+trigger2=var(52)<=-7
+2A暴れ
+[state ]
+type=null;varset
+var(57)=400
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),statetype!=a||fvar(38)-helper(2),fvar(3)<=40
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),movetype!=h
+triggerall=facing*(playerid(var(55)),pos x-pos x)=[-30,0]
+triggerall=playerid(var(55)),movetype=a||!playerid(var(55)),ctrl
+triggerall=playerid(var(55)),stateno>=200&&(var(51)||playerid(var(55)),anim=[200,899])
+triggerall=random<=20*var(58)*var(58)&&var(58)>2||var(58)<=2&&random<=30||(var(58)>3||playerid(var(55)),time>=20)&&random>=400||var(58)>4&&var(51)
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800||(anim=[200,205])||anim=[400,410]
+trigger1=playerid(var(55)),hitdefattr=sac,aa,at,ap=0
+trigger1=!var(51)
+trigger1=(playerid(var(55)),time=[20,40])&&playerid(var(55)),time-animtime<=100||anim=800||(anim=[200,205])||anim=[400,410]
+trigger1=!fvar(5)
+trigger2=var(58)>3
+trigger2=var(51)
+trigger2=var(52)<=-3
+D暴れ
+[state ]
+type=varset
+var(57)=230
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=fvar(39)-fvar(34)*4-25*(fvar(2)>=225||var(1)&128&&fvar(2)>=40)<=75
+triggerall=playerid(var(55)),statetype!=a||fvar(38)-helper(2),fvar(3)=[10,80]
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),movetype!=h
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=playerid(var(55)),movetype=a||!playerid(var(55)),ctrl
+triggerall=playerid(var(55)),stateno>=200&&(var(51)||playerid(var(55)),anim=[200,899])
+triggerall=random<=20*var(58)*var(58)&&var(58)>2||var(58)<=2&&random<=30||(var(58)>3||playerid(var(55)),time>=20)&&random>=400||var(58)>4&&var(51)
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800||(anim=[200,230])||anim=[400,430]
+trigger1=playerid(var(55)),hitdefattr=sac,aa,at,ap=0
+trigger1=!var(51)
+trigger1=(playerid(var(55)),time=[20,40])&&playerid(var(55)),time-animtime<=100||anim=800||(anim=[200,230])||anim=[400,430]
+trigger1=!fvar(5)
+trigger2=var(58)>3
+trigger2=var(51)
+trigger2=var(52)<=-7
+A暴れ
+[state ]
+type=varset
+var(57)=200
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=fvar(39)-fvar(34)*4-25*(fvar(2)>=225||var(1)&128&&fvar(2)>=40)<=45
+triggerall=playerid(var(55)),statetype!=a||fvar(38)-helper(2),fvar(4)=[20,60]
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),movetype!=h
+triggerall=playerid(var(55)),statetype!=c
+;triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=var(56)&512||(prevstateno=[5000,5270])||(prevstateno=[120,155])||(stateno=[120,139])||var(58)>3
+triggerall=playerid(var(55)),movetype=a||!playerid(var(55)),ctrl
+triggerall=playerid(var(55)),stateno>=200&&(var(51)||playerid(var(55)),anim=[200,899])
+triggerall=random<=20*var(58)*var(58)&&var(58)>2||var(58)<=2&&random<=30||var(58)>3&&random>=400||var(58)>4&&var(51)
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800||(anim=[200,205])||anim=[400,410]
+trigger1=playerid(var(55)),hitdefattr=sac,aa,at,ap=0
+trigger1=!var(51)
+trigger1=(playerid(var(55)),time=[20,40])&&playerid(var(55)),time-animtime<=100||anim=800||(anim=[200,205])||anim=[400,410]
+trigger1=!fvar(5)
+trigger2=var(58)>3
+trigger2=var(51)
+trigger2=var(52)<=-4
+2A暴れ
+[state ]
+type=varset
+var(57)=400
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=fvar(39)-fvar(34)*4-25*(fvar(2)>=225||var(1)&128&&fvar(2)>=40)<=40
+triggerall=playerid(var(55)),statetype!=a||fvar(38)-helper(2),fvar(3)<=40
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),movetype!=h
+;triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=playerid(var(55)),movetype=a||!playerid(var(55)),ctrl
+triggerall=playerid(var(55)),stateno>=200&&(var(51)||playerid(var(55)),anim=[200,899])
+triggerall=random<=20*var(58)*var(58)&&var(58)>2||var(58)<=2&&random<=30||(var(58)>3||playerid(var(55)),time>=20)&&random>=400||var(58)>4&&var(51)
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800||(anim=[200,205])||anim=[400,410]
+trigger1=playerid(var(55)),hitdefattr=sac,aa,at,ap=0
+trigger1=!var(51)
+trigger1=(playerid(var(55)),time=[20,40])&&playerid(var(55)),time-animtime<=100||anim=800||(anim=[200,205])||anim=[400,410]
+trigger1=!fvar(5)
+trigger2=var(58)>3
+trigger2=var(51)
+trigger2=var(52)<=-3
+2A
+[state ]
+type=varset
+var(57)=400
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=var(51)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),movetype!=h
+triggerall=fvar(39)-fvar(34)*4-25*(playerid(var(55)),statetype!=a)*(fvar(2)>=225||var(1)&128&&fvar(2)>=40)<=35
+;triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=playerid(var(55)),stateno>=200&&(var(51)||playerid(var(55)),anim=[200,899])
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800||(anim=[200,205])||anim=[400,410]
+triggerall=random<=100*var(58)||var(58)>4
+triggerall=playerid(var(55)),time>=20||var(58)>4
+trigger1=var(52)<=-3||var(58)<4||anim=800||playerid(var(55)),movereversed
+trigger2=playerid(var(55)),movecontact||var(59)&512
+trigger2=helper(2),var(var(51))<=playerid(var(55)),time
+trigger2=playerid(var(55)),animtime<=-3
+D
+[state ]
+type=varset
+var(57)=230
+triggerall=var(59)&1
+triggerall=var(58)>3
+triggerall=!var(57)
+triggerall=var(51)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),movetype!=h
+triggerall=fvar(39)-fvar(34)*4-25*(playerid(var(55)),statetype!=a)*(fvar(2)>=225||var(1)&128&&fvar(2)>=40)<=65
+triggerall=playerid(var(55)),statetype!=a||fvar(38)-helper(2),fvar(3)=[10,80]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=playerid(var(55)),stateno>=200&&(var(51)||playerid(var(55)),anim=[200,899])
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800||(anim=[200,205])||anim=[400,410]
+triggerall=random<=100*var(58)||var(58)>4
+triggerall=playerid(var(55)),time>=20||var(58)>4
+trigger1=var(52)<=-7||var(58)<4||anim=800||playerid(var(55)),movereversed
+trigger2=playerid(var(55)),movecontact||var(59)&512
+trigger2=helper(2),var(var(51))<=playerid(var(55)),time
+trigger2=playerid(var(55)),animtime<=-7
+D
+[state ]
+type=varset
+var(57)=230
+triggerall=var(59)&1
+triggerall=var(58)>3
+triggerall=!var(57)
+triggerall=var(51)
+triggerall=statetype!=a
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=playerid(var(55)),statetype=s
+triggerall=playerid(var(55)),movetype!=h
+triggerall=playerid(var(55)),stateno>=200&&(var(51)||playerid(var(55)),anim=[200,899])
+triggerall=fvar(39)-fvar(29)*4-25*(fvar(2)>=225||var(1)&128&&fvar(2)>=40)<=85
+triggerall=playerid(var(55)),statetype!=a||fvar(38)-helper(2),fvar(3)=[5,70]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800||(anim=[200,230])||anim=[400,430]
+triggerall=random<=100*var(58)||var(58)>4
+triggerall=playerid(var(55)),time>=20||var(58)>4
+trigger1=var(52)<=-7||var(58)<4||anim=800||playerid(var(55)),movereversed
+trigger2=playerid(var(55)),movecontact||var(59)&512
+trigger2=helper(2),var(var(51))<=playerid(var(55)),time
+trigger2=playerid(var(55)),animtime<-6
+[state ]
+type=varset
+var(57)=100
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=var(58)=5
+triggerall=statetype!=a
+triggerall=fvar(39)>=30
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),movetype!=h
+triggerall=playerid(var(55)),movetype=a||!playerid(var(55)),ctrl
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])
+trigger1=var(51)
+trigger1=var(52)<=-5
+強有情（裏周り用）
+[state ]
+type=varset
+var(57)=1200
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=var(58)>4
+triggerall=var(0)<=1
+triggerall=statetype!=a
+triggerall=playerid(var(55)),animtime<=-8||var(51)&&!playerid(var(55)),movecontact
+triggerall=playerid(var(55)),movetype=a
+triggerall=facing*(playerid(var(55)),pos x-pos x)=[-50,0]
+triggerall=(playerid(var(55)),stateno=[200,899])||(playerid(var(55)),anim=[200,899])||var(51)
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),time>=30||(prevstateno=[5000,5270])||(prevstateno=[150,155])||var(58)>4
+triggerall=random<=100*var(58)||var(58)>4
+triggerall=playerid(var(55)),time>=10+5*(5-var(58))||var(58)>4
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800||movecontact&&((anim=[200,235])||anim=[400,430])
+trigger1=prevstateno!=2150
+対空弱有情
+[state ]
+type=varset
+var(57)=1100
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=var(58)>3
+triggerall=var(0)<=1
+triggerall=statetype!=a
+;triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=playerid(var(55)),movetype=a||playerid(var(55)),movetype=i&&fvar(38)>=70
+triggerall=playerid(var(55)),statetype=a||!playerid(var(55)),pos y
+triggerall=fvar(38)-helper(2),fvar(8)=[40,100]
+triggerall=random<=40*var(58)||var(58)>4
+triggerall=playerid(var(55)),time>=20||var(58)>4
+trigger1=fvar(39)-fvar(34)*8-sysfvar(1)*4=[-8,30]
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+trigger1=prevstateno!=2150
+対空D
+[state ]
+type=varset
+var(57)=230
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=var(58)>2
+triggerall=statetype!=a
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=playerid(var(55)),movetype=a
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno>=200&&(var(51)||playerid(var(55)),anim=[200,899])
+triggerall=playerid(var(55)),vel y<=0
+triggerall=fvar(38)-helper(2),fvar(7)=[20,70]
+triggerall=fvar(39)-fvar(34)*6<=85
+triggerall=random<=40*(5-var(58))||var(58)>4
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+アーマー潰し
+[state ]
+type=varset
+var(57)=1200
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=var(58)>4
+triggerall=random<=100||var(58)>4
+triggerall=statetype!=a
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),movetype!=h
+triggerall=playerid(var(55)),movetype=a
+triggerall=playerid(var(55)),stateno>=200
+triggerall=fvar(2)>=185||var(1)&128&&fvar(2)>=40
+triggerall=anim=800
+triggerall=random<=300||var(58)>4
+trigger1=1
+[state ]
+type=varset
+var(57)=800
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=var(58)>4
+triggerall=random<=100||var(58)>4
+triggerall=statetype!=a
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),movetype!=h
+triggerall=playerid(var(55)),movetype=a
+triggerall=playerid(var(55)),stateno>=200
+triggerall=fvar(2)>=185||var(1)&128&&fvar(2)>=40
+triggerall=random<=300||var(58)>4
+trigger1=movehit>1
+trigger1=anim=[200,430]
+trigger2=anim=1000&&animelem=9
+無想
+[state ]
+type=varset
+var(57)=2100
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=var(58)>3
+triggerall=var(0)<=1
+triggerall=!fvar(5)
+triggerall=power>=1000
+triggerall=statetype!=a
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200||var(58)>4
+trigger1=playerid(var(55)),movetype=a
+trigger1=playerid(var(55)),statetype=a&&playerid(var(55)),vel x<=0||playerid(var(55)),statetype!=a
+trigger1=fvar(39)>100&&playerid(var(55)),vel x<=0
+trigger1=playerid(var(55)),animtime<=-5
+trigger1=random<=40*var(58)||var(58)>4||1
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+強有情
+[state ]
+type=varset
+var(57)=1200
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=var(58)>4
+triggerall=var(0)<=1
+triggerall=statetype!=a
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=playerid(var(55)),facing!=facing
+triggerall=playerid(var(55)),animtime<=-8||var(51)&&!playerid(var(55)),movecontact
+triggerall=playerid(var(55)),movetype=a
+triggerall=(playerid(var(55)),stateno=[200,899])||(playerid(var(55)),anim=[200,899])||var(51)
+triggerall=playerid(var(55)),statetype=a||var(51)&&var(52)<=-8||fvar(39)<=20&&playerid(var(55)),statetype!=a&&(playerid(var(55)),anim=[200,899])&&fvar(2)>=185*1.5
+triggerall=fvar(34)>=0&&fvar(39)>=-5&&fvar(38)<=70
+triggerall=fvar(39)-fvar(34)*8-30*(fvar(2)>=225||var(1)&128&&fvar(2)>=40)=[-10,15]
+triggerall=fvar(38)-helper(2),fvar(8)>0||playerid(var(55)),statetype!=a
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=playerid(var(55)),time>=30||(prevstateno=[5000,5270])||(prevstateno=[150,155])||var(58)>4
+triggerall=random<=100*var(58)||var(58)>4
+triggerall=playerid(var(55)),time>=10+5*(5-var(58))||var(58)>4
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800||movecontact&&((anim=[200,235])||anim=[400,430])
+trigger1=prevstateno!=2150
+ブースト
+[state ]
+type=varset
+var(57)=800
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=var(58)>3
+triggerall=var(0)<=1
+triggerall=statetype!=a
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),movetype=a
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+trigger1=fvar(2)>=225||var(1)&128&&fvar(2)>=40
+trigger1=anim=1200
+trigger1=animelem=1,=1
+trigger1=fvar(39)>10;30+(anim=235)*50
+バックステッポ
+[state ]
+type=varset
+var(57)=47-(backedgebodydist<=40);105
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=var(58)>4
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=a
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),hitdefattr=sac,at
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=fvar(39)<=80
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])
+trigger1=1
+ジャンプ逃げ
+[state ]
+type=varset
+var(57)=46+(fvar(37)<=120)
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=statetype!=a
+triggerall=fvar(39)-fvar(34)*4-25*(fvar(2)>=225||var(1)&128&&fvar(2)>=40)=[75,140]
+triggerall=playerid(var(55)),statetype!=a||fvar(38)-helper(2),fvar(4)=[20,60]
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),movetype!=h
+;triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=var(56)&512||(prevstateno=[5000,5270])||(prevstateno=[120,155])||(stateno=[120,139])||var(58)>3
+triggerall=playerid(var(55)),movetype=a||!playerid(var(55)),ctrl
+triggerall=playerid(var(55)),stateno>=200&&(var(51)||playerid(var(55)),anim=[200,899])
+triggerall=random<=20*var(58)*var(58)&&var(58)>2||var(58)<=2&&random<=30||var(58)>3&&random>=400||var(58)>4&&var(51)
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800||(anim=[200,205])||anim=[400,410]
+trigger1=playerid(var(55)),hitdefattr=sac,aa,at,ap=0
+trigger1=!var(51)
+trigger1=(playerid(var(55)),time=[20,40])&&playerid(var(55)),time-animtime<=100||anim=800||(anim=[200,205])||anim=[400,410]
+trigger1=!fvar(5)
+//////////////////////////////////////////////////////////////////////////////////
+ 隙つき
+//////////////////////////////////////////////////////////////////////////////////
+硬直刺し
+投げ
+[state ]
+type=varset
+var(57)=720+(backedgebodydist<=40)
+triggerall=var(59)&1
+triggerall=var(58)>=5
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=i
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),prevstateno!=[5000,5270]
+triggerall=playerid(var(55)),animtime=-3
+triggerall=!playerid(var(55)),ctrl
+triggerall=!(inguarddist||var(59)&128)
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+trigger1=fvar(39)<=8
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])
+[state ]
+type=null;varset
+var(57)=720+(backedgebodydist<=40)
+triggerall=var(59)&1
+triggerall=var(58)>=5
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=a&&vel x>2
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=!playerid(var(55)),ctrl
+triggerall=playerid(var(55)),prevstateno!=[5000,5270]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+trigger1=fvar(39)<=8
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])
+2A
+[state ]
+type=varset
+var(57)=400
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),movetype!=h
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),hitdefattr=sac,aa,at,ap=0
+triggerall=!playerid(var(55)),ctrl
+triggerall=playerid(var(55)),prevstateno!=[5000,5270]
+triggerall=playerid(var(55)),animtime<=-4
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=(playerid(var(55)),animtime=[-6,-4])||playerid(var(55)),movecontact||playerid(var(55)),movereversed||var(59)&512
+triggerall=playerid(var(55)),movecontact||playerid(var(55)),movereversed||playerid(var(55)),time>10||var(59)&512
+triggerall=playerid(var(55)),stateno>=105
+triggerall=fvar(39)-40*(fvar(2)>=225||var(1)&128&&fvar(2)>37)<=40
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+trigger1=random<=var(58)*80||var(58)>4
+D
+[state ]
+type=varset
+var(57)=230
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),movetype!=h
+triggerall=playerid(var(55)),statetype=s
+triggerall=playerid(var(55)),hitdefattr=sac,aa,at,ap=0
+triggerall=playerid(var(55)),stateno>=105
+triggerall=playerid(var(55)),prevstateno!=[5000,5270]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=playerid(var(55)),movecontact||playerid(var(55)),movereversed||playerid(var(55)),time>12||var(59)&512
+triggerall=!playerid(var(55)),ctrl
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),pos y+helper(2),fvar(7)<0
+triggerall=playerid(var(55)),animtime<=-7
+triggerall=(playerid(var(55)),animtime=[-9,-7])||playerid(var(55)),movecontact||playerid(var(55)),movereversed||var(59)&512
+triggerall=fvar(39)>=40
+triggerall=fvar(39)-30*(fvar(2)>=225||var(1)&128&&fvar(2)>37)<=100
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+trigger1=random<=var(58)*80||var(58)>4
+D
+[state ]
+type=varset
+var(57)=230
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movecontact||playerid(var(55)),movereversed||playerid(var(55)),time>12||var(59)&512
+triggerall=playerid(var(55)),movetype=i||playerid(var(55)),movetype=a&&playerid(var(55)),facing=facing
+triggerall=!playerid(var(55)),ctrl
+triggerall=playerid(var(55)),prevstateno!=[5000,5270]
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),facing!=facing&&fvar(39)-fvar(34)*6>0||enemy,facing=facing
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),pos y+helper(2),fvar(7)<0
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+trigger1=fvar(39)-fvar(34)*6=[10,75]
+trigger1=fvar(38)-helper(2),fvar(6)<=75
+trigger1=fvar(34)>=0
+trigger1=random<=var(58)*80||var(58)>4
+ブースト
+[state ]
+type=varset
+var(52)=800
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),movetype!=h
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),prevstateno!=[5000,5270]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!playerid(var(55)),ctrl
+triggerall=!(var(56)&4)
+triggerall=playerid(var(55)),animtime=[-8,-2]
+triggerall=var(5)>=100||var(6)&&var(5)%100>=20
+triggerall=fvar(39)>30+(anim=410)*30+(anim=235)*50
+triggerall=anim=400||anim=410||anim=235
+triggerall=time=1
+trigger1=random<=var(58)*80||var(58)>4
+[state ]
+type=varset
+var(57)=110
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),movetype!=h
+triggerall=playerid(var(55)),movetype=i||playerid(var(55)),movetype=a;&&playerid(var(55)),facing=facing
+triggerall=playerid(var(55)),animtime<=-35||playerid(var(55)),statetype=a&&fvar(38)-helper(2),fvar(2)>5
+triggerall=playerid(var(55)),prevstateno!=[5000,5270]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!playerid(var(55)),ctrl
+triggerall=playerid(var(55)),stateno>=105
+triggerall=!var(51)
+triggerall=!(inguarddist||var(59)&128)||playerid(var(55)),hitdefattr=sac,aa,at,ap=0&&playerid(var(55)),stateno=[1000,1999]
+triggerall=pos y<=-100
+trigger1=anim=41||anim=132
+trigger1=fvar(39)>=120
+trigger1=random<=var(58)*80||var(58)>4
+[state ]
+type=varset
+var(57)=41
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),movetype!=h
+triggerall=playerid(var(55)),movetype=i||playerid(var(55)),movetype=a;&&playerid(var(55)),facing=facing
+triggerall=playerid(var(55)),animtime<=-50
+triggerall=playerid(var(55)),prevstateno!=[5000,5270]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!playerid(var(55)),ctrl
+triggerall=!var(51)
+triggerall=playerid(var(55)),stateno>=105
+triggerall=!(inguarddist||var(59)&128)||playerid(var(55)),hitdefattr=sac,aa,at,ap=0&&playerid(var(55)),stateno=[1000,1999]
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+trigger1=fvar(39)>=160
+trigger1=random<=var(58)*80||var(58)>4
+[state ]
+type=varset
+var(57)=100
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),movetype!=h
+triggerall=playerid(var(55)),movetype=i||playerid(var(55)),movetype=a;&&playerid(var(55)),facing=facing
+triggerall=playerid(var(55)),animtime<-2||playerid(var(55)),statetype=a&&fvar(38)-helper(2),fvar(2)>5
+triggerall=playerid(var(55)),prevstateno!=[5000,5270]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!playerid(var(55)),ctrl
+triggerall=playerid(var(55)),stateno>=105
+triggerall=!(inguarddist||var(59)&128)
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+trigger1=fvar(39)-sysfvar(2)*5>46
+trigger1=random<=var(58)*80||anim=100||var(58)>4
+[state ]
+type=varset
+var(57)=2100
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=!fvar(5)
+triggerall=statetype!=a
+triggerall=power>=1000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+trigger1=playerid(var(55)),movetype=a
+trigger1=playerid(var(55)),statetype=a&&playerid(var(55)),vel x<=0||statetype!=a
+trigger1=fvar(39)>100&&playerid(var(55)),vel x<=0
+trigger1=playerid(var(55)),animtime<=-5
+trigger1=random<=var(58)*80||var(58)>4
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+[state ]
+type=varset
+var(57)=47
+triggerall=var(59)&1
+triggerall=var(58)=5
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype!=h
+triggerall=playerid(var(55)),statetype=s
+triggerall=playerid(var(55)),ctrl
+triggerall=!playerid(var(55)),pos y
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!(inguarddist||var(59)&128)
+trigger1=fvar(39)<=18
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+立ち無想
+[state ]
+type=varset
+var(57)=20
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=fvar(5)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=a
+triggerall=playerid(var(55)),statetype!=c
+triggerall=fvar(38)>=-60&&playerid(var(55)),statetype=a&&fvar(34)>0&&playerid(var(55)),pos y+helper(2),fvar(8)<10||playerid(var(55)),statetype=s
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=playerid(var(55)),facing!=facing
+triggerall=playerid(var(55)),backedgebodydist>20
+triggerall=playerid(var(55)),hitdefattr=sa,aa,ap||inguarddist&&fvar(39)<=120&&!var(51)
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])
+triggerall=playerid(var(55)),time>=5+8*(var(58)=3)||var(58)>4
+trigger1=random<=100*var(58)||var(58)>4
+trigger1=playerid(var(55)),animtime<=-4-16
+trigger1=fvar(6)<=0&&fvar(7)<=0&&anim!=20
+trigger2=fvar(6)>1&&anim=20
+屈み無想
+[state ]
+type=varset
+var(57)=10
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=fvar(5)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=a
+triggerall=playerid(var(55)),statetype=c
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=playerid(var(55)),facing!=facing
+triggerall=playerid(var(55)),backedgebodydist>20
+triggerall=fvar(36)<=30||fvar(2)>=185||playerid(var(55)),time>25
+triggerall=playerid(var(55)),hitdefattr=c,aa,ap
+triggerall=playerid(var(55)),time>=5+8*(var(58)=3)||var(58)>4
+trigger1=random<=100*var(58)||var(58)>4
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])
+trigger1=playerid(var(55)),animtime<=-4-16
+trigger1=fvar(6)<=0&&fvar(7)<=0&&anim!=[10,12]
+trigger2=fvar(6)>1&&anim=[10,12]
+//////////////////////////////////////////////////////////////////////////////////
+ statetype=l
+//////////////////////////////////////////////////////////////////////////////////
+2A
+2A詐欺
+2B
+2B詐欺
+ノーマルジャンプJB
+ノーマルジャンプJBすかし
+低ダ2B
+低ダ2B重ね
+低ダJAすかし
+低空七死
+ブー七死すかし
+[state ]
+type=varset
+var(57)=2100
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=!fvar(5)&&power>=1000
+triggerall=statetype!=a
+triggerall=playerid(var(55)),statetype=l
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=playerid(var(55)),anim=[5120,5129]
+triggerall=playerid(var(55)),animtime<=-3
+trigger1=random<=var(58)*80||var(58)>4
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+2A
+[state ]
+type=varset
+var(57)=400
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=var(58)<=4
+triggerall=statetype!=a
+triggerall=playerid(var(55)),statetype=l
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=playerid(var(55)),anim=[5120,5129]
+triggerall=playerid(var(55)),animtime=-3
+trigger1=random<=100*var(58)
+trigger1=fvar(39)<=65
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+2B
+[state ]
+type=varset
+var(57)=410
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=var(58)<=4
+triggerall=statetype!=a
+triggerall=playerid(var(55)),statetype=l
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=playerid(var(55)),anim=[5120,5129]
+triggerall=playerid(var(55)),animtime=-4||playerid(var(55)),animtime=-11&&random<=333&&var(58)>2
+trigger1=random<=180*var(58)
+trigger1=fvar(39)<=100
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+低空七死
+[state ]
+type=varset
+var(57)=800
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=statetype=a
+triggerall=playerid(var(55)),statetype=l
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=playerid(var(55)),anim=[5120,5129]
+triggerall=fvar(2)>=225
+trigger1=random<=100*var(58)
+trigger1=anim=1500
+trigger1=animelem=1,=1
+[state ]
+type=varset
+var(57)=1500
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=statetype=a
+triggerall=playerid(var(55)),statetype=l
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=playerid(var(55)),anim=[5120,5129]
+triggerall=fvar(2)>=225
+trigger1=random<=50
+trigger1=anim=41
+trigger1=animelem=1,=4
+低ダJB
+[state ]
+type=varset
+var(57)=ifelse(random<=200,600,610)
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype=a
+triggerall=playerid(var(55)),statetype=l
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=playerid(var(55)),anim=[5120,5129]
+trigger1=anim=110
+[state ]
+type=varset
+var(57)=110
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype=a
+triggerall=playerid(var(55)),statetype=l
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=playerid(var(55)),anim=[5120,5129]
+trigger1=anim=41
+[state ]
+type=varset
+var(57)=41-(fvar(39)<=80&&random<=777)
+triggerall=var(59)&1
+triggerall=var(58)<=4
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),statetype=l
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=playerid(var(55)),anim=[5120,5129]
+triggerall=playerid(var(55)),animtime=-20
+trigger1=random<=100*var(58)
+trigger1=fvar(39)<=120
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+;--------------移動調整
+ダッシュ
+[state ]
+type=varset
+var(57)=100
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),statetype=l
+triggerall=playerid(var(55)),stateno%10000=[5111,5120]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+triggerall=random<=20&&var(58)<=2||var(58)>2&&random<=200*var(58)||var(58)>4||anim=100
+trigger1=fvar(39)-sysfvar(2)*5>46
+trigger2=var(58)<=4
+trigger2=fvar(39)>30
+後退
+[state ]
+type=varset
+var(57)=21
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),statetype=l
+triggerall=playerid(var(55)),stateno%10000=[5111,5120]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+trigger1=fvar(39)<=25
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+/////////////////////////////////////////////////////////////////////////////////
+ 裏周り
+/////////////////////////////////////////////////////////////////////////////////
+2A
+[state ]
+type=varset
+var(57)=400
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=playerid(var(55)),movetype!=h
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),statetype!=a
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=facing=playerid(var(55)),facing
+triggerall=!playerid(var(55)),ctrl
+triggerall=fvar(39)-30*(var(5)>=100||var(6)&&var(5)%100>=20)<=35
+triggerall=statetype!=a
+triggerall=playerid(var(55)),animtime<-3
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+trigger1=random<=200*var(58)||var(58)>4
+2B
+[state ]
+type=varset
+var(57)=410
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=playerid(var(55)),movetype!=h
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),statetype!=a
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=facing=playerid(var(55)),facing
+triggerall=!playerid(var(55)),ctrl
+triggerall=playerid(var(55)),animtime<-6
+triggerall=fvar(39)-30*(var(5)>=100||var(6)&&var(5)%100>=20)<=55
+triggerall=statetype!=a
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+trigger1=random<=200*var(58)||var(58)>4
+D
+[state ]
+type=varset
+var(57)=230
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=playerid(var(55)),movetype!=h
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),statetype=a
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=facing=playerid(var(55)),facing
+triggerall=!playerid(var(55)),ctrl
+triggerall=playerid(var(55)),animtime<-6
+triggerall=playerid(var(55)),movecontact||playerid(var(55)),movereversed||playerid(var(55)),time>12||var(59)&512
+triggerall=fvar(39)-30*(var(5)>=100||var(6)&&var(5)%100>=20)<=75
+triggerall=fvar(38)-helper(2),fvar(6)=[5,75]
+triggerall=playerid(var(55)),pos y+helper(2),fvar(7)<0
+triggerall=statetype!=a
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+trigger1=random<=200*var(58)||var(58)>4
+[state ]
+type=varset
+var(57)=800
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=playerid(var(55)),movetype!=h
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),statetype!=a
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=facing=playerid(var(55)),facing
+triggerall=!playerid(var(55)),ctrl
+triggerall=fvar(39)>45+(anim=410)*30
+triggerall=statetype!=a
+triggerall=playerid(var(55)),animtime<-2
+trigger1=random<=200*var(58)||var(58)>4
+trigger1=anim=400||anim=410
+trigger1=time=1
+//////////////////////////////////////////////////////////////////////////////////
+ バスケ
+//////////////////////////////////////////////////////////////////////////////////
+[state ]
+type=varadd
+trigger1=!numtarget
+var(59)=-(var(59)&2048)
+[state ]
+type=varadd
+trigger1=!(var(59)&2048)
+trigger1=anim=1300
+trigger1=numenemy=1
+trigger1=power>=1000
+trigger1=sysvar(4)=1
+trigger1=movehit=2
+trigger1=fvar(36)=[80,230]
+trigger1=fvar(2)>=185*.8&&!(var(1)&128)||fvar(2)>=185*2
+trigger1=var(58)>3
+trigger1=fvar(1)>3
+var(59)=2048
+弱有情
+[state ]
+type=varset
+var(57)=1100
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=var(1)&16384
+triggerall=enemynear,movetype=h
+triggerall=enemynear,stateno=35110
+triggerall=sysvar(4)>=85
+triggerall=!(var(2)&16777216)
+triggerall=fvar(35)<=-10
+triggerall=fvar(38)-helper(2),fvar(8)=[60,100]
+triggerall=fvar(39)<=40
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+trigger2=(anim=[200,205])||anim=400
+バニ
+[state ]
+type=varset
+var(57)=760
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=var(1)&16384
+triggerall=enemynear,movetype=h
+triggerall=enemynear,stateno=35110
+triggerall=sysvar(4)>=85
+triggerall=!(var(2)&1048576)
+triggerall=fvar(35)<=-10
+triggerall=fvar(38)-helper(2),fvar(18)=[60,100]
+triggerall=fvar(39)<=60
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+trigger2=(anim=[200,205])||anim=400
+ドリブル遠B
+[state ]
+type=varset
+var(57)=210
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=var(1)&16384
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno=35110
+triggerall=sysvar(4)>=35
+triggerall=p2bodydist x>=40
+triggerall=fvar(35)<=-8
+triggerall=fvar(39)<=60
+triggerall=var(58)>4||random<=777
+triggerall=fvar(38)-helper(2),fvar(6)=[55,80]
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+trigger2=movehit>1&&(anim=400||anim=215)
+A
+[state ]
+type=varset
+var(57)=200
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=var(1)&16384
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno=35110
+triggerall=sysvar(4)>=35
+triggerall=fvar(35)<=-8
+triggerall=fvar(39)<=45
+triggerall=var(58)>4||random<=777
+triggerall=fvar(38)-helper(2),fvar(4)=[70,80]
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+trigger2=movehit>1&&(anim=400||anim=[200,205])
+ドリブル2A
+[state ]
+type=varset
+var(57)=400
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=var(1)&16384
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno=35110
+triggerall=sysvar(4)>=33
+triggerall=fvar(35)<=-4
+triggerall=fvar(39)<=50
+triggerall=var(58)>4||random<=500
+triggerall=fvar(38)-helper(2),fvar(4)=[15,67]
+triggerall=playerid(var(55)),vel y+helper(2),fvar(0)*4>0
+triggerall=playerid(var(55)),time>2
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+trigger2=movehit>1&&(anim=400||anim=[200,205])
+A
+[state ]
+type=varset
+var(57)=400
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=var(1)&16384
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno=5050
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=sysvar(4)>=33
+triggerall=var(58)>4||random<=777
+triggerall=fvar(38)-helper(2),fvar(4)<=60
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+triggerall=random<=200*var(58)||var(58)>4
+trigger1=fvar(39)<=50
+移動ブースト
+[state ]
+type=varset
+var(57)=800
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno=5050
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=sysvar(4)>=32
+triggerall=fvar(39)>=80&&fvar(11)<-1||var(6)&&var(5)%100=[20,30]
+trigger1=fvar(2)=185
+trigger1=fvar(39)>=45
+trigger1=anim=[200,205]
+trigger1=animelem=1,<=2
+天破活殺
+[state ]
+type=varset
+var(57)=2000
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=var(1)&16384
+triggerall=sysvar(4)=[26,33]
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno=35110
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+;triggerall=fvar(35)<-6.5
+;triggerall=playerid(var(55)),vel y+helper(2),fvar(0)*12>=0
+;triggerall=playerid(var(55)),vel y<0
+trigger1=power>=1000||fvar(39)<=35;1000
+trigger1=random<=200*var(58)||var(58)>4
+ダッシュ調整
+[state ]
+type=varset
+var(57)=100
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=var(1)&16384
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno=35110||playerid(var(55)),stateno=5050
+triggerall=sysvar(4)>=26
+triggerall=var(58)>4||random<=100||anim=100
+triggerall=fvar(35)<=-5&&fvar(39)>45||backedgebodydist<frontedgebodydist&&facing*(enemynear,pos x-pos x)>0
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+屈み待機
+[state ]
+type=varset
+var(57)=10
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=var(1)&16384
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno=35110
+triggerall=fvar(35)>-8.5
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+移動ブースト
+[state ]
+type=varset
+var(57)=800
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=sysvar(4)>12
+triggerall=statetype!=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=anim=[200,205]
+triggerall=animelem=1,<=4
+trigger1=fvar(39)>=50
+trigger1=fvar(2)>=185&&!(var(1)&128)
+trigger2=var(1)&128
+trigger2=(fvar(2)=[38,50])||fvar(2)=[225,238]
+A
+[state ]
+type=varset
+var(57)=200
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=sysvar(4)>12
+triggerall=statetype!=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+trigger1=anim=400||anim=[200,205]
+trigger1=movehit>1
+trigger1=!(playerid(var(55)),backedgebodydist+fvar(34)*5<=25||sysvar(4)>=33)
+2A
+[state ]
+type=varset
+var(57)=400
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=sysvar(4)>12
+triggerall=statetype!=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+JAB
+[state ]
+type=varset
+var(57)=600+30*(anim=600)
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=sysvar(4)>6
+triggerall=statetype=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=var(1)&8
+triggerall=var(1)&16
+trigger1=anim=110
+trigger1=animelem=1,=4
+trigger2=anim=600
+trigger2=movehit>1
+空中ダッシュ
+[state ]
+type=varset
+var(57)=110
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=sysvar(4)>6
+triggerall=statetype=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=var(1)&8
+trigger1=prevstateno=610
+trigger1=anim=41
+JAB
+[state ]
+type=varset
+var(57)=600+10*(anim=600)
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=sysvar(4)>6
+triggerall=statetype=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+trigger1=var(1)&8
+trigger1=anim=41
+trigger2=anim=[600,610]
+trigger2=movehit>1
+;trigger2=!var(0)
+trigger2=anim=610&&sysfvar(4)<=1||anim=600
+HJ
+[state ]
+type=varset
+var(57)=46
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=sysvar(4)>6
+triggerall=statetype!=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+trigger1=var(54)>1
+ブースト
+[state ]
+type=varset
+var(57)=800
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=sysvar(4)>5
+triggerall=statetype=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+trigger1=!(var(1)&8)
+trigger1=anim=630
+trigger1=movehit=2
+JD
+[state ]
+type=varset
+var(57)=630
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=sysvar(4)>4
+triggerall=statetype=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+trigger1=sysfvar(4)>0
+trigger1=anim=600
+trigger1=movehit>1
+JA
+[state ]
+type=varset
+var(57)=600
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=sysvar(4)>4
+triggerall=statetype=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+trigger1=!(var(1)&8)
+trigger1=anim=110
+低ダ
+[state ]
+type=varset
+var(57)=110
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=sysvar(4)>3
+triggerall=statetype=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+trigger1=anim=41
+蛇
+[state ]
+type=varset
+var(57)=1300
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=sysvar(4)
+triggerall=statetype!=a
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno!=[130,159]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4
+trigger1=fvar(38)-helper(2),fvar(20)<=65||1
+trigger1=anim=[230,235]
+trigger1=movehit>1
+D
+[state ]
+type=varset
+var(57)=230
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=statetype!=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno!=[130,159]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=sysvar(4)<=6
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+triggerall=fvar(38)-helper(2),fvar(7)=[40,80]
+triggerall=random<=200*var(58)||var(58)>4||1
+trigger1=!sysfvar(4)||!pos y
+trigger1=fvar(39)-fvar(34)*6<=100
+JD
+[state ]
+type=varset
+var(57)=630
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=sysvar(4)<=2
+triggerall=statetype=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+trigger1=sysfvar(4)>2
+trigger1=anim=[610,620]
+trigger1=movehit>1
+JB
+[state ]
+type=varset
+var(57)=610
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=sysvar(4)<=2
+triggerall=statetype=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+trigger1=anim=41
+trigger1=var(54)>6
+蛇>cj
+[state ]
+type=varset
+var(57)=41-(sysvar(4)>3)
+triggerall=var(59)&1
+triggerall=var(59)&2048
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=sysvar(4)
+triggerall=statetype!=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+trigger1=anim=1300
+trigger1=movehit>1
+蛇
+[state ]
+type=varset
+var(57)=1300
+triggerall=var(59)&1
+triggerall=var(58)>3
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=statetype!=a
+triggerall=!(var(1)&16384)
+triggerall=numtarget
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=anim=235
+triggerall=movehit>1
+trigger1=numenemy=1
+trigger1=power>=1000;1000
+trigger1=fvar(1)>3
+trigger1=fvar(36)=[20,125]
+trigger1=!(var(1)&2048)
+trigger1=fvar(2)>=185*.7&&!(var(1)&128)||fvar(2)>=185*2
+D
+[state ]
+type=varset
+var(57)=230
+triggerall=var(59)&1
+triggerall=var(58)>3
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=statetype!=a
+triggerall=!(var(1)&16384)
+triggerall=numtarget
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),statetype=s
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=fvar(1)>3
+triggerall=fvar(36)=[20,125]
+triggerall=(anim=[200,215])||anim=230||anim=[400,410]
+triggerall=movehit>1
+trigger1=numenemy=1
+trigger1=power>=1000;1000
+trigger1=fvar(2)>=185*.7&&!(var(1)&128)||fvar(2)>=185*2
+[state ]
+type=varset
+trigger1=numtarget
+trigger1=var(59)&2048
+trigger1=!var(57)
+var(57)=-1
+//////////////////////////////////////////////////////////////////////////////////
+ movetype=h
+//////////////////////////////////////////////////////////////////////////////////
+タッグ用コンボ
+[state ]
+type=varset
+var(57)=2000
+triggerall=var(59)&1
+triggerall=power>=1000;1000
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=numenemy>1
+triggerall=enemynear,movetype=h||!enemynear,alive
+triggerall=enemynear(1),movetype=h||!enemynear(1),alive
+triggerall=enemynear,stateno>=5000
+triggerall=enemynear(1),stateno>=5000
+triggerall=enemynear,gethitvar(hittime)>=18&&enemynear,alive||enemynear(1),gethitvar(hittime)>=18&&enemynear(1),alive
+triggerall=facing*(enemynear,pos x-pos x)>0&&facing*(enemynear(1),pos x-pos x)>0
+triggerall=numpartner
+triggerall=partner,movetype=a||partner,numtarget
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>3
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+trigger1=fvar(38)<=120
+ﾔﾘﾀｶｯﾀﾀﾞｹｰ一撃
+[state ]
+type=varset
+var(57)=1200
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=fvar(1)<=0
+triggerall=var(59)&256
+triggerall=!(var(1)&16384)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=h
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>3
+trigger1=anim=800
+trigger1=prevstateno=760
+trigger1=!(var(1)&1024)
+trigger1=sysvar(4)
+[state ]
+type=varset
+var(57)=800
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=fvar(1)<=0
+triggerall=var(59)&256
+triggerall=!(var(1)&16384)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=h
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>3
+triggerall=!(var(1)&1024)
+triggerall=movehit>1
+trigger1=anim=760
+trigger1=fvar(2)>=185
+trigger2=anim=1200
+trigger2=animelem=7,>=0
+trigger2=fvar(2)>=185||var(1)&128&&fvar(2)>37
+[state ]
+type=varset
+var(57)=760
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=fvar(1)<=0
+triggerall=var(59)&256
+triggerall=!(var(1)&16384)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=h
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>3
+triggerall=fvar(2)>=185
+trigger1=var(1)&1024
+trigger1=playerid(var(55)),stateno=30765
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+trigger1=fvar(39)<=80
+北斗百裂拳
+[state ]
+type=varset
+var(57)=ifelse(var(58)>4||random<=100+var(58)*200,3000,760)
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=fvar(1)<=0
+triggerall=var(59)&256
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=h
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>3
+バニ一撃
+trigger1=var(1)&1024
+trigger1=playerid(var(55)),stateno=30765
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+trigger1=fvar(39)<=80
+ダウン追い討ち一撃
+trigger2=var(1)&16384
+trigger2=playerid(var(55)),stateno=35110
+trigger2=facing*(playerid(var(55)),pos x-pos x)>0
+trigger2=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+trigger2=fvar(35)<-6.5
+trigger2=fvar(39)-fvar(34)*8<=70
+活殺>一撃
+trigger3=var(1)&16384
+trigger3=playerid(var(55)),stateno=5050
+trigger3=fvar(38)-helper(2),fvar(12)>10
+ﾔﾘﾀｶｯﾀﾀﾞｹｰ一撃
+trigger4=sysvar(4)
+trigger4=!(var(1)&16384)
+trigger4=playerid(var(55)),statetype=a
+trigger4=playerid(var(55)),stateno!=[130,159]
+trigger4=playerid(var(55)),backedgebodydist<=50||var(58)=[3,4]
+trigger4=sysfvar(4)<0
+trigger4=anim=800
+ブー一撃
+trigger5=var(58)>2
+trigger5=sysvar(4)>4
+trigger5=fvar(39)<=80
+trigger5=anim=800
+trigger5=prevstateno=760||prevstateno=1050||prevstateno=1100
+trigger5=playerid(var(55)),backedgebodydist<=15||facing*(playerid(var(55)),pos x-pos x)<0
+;-------------------ダウン追い討ち
+ブー弱有情or醒衛
+[state ]
+type=varset
+var(57)=ifelse(var(2)&16777216,1050,1100)
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=var(5)<=2
+triggerall=var(1)&16384
+triggerall=playerid(var(55)),movetype=h
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4
+triggerall=!(var(2)&16777216)||!(var(2)&8388608)
+trigger1=prevstateno=1100||prevstateno=760
+trigger1=anim=800
+trigger1=fvar(1)>0
+[state ]
+type=varset
+var(57)=800
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=var(1)&16384
+triggerall=playerid(var(55)),movetype=h
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=anim=760&&prevstateno!=800||anim=1100||anim=1050&&fvar(1)<=0&&var(59)&256
+triggerall=random<=200*var(58)||var(58)>4
+triggerall=movehit=2
+trigger1=fvar(2)>=185*2.5
+trigger2=fvar(2)>=185||fvar(2)>37&&var(1)&128
+trigger2=var(59)&256
+trigger2=fvar(1)<=(3-var(5))
+弱有情
+[state ]
+type=varset
+var(57)=1100
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=var(1)&16384
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno=5050
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=fvar(37)<=90
+triggerall=random<=200*var(58)||var(58)>4
+trigger1=fvar(39)<=40
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+バニ
+[state ]
+type=varset
+var(57)=760
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=fvar(1)<=3-(fvar(2)<185*1.2)
+triggerall=fvar(2)>=185
+triggerall=fvar(1)<=(3-var(5))
+triggerall=playerid(var(55)),backedgebodydist<=40
+triggerall=fvar(39)<=60
+triggerall=var(59)&256
+triggerall=var(1)&16384
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno=35110
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+triggerall=fvar(35)<-6.5
+triggerall=playerid(var(55)),vel y+helper(2),fvar(0)*16>=0
+triggerall=playerid(var(55)),vel y<0
+trigger1=random<=200*var(58)||var(58)>4
+醒鋭or活殺
+[state ]
+type=varset
+var(57)=ifelse(power>=1000&&fvar(5)>0||power>=2000,2000,1050);1000
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=var(1)&16384
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno=35110
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+triggerall=fvar(35)<-6.5
+triggerall=playerid(var(55)),vel y+helper(2),fvar(0)*16>=0
+triggerall=playerid(var(55)),vel y<0
+trigger1=power>=1000||fvar(39)<=35;1000
+trigger1=random<=200*var(58)||var(58)>4
+無想
+[state ]
+type=varset
+var(57)=2100
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=!fvar(5)&&power>=1000;1000
+triggerall=statetype!=a
+triggerall=var(1)&16384
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno=35110
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+triggerall=fvar(35)>=-6.5&&fvar(35)<-3
+trigger1=playerid(var(55)),vel y<0
+trigger1=random<=200*var(58)||var(58)>4
+2B
+[state ]
+type=varset
+var(57)=410
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=var(1)&16384
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno=35110
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+triggerall=fvar(35)>=-6.5&&fvar(35)<-3
+triggerall=playerid(var(55)),vel y<0
+trigger1=fvar(39)<=35
+trigger1=random<=200*var(58)||var(58)>4
+-------------------空中コンボ
+JD
+[state ]
+type=varset
+var(57)=630
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=sysvar(4)>5
+triggerall=statetype=a
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno!=[130,159]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4||1
+trigger1=sysvar(4)>=3
+trigger1=sysfvar(4)>2&&var(1)&8
+trigger1=anim=[600,610]
+trigger1=anim=600||anim=610&&fvar(38)>=40
+trigger1=movehit>1
+trigger2=anim=620
+trigger2=movehit>1
+trigger2=!(var(1)&8)
+JC
+[state ]
+type=varset
+var(57)=620
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=sysvar(4)
+triggerall=statetype=a
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno!=[130,159]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4
+trigger1=sysvar(4)>=4
+trigger1=anim=610
+trigger1=movehit>1
+trigger1=!(var(1)&8)
+JAB
+[state ]
+type=varset
+var(57)=600+10*(anim=600)
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=sysvar(4)
+triggerall=statetype=a
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno!=[130,159]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4||1
+trigger1=sysvar(4)>=3
+trigger1=anim=[600,610]
+trigger1=movehit>1
+JA
+[state ]
+type=varset
+var(57)=600
+triggerall=var(59)&1
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=sysvar(4)
+triggerall=statetype=a
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno!=[130,159]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4
+triggerall=fvar(39)<=70
+trigger1=sysvar(4)>=3
+trigger1=anim=41
+蛇>cj
+[state ]
+type=varset
+var(57)=46
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=statetype!=a
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno!=[130,159]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=sysvar(4)=[3,4]
+triggerall=random<=200*var(58)||var(58)>4
+triggerall=fvar(39)<=70
+trigger1=anim=1300
+trigger1=movehit>1
+蛇>cj
+[state ]
+type=varset
+var(57)=ifelse(sysvar(4)<=4||fvar(38)>48,46-5*(random<=900-200*var(58)),41+5*(random<=900-200*var(58)))
+triggerall=var(59)&1
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=sysvar(4)
+triggerall=statetype!=a
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno!=[130,159]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4
+triggerall=sysvar(4)>=3
+triggerall=fvar(39)<=70
+trigger1=anim=1300
+trigger1=movehit>1
+蛇
+[state ]
+type=varset
+var(57)=1300
+triggerall=var(59)&1
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=sysvar(4)
+triggerall=statetype!=a
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno!=[130,159]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4
+trigger1=fvar(38)-helper(2),fvar(20)<=55||sysvar(4)>=3
+trigger1=anim=[230,235]
+trigger1=movehit>1
+有情グレイブ
+[state ]
+type=varset
+var(57)=750
+triggerall=var(59)&1
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=sysvar(4)
+triggerall=statetype!=a
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno!=[130,159]
+triggerall=random<=200*var(58)||var(58)>2
+trigger1=sysfvar(4)<0
+trigger1=anim=800
+2A
+[state ]
+type=varset
+var(57)=400
+triggerall=var(59)&1
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=sysvar(4)<=1
+triggerall=statetype!=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno!=[130,159]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=sysvar(4)<=6
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+triggerall=fvar(38)-helper(2),fvar(4)=[10,40]
+triggerall=prevstateno!=750
+triggerall=random<=200*var(58)||var(58)>4
+triggerall=fvar(39)<=50
+trigger1=prevstateno=1100
+trigger2=!sysfvar(4)&&!pos y
+D
+[state ]
+type=varset
+var(57)=230
+triggerall=var(59)&1
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=statetype!=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno!=[130,159]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=sysvar(4)<=6
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+triggerall=fvar(38)-helper(2),fvar(7)=[40,120]
+triggerall=random<=200*var(58)||var(58)>4||1
+trigger1=!sysfvar(4)||!pos y
+trigger1=fvar(39)-fvar(34)*6<=100
+trigger2=fvar(1)>0
+trigger2=sysfvar(4)>0
+trigger2=pos y>=-95
+trigger3=!sysfvar(4)||!pos y
+trigger3=prevstateno!=760
+trigger3=playerid(var(55)),gethitvar(recovertime)<22
+;-------浮かし一回目
+JC
+[state ]
+type=varset
+var(57)=620
+triggerall=var(59)&1
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=sysvar(4)<=2||fvar(39)<=80&&sysvar(4)=[3,4]
+triggerall=statetype=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4
+trigger1=anim=110
+低ダ
+[state ]
+type=varset
+var(57)=110
+triggerall=var(59)&1
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=sysvar(4)<=2||fvar(39)>70
+triggerall=statetype=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4
+trigger1=anim=41
+蛇>cj
+[state ]
+type=varset
+var(57)=41
+triggerall=var(59)&1
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=sysvar(4)<=2||fvar(39)>70
+triggerall=statetype!=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4
+trigger1=anim=1300||anim=710
+trigger1=movehit>1
+有情ブースト
+[state ]
+type=varset
+var(57)=800
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=sysvar(4)
+triggerall=statetype!=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4
+trigger1=anim=1200
+trigger1=fvar(2)>=285
+trigger1=animelem=7,>=0
+trigger1=var(0)=[2,6]
+trigger1=movehit>1
+ブーストグレイブ
+[state ]
+type=varset
+var(57)=800
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=sysvar(4)
+triggerall=statetype!=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4
+trigger1=fvar(2)>=225
+trigger1=fvar(37)>120
+trigger1=anim=750
+trigger1=animelem=3
+trigger1=!sysfvar(4)
+飛衛orグレイブ
+[state ]
+type=varset
+var(57)=ifelse(fvar(2)>=225||fvar(37)<=140,750,1400)
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=statetype!=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4
+trigger1=anim=430
+trigger1=movehit>1
+D
+[state ]
+type=varset
+var(57)=230
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4
+trigger1=sysvar(4)<=6||anim=400
+trigger1=(anim=[200,215])||anim=400
+trigger1=!sysfvar(4)||!pos y
+trigger1=movehit>1
+ブー2A
+[state ]
+type=varset
+var(57)=800
+triggerall=var(59)&1
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=!sysvar(4)
+triggerall=statetype!=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>3
+trigger1=anim=400
+trigger1=playerid(var(55)),backedgebodydist>20
+trigger1=animelem=1,=2
+投げ～2A
+[state ]
+type=varset
+var(57)=400
+triggerall=var(59)&1
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=!sysvar(4)
+triggerall=statetype!=a
+triggerall=!(var(1)&1024)
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=prevstateno=725
+triggerall=random<=200*var(58)||var(58)>4
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+;-------------------壁コン
+活殺二回
+[state ]
+type=varset
+var(57)=2000
+triggerall=var(59)&1
+triggerall=var(58)>3
+triggerall=!var(57)
+triggerall=power>=1000;1000
+triggerall=statetype!=a
+triggerall=sysvar(3)>=16
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=a
+triggerall=playerid(var(55)),stateno=5050
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4
+trigger1=fvar(38)>=60
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+活殺
+[state ]
+type=varset
+var(57)=ifelse(power>=1000,2000+100*!fvar(5),100);1500
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=var(1)&1024
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno=30765
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=sysvar(3)>=15
+triggerall=random<=200*var(58)||var(58)>4
+trigger1=(anim=[200,205])||anim=235
+trigger1=movehit>1
+trigger2=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+JB
+[state ]
+type=varset
+var(57)=610
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=statetype=a
+triggerall=var(1)&1024
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4
+trigger1=sysvar(3)<=3
+trigger1=fvar(39)<=130&&fvar(37)<=110||playerid(var(55)),stateno=30765&&playerid(var(55)),time>=12
+trigger1=anim=110
+JC
+[state ]
+type=varset
+var(57)=ifelse(sysvar(3)>=15,630,610+10*(sysvar(3)<=12))
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=statetype=a
+triggerall=var(1)&1024
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4
+trigger1=fvar(39)<=130&&fvar(37)<=110||playerid(var(55)),stateno=30765&&playerid(var(55)),time>=12
+trigger1=anim=110
+低ダ
+[state ]
+type=varset
+var(57)=110
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=statetype=a
+triggerall=var(1)&1024
+triggerall=!(var(1)&16384)
+triggerall=playerid(var(55)),movetype=h
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4
+trigger1=anim=41||anim=1400&&movehit>1
+蛇>cj
+[state ]
+type=varset
+var(57)=41
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=var(1)&1024
+triggerall=playerid(var(55)),movetype=h
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4
+trigger1=anim=1300||anim=710
+trigger1=movehit>1
+精鋭
+[state ]
+type=varset
+var(57)=1050
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=var(1)&1024
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno=30765
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4
+triggerall=fvar(39)<=46
+triggerall=anim=[230,235]
+trigger1=var(5)<=1&&sysvar(3)<=7
+trigger1=!(var(2)&8388608)
+蛇
+[state ]
+type=varset
+var(57)=1300
+triggerall=var(59)&1
+triggerall=var(58)>1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=var(1)&1024
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno=30765
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4
+triggerall=fvar(38)-helper(2),fvar(18)<=100
+trigger1=(anim=[200,205])||anim=235||anim=230&&sysvar(3)>=6
+trigger1=movehit>1
+trigger2=playerid(var(55)),prevstateno=30761
+trigger2=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+A
+[state ]
+type=varset
+var(57)=ifelse(fvar(39)<=50,200,100)
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=var(1)&1024
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno=30765
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=sysvar(3)>8
+triggerall=random<=200*var(58)||var(58)>4
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+～7ヒット
+弱有情ブーキャン
+[state ]
+type=varset
+var(57)=800
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+;triggerall=fvar(1)<=0
+triggerall=statetype!=a
+triggerall=var(1)&1024
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno=30765
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4
+trigger1=anim=1100
+trigger1=movehit>1
+弱有情
+[state ]
+type=varset
+var(57)=1100
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=var(1)&1024
+triggerall=!(var(2)&16777216)
+triggerall=fvar(1)>0
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno=30765
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=sysvar(3)<=8
+triggerall=random<=200*var(58)||var(58)>4
+triggerall=fvar(39)<=46
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+triggerall=var(2)<185||var(59)&256&&fvar(1)<=1
+trigger1=fvar(38)>=60||anim=[230,235]
+trigger2=var(5)<=2&&sysvar(3)<=5
+D
+[state ]
+type=varset
+var(57)=230
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=var(1)&1024
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno=30765
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=sysvar(3)<=7+(anim!=230)
+triggerall=random<=200*var(58)||var(58)>4
+triggerall=fvar(38)-helper(2),fvar(6)<=80
+trigger1=fvar(39)<=46
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+trigger2=anim=230&&movehit
+trigger2=sysvar(3)<=6
+;ブースト
+[state ]
+type=varset
+var(57)=800
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=var(1)&1024
+triggerall=playerid(var(55)),movetype=h
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=movehit
+triggerall=random<=200*var(58)||var(58)>4
+trigger1=anim=[760,765]
+trigger1=var(0)<0
+trigger2=var(59)>2
+trigger2=anim=1400||anim=1750
+;-------------------地上コンボ
+ブーバニ
+[state ]
+type=varset
+var(57)=760
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=statetype!=a
+triggerall=!(var(1)&16384)
+triggerall=numtarget
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),stateno>=5000||playerid(var(55)),stateno=735
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>3
+trigger1=anim=800
+trigger1=prevstateno=1050
+[state ]
+type=varset
+var(57)=800
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=!(var(1)&16384)
+triggerall=numtarget
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),stateno>=5000||playerid(var(55)),stateno=735
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>3
+trigger1=anim=1050
+trigger1=movehit>=6
+ブー醒鋭
+[state ]
+type=varset
+var(57)=800
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=statetype!=a
+triggerall=!(var(1)&16384)
+triggerall=numtarget
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>3
+trigger1=fvar(2)>=185
+trigger1=anim=1050
+trigger1=animelem=1,=1
+[state ]
+type=varset
+var(57)=1050
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=statetype!=a
+triggerall=!(var(1)&16384)
+triggerall=numtarget
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>3
+trigger1=fvar(2)>=185;*2.2||fvar(2)>=185&&fvar(1)<=3&&var(59)&256
+trigger1=(anim=[230,235])||anim=410
+trigger1=movehit>1
+2D
+[state ]
+type=varset
+var(57)=430
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=statetype!=a
+triggerall=!(var(1)&16384)
+triggerall=numtarget
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype=c
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4
+trigger1=anim=410||anim=230
+trigger1=movehit>1
+蛇
+[state ]
+type=varset
+var(57)=1300
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=statetype!=a
+triggerall=!(var(1)&16384)
+triggerall=numtarget
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4
+trigger1=anim=235
+trigger1=movehit>1
+D
+[state ]
+type=varset
+var(57)=230
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=statetype!=a
+triggerall=!(var(1)&16384)
+triggerall=numtarget
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),statetype!=a
+triggerall=p2bodydist x<40||playerid(var(55)),statetype=s
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=100*var(58)||var(58)>4
+trigger1=anim=410&&(fvar(39)>=40||sysfvar(1)>1||fvar(39)<=30)||anim=230||(anim=[200,215])||anim=400
+trigger1=movehit>1
+2B
+[state ]
+type=varset
+var(57)=410
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=var(0)<=1
+triggerall=statetype!=a
+triggerall=!(var(1)&16384)
+triggerall=numtarget
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=100*var(58)||var(58)>4
+trigger1=(anim=[200,210])||anim=[400,410]
+trigger1=movehit>1
+trigger1=var(0)<=-3
+D
+[state ]
+type=varset
+var(57)=230
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=!(var(1)&16384)
+triggerall=numtarget
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=100*var(58)||var(58)>4
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])
+trigger1=playerid(var(55)),gethitvar(hittime)>=5
+trigger1=fvar(39)-sysfvar(1)*3<=100
+2B
+[state ]
+type=varset
+var(57)=410
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=!(var(1)&16384)
+triggerall=numtarget
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=100*var(58)||var(58)>4
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])
+trigger1=playerid(var(55)),gethitvar(hittime)>=5
+trigger1=fvar(39)<=60
+2A
+[state ]
+type=varset
+var(57)=400
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=!(var(1)&16384)
+triggerall=numtarget
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=100*var(58)||var(58)>4
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])
+trigger1=playerid(var(55)),gethitvar(hittime)>=3
+trigger1=fvar(39)<=40
+JA
+[state ]
+type=varset
+var(57)=600
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype=a
+triggerall=!(var(1)&16384)
+triggerall=numtarget
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),statetype=s
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=100*var(58)||var(58)>4
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,132])||anim=610&&movehit&&var(0)<=1
+trigger1=playerid(var(55)),gethitvar(hittime)>=3
+trigger1=fvar(39)<=40
+移動調整
+ダッシュ
+[state ]
+type=varset
+var(57)=100
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno>=5000
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=200*var(58)||var(58)>4||anim=100
+trigger1=!pos y
+trigger1=fvar(39)>46
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+//////////////////////////////////////////////////////////////////////////////////
+ リバサ、暴れ
+//////////////////////////////////////////////////////////////////////////////////
+強有情ブーストフォロー
+[state ]
+type=varset
+var(57)=800
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=anim=[1150,1200]
+triggerall=playerid(var(55)),movetype!=h||moveguarded
+trigger1=fvar(2)>=185
+trigger1=fvar(39)<=80
+trigger1=fvar(37)>240
+trigger1=animelemtime(1)=40
+trigger1=random<=777&&(var(58)=[3,4])||var(58)>4&&(fvar(2)>=185*2||fvar(37)>=80)
+trigger2=animelemtime(1)=48||animelemtime(1)=56||animelemtime(1)=64
+trigger2=sysfvar(1)>0
+飛衛拳
+[state ]
+type=varset
+var(57)=1400
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),movetype!=h
+triggerall=fvar(39)<=60&&playerid(var(55)),statetype=s&&var(58)<=3||playerid(var(55)),statetype=a&&fvar(38)>=40&&fvar(39)>60
+trigger1=var(58)<=4
+trigger1=ifelse(var(58)>2,random<=20,random<=20*var(58))
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])
+強有情
+[state ]
+type=varset
+var(57)=1200
+triggerall=var(59)&1
+triggerall=var(58)<=4
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=var(59)&1024
+triggerall=fvar(39)<=50
+triggerall=fvar(38)<=70
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])
+triggerall=fvar(2)>=185||var(57)<3
+trigger1=random<=200||playerid(var(55)),time>=20&&var(58)>2
+活殺
+[state ]
+type=varset
+var(57)=2000
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=power>=1000;1000
+triggerall=statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),movetype!=h
+triggerall=fvar(39)>=120
+trigger1=var(58)<=2
+trigger1=ifelse(var(58)>2,random<=10*(5-var(58)),random<=10*var(58))
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])
+強有情
+[state ]
+type=varset
+var(57)=1200
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),movetype!=h
+triggerall=fvar(38)<=80
+triggerall=fvar(39)-fvar(34)*8<=45
+trigger1=var(58)<=4
+trigger1=ifelse(var(58)>2,random<=30,random<=20*var(58))
+trigger1=var(58)<=2||var(58)>2&&((prevstateno=[150,155])||(prevstateno=[5000,5120])||anim=[130,131])&&fvar(2)>=185
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])
+バニ
+[state ]
+type=varset
+var(57)=760
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),movetype!=h
+triggerall=fvar(39)<=50
+trigger1=var(58)<=3
+trigger1=ifelse(var(58)>2,random<=10&&playerid(var(55)),statetype!=a,random<=20*var(58))
+trigger1=var(58)<=2||var(58)>2&&((prevstateno=[150,155])||(prevstateno=[5000,5120])||anim=[130,131])&&fvar(2)>=185
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])
+2B
+[state ]
+type=varset
+var(57)=410
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),movetype!=h
+triggerall=fvar(39)-fvar(34)<=50
+trigger1=var(58)<=4
+trigger1=ifelse(var(58)>2,random<=40,random<=20*var(58))
+trigger1=var(58)<=2||var(58)>2&&((prevstateno=[150,155])||(prevstateno=[5000,5120])||anim=[130,131])&&fvar(2)>=185
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])
+2A
+[state ]
+type=varset
+var(57)=400
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),movetype!=h
+triggerall=fvar(39)-fvar(34)<=50
+trigger1=var(58)<=4
+trigger1=ifelse(var(58)>2,random<=40,random<=20*var(58))
+trigger1=var(58)<=2||var(58)>2&&((prevstateno=[150,155])||(prevstateno=[5000,5120])||anim=[130,131])&&fvar(2)>=185
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])
+//////////////////////////////////////////////////////////////////////////////////
+ inguarddist
+//////////////////////////////////////////////////////////////////////////////////
+オーラガード
+[state ]
+type=varadd
+trigger1=1
+var(59)=-(var(59)&8)
+[state ]
+type=varadd
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=inguarddist||var(59)&128
+triggerall=!anim||(anim=[10,12])||anim=20||anim=41||(anim=[130,155])
+trigger1=life<=lifemax*.15||backedgebodydist>=20
+trigger1=playerid(var(55)),stateno>=1000
+trigger2=statetype=a||anim=132||anim=152
+trigger2=playerid(var(55)),stateno>=1000||playerid(var(55)),statetype!=a
+trigger3=playerid(var(55)),prevstateno=playerid(var(55)),stateno&&fvar(39)>=25||fvar(39)>=40&&playerid(var(55)),stateno<1000
+trigger3=fvar(36)>=40
+var(59)=8
+ガードキャンセル
+[state ]
+type=varset
+var(57)=770
+triggerall=var(59)&1
+triggerall=var(58)<=4
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=movetype=h
+triggerall=playerid(var(55)),movetype=a
+triggerall=stateno=[150,155]
+triggerall=power>=1000;1000
+triggerall=fvar(39)-fvar(34)*8<=60
+triggerall=playerid(var(55)),pos y>=-60
+trigger1=var(58)<3
+trigger1=random<=50
+trigger2=var(58)=[3,4]
+trigger2=playerid(var(55)),animtime<=-5
+trigger2=random<=5
+trigger3=!playerid(var(55)),hitpausetime
+trigger3=!playerid(var(55)),movecontact&&!(var(59)&512)
+trigger3=playerid(var(55)),animtime<-8
+trigger3=playerid(var(55)),hitdefattr=sac,aa,at,ap
+trigger3=playerid(var(55)),time>=27
+ガード
+[state ]
+type=varset
+var(57)=120
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=inguarddist||var(59)&128
+triggerall=!anim||(anim=[10,12])||anim=20||anim=41||(anim=[130,155])
+triggerall=fvar(6)<=0||!anim
+trigger1=(anim=[130,155])
+trigger1=facing*(playerid(var(55)),pos x-pos x)>0
+trigger1=playerid(var(55)),facing*(pos x-playerid(var(55)),pos x)>0
+trigger2=ifelse(var(58)>2,random<=100*var(58),random<=30*var(58))
+trigger3=var(58)>4||(prevstateno=[5000,5120])||var(59)&1024
+[state ]
+type=varadd
+trigger1=movetype=i&&statetype!=l&&anim!=[5120,5122]
+var(59)=-(var(59)&1024)
+//////////////////////////////////////////////////////////////////////////////////
+ moveguarded
+//////////////////////////////////////////////////////////////////////////////////
+投げ崩し用歩き
+[state ]
+type=varset
+var(57)=20
+triggerall=var(59)&1
+triggerall=var(58)<=4
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno=[150,155]
+triggerall=!(inguarddist||var(59)&128)
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+trigger1=playerid(var(55)),backedgebodydist<20||backedgebodydist<20||fvar(2)>=225
+trigger1=fvar(39)<=25
+trigger1=random<=20+20*(prevstateno=52||prevstateno=800)*var(58)||anim=20&&fvar(39)<=25&&var(54)<=15
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+ブーストフォロー
+[state ]
+type=varset
+var(57)=800
+triggerall=var(59)&1
+triggerall=var(58)<=5
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno=[150,155]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!(inguarddist||var(59)&128)
+trigger1=fvar(39)>=50
+trigger1=anim=410&&animelem=1,=2&&fvar(2)>185*1.2&&random<=200
+trigger2=playerid(var(55)),backedgebodydist<=20
+trigger2=(anim=410||anim=610)&&movecontact=3&&fvar(2)>185*1.5&&random<=200
+低ダJB
+[state ]
+type=varset
+var(57)=ifelse(random<=200,600,610)
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype=a
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno=[150,155]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!(inguarddist||var(59)&128)
+trigger1=ifelse(var(58)<=4,random<=800*var(58),random<=800)
+trigger1=anim=110
+[state ]
+type=varset
+var(57)=110
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype=a
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno=[150,155]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!(inguarddist||var(59)&128)
+trigger1=ifelse(var(58)<=4,random<=240*var(58),random<=960)
+trigger1=anim=41
+[state ]
+type=varset
+var(57)=41
+triggerall=var(59)&1
+triggerall=var(58)<=5
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype!=a
+triggerall=!playerid(var(55)),pos y
+triggerall=playerid(var(55)),stateno=[150,155]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!(inguarddist||var(59)&128)
+trigger1=ifelse(var(58)<=4,random<=200*var(58),random<=800)
+trigger1=fvar(39)=[20,120]
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+バニ
+[state ]
+type=varset
+var(57)=760
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=var(58)<=4
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),stateno=[150,155]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!(inguarddist||var(59)&128)
+trigger1=fvar(39)=[35,70]
+trigger1=anim=410
+trigger1=random<=35+(fvar(2)<185*1.2)*30
+trigger1=movecontact
+trigger1=!var(0)
+2B
+[state ]
+type=varset
+var(57)=410
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=var(58)<=4
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),stateno=[150,155]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!(inguarddist||var(59)&128)
+triggerall=fvar(39)<=50
+trigger1=(anim=[200,210])||anim=[400,410]
+trigger1=ifelse(var(58)<=4,random<=210*var(58),random<=840)||var(58)>4&&anim=400
+trigger1=movecontact
+trigger1=!var(0)
+trigger2=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])
+2A
+[state ]
+type=varset
+var(57)=400
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=h
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),stateno=[150,155]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!(inguarddist||var(59)&128)
+triggerall=ifelse(var(58)<=4,random<=240*var(58),random<=960)
+triggerall=fvar(39)<=40
+trigger1=(anim=[200,205])||anim=400
+trigger1=movecontact
+trigger1=!var(0)
+trigger1=var(58)<=4
+trigger2=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])
+//////////////////////////////////////////////////////////////////////////////////
+ statetype=a
+//////////////////////////////////////////////////////////////////////////////////
+飛衛拳
+[state ]
+type=varset
+var(57)=1400
+triggerall=var(59)&1
+triggerall=var(58)<=4
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype!=h
+triggerall=playerid(var(55)),movetype=i
+triggerall=playerid(var(55)),statetype=a
+triggerall=!(inguarddist||var(59)&128)
+triggerall=playerid(var(55)),backedgebodydist<=20
+triggerall=fvar(39)>60
+triggerall=fvar(38)-helper(2),fvar(8)>=40
+triggerall=playerid(var(55)),vel y<-2
+trigger1=random<=30
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])
+JA
+[state ]
+type=varset
+var(57)=600
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype=a
+triggerall=playerid(var(55)),movetype=i
+triggerall=playerid(var(55)),statetype=a||playerid(var(55)),stateno=[40,49]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!(inguarddist||var(59)&128)
+trigger1=fvar(39)-fvar(34)*5<=45
+trigger1=fvar(38)-sysfvar(4)*3-.6*3*3/2-helper(2),fvar(3)=[-40,100]
+trigger1=ifelse(var(58)<=4,random<=40*var(58),random<=200)
+trigger1=anim=41
+JD
+[state ]
+type=varset
+var(57)=630
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype=a
+triggerall=playerid(var(55)),movetype=i
+triggerall=playerid(var(55)),statetype=a
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!(inguarddist||var(59)&128)
+triggerall=fvar(39)-fvar(34)*6-sysfvar(0)*6<=100
+triggerall=ifelse(var(58)<=4,random<=40*var(58),random<=200)
+trigger1=fvar(38)-helper(2),fvar(6)=[40,120]
+trigger1=anim=41||anim=110
+JB
+[state ]
+type=varset
+var(57)=610
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype=a
+triggerall=playerid(var(55)),movetype=i
+triggerall=playerid(var(55)),statetype=a||playerid(var(55)),stateno=[40,49]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!(inguarddist||var(59)&128)
+triggerall=fvar(39)-fvar(34)*7-sysfvar(0)*7<=80
+triggerall=fvar(38)-sysfvar(4)*6-.6*6*6/2-helper(2),fvar(6)=[-40,80]
+triggerall=ifelse(var(58)<=4,random<=20*var(58),random<=200)
+trigger1=anim=41||anim=110
+[state ]
+type=varset
+var(57)=110
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype=a
+triggerall=playerid(var(55)),movetype=i
+triggerall=playerid(var(55)),statetype=a||playerid(var(55)),stateno=[40,49]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!(inguarddist||var(59)&128)
+trigger1=fvar(39)-fvar(34)*5=[60,120]
+trigger1=fvar(38)=[-90,70]
+trigger1=random<=60
+trigger1=anim=41
+遠D
+[state ]
+type=varset
+var(57)=230
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=i
+triggerall=playerid(var(55)),statetype=a||playerid(var(55)),stateno=[40,49]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!(inguarddist||var(59)&128)
+trigger1=fvar(39)>=65
+trigger1=fvar(39)-fvar(34)*6-sysfvar(0)*3=[10,100]
+trigger1=fvar(38)-helper(2),fvar(6)=[5,70]
+trigger1=ifelse(var(58)<=4,random<=20*var(58),random<=200)
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])
+A
+[state ]
+type=varset
+var(57)=200
+triggerall=var(59)&1
+triggerall=var(58)>2
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=i
+triggerall=playerid(var(55)),statetype=a||playerid(var(55)),stateno=[40,49]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!(inguarddist||var(59)&128)
+trigger1=fvar(39)-fvar(34)*3-sysfvar(0)*3=[5,45]
+trigger1=fvar(38)-helper(2),fvar(6)=[30,80]
+trigger1=ifelse(var(58)<=4,random<=40*var(58),random<=200)
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])
+A
+[state ]
+type=varset
+var(57)=200
+triggerall=var(59)&1
+triggerall=var(58)<=5
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=numhelper(31111)
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),movetype!=h
+triggerall=playerid(var(55)),movetype!=a
+triggerall=playerid(var(55)),statetype=a
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!(var(56)&4)
+triggerall=fvar(39)-fvar(29)*4-vel x*4<=60
+triggerall=fvar(38)-helper(31111),fvar(4)=[-100,-40]
+trigger1=ifelse(var(58)<=4,random<=30*var(58),random<=120)
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])
+ジャンプ
+[state ]
+type=varset
+var(57)=41
+triggerall=var(59)&1
+triggerall=var(58)<=4
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=i
+triggerall=playerid(var(55)),statetype=a||playerid(var(55)),stateno=[40,49]
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!(inguarddist||var(59)&128)
+triggerall=!(var(56)&4)
+triggerall=fvar(39)>=100
+triggerall=fvar(39)-fvar(34)*5<=160
+triggerall=playerid(var(55)),vel y<=1||playerid(var(55)),pos y<=-60||playerid(var(55)),stateno=[40,49]
+trigger1=ifelse(var(58)<=4,random<=20*var(58),random<=80)
+//////////////////////////////////////////////////////////////////////////////////
+ statetype!=a
+//////////////////////////////////////////////////////////////////////////////////
+投げ崩し
+[state ]
+type=varset
+var(57)=720
+triggerall=var(59)&1
+triggerall=fvar(33)<=0
+triggerall=var(58)<=4
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=i
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),prevstateno!=[5000,5270]
+triggerall=!(inguarddist||var(59)&128)
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=ifelse(var(58)<=4,random<=200*var(58),random<=800)
+trigger1=playerid(var(55)),backedgebodydist<20||backedgebodydist<20||fvar(2)>=225||var(58)=5
+trigger1=random<=600&&anim=20&&(var(54)>6)||var(58)=5
+trigger1=fvar(39)<=8
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])
+投げ崩し用歩き
+[state ]
+type=varset
+var(57)=20
+triggerall=var(59)&1
+triggerall=fvar(33)<=0
+triggerall=var(58)<=4
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=i
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),prevstateno!=[5000,5270]
+triggerall=!(inguarddist||var(59)&128)
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+trigger1=playerid(var(55)),backedgebodydist<20||backedgebodydist<20||fvar(2)>=225
+trigger1=fvar(39)<=25
+trigger1=random<=20+150*(prevstateno=52)||anim=20&&fvar(39)<=25&&var(54)<=15
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+[state ]
+type=varset
+triggerall=var(58)>4
+trigger1=fvar(33):=fvar(33)-1&&0
+trigger2=playerid(var(55)),statetype=l
+fvar(33)=20
+2A
+[state ]
+type=varset
+var(57)=400
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=fvar(33)<=0
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=i
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),prevstateno!=[5000,5270]
+triggerall=!(inguarddist||var(59)&128)
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+trigger1=ifelse(var(58)<=5,random<=40*var(58),random<=200)
+trigger1=fvar(39)-sysfvar(2)*3<=45
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+2B
+[state ]
+type=varset
+var(57)=410
+triggerall=var(59)&1
+triggerall=fvar(33)<=0
+triggerall=var(58)<=4
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=i
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),prevstateno!=[5000,5270]
+triggerall=!(inguarddist||var(59)&128)
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+trigger1=ifelse(var(58)<=5,random<=40*var(58),random<=20)
+trigger1=random<=200||prevstateno=52
+trigger1=fvar(39)-sysfvar(2)*3<=55
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+低空七死
+[state ]
+type=varset
+var(57)=800
+triggerall=var(59)&1
+triggerall=fvar(33)<=0
+triggerall=var(58)=[3,4]
+triggerall=!var(57)
+triggerall=statetype=a
+triggerall=playerid(var(55)),movetype=i
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),prevstateno!=[5000,5270]
+triggerall=!(inguarddist||var(59)&128)
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=fvar(2)>=225
+trigger1=random<=200
+trigger1=anim=1500
+trigger1=animelem=1,=1
+[state ]
+type=varset
+var(57)=1500
+triggerall=var(59)&1
+triggerall=fvar(33)<=0
+triggerall=var(58)=[3,4]
+triggerall=!var(57)
+triggerall=statetype=a
+triggerall=playerid(var(55)),movetype=i
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),prevstateno!=[5000,5270]
+triggerall=!(inguarddist||var(59)&128)
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=fvar(2)>=225
+trigger1=random<=50
+trigger1=anim=41
+trigger1=animelem=1,=4
+低ダJD
+[state ]
+type=varset
+var(57)=630
+triggerall=var(59)&1
+triggerall=fvar(33)<=0
+triggerall=var(58)<=5
+triggerall=!var(57)
+triggerall=statetype=a
+triggerall=playerid(var(55)),movetype=i
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),prevstateno!=[5000,5270]
+triggerall=!(inguarddist||var(59)&128)
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=fvar(39)-sysfvar(0)*6-playerid(var(55)),vel x*4=[60,90]
+trigger1=random<=40*var(58)||var(58)>3
+trigger1=anim=110
+trigger2=anim=41
+trigger2=sysfvar(4)>0
+低ダJBorJA
+[state ]
+type=varset
+var(57)=ifelse(random<=200,620,610)
+triggerall=var(59)&1
+triggerall=fvar(33)<=0
+triggerall=var(58)<=5
+triggerall=!var(57)
+triggerall=statetype=a
+triggerall=playerid(var(55)),movetype=i
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),prevstateno!=[5000,5270]
+triggerall=!(inguarddist||var(59)&128)
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=fvar(39)-sysfvar(0)*6-playerid(var(55)),vel x*4<=120
+triggerall=fvar(38)>=-80
+trigger1=random<=40*var(58)||var(58)>3
+trigger1=anim=110
+trigger2=anim=41
+trigger2=sysfvar(4)>0
+[state ]
+type=varset
+var(57)=110
+triggerall=var(59)&1
+triggerall=fvar(33)<=0
+triggerall=var(58)<=5
+triggerall=!var(57)
+triggerall=statetype=a
+triggerall=playerid(var(55)),movetype=i
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),prevstateno!=[5000,5270]
+triggerall=!(inguarddist||var(59)&128)
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=fvar(38)<=80||var(58)<5
+trigger1=ifelse(var(58)<=4,random<=200*var(58),random<=800)
+trigger1=anim=41
+[state ]
+type=varset
+var(57)=41-(fvar(39)<=80&&random<=777)
+triggerall=var(59)&1
+triggerall=fvar(33)<=0
+triggerall=var(58)<=4||var(58)>=5&&fvar(39)>=140
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=i
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),prevstateno!=[5000,5270]
+triggerall=!(inguarddist||var(59)&128)
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=random<=10*var(58)
+trigger1=fvar(39)<=120
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+//////////////////////////////////////////////////////////////////////////////////
+ 牽制
+//////////////////////////////////////////////////////////////////////////////////
+闘気
+[state ]
+type=varset
+var(57)=1000
+triggerall=var(59)&1
+triggerall=var(58)<=4
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=i
+triggerall=playerid(var(55)),statetype!=l
+triggerall=!(inguarddist||var(59)&128)
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=playerid(var(55)),prevstateno!=[5000,5270]
+trigger1=numenemy=1
+trigger1=random<=20
+trigger1=fvar(39)-sysfvar(2)*3=[140,220]
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+遠B
+[state ]
+type=varset
+var(57)=210
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=i
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),prevstateno!=[5000,5270]
+triggerall=!(inguarddist||var(59)&128)
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+trigger1=numenemy=1
+trigger1=random<=10&&var(58)>4||var(58)<=5&&ifelse(var(58)<=4,random<=10*var(58),random<=40)
+trigger1=fvar(39)-sysfvar(2)*3=[65,100]
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+2A
+[state ]
+type=varset
+var(57)=400
+triggerall=var(59)&1
+triggerall=var(58)>4
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=i
+triggerall=playerid(var(55)),statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),prevstateno!=[5000,5270]
+triggerall=!(inguarddist||var(59)&128)
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+trigger1=numenemy=1
+trigger1=random<=50
+trigger1=fvar(39)=[60,100]
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+//////////////////////////////////////////////////////////////////////////////////
+ 移動
+//////////////////////////////////////////////////////////////////////////////////
+無想
+[state ]
+type=varset
+var(57)=2100
+triggerall=var(59)&1
+triggerall=var(58)>3
+triggerall=!var(57)
+triggerall=!fvar(5)
+triggerall=power>=1000;1000
+triggerall=statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),movetype=i
+triggerall=fvar(39)>=80
+triggerall=random<=333||var(58)>4
+trigger1=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+空中バックダッシュ
+[state ]
+type=varset
+var(57)=115
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),movetype!=h
+triggerall=backedgebodydist>=62
+triggerall=anim=41
+triggerall=random<=200
+trigger1=fvar(39)=[20,160]
+テクテク
+[state ]
+type=varset
+var(57)=20
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=i
+triggerall=playerid(var(55)),statetype!=l
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+triggerall=random<=40*var(58)
+trigger1=fvar(39)>=90
+trigger1=random<=25||anim=20&&(var(54)<=8||random<=970-(fvar(39)-60)*9)
+trigger2=random<=10||var(54)<=8
+trigger2=var(58)=5
+trigger2=fvar(39)=[25,40]
+ジャンプ
+[state ]
+type=varset
+var(57)=ifelse((fvar(36)<=40||fvar(39)>=80||random<=100),45,40)+(fvar(39)>=160||(random%2))
+triggerall=var(59)&1
+triggerall=var(58)<=4
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=playerid(var(55)),movetype!=h
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+triggerall=random<=25
+trigger1=playerid(var(55)),statetype!=a&&fvar(39)>=120||playerid(var(55)),statetype=a&&fvar(39)=[60,160]
+ダッシュ
+[state ]
+type=varset
+var(57)=100
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=i
+triggerall=playerid(var(55)),statetype!=l
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+triggerall=random<=40||anim=100
+trigger1=fvar(39)>45
+trigger1=playerid(var(55)),vel x<(playerid(var(55)),statetype=a)||var(54)<ifelse(fvar(39)<=90,8,16)
+trigger2=fvar(39)>=120
+ダッシュ(距離詰め用)
+[state ]
+type=varset
+var(57)=100
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype!=a
+triggerall=playerid(var(55)),statetype!=l
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+triggerall=var(58)>=5
+;triggerall=random<=555||anim=100
+trigger1=fvar(39)>60-30*(playerid(var(55)),statetype=a)
+後退
+[state ]
+type=varset
+var(57)=21
+triggerall=var(59)&1
+triggerall=!var(57)
+triggerall=statetype!=a
+triggerall=playerid(var(55)),movetype=i
+triggerall=playerid(var(55)),statetype!=l
+triggerall=facing*(playerid(var(55)),pos x-pos x)>0
+triggerall=!anim||(anim=[10,12])||anim=20||(anim=[100,115])||(anim=[130,131])||anim=800
+triggerall=random<=80||anim=20
+trigger1=fvar(39)>=60
+trigger1=var(54)<=12||random<750||playerid(var(55)),vel x>=5
+trigger2=fvar(39)<=20
+;trigger3=var(54)<=8||anim!=21
+[state ]
+type=varset
+trigger1=movetype!=h
+fvar(26)=anim
+[state ]
+type=displaytoclipboard
+trigger1=1
+text="dx:%d,dy:%d,f:%d,b:%d,ch:%d"
+params=floor(fvar(39)),floor(fvar(38)),floor(fvar(37)),floor(fvar(36)),var(56)
+[state ]
+type=appendtoclipboard
+trigger1=1
+text=",cmd:%d,time:%d,bv:%f,AI:%d,lv:%d"
+params=var(57),var(54),fvar(35),var(59)&3,var(58)
+[state ]
+type=appendtoclipboard
+trigger1=1
+text="\nM:%d,M2:%d,D:%d,D2:%d,ps:%d,"
+params=var(51),var(52),var(46),var(45),var(44)
+[state ]
+type=appendtoclipboard
+trigger1=1
+text="%d,%d,%d,%d,ah:%d"
+params=floor(fvar(26)),floor(fvar(31)),floor(fvar(30)),floor(fvar(19)),sysvar(4)
+[state -3, nolifebar]
+type = assertspecial
+trigger1 = roundstate < 2
+flag = NoBarDisplay
+;----------------------------------------------------------------------------------
+;==================================================================================
+; AI-helper
+;==================================================================================
+;----------------------------------------------------------------------------------
+[statedef 2]
+[state ]
+type=selfstate
+trigger1=!ishelper
+value=50
+ignorehitpause=1
+;----------------------------------------------------------------------------------
+; 初期設定
+;----------------------------------------------------------------------------------
+[state ]
+type=changeanim
+trigger1=anim!=2
+value=2
+[state ]
+type=posset
+trigger1=animelem=1
+trigger1=var(53):=100000000
+x=0
+y=0
+[state ]
+type=null
+trigger1=fvar(39):=pos x
+;----------------------------------------------------------------------------------
+; AIフラグセット
+;----------------------------------------------------------------------------------
+[state ]
+type=varset
+triggerall=!var(59)
+trigger1=command="up"&&root,command="up"
+trigger2=command="down"&&root,command="down"
+trigger3=command="back"&&root,command="back"
+trigger4=command="fwd"&&root,command="fwd"
+trigger5=command="a"&&root,command="a"
+trigger6=command="b"&&root,command="b"
+trigger7=command="c"&&root,command="c"
+trigger8=command="x"&&root,command="x"
+trigger9=command="y"&&root,command="y"
+trigger10=command="z"&&root,command="z"
+trigger11=command="start"&&root,command="start"
+var(59)=-1
+[state ]
+type=varset
+triggerall=var(59)!=-1
+trigger1=root,command="up"
+trigger2=root,command="down"
+trigger3=root,command="back"
+trigger4=root,command="fwd"
+trigger5=root,command="a"
+trigger6=root,command="b"
+trigger7=root,command="c"
+trigger8=root,command="x"
+trigger9=root,command="y"
+trigger10=root,command="z"
+trigger11=root,command="start"
+trigger12=root,var(59)&1
+var(59)=1
+;----------------------------------------------------------------------------------
+; カウント
+;----------------------------------------------------------------------------------
+[state ]
+type=varadd
+trigger1=roundstate=2
+var(58)=1
+;----------------------------------------------------------------------------------
+; めくり対策
+;----------------------------------------------------------------------------------
+[state ]
+type=posset
+trigger1=1
+x=root,pos x-60*facing
+y=0
+[state ]
+type=varadd
+trigger1=var(57):=0||1
+var(57)=inguarddist
+[state ]
+type=posset
+trigger1=1
+x=root,pos x+60*facing
+y=0
+[state ]
+type=varadd
+trigger1=1
+var(57)=inguarddist
+[state ]
+type=posset
+trigger1=1
+x=root,pos x-90*facing
+y=0
+[state ]
+type=varadd
+trigger1=1
+var(57)=inguarddist
+[state ]
+type=posset
+trigger1=1
+x=root,pos x+90*facing
+y=0
+[state ]
+type=varadd
+trigger1=1
+var(57)=inguarddist
+;----------------------------------------------------------------------------------
+; 重力計算
+;----------------------------------------------------------------------------------
+[state ]
+type=null
+trigger1=numenemy
+trigger1=1||fvar(0):=ceil((playerid(root,var(55)),pos y-fvar(36)-fvar(37))*1000.0)*(playerid(root,var(55)),pos y<0)/1000.0
+trigger1=1||fvar(37):=playerid(root,var(55)),pos y-fvar(36)
+trigger1=1||fvar(36):=playerid(root,var(55)),pos y
+trigger1=1||fvar(1):=playerid(root,var(55)),vel y+fvar(0)/2
+trigger1=1||fvar(2):=playerid(root,var(55)),vel y*2+fvar(0)*2*2/2
+trigger1=1||fvar(3):=playerid(root,var(55)),vel y*3+fvar(0)*3*3/2
+trigger1=1||fvar(4):=playerid(root,var(55)),vel y*4+fvar(0)*4*4/2
+trigger1=1||fvar(5):=playerid(root,var(55)),vel y*5+fvar(0)*5*5/2
+trigger1=1||fvar(6):=playerid(root,var(55)),vel y*6+fvar(0)*6*6/2
+trigger1=1||fvar(7):=playerid(root,var(55)),vel y*7+fvar(0)*7*7/2
+trigger1=1||fvar(8):=playerid(root,var(55)),vel y*8+fvar(0)*8*8/2
+trigger1=1||fvar(9):=playerid(root,var(55)),vel y*9+fvar(0)*9*9/2
+trigger1=1||fvar(10):=playerid(root,var(55)),vel y*10+fvar(0)*10*10/2
+trigger1=1||fvar(11):=playerid(root,var(55)),vel y*11+fvar(0)*11*11/2
+trigger1=1||fvar(12):=playerid(root,var(55)),vel y*12+fvar(0)*12*12/2
+trigger1=1||fvar(13):=playerid(root,var(55)),vel y*13+fvar(0)*13*13/2
+trigger1=1||fvar(14):=playerid(root,var(55)),vel y*14+fvar(0)*14*14/2
+trigger1=1||fvar(15):=playerid(root,var(55)),vel y*15+fvar(0)*15*15/2
+trigger1=1||fvar(16):=playerid(root,var(55)),vel y*16+fvar(0)*16*16/2
+trigger1=1||fvar(17):=playerid(root,var(55)),vel y*17+fvar(0)*17*17/2
+trigger1=1||fvar(18):=playerid(root,var(55)),vel y*18+fvar(0)*18*18/2
+trigger1=1||fvar(19):=playerid(root,var(55)),vel y*19+fvar(0)*19*19/2
+trigger1=1||fvar(20):=playerid(root,var(55)),vel y*20+fvar(0)*20*20/2
+trigger1=1||fvar(21):=playerid(root,var(55)),vel y*21+fvar(0)*21*21/2
+trigger1=1||fvar(22):=playerid(root,var(55)),vel y*22+fvar(0)*22*22/2
+trigger1=1||fvar(23):=playerid(root,var(55)),vel y*23+fvar(0)*23*23/2
+trigger1=1||fvar(24):=playerid(root,var(55)),vel y*24+fvar(0)*24*24/2
+trigger1=1||fvar(25):=playerid(root,var(55)),vel y*25+fvar(0)*25*25/2
+trigger1=1||fvar(26):=playerid(root,var(55)),vel y*26+fvar(0)*26*26/2
+trigger1=1||fvar(27):=playerid(root,var(55)),vel y*27+fvar(0)*27*27/2
+trigger1=1||fvar(28):=playerid(root,var(55)),vel y*28+fvar(0)*28*28/2
+trigger1=1||fvar(29):=playerid(root,var(55)),vel y*29+fvar(0)*29*29/2
+trigger1=1||fvar(30):=playerid(root,var(55)),vel y*30+fvar(0)*30*30/2
+trigger1=1||fvar(31):=playerid(root,var(55)),vel y*31+fvar(0)*31*31/2
+;----------------------------------------------------------------------------------
+; 発生フレーム検知（割り込み、暴れ用）v48~v29=stateno v28~v8=time
+;----------------------------------------------------------------------------------
+;var(40)~var(20)
+;同期
+[state ]
+type=null
+trigger1=!var(28)
+trigger1=var(28):=root,var(28)&&0
+trigger2=!var(27)
+trigger2=var(27):=root,var(27)&&0
+trigger3=!var(26)
+trigger3=var(26):=root,var(26)&&0
+trigger4=!var(25)
+trigger4=var(25):=root,var(25)&&0
+trigger5=!var(24)
+trigger5=var(24):=root,var(24)&&0
+trigger6=!var(23)
+trigger6=var(23):=root,var(23)&&0
+trigger7=!var(22)
+trigger7=var(22):=root,var(22)&&0
+trigger8=!var(21)
+trigger8=var(21):=root,var(21)&&0
+trigger9=!var(20)
+trigger9=var(20):=root,var(20)&&0
+trigger10=!var(19)
+trigger10=var(19):=root,var(19)&&0
+trigger11=!var(18)
+trigger11=var(18):=root,var(18)&&0
+trigger12=!var(17)
+trigger12=var(17):=root,var(17)&&0
+trigger13=!var(16)
+trigger13=var(16):=root,var(16)&&0
+trigger14=!var(15)
+trigger14=var(15):=root,var(15)&&0
+trigger15=!var(14)
+trigger15=var(14):=root,var(14)&&0
+trigger16=!var(13)
+trigger16=var(13):=root,var(13)&&0
+trigger17=!var(12)
+trigger17=var(12):=root,var(12)&&0
+trigger18=!var(11)
+trigger18=var(11):=root,var(11)&&0
+trigger19=!var(10)
+trigger19=var(10):=root,var(10)&&0
+trigger20=!var(9)
+trigger20=var(9):=root,var(9)&&0
+trigger21=!var(8)
+trigger21=var(8):=root,var(8)&&0
+[state ]
+type=parentvarset
+triggerall=!root,var(48)||root,var(48)=playerid(root,var(55)),anim
+trigger1=playerid(root,var(55)),movecontact||playerid(root,var(55)),hitpausetime>0||playerid(root,var(55)),movereversed
+;trigger1=playerid(root,var(55)),time-1>=5
+trigger1=playerid(root,var(55)),time-1<root,var(28)||!root,var(28)
+trigger1=(playerid(root,var(55)),stateno=[200,899])||(playerid(root,var(55)),anim=[200,899])||playerid(root,var(55)),statetype=a
+trigger1=var(28):=playerid(root,var(55)),time-1
+var(48)=playerid(root,var(55)),anim
+[state ]
+type=parentvarset
+trigger1=var(28)<root,var(28)||!root,var(28)
+var(28)=var(28)
+[state ]
+type=parentvarset
+triggerall=root,var(48)!=playerid(root,var(55)),anim
+triggerall=!root,var(47)||root,var(47)=playerid(root,var(55)),anim
+trigger1=playerid(root,var(55)),movecontact||playerid(root,var(55)),hitpausetime>0||playerid(root,var(55)),movereversed
+;trigger1=playerid(root,var(55)),time-1>=5
+trigger1=playerid(root,var(55)),time-1<root,var(27)||!root,var(27)
+trigger1=(playerid(root,var(55)),stateno=[200,899])||(playerid(root,var(55)),anim=[200,899])||playerid(root,var(55)),statetype=a
+trigger1=var(27):=playerid(root,var(55)),time-1
+var(47)=playerid(root,var(55)),anim
+[state ]
+type=parentvarset
+trigger1=var(27)<root,var(27)||!root,var(27)
+var(27)=var(27)
+[state ]
+type=parentvarset
+triggerall=root,var(47)!=playerid(root,var(55)),anim
+triggerall=root,var(48)!=playerid(root,var(55)),anim
+triggerall=!root,var(46)||root,var(46)=playerid(root,var(55)),anim
+trigger1=playerid(root,var(55)),movecontact||playerid(root,var(55)),hitpausetime>0||playerid(root,var(55)),movereversed
+;trigger1=playerid(root,var(55)),time-1>=5
+trigger1=playerid(root,var(55)),time-1<root,var(26)||!root,var(26)
+trigger1=(playerid(root,var(55)),stateno=[200,899])||(playerid(root,var(55)),anim=[200,899])||playerid(root,var(55)),statetype=a
+trigger1=var(26):=playerid(root,var(55)),time-1
+var(46)=playerid(root,var(55)),anim
+[state ]
+type=parentvarset
+trigger1=var(26)<root,var(26)||!root,var(26)
+var(26)=var(26)
+[state ]
+type=parentvarset
+triggerall=root,var(46)!=playerid(root,var(55)),anim
+triggerall=root,var(47)!=playerid(root,var(55)),anim
+triggerall=root,var(48)!=playerid(root,var(55)),anim
+triggerall=!root,var(45)||root,var(45)=playerid(root,var(55)),anim
+trigger1=playerid(root,var(55)),movecontact||playerid(root,var(55)),hitpausetime>0||playerid(root,var(55)),movereversed
+;trigger1=playerid(root,var(55)),time-1>=5
+trigger1=playerid(root,var(55)),time-1<root,var(25)||!root,var(25)
+trigger1=(playerid(root,var(55)),stateno=[200,899])||(playerid(root,var(55)),anim=[200,899])||playerid(root,var(55)),statetype=a
+trigger1=var(25):=playerid(root,var(55)),time-1
+var(45)=playerid(root,var(55)),anim
+[state ]
+type=parentvarset
+trigger1=var(25)<root,var(25)||!root,var(25)
+var(25)=var(25)
+[state ]
+type=parentvarset
+triggerall=root,var(45)!=playerid(root,var(55)),anim
+triggerall=root,var(46)!=playerid(root,var(55)),anim
+triggerall=root,var(47)!=playerid(root,var(55)),anim
+triggerall=root,var(48)!=playerid(root,var(55)),anim
+triggerall=!root,var(44)||root,var(44)=playerid(root,var(55)),anim
+trigger1=playerid(root,var(55)),movecontact||playerid(root,var(55)),hitpausetime>0||playerid(root,var(55)),movereversed
+;trigger1=playerid(root,var(55)),time-1>=5
+trigger1=playerid(root,var(55)),time-1<root,var(24)||!root,var(24)
+trigger1=(playerid(root,var(55)),stateno=[200,899])||(playerid(root,var(55)),anim=[200,899])||playerid(root,var(55)),statetype=a
+trigger1=var(24):=playerid(root,var(55)),time-1
+var(44)=playerid(root,var(55)),anim
+[state ]
+type=parentvarset
+trigger1=var(24)<root,var(24)||!root,var(24)
+var(24)=var(24)
+[state ]
+type=parentvarset
+triggerall=root,var(44)!=playerid(root,var(55)),anim
+triggerall=root,var(45)!=playerid(root,var(55)),anim
+triggerall=root,var(46)!=playerid(root,var(55)),anim
+triggerall=root,var(47)!=playerid(root,var(55)),anim
+triggerall=root,var(48)!=playerid(root,var(55)),anim
+triggerall=!root,var(43)||root,var(43)=playerid(root,var(55)),anim
+trigger1=playerid(root,var(55)),movecontact||playerid(root,var(55)),hitpausetime>0||playerid(root,var(55)),movereversed
+;trigger1=playerid(root,var(55)),time-1>=5
+trigger1=playerid(root,var(55)),time-1<root,var(23)||!root,var(23)
+trigger1=(playerid(root,var(55)),stateno=[200,899])||(playerid(root,var(55)),anim=[200,899])||playerid(root,var(55)),statetype=a
+trigger1=var(23):=playerid(root,var(55)),time-1
+var(43)=playerid(root,var(55)),anim
+[state ]
+type=parentvarset
+trigger1=var(23)<root,var(23)||!root,var(23)
+var(23)=var(23)
+[state ]
+type=parentvarset
+triggerall=root,var(43)!=playerid(root,var(55)),anim
+triggerall=root,var(44)!=playerid(root,var(55)),anim
+triggerall=root,var(45)!=playerid(root,var(55)),anim
+triggerall=root,var(46)!=playerid(root,var(55)),anim
+triggerall=root,var(47)!=playerid(root,var(55)),anim
+triggerall=root,var(48)!=playerid(root,var(55)),anim
+triggerall=!root,var(42)||root,var(42)=playerid(root,var(55)),anim
+trigger1=playerid(root,var(55)),movecontact||playerid(root,var(55)),hitpausetime>0||playerid(root,var(55)),movereversed
+;trigger1=playerid(root,var(55)),time-1>=5
+trigger1=playerid(root,var(55)),time-1<root,var(22)||!root,var(22)
+trigger1=(playerid(root,var(55)),stateno=[200,899])||(playerid(root,var(55)),anim=[200,899])||playerid(root,var(55)),statetype=a
+trigger1=var(22):=playerid(root,var(55)),time-1
+var(42)=playerid(root,var(55)),anim
+[state ]
+type=parentvarset
+trigger1=var(22)<root,var(22)||!root,var(22)
+var(22)=var(22)
+[state ]
+type=parentvarset
+triggerall=root,var(42)!=playerid(root,var(55)),anim
+triggerall=root,var(43)!=playerid(root,var(55)),anim
+triggerall=root,var(44)!=playerid(root,var(55)),anim
+triggerall=root,var(45)!=playerid(root,var(55)),anim
+triggerall=root,var(46)!=playerid(root,var(55)),anim
+triggerall=root,var(47)!=playerid(root,var(55)),anim
+triggerall=root,var(48)!=playerid(root,var(55)),anim
+triggerall=!root,var(41)||root,var(41)=playerid(root,var(55)),anim
+trigger1=playerid(root,var(55)),movecontact||playerid(root,var(55)),hitpausetime>0||playerid(root,var(55)),movereversed
+;trigger1=playerid(root,var(55)),time-1>=5
+trigger1=playerid(root,var(55)),time-1<root,var(21)||!root,var(21)
+trigger1=(playerid(root,var(55)),stateno=[200,899])||(playerid(root,var(55)),anim=[200,899])||playerid(root,var(55)),statetype=a
+trigger1=var(21):=playerid(root,var(55)),time-1
+var(41)=playerid(root,var(55)),anim
+[state ]
+type=parentvarset
+trigger1=var(21)<root,var(21)||!root,var(21)
+var(21)=var(21)
+[state ]
+type=parentvarset
+triggerall=root,var(41)!=playerid(root,var(55)),anim
+triggerall=root,var(42)!=playerid(root,var(55)),anim
+triggerall=root,var(43)!=playerid(root,var(55)),anim
+triggerall=root,var(44)!=playerid(root,var(55)),anim
+triggerall=root,var(45)!=playerid(root,var(55)),anim
+triggerall=root,var(46)!=playerid(root,var(55)),anim
+triggerall=root,var(47)!=playerid(root,var(55)),anim
+triggerall=root,var(48)!=playerid(root,var(55)),anim
+triggerall=!root,var(40)||root,var(40)=playerid(root,var(55)),anim
+trigger1=playerid(root,var(55)),movecontact||playerid(root,var(55)),hitpausetime>0||playerid(root,var(55)),movereversed
+;trigger1=playerid(root,var(55)),time-1>=5
+trigger1=playerid(root,var(55)),time-1<root,var(20)||!root,var(20)
+trigger1=(playerid(root,var(55)),stateno=[200,899])||(playerid(root,var(55)),anim=[200,899])||playerid(root,var(55)),statetype=a
+trigger1=var(20):=playerid(root,var(55)),time-1
+var(40)=playerid(root,var(55)),anim
+[state ]
+type=parentvarset
+trigger1=var(20)<root,var(20)||!root,var(20)
+var(20)=var(20)
+[state ]
+type=parentvarset
+triggerall=root,var(40)!=playerid(root,var(55)),anim
+triggerall=root,var(41)!=playerid(root,var(55)),anim
+triggerall=root,var(42)!=playerid(root,var(55)),anim
+triggerall=root,var(43)!=playerid(root,var(55)),anim
+triggerall=root,var(44)!=playerid(root,var(55)),anim
+triggerall=root,var(45)!=playerid(root,var(55)),anim
+triggerall=root,var(46)!=playerid(root,var(55)),anim
+triggerall=root,var(47)!=playerid(root,var(55)),anim
+triggerall=root,var(48)!=playerid(root,var(55)),anim
+triggerall=!root,var(39)||root,var(39)=playerid(root,var(55)),anim
+trigger1=playerid(root,var(55)),movecontact||playerid(root,var(55)),hitpausetime>0||playerid(root,var(55)),movereversed
+;trigger1=playerid(root,var(55)),time-1>=5
+trigger1=playerid(root,var(55)),time-1<root,var(19)||!root,var(19)
+trigger1=(playerid(root,var(55)),stateno=[200,899])||(playerid(root,var(55)),anim=[200,899])||playerid(root,var(55)),statetype=a
+trigger1=var(19):=playerid(root,var(55)),time-1
+var(39)=playerid(root,var(55)),anim
+[state ]
+type=parentvarset
+trigger1=var(19)<root,var(19)||!root,var(19)
+var(19)=var(19)
+[state ]
+type=parentvarset
+triggerall=root,var(39)!=playerid(root,var(55)),anim
+triggerall=root,var(40)!=playerid(root,var(55)),anim
+triggerall=root,var(41)!=playerid(root,var(55)),anim
+triggerall=root,var(42)!=playerid(root,var(55)),anim
+triggerall=root,var(43)!=playerid(root,var(55)),anim
+triggerall=root,var(44)!=playerid(root,var(55)),anim
+triggerall=root,var(45)!=playerid(root,var(55)),anim
+triggerall=root,var(46)!=playerid(root,var(55)),anim
+triggerall=root,var(47)!=playerid(root,var(55)),anim
+triggerall=root,var(48)!=playerid(root,var(55)),anim
+triggerall=!root,var(38)||root,var(38)=playerid(root,var(55)),anim
+trigger1=playerid(root,var(55)),movecontact||playerid(root,var(55)),hitpausetime>0||playerid(root,var(55)),movereversed
+;trigger1=playerid(root,var(55)),time-1>=5
+trigger1=playerid(root,var(55)),time-1<root,var(18)||!root,var(18)
+trigger1=(playerid(root,var(55)),stateno=[200,899])||(playerid(root,var(55)),anim=[200,899])||playerid(root,var(55)),statetype=a
+trigger1=var(18):=playerid(root,var(55)),time-1
+var(38)=playerid(root,var(55)),anim
+[state ]
+type=parentvarset
+trigger1=var(18)<root,var(18)||!root,var(18)
+var(18)=var(18)
+[state ]
+type=parentvarset
+triggerall=root,var(38)!=playerid(root,var(55)),anim
+triggerall=root,var(39)!=playerid(root,var(55)),anim
+triggerall=root,var(40)!=playerid(root,var(55)),anim
+triggerall=root,var(41)!=playerid(root,var(55)),anim
+triggerall=root,var(42)!=playerid(root,var(55)),anim
+triggerall=root,var(43)!=playerid(root,var(55)),anim
+triggerall=root,var(44)!=playerid(root,var(55)),anim
+triggerall=root,var(45)!=playerid(root,var(55)),anim
+triggerall=root,var(46)!=playerid(root,var(55)),anim
+triggerall=root,var(47)!=playerid(root,var(55)),anim
+triggerall=root,var(48)!=playerid(root,var(55)),anim
+triggerall=!root,var(37)||root,var(37)=playerid(root,var(55)),anim
+trigger1=playerid(root,var(55)),movecontact||playerid(root,var(55)),hitpausetime>0||playerid(root,var(55)),movereversed
+;trigger1=playerid(root,var(55)),time-1>=5
+trigger1=playerid(root,var(55)),time-1<root,var(17)||!root,var(17)
+trigger1=(playerid(root,var(55)),stateno=[200,899])||(playerid(root,var(55)),anim=[200,899])||playerid(root,var(55)),statetype=a
+trigger1=var(17):=playerid(root,var(55)),time-1
+var(37)=playerid(root,var(55)),anim
+[state ]
+type=parentvarset
+trigger1=var(17)<root,var(17)||!root,var(17)
+var(17)=var(17)
+[state ]
+type=parentvarset
+triggerall=root,var(37)!=playerid(root,var(55)),anim
+triggerall=root,var(38)!=playerid(root,var(55)),anim
+triggerall=root,var(39)!=playerid(root,var(55)),anim
+triggerall=root,var(40)!=playerid(root,var(55)),anim
+triggerall=root,var(41)!=playerid(root,var(55)),anim
+triggerall=root,var(42)!=playerid(root,var(55)),anim
+triggerall=root,var(43)!=playerid(root,var(55)),anim
+triggerall=root,var(44)!=playerid(root,var(55)),anim
+triggerall=root,var(45)!=playerid(root,var(55)),anim
+triggerall=root,var(46)!=playerid(root,var(55)),anim
+triggerall=root,var(47)!=playerid(root,var(55)),anim
+triggerall=root,var(48)!=playerid(root,var(55)),anim
+triggerall=!root,var(36)||root,var(36)=playerid(root,var(55)),anim
+trigger1=playerid(root,var(55)),movecontact||playerid(root,var(55)),hitpausetime>0||playerid(root,var(55)),movereversed
+;trigger1=playerid(root,var(55)),time-1>=5
+trigger1=playerid(root,var(55)),time-1<root,var(16)||!root,var(16)
+trigger1=(playerid(root,var(55)),stateno=[200,899])||(playerid(root,var(55)),anim=[200,899])||playerid(root,var(55)),statetype=a
+trigger1=var(16):=playerid(root,var(55)),time-1
+var(36)=playerid(root,var(55)),anim
+[state ]
+type=parentvarset
+trigger1=var(16)<root,var(16)||!root,var(16)
+var(16)=var(16)
+[state ]
+type=parentvarset
+triggerall=root,var(36)!=playerid(root,var(55)),anim
+triggerall=root,var(37)!=playerid(root,var(55)),anim
+triggerall=root,var(38)!=playerid(root,var(55)),anim
+triggerall=root,var(39)!=playerid(root,var(55)),anim
+triggerall=root,var(40)!=playerid(root,var(55)),anim
+triggerall=root,var(41)!=playerid(root,var(55)),anim
+triggerall=root,var(42)!=playerid(root,var(55)),anim
+triggerall=root,var(43)!=playerid(root,var(55)),anim
+triggerall=root,var(44)!=playerid(root,var(55)),anim
+triggerall=root,var(45)!=playerid(root,var(55)),anim
+triggerall=root,var(46)!=playerid(root,var(55)),anim
+triggerall=root,var(47)!=playerid(root,var(55)),anim
+triggerall=root,var(48)!=playerid(root,var(55)),anim
+triggerall=!root,var(35)||root,var(35)=playerid(root,var(55)),anim
+trigger1=playerid(root,var(55)),movecontact||playerid(root,var(55)),hitpausetime>0||playerid(root,var(55)),movereversed
+;trigger1=playerid(root,var(55)),time-1>=5
+trigger1=playerid(root,var(55)),time-1<root,var(15)||!root,var(15)
+trigger1=(playerid(root,var(55)),stateno=[200,899])||(playerid(root,var(55)),anim=[200,899])||playerid(root,var(55)),statetype=a
+trigger1=var(15):=playerid(root,var(55)),time-1
+var(35)=playerid(root,var(55)),anim
+[state ]
+type=parentvarset
+trigger1=var(15)<root,var(15)||!root,var(15)
+var(15)=var(15)
+[state ]
+type=parentvarset
+triggerall=root,var(35)!=playerid(root,var(55)),anim
+triggerall=root,var(36)!=playerid(root,var(55)),anim
+triggerall=root,var(37)!=playerid(root,var(55)),anim
+triggerall=root,var(38)!=playerid(root,var(55)),anim
+triggerall=root,var(39)!=playerid(root,var(55)),anim
+triggerall=root,var(40)!=playerid(root,var(55)),anim
+triggerall=root,var(41)!=playerid(root,var(55)),anim
+triggerall=root,var(42)!=playerid(root,var(55)),anim
+triggerall=root,var(43)!=playerid(root,var(55)),anim
+triggerall=root,var(44)!=playerid(root,var(55)),anim
+triggerall=root,var(45)!=playerid(root,var(55)),anim
+triggerall=root,var(46)!=playerid(root,var(55)),anim
+triggerall=root,var(47)!=playerid(root,var(55)),anim
+triggerall=root,var(48)!=playerid(root,var(55)),anim
+triggerall=!root,var(34)||root,var(34)=playerid(root,var(55)),anim
+trigger1=playerid(root,var(55)),movecontact||playerid(root,var(55)),hitpausetime>0||playerid(root,var(55)),movereversed
+;trigger1=playerid(root,var(55)),time-1>=5
+trigger1=playerid(root,var(55)),time-1<root,var(14)||!root,var(14)
+trigger1=(playerid(root,var(55)),stateno=[200,899])||(playerid(root,var(55)),anim=[200,899])||playerid(root,var(55)),statetype=a
+trigger1=var(14):=playerid(root,var(55)),time-1
+var(34)=playerid(root,var(55)),anim
+[state ]
+type=parentvarset
+trigger1=var(14)<root,var(14)||!root,var(14)
+var(14)=var(14)
+[state ]
+type=parentvarset
+triggerall=root,var(34)!=playerid(root,var(55)),anim
+triggerall=root,var(35)!=playerid(root,var(55)),anim
+triggerall=root,var(36)!=playerid(root,var(55)),anim
+triggerall=root,var(37)!=playerid(root,var(55)),anim
+triggerall=root,var(38)!=playerid(root,var(55)),anim
+triggerall=root,var(39)!=playerid(root,var(55)),anim
+triggerall=root,var(40)!=playerid(root,var(55)),anim
+triggerall=root,var(41)!=playerid(root,var(55)),anim
+triggerall=root,var(42)!=playerid(root,var(55)),anim
+triggerall=root,var(43)!=playerid(root,var(55)),anim
+triggerall=root,var(44)!=playerid(root,var(55)),anim
+triggerall=root,var(45)!=playerid(root,var(55)),anim
+triggerall=root,var(46)!=playerid(root,var(55)),anim
+triggerall=root,var(47)!=playerid(root,var(55)),anim
+triggerall=root,var(48)!=playerid(root,var(55)),anim
+triggerall=!root,var(33)||root,var(33)=playerid(root,var(55)),anim
+trigger1=playerid(root,var(55)),movecontact||playerid(root,var(55)),hitpausetime>0||playerid(root,var(55)),movereversed
+;trigger1=playerid(root,var(55)),time-1>=5
+trigger1=playerid(root,var(55)),time-1<root,var(13)||!root,var(13)
+trigger1=(playerid(root,var(55)),stateno=[200,899])||(playerid(root,var(55)),anim=[200,899])||playerid(root,var(55)),statetype=a
+trigger1=var(13):=playerid(root,var(55)),time-1
+var(33)=playerid(root,var(55)),anim
+[state ]
+type=parentvarset
+trigger1=var(13)<root,var(13)||!root,var(13)
+var(13)=var(13)
+[state ]
+type=parentvarset
+triggerall=root,var(33)!=playerid(root,var(55)),anim
+triggerall=root,var(34)!=playerid(root,var(55)),anim
+triggerall=root,var(35)!=playerid(root,var(55)),anim
+triggerall=root,var(36)!=playerid(root,var(55)),anim
+triggerall=root,var(37)!=playerid(root,var(55)),anim
+triggerall=root,var(38)!=playerid(root,var(55)),anim
+triggerall=root,var(39)!=playerid(root,var(55)),anim
+triggerall=root,var(40)!=playerid(root,var(55)),anim
+triggerall=root,var(41)!=playerid(root,var(55)),anim
+triggerall=root,var(42)!=playerid(root,var(55)),anim
+triggerall=root,var(43)!=playerid(root,var(55)),anim
+triggerall=root,var(44)!=playerid(root,var(55)),anim
+triggerall=root,var(45)!=playerid(root,var(55)),anim
+triggerall=root,var(46)!=playerid(root,var(55)),anim
+triggerall=root,var(47)!=playerid(root,var(55)),anim
+triggerall=root,var(48)!=playerid(root,var(55)),anim
+triggerall=!root,var(32)||root,var(32)=playerid(root,var(55)),anim
+trigger1=playerid(root,var(55)),movecontact||playerid(root,var(55)),hitpausetime>0||playerid(root,var(55)),movereversed
+;trigger1=playerid(root,var(55)),time-1>=5
+trigger1=playerid(root,var(55)),time-1<root,var(12)||!root,var(12)
+trigger1=(playerid(root,var(55)),stateno=[200,899])||(playerid(root,var(55)),anim=[200,899])||playerid(root,var(55)),statetype=a
+trigger1=var(12):=playerid(root,var(55)),time-1
+var(32)=playerid(root,var(55)),anim
+[state ]
+type=parentvarset
+trigger1=var(12)<root,var(12)||!root,var(12)
+var(12)=var(12)
+[state ]
+type=parentvarset
+triggerall=root,var(32)!=playerid(root,var(55)),anim
+triggerall=root,var(33)!=playerid(root,var(55)),anim
+triggerall=root,var(34)!=playerid(root,var(55)),anim
+triggerall=root,var(35)!=playerid(root,var(55)),anim
+triggerall=root,var(36)!=playerid(root,var(55)),anim
+triggerall=root,var(37)!=playerid(root,var(55)),anim
+triggerall=root,var(38)!=playerid(root,var(55)),anim
+triggerall=root,var(39)!=playerid(root,var(55)),anim
+triggerall=root,var(40)!=playerid(root,var(55)),anim
+triggerall=root,var(41)!=playerid(root,var(55)),anim
+triggerall=root,var(42)!=playerid(root,var(55)),anim
+triggerall=root,var(43)!=playerid(root,var(55)),anim
+triggerall=root,var(44)!=playerid(root,var(55)),anim
+triggerall=root,var(45)!=playerid(root,var(55)),anim
+triggerall=root,var(46)!=playerid(root,var(55)),anim
+triggerall=root,var(47)!=playerid(root,var(55)),anim
+triggerall=root,var(48)!=playerid(root,var(55)),anim
+triggerall=!root,var(31)||root,var(31)=playerid(root,var(55)),anim
+trigger1=playerid(root,var(55)),movecontact||playerid(root,var(55)),hitpausetime>0||playerid(root,var(55)),movereversed
+;trigger1=playerid(root,var(55)),time-1>=5
+trigger1=playerid(root,var(55)),time-1<root,var(11)||!root,var(11)
+trigger1=(playerid(root,var(55)),stateno=[200,899])||(playerid(root,var(55)),anim=[200,899])||playerid(root,var(55)),statetype=a
+trigger1=var(11):=playerid(root,var(55)),time-1
+var(31)=playerid(root,var(55)),anim
+[state ]
+type=parentvarset
+trigger1=var(11)<root,var(11)||!root,var(11)
+var(11)=var(11)
+[state ]
+type=parentvarset
+triggerall=root,var(31)!=playerid(root,var(55)),anim
+triggerall=root,var(32)!=playerid(root,var(55)),anim
+triggerall=root,var(33)!=playerid(root,var(55)),anim
+triggerall=root,var(34)!=playerid(root,var(55)),anim
+triggerall=root,var(35)!=playerid(root,var(55)),anim
+triggerall=root,var(36)!=playerid(root,var(55)),anim
+triggerall=root,var(37)!=playerid(root,var(55)),anim
+triggerall=root,var(38)!=playerid(root,var(55)),anim
+triggerall=root,var(39)!=playerid(root,var(55)),anim
+triggerall=root,var(40)!=playerid(root,var(55)),anim
+triggerall=root,var(41)!=playerid(root,var(55)),anim
+triggerall=root,var(42)!=playerid(root,var(55)),anim
+triggerall=root,var(43)!=playerid(root,var(55)),anim
+triggerall=root,var(44)!=playerid(root,var(55)),anim
+triggerall=root,var(45)!=playerid(root,var(55)),anim
+triggerall=root,var(46)!=playerid(root,var(55)),anim
+triggerall=root,var(47)!=playerid(root,var(55)),anim
+triggerall=root,var(48)!=playerid(root,var(55)),anim
+triggerall=!root,var(30)||root,var(30)=playerid(root,var(55)),anim
+trigger1=playerid(root,var(55)),movecontact||playerid(root,var(55)),hitpausetime>0||playerid(root,var(55)),movereversed
+;trigger1=playerid(root,var(55)),time-1>=5
+trigger1=playerid(root,var(55)),time-1<root,var(10)||!root,var(10)
+trigger1=(playerid(root,var(55)),stateno=[200,899])||(playerid(root,var(55)),anim=[200,899])||playerid(root,var(55)),statetype=a
+trigger1=var(10):=playerid(root,var(55)),time-1
+var(30)=playerid(root,var(55)),anim
+[state ]
+type=parentvarset
+trigger1=var(10)<root,var(10)||!root,var(10)
+var(10)=var(10)
+[state ]
+type=parentvarset
+triggerall=root,var(30)!=playerid(root,var(55)),anim
+triggerall=root,var(31)!=playerid(root,var(55)),anim
+triggerall=root,var(32)!=playerid(root,var(55)),anim
+triggerall=root,var(33)!=playerid(root,var(55)),anim
+triggerall=root,var(34)!=playerid(root,var(55)),anim
+triggerall=root,var(35)!=playerid(root,var(55)),anim
+triggerall=root,var(36)!=playerid(root,var(55)),anim
+triggerall=root,var(37)!=playerid(root,var(55)),anim
+triggerall=root,var(38)!=playerid(root,var(55)),anim
+triggerall=root,var(39)!=playerid(root,var(55)),anim
+triggerall=root,var(40)!=playerid(root,var(55)),anim
+triggerall=root,var(41)!=playerid(root,var(55)),anim
+triggerall=root,var(42)!=playerid(root,var(55)),anim
+triggerall=root,var(43)!=playerid(root,var(55)),anim
+triggerall=root,var(44)!=playerid(root,var(55)),anim
+triggerall=root,var(45)!=playerid(root,var(55)),anim
+triggerall=root,var(46)!=playerid(root,var(55)),anim
+triggerall=root,var(47)!=playerid(root,var(55)),anim
+triggerall=root,var(48)!=playerid(root,var(55)),anim
+triggerall=!var(29)||var(29)=playerid(root,var(55)),anim
+trigger1=playerid(root,var(55)),movecontact||playerid(root,var(55)),hitpausetime>0||playerid(root,var(55)),movereversed
+;trigger1=playerid(root,var(55)),time-1>=5
+trigger1=playerid(root,var(55)),time-1<root,var(9)||!root,var(9)
+trigger1=(playerid(root,var(55)),stateno=[200,899])||(playerid(root,var(55)),anim=[200,899])||playerid(root,var(55)),statetype=a
+trigger1=var(9):=playerid(root,var(55)),time-1
+var(29)=playerid(root,var(55)),anim
+[state ]
+type=parentvarset
+trigger1=var(9)<root,var(9)||!root,var(9)
+var(9)=var(9)
+[state ]
+type=displaytoclipboard
+trigger1=0
+text="%d,%d,%d,%d,%d"
+params=var(53),var(50),var(51),var(52),var(53)
+[state ]
+type=appendtoclipboard
+trigger1=0
+text="\n,%d,%d,%d,%d"
+params=var(55),var(54),inguarddist,var(48)
+[state ]
+type=displaytoclipboard
+trigger1=1
+text="%d,%d,%d,%d,%d"
+params=root,var(28),root,var(27),root,var(26),root,var(25),root,var(24)
+[state ]
+type=appendtoclipboard
+trigger1=1
+text=",%d,%d,%d,%d,%d"
+params=root,var(23),root,var(22),root,var(21),root,var(19),root,var(18)
+[state ]
+type=appendtoclipboard
+trigger1=1
+text="\n,%d,%d,%d,%d,%d"
+params=root,var(17),root,var(16),root,var(15),root,var(14),root,var(13)
+;----------------------------------------------------------------------------------
+; ステージ端探知 (v53~v49)
+;----------------------------------------------------------------------------------
+[state ]
+type=posset
+trigger1=1
+x=fvar(39)
+y=0
+[state ]
+type=turn
+trigger1=root,facing!=facing
+[state ]
+type=changestate
+trigger1=var(53)
+value=3
+[state ]
+type=attackdist
+trigger1=1
+value=0
+[statedef 3]
+[state ]
+type=null
+triggerall=var(49)
+triggerall=var(53)>0||var(52):=0||var(53):=var(53)/10
+trigger1=root,numprojid(10000)
+trigger1=var(50):=var(50)+root,numprojid(10000)*var(53)*10&&0
+trigger2=root,numprojid(10001)
+trigger2=var(51):=var(51)+root,numprojid(10001)*var(53)*10
+[state ]
+type=turn
+trigger1=facing=-1
+[state ]
+type=projectile
+trigger1=var(52)*var(53)>0
+velocity=1
+projid=10000
+projanim=1
+offset=var(50)+var(52)*var(53),0
+projstagebound=-9
+guard.dist=0
+projedgebound=2000000000
+projremovetime=1
+supermovetime=99999990
+pausemovetime=99999990
+[state ]
+type=turn
+trigger1=facing=1
+[state ]
+type=projectile
+trigger1=var(52)*var(53)>0
+velocity=1
+projid=10001
+projanim=1
+offset=var(51)+var(52)*var(53),0
+projstagebound=-9
+guard.dist=0
+projedgebound=2000000000
+projremovetime=1
+supermovetime=99999990
+pausemovetime=99999990
+[state ]
+type=changestate
+trigger1=var(52)<9
+trigger1=var(52):=var(52)+1
+trigger1=var(53)>0
+trigger1=var(49):=0||1
+value=stateno
+[state ]
+type=turn
+trigger1=root,facing!=facing
+[state ]
+type=posset
+trigger1=var(49):=1
+x=fvar(39)
+y=0

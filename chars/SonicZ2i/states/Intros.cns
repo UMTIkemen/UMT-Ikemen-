@@ -1,0 +1,199 @@
+;==============================================================================
+; Lose by Time Over
+[Statedef 170]
+type = S
+ctrl = 0
+anim = 170
+velset = 0,0
+
+[State 0, PlaySnd]
+type = PlaySnd
+trigger1 = animelem = 4
+value = 0,6
+volumescale = 200
+channel = -1
+
+[State 170, 1]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 1
+;----------------------------------------------------------------------------
+; WIN STATE DECIDER
+[Statedef 180]
+type = S
+
+[State 180, 1]
+type = ChangeState
+trigger1 = 1
+value = 181;+random%9
+
+;---------------------------------------------------------------------------
+; Win 1
+[Statedef 181]
+type = S
+ctrl = 0
+anim = 181
+velset = 0,0
+sprpriority = 1
+
+[State 181, 1]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 1
+
+[State 0, PlaySnd]
+type = PlaySnd
+trigger1 = !time
+value = 180,0
+volumescale = 200
+channel = -1
+
+[State 0, PlaySnd]
+type = PlaySnd
+trigger1 = animelemtime(6)=0
+value = 0,6
+volumescale = 200
+channel = -1
+
+[State 0, PlaySnd]
+type = PlaySnd
+trigger1 = animelemtime(8)=0
+value = 0,8
+volumescale = 200
+channel = -1
+
+[State 0, PlaySnd]
+type = PlaySnd
+trigger1 = animelemtime(10)=0
+value = 0,7
+volumescale = 200
+channel = -1
+
+[state 0,  Effect]
+type=explod
+trigger1 = animelemtime(10) = 0
+anim=111181
+id=111181
+pos= -65,-11
+postype=P1
+sprpriority=12
+ontop = 1
+ownpal=1
+scale = 0.55,0.55
+supermovetime=-1
+bindtime = -1
+
+[state 181, 1]
+type = assertspecial
+trigger1 = time < 300
+flag = roundnotover
+;===========================================================================
+
+[Statedef 190]
+type = S
+ctrl = 0
+
+[State 190, 2] ;Assert this until you want "round 1, fight" to begin
+type = AssertSpecial
+trigger1 = 1
+flag = Intro
+
+[State 180, 1]
+type = ChangeState
+trigger1 = Time = 0
+value = 191
+
+;---------------------------------------------------------------------------
+; 191 - Vanilla Intro Decider [700-709]
+;---- 700 - V - Intro V1 - : 191
+
+;Vanilla Intro Decider [700-709]
+[Statedef 191] ;new state
+type = S
+ctrl = 0
+velset = 0,0
+
+[State 190, 2] ;Assert this until you want "round 1, fight" to begin
+type = AssertSpecial
+trigger1 = 1
+flag = Intro
+
+[State 0, ChangeState]
+type = ChangeState
+trigger1 = !time
+value =  700;+random%9
+ctrl = 0
+;---------------------------------------------------------------------------
+; INTRO 1 , Sleeping
+[Statedef 700] 
+type = S
+ctrl = 0
+anim = 700
+velset = 0,0
+
+[State 182, NotHitBy]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 1
+
+[State 700, 1] ;Freeze animation until PreIntro is over
+type = ChangeAnim
+trigger1 = RoundState = 0
+value = 700
+
+[State 700, 2] ;Assert this until you want "round 1, fight" to begin
+type = AssertSpecial
+trigger1 = 1
+flag = Intro
+
+[State 17100, Intro Speech]
+type = PlaySnd
+trigger1 = AnimElemTime(2)=0
+value = 190,0
+channel = 0
+volumescale = 200
+
+[State 700, 4] ;Change to stand state
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 0
+ctrl = 0
+;---------------------------------------------------------------------------
+; INTRO 2, Sonic Battle Summon
+[Statedef 701] 
+type = S
+ctrl = 0
+anim = 701
+velset = 0,0
+
+[State 182, NotHitBy]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 1
+
+[State 700, 1] ;Freeze animation until PreIntro is over
+type = ChangeAnim
+trigger1 = RoundState = 0
+value = 701
+
+[State 700, 2] ;Assert this until you want "round 1, fight" to begin
+type = AssertSpecial
+trigger1 = 1
+flag = Intro
+
+[State 17100, "Time to party!"]
+type = Null
+trigger1 = AnimElemTime(2)=0
+value = 190,0
+channel = 0
+volumescale = 200
+
+[State 700, 4] ;Change to stand state
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 0
+ctrl = 0

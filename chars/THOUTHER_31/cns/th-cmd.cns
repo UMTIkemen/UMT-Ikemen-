@@ -1,0 +1,2567 @@
+[statedef -1]
+[state ]
+type=selfstate
+trigger1=ishelper(2)
+value=2
+[state ]
+type=ctrlset
+triggerall=numhelper(9977)=0
+trigger1=roundstate>2
+trigger1=movetype=i
+trigger2=!(var(1)&131072)
+value=(roundstate=3)
+[State 0 DestroySelf]
+type = DestroySelf
+triggerall=numhelper(9977)!=0
+trigger1 = ishelper
+[state ]
+type=velset
+trigger1=movetype!=h
+x=0
+y=0
+[state ]
+type=statetypeset
+trigger1=anim=132||anim=152
+statetype=a
+[state ]
+type=varset
+trigger1=movetype!=h
+sysvar(0)=1
+;-----------暗転停止フラグ
+[state ]
+type=varadd
+trigger1=anim=2010+anim%5||anim=2050+anim%5
+trigger1=animelem=3,>0&&animelem=8,<0
+trigger2=anim=2100+anim%5
+trigger2=animelem=1,>0&&animelem=3,<0
+trigger3=anim=2200+anim%5
+trigger3=animelem=3,>=0&&animelem=4,<0
+trigger4=anim=3000+anim%5
+trigger4=animelem=18,>=0
+var(1)=8192
+;--------------すり抜け
+[state ]
+type=playerpush
+trigger1=(statetype!=a||0&&sysfvar(1))&&p2dist y<-40
+trigger2=statetype=a
+trigger2=enemynear,statetype!=a&&(sysfvar(4)<0||pos y<-20)&&(anim!=[1300,1351])&&anim=3000+anim%5
+trigger3=var(1)&1024
+value=0
+;--------------画面端でめくられない、めくらない
+[state ]
+type=width
+trigger1=!(var(1)&1024)
+trigger2=numtarget
+trigger2=var(1)&1024
+trigger2=target,backedgebodydist<=5||target,frontedgebodydist<=5
+edge=15,-3
+;--------------グレイブ
+;-----グレイブ初期化
+[state ]
+type=varadd
+trigger1=!anim||(anim=[10,12])||(anim=[100,105])||anim=47||(anim=[200,431])&&anim!=220+anim%5||anim=3000
+var(1)=-(var(1)&256)-(var(1)&512)
+;------グレイブ仕込み
+[state ]
+type=varadd
+trigger1=!(var(1)&256)
+trigger1=anim=220+anim%5||anim=750+anim%5
+trigger1=movehit
+trigger1=command="holdup"
+var(1)=256
+;--------------星取りリセット
+[state ]
+type=null
+trigger1=!numtarget
+trigger1=var(7)!=anim||movetype!=a||animelem=1,=1||!animtime
+trigger1=var(2):=0||var(5):=0
+[state ]
+type=null
+triggerall=var(6):=0||fvar(1)>0
+triggerall=movehit=1
+triggerall=var(5)<3
+;-------衝破（腕）
+trigger1=anim=1400+anim%5&&!(var(2)&1)
+trigger1=var(1)&256||var(4)
+trigger1=1||var(6):=(var(1)&256&&!(var(1)&512))*(var(5)<=2)
+trigger1=1||var(6):=var(6)+!!var(4)*(var(5)+var(6)<=2)
+trigger1=fvar(1):=fvar(1)-var(6)||var(2):=(var(2)+1)||var(5):=var(5)+var(6)||var(1):=var(1)+512*!!(var(1)&256)*!(var(1)&512)
+;-------爆星（腕）
+trigger2=anim=1500+anim%5&&!(var(2)&4)
+trigger2=var(1)&256||var(4)
+trigger2=1||var(6):=(var(1)&256&&!(var(1)&512))*(var(5)<=2)
+trigger2=1||var(6):=var(6)+!!var(4)*(var(5)+var(6)<=2)
+trigger2=fvar(1):=fvar(1)-var(6)||var(2):=(var(2)+4)||var(5):=var(5)+var(6)||var(1):=var(1)+512*!!(var(1)&256)*!(var(1)&512)
+;-------不退
+trigger3=anim=1000+anim%5&&!(var(2)&32)
+trigger3=var(1)&256||var(4)
+trigger3=1||var(6):=(var(1)&256&&!(var(1)&512))*(var(5)<=2)
+trigger3=1||var(6):=var(6)+!!var(4)*(var(5)+var(6)<=2)
+trigger3=fvar(1):=fvar(1)-var(6)||var(2):=(var(2)+32)||var(5):=var(5)+var(6)||var(1):=var(1)+512*!!(var(1)&256)*!(var(1)&512)
+;------不媚
+trigger4=(anim=[1100,1201])&&!(var(2)&64)
+trigger4=var(1)&256||var(4)
+trigger4=1||var(6):=(var(1)&256&&!(var(1)&512))*(var(5)<=2)
+trigger4=1||var(6):=var(6)+!!var(4)*(var(5)+var(6)<=2)
+trigger4=fvar(1):=fvar(1)-var(6)||var(2):=(var(2)+64)||var(5):=var(5)+var(6)||var(1):=var(1)+512*!!(var(1)&256)*!(var(1)&512)
+;------不省
+trigger5=(anim=[1300,1351])&&!(var(2)&128)&&palno<10
+trigger5=var(1)&256||var(4)
+trigger5=1||var(6):=(var(1)&256&&!(var(1)&512))*(var(5)<=2)
+trigger5=1||var(6):=var(6)+!!var(4)*(var(5)+var(6)<=2)
+trigger5=fvar(1):=fvar(1)-var(6)||var(2):=(var(2)+128)||var(5):=var(5)+var(6)||var(1):=var(1)+512*!!(var(1)&256)*!(var(1)&512)
+;------彷翔
+trigger6=(anim=[2000,2051])&&!(var(2)&256)
+trigger6=1||var(6):=(var(1)&256&&!(var(1)&512))*(var(5)<=1)
+trigger6=1||var(6):=var(6)+!!var(4)*(var(5)+var(6)<=1)
+trigger6=fvar(1):=fvar(1)-var(6)-1||var(2):=(var(2)+256)||var(5):=var(5)+var(6)+1||var(1):=var(1)+512*!!(var(1)&256)*!(var(1)&512)
+;------ヘヴィ
+trigger7=anim=730+anim%5&&!(var(2)&512)
+trigger7=fvar(1):=fvar(1)-1||var(2):=(var(2)+512)||var(5):=var(5)+1
+;------バニ
+trigger8=anim=760+anim%5&&!(var(2)&1024)
+trigger8=fvar(1):=fvar(1)-1||var(2):=(var(2)+1024)||var(5):=var(5)+1
+;------溜めバニ
+trigger9=anim=765+anim%5&&!(var(2)&2048)
+trigger9=fvar(1):=fvar(1)-1||var(2):=(var(2)+2048)||var(5):=var(5)+1
+;------6A
+trigger10=anim=700+anim%5&&var(4)
+trigger10=fvar(1):=fvar(1)-1||var(5):=var(5)+1
+;------6B
+trigger11=anim=710+anim%5&&var(4)
+trigger11=fvar(1):=fvar(1)-1||var(5):=var(5)+1
+;------掴み投げ
+trigger12=anim=740+anim%5
+trigger12=fvar(1):=fvar(1)-1
+;------不省(アレンジモード)
+trigger13=(anim=[1300,1351])&&!(var(2)&128)&&palno>9
+trigger13=1||var(6):=(var(1)&256&&!(var(1)&512))*(var(5)<=1)
+trigger13=1||var(6):=var(6)+!!var(4)*(var(5)+var(6)<=1)
+trigger13=fvar(1):=fvar(1)-var(6)-1||var(2):=(var(2)+128)||var(5):=var(5)+var(6)||var(1):=var(1)+512*!!(var(1)&256)*!(var(1)&512)
+[state ]
+type=null
+triggerall=var(5)<3
+;衝破
+trigger1=!projhittime(1450)&&!(var(2)&2)&&var(4)
+trigger1=fvar(1):=fvar(1)-1||var(2):=(var(2)+2)||var(5):=var(5)+1
+trigger2=!projhittime(1451)&&!(var(2)&2)&&!(var(1)&512)
+trigger2=1||var(6):=(var(5)<=2)
+trigger2=1||var(6):=var(6)+!!var(4)*(var(5)+var(6)<=2)
+trigger2=fvar(1):=fvar(1)-var(6)||var(2):=(var(2)+2)||var(5):=var(5)+var(6)||var(1):=var(1)+512*!!(var(1)&256)*!(var(1)&512)
+;爆星
+trigger3=!projhittime(1550)&&!(var(2)&8)&&var(4)
+trigger3=fvar(1):=fvar(1)-1||var(2):=(var(2)+8)||var(5):=var(5)+1
+trigger4=!projhittime(1551)&&!(var(2)&8)&&!(var(1)&512)
+trigger4=1||var(6):=(var(5)<=2)
+trigger4=1||var(6):=var(6)+!!var(4)*(var(5)+var(6)<=2)
+trigger4=fvar(1):=fvar(1)-var(6)||var(2):=(var(2)+8)||var(5):=var(5)+var(6)||var(1):=var(1)+512*!!(var(1)&256)*!(var(1)&512)
+;槍
+trigger5=!projhittime(1650)&&!(var(2)&16)&&var(4)
+trigger5=fvar(1):=fvar(1)-1||var(2):=(var(2)+16)||var(5):=var(5)+1
+trigger6=!projhittime(1651)&&!(var(2)&16)&&!(var(1)&512)
+trigger6=1||var(6):=(var(5)<=2)
+trigger6=1||var(6):=var(6)+!!var(4)*(var(5)+var(6)<=2)
+trigger6=fvar(1):=fvar(1)-var(6)||var(2):=(var(2)+16)||var(5):=var(5)+var(6)||var(1):=var(1)+512*!!(var(1)&256)*!(var(1)&512)
+;十字陵1
+trigger7=!projhittime(2205)&&var(4)
+trigger7=fvar(1):=fvar(1)-1||var(5):=var(5)+1
+;十字陵2
+trigger8=!projhittime(2220)
+trigger8=fvar(1):=fvar(1)-1||var(5):=var(5)+1
+;十字陵3
+trigger9=!projhittime(2206)
+trigger9=fvar(1):=fvar(1)-1||var(5):=var(5)+1
+[state ]
+type=varset
+trigger1=fvar(1)<0
+fvar(1)=0
+;--------------カウンターヒット判定
+[state ]
+type=varset
+trigger1=enemynear,movetype=a
+var(4)=enemynear,stateno
+[state ]
+type=varset
+trigger1=anim=3000+anim%5
+var(4)=0
+;--------------秘孔よろけ
+[state ]
+type=targetstate
+triggerall=movehit=1
+triggerall=numtarget
+triggerall=target,statetype!=a&&target,statetype!=l
+triggerall=target,alive&&target,life-target,gethitvar(damage)>0
+trigger1=anim=730+anim%5
+trigger1=target,gethitvar(hitcount)<=1
+value=735
+[state ]
+type=playsnd
+trigger1=movehit=1
+trigger1=anim=730+anim%5
+trigger1=numtarget
+trigger1=target,gethitvar(hitcount)<=1
+value=s730,10
+;--------------敵アジガ判定
+[state ]
+type=projectile
+trigger1=0
+projid=766
+projanim=766
+projremovetime=1
+pausetime=0,13
+offset=0,0
+numhits=0
+attr=s,sa
+guardflag=
+hitflag=MA
+sparkno=-1
+p2stateno=153
+[state ]
+type=varset
+trigger1=enemynear,stateno!=[120,155]
+fvar(19)=0
+[state ]
+type=varadd
+trigger1=enemynear,stateno=[120,155]
+fvar(19)=1
+;--------------バニシング
+;------始動
+[state ]
+type=targetstate
+triggerall=!(var(1)&1024)
+triggerall=movehit=1
+triggerall=numtarget
+triggerall=(anim=[760,766])||anim=710+anim%5||(anim=[2010,2051])&&var(4)
+trigger1=target,statetype!=a&&target,statetype!=l
+trigger2=target,statetype=a&&target,gethitvar(hitcount)<=1
+value=30760
+[state ]
+type=varadd
+trigger1=movehit
+trigger1=numtarget
+trigger1=(anim=[760,766])||anim=710+anim%5||(anim=[2010,2051])&&var(4)
+trigger1=target,stateno=30760
+trigger1=!(var(1)&1024)
+var(1)=1024
+[state ]
+type=varadd
+trigger1=!numtarget
+trigger2=target,statetype=l
+trigger3=anim=710+anim%5||(anim=[760,766])||anim=3000+anim%5
+trigger3=movehit
+trigger3=numtarget
+trigger3=target,stateno!=[30760,30765]
+var(1)=-(var(1)&1024)
+[state ]
+type=width
+trigger1=numtarget
+trigger1=var(1)&1024
+trigger1=target,backedgebodydist>15&&target,frontedgebodydist>15
+edge=-3,-3
+[state ]
+type=width
+trigger1=numtarget
+trigger1=var(1)&1024
+trigger1=target,backedgebodydist<=15||target,frontedgebodydist<=15
+trigger1=p2dist y=[-60-50*(statetype!=c),enemynear,const(size.height)]
+trigger1=backedgebodydist>15&&frontedgebodydist>15
+edge=40,0
+[state ]
+type=helper
+trigger1=numtarget
+trigger1=var(1)&1024
+trigger1=target,stateno=[30760,30764]
+trigger1=target,hitshakeover
+trigger1=target,time%5=0
+trigger1=target,pos y>=-15
+id=6105
+stateno=6105
+pos=facing*floor(target,pos x-pos x),-floor(pos y)
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+;--------------バニステート奪取
+;-------バウンド
+[state ]
+type=targetstate
+triggerall=var(1)&1024
+triggerall=movehit=1
+triggerall=numtarget
+triggerall=target,stateno=[5000,5100]
+triggerall=target,pos y<20
+triggerall=anim=[200,1501]
+trigger1=target,backedgebodydist>10&&target,frontedgebodydist>10
+trigger1=(anim=[220,236])||(anim=[420,431])||(anim=[620,631])||(anim=[700,780])||anim=[1000,1601]
+trigger2=(anim=[200,216])||(anim=[400,411])||anim=[600,611]
+trigger3=anim=[1000,1351]
+value=30761
+[state ]
+type=targetstate
+triggerall=var(1)&1024
+triggerall=!projhittime(1450)||!projhittime(1451)||!projhittime(1550)||!projhittime(1551)||!projhittime(1650)||!projhittime(1651)||!projhittime(2205)
+triggerall=numtarget
+triggerall=target,stateno=[5000,5100]
+triggerall=target,pos y<20
+trigger1=target,backedgebodydist>10&&target,frontedgebodydist>10
+value=30761
+;-----ノーバウンド
+[state ]
+type=targetstate
+triggerall=var(1)&1024
+triggerall=movehit=1
+triggerall=numtarget
+triggerall=target,stateno=[5000,5100]
+triggerall=target,pos y<20
+trigger1=movehit=1
+value=30762
+[state ]
+type=targetstate
+triggerall=var(1)&1024
+triggerall=!projhittime(1450)||!projhittime(1451)||!projhittime(1550)||!projhittime(1551)||!projhittime(1650)||!projhittime(1651)||!projhittime(2205)
+triggerall=numtarget
+triggerall=target,stateno=[5000,5100]
+trigger1=target,pos y<20
+value=30762
+;-----Y軸補正
+[state ]
+type=targetvelset
+triggerall=var(1)&1024
+triggerall=movehit=1
+triggerall=target,stateno!=30760
+trigger1=anim=[200,206]
+trigger2=anim=400
+trigger3=anim=600
+y=(sysvar(3)+sysvar(4))*2
+[state ]
+type=targetvelset
+triggerall=var(1)&1024
+triggerall=target,stateno!=30760
+trigger1=movehit=1
+trigger1=anim=[210,216]
+trigger2=movehit=1
+trigger2=anim=410
+trigger3=movehit=1
+trigger3=anim=610
+trigger4=!projhittime(1450)||!projhittime(1451)
+y=(sysvar(3)+sysvar(4))*.5
+[state ]
+type=targetvelset
+triggerall=var(1)&1024
+triggerall=target,stateno!=30760
+trigger1=movehit=1
+trigger1=anim=[220,226]
+trigger2=movehit=1
+trigger2=anim=420
+trigger3=movehit=1
+trigger3=anim=[1000,1501]
+trigger4=!projhittime(1550)||!projhittime(1551)
+y=-12+(sysvar(3)+sysvar(4))*.8
+[state ]
+type=targetvelset
+triggerall=var(1)&1024
+triggerall=target,stateno!=30760
+trigger1=movehit=1
+trigger1=anim=[230,236]
+trigger2=movehit=1
+trigger2=anim=420
+trigger3=movehit=1
+trigger3=anim=[700,751]
+trigger4=!projhittime(1650)||!projhittime(1651)
+y=-16+(sysvar(3)+sysvar(4))*1.3
+[state ]
+type=targetvelset
+triggerall=var(1)&1024
+triggerall=target,stateno!=30760
+trigger1=movehit=1
+trigger1=anim=430
+trigger2=movehit=1
+trigger2=anim=[2000,2051]
+trigger3=!projhittime(2205)
+y=-22+(sysvar(3)+sysvar(4))*1.5
+[state ]
+type=varset
+trigger1=fvar(2)<185
+trigger1=anim=710+anim%5||anim=[760,766]
+trigger1=var(1)&1024
+trigger1=movehit
+trigger1=command="holdfwd"||command="z"&&command!="holdback"
+fvar(2)=185
+;--------------ダウン追い討ち
+[state ]
+type=varadd
+trigger1=!numtarget
+var(1)=-(var(1)&16384)
+[state ]
+type=playsnd
+triggerall=numtarget
+triggerall=!((anim=2010+anim%5||anim=2050+anim%5)&&animelem=3,>0&&animelem=8,<0)
+triggerall=!(anim=2100+anim%5&&animelem=1,>0&&animelem=3,<0)
+triggerall=!(anim=2200+anim%5&&animelem=1,>0&&animelem=3,<0)
+triggerall=!(anim=3000+anim%5&&animelem=18,>=0)
+triggerall=target,time=1
+trigger1=target,prevstateno!=30766
+trigger1=target,stateno=35110
+trigger1=fvar(35)<-3
+trigger2=target,prevstateno!=30766
+trigger2=target,stateno=5110
+trigger2=fvar(35)>=-3
+trigger3=target,stateno=30766
+value=s5100,0
+[state ]
+type=explod
+triggerall=numtarget
+triggerall=target,time=1
+triggerall=!((anim=2010+anim%5||anim=2050+anim%5)&&animelem=3,>0&&animelem=8,<0)
+triggerall=!(anim=2100+anim%5&&animelem=1,>0&&animelem=3,<0)
+triggerall=!(anim=2200+anim%5&&animelem=1,>0&&animelem=3,<0)
+triggerall=!(anim=3000+anim%5&&animelem=18,>=0)
+triggerall=(target,gethitvar(animtype)!=[4,5])||target,stateno=30766
+trigger1=target,prevstateno!=30766
+trigger1=target,stateno=35110
+trigger1=fvar(35)<-3
+trigger2=target,prevstateno!=30766
+trigger2=target,stateno=5110
+trigger2=fvar(35)>=-3
+trigger3=target,stateno=30766
+id=34002
+anim=34002
+scale=.5,.5
+removetime=-2
+pos=facing*floor(target,pos x-pos x),-floor(pos y)
+sprpriority=-2
+ownpal=1
+trans=add
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=helper
+triggerall=numtarget
+triggerall=!((anim=2010+anim%5||anim=2050+anim%5)&&animelem=3,>0&&animelem=8,<0)
+triggerall=!(anim=2100+anim%5&&animelem=1,>0&&animelem=3,<0)
+triggerall=!(anim=2200+anim%5&&animelem=1,>0&&animelem=3,<0)
+triggerall=!(anim=3000+anim%5&&animelem=18,>=0)
+triggerall=target,time=1
+triggerall=(target,gethitvar(animtype)=[4,5])&&target,stateno!=30766
+trigger1=target,prevstateno!=30766
+trigger1=target,stateno=35110
+trigger1=fvar(35)<-3
+trigger2=target,prevstateno!=30766
+trigger2=target,stateno=5110
+trigger2=fvar(35)>=-3
+id=6100
+stateno=6100
+pos=facing*floor(target,pos x-pos x),-floor(pos y)
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=varadd
+trigger1=numtarget
+trigger1=target,statetype=l
+trigger1=!(var(1)&16384)
+var(1)=16384
+[state ]
+type=targetstate
+trigger1=numtarget
+trigger1=target,stateno=[5000,5099]
+trigger1=movehit=1||!projhittime(0)
+trigger1=var(1)&16384
+value=35100
+[state ]
+type=targetstate
+trigger1=numtarget
+trigger1=target,statetype=l
+trigger1=target,stateno=[5100,5109]
+value=35110
+[state ]
+type=targetvelset
+trigger1=numtarget
+trigger1=target,statetype=l
+trigger1=target,stateno=35110
+trigger1=fvar(35):=-fvar(11)*.275||1
+y=-fvar(11)*.275
+[state ]
+type=varset
+trigger1=numtarget
+trigger1=target,hitfall
+trigger1=target,statetype=a
+fvar(11)=target,vel y
+;--------------うつ伏せダウン
+[state ]
+type=targetstate
+trigger1=!(var(1)&1024)
+trigger1=!(var(1)&16384)
+trigger1=movehit=1
+trigger1=numtarget
+trigger1=anim=700+anim%5
+trigger1=target,stateno=[5000,5100]
+value=35070
+;-----------オーラガード
+[state ]
+type=varadd
+trigger1=hitover
+fvar(15)=-1
+[state ]
+type=poweradd
+trigger1=var(1)&32768
+value=-2
+[state ]
+type=varset
+trigger1=movetype=h
+trigger1=gethitvar(guarded)
+trigger1=var(1)&32768
+trigger1=!time
+fvar(15)=5
+[state ]
+type=lifeadd
+trigger1=gethitvar(damage)>0
+trigger1=var(1)&32768
+trigger1=stateno=[150,155]
+value=gethitvar(damage)
+[state ]
+type=varadd
+trigger1=command!="holdE"
+trigger2=anim&&(anim!=[10,12])&&(anim!=[20,21])&&(anim!=[41,43])&&anim!=100&&anim!=[120,155]
+var(1)=-(var(1)&32768)
+[state ]
+type=varadd
+trigger1=roundstate=2&&!(var(1)&131072)
+trigger1=!(var(1)&32768)
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||(anim=[41,43])||anim=100||(anim=[130,132])
+trigger1=command="holdback"&&command="holdE"&&(var(1)&32768||command="z")
+trigger1=power>2
+var(1)=32768
+[state ]
+type=helper
+trigger1=var(1)&32768
+trigger1=!numhelper(6150)
+id=6150
+stateno=6150
+supermovetime=9999
+pausemovetime=9999
+;-----------アジガ
+[state ]
+type=varset
+trigger1=anim!=[130,152]
+trigger1=command!="holdback"
+fvar(14)=5
+;-----------クイックスタンディング判定
+[state ]
+type=varadd
+trigger1=!(var(1)&67108864)
+trigger1=statetype=l
+trigger1=stateno=[5100,5111]
+trigger1=command="up"
+var(1)=67108864
+[state ]
+type=palfx
+trigger1=var(1)&67108864
+trigger1=animelem=1,=1
+trigger1=anim=[5120,5122]
+add=256,256,256
+time=8
+[state ]
+type=varadd
+trigger1=movetype!=h||statetype!=l
+var(1)=-(var(1)&67108864)
+;--------------ヒットスパーク位置設定
+[state ]
+type=null
+trigger1=anim=[200,206]
+trigger1=fvar(12):=30+(p2dist x>30)*(p2dist x-30-(p2dist x-60)*(p2dist x>60))||fvar(13):=-105
+trigger2=anim=210+anim%5
+trigger2=fvar(12):=30+(p2dist x>30)*(p2dist x-30-(p2dist x-55)*(p2dist x>55))||fvar(13):=-75
+trigger3=anim=215+anim%5
+trigger3=fvar(12):=30+(p2dist x>30)*(p2dist x-30-(p2dist x-70)*(p2dist x>70))||fvar(13):=-105
+trigger4=anim=220+anim%5
+trigger4=fvar(12):=30+(p2dist x>30)*(p2dist x-30-(p2dist x-70)*(p2dist x>70))||fvar(13):=-100
+trigger5=anim=225+anim%5
+trigger5=fvar(12):=30+(p2dist x>30)*(p2dist x-30-(p2dist x-95)*(p2dist x>95))||fvar(13):=-95+(p2dist y+95)*(p2dist y<-95)
+trigger6=anim=230+anim%5
+trigger6=fvar(12):=30+(p2dist x>30)*(p2dist x-30-(p2dist x-100)*(p2dist x>100))||fvar(13):=-70
+trigger7=anim=235+anim%5
+trigger7=fvar(12):=30+(p2dist x>30)*(p2dist x-30-(p2dist x-120)*(p2dist x>120))||fvar(13):=-50
+trigger8=anim=400+anim%5
+trigger8=fvar(12):=30+(p2dist x>30)*(p2dist x-30-(p2dist x-50)*(p2dist x>50))||fvar(13):=-70
+trigger9=anim=410+anim%5
+trigger9=fvar(12):=30+(p2dist x>30)*(p2dist x-30-(p2dist x-75)*(p2dist x>75))||fvar(13):=-10-(75-p2dist x)*.35
+trigger10=anim=420+anim%5
+trigger10=fvar(12):=40+(p2dist x>40)*(p2dist x-40-(p2dist x-73)*(p2dist x>73))||fvar(13):=-70+(p2dist y+70)*(p2dist y<-70)
+trigger11=anim=430+anim%5
+trigger11=fvar(12):=30+(p2dist x>30)*(p2dist x-30-(p2dist x-120)*(p2dist x>120))||fvar(13):=-5-(120-p2dist x)*.4
+trigger12=anim=600+anim%5
+trigger12=fvar(12):=(p2dist x>0)*(p2dist x-(p2dist x-45)*(p2dist x>45))||fvar(13):=-100-(45-p2dist x)*(p2dist y<-80)
+trigger13=anim=610+anim%5
+trigger13=fvar(12):=(p2dist x>0)*(p2dist x-(p2dist x-95)*(p2dist x>95))||fvar(13):=-25-(95-p2dist x)*.5
+trigger14=anim=620+anim%5
+trigger14=fvar(12):=30+(p2dist x>30)*(p2dist x-30-(p2dist x-50)*(p2dist x>50))||fvar(13):=-95-(50-p2dist x)*(p2dist y<-80)
+trigger15=anim=630+anim%5
+trigger15=fvar(12):=30+(p2dist x>30)*(p2dist x-30-(p2dist x-105)*(p2dist x>105))||fvar(13):=-20+(p2dist y+20)*(p2dist y<-20)
+trigger16=anim=700+anim%5
+trigger16=fvar(12):=30+(p2dist x>30)*(p2dist x-30-(p2dist x-105)*(p2dist x>105))||fvar(13):=-70+(p2dist y<-30)*(p2dist y+30)
+trigger17=anim=710+anim%5
+trigger17=fvar(12):=30+(p2dist x>30)*(p2dist x-30-(p2dist x-105)*(p2dist x>105))||fvar(13):=-50
+trigger18=anim=725+anim%5
+trigger18=fvar(12):=40||fvar(13):=-115
+trigger19=anim=730+anim%5
+trigger19=fvar(12):=50+(p2dist x>50)*(p2dist x-50-(p2dist x-70)*(p2dist x>70))||fvar(13):=-90
+trigger20=anim=740+anim%5
+trigger20=fvar(12):=40||fvar(13):=-80
+trigger21=anim=745+anim%5
+trigger21=fvar(12):=35||fvar(13):=-90
+trigger22=anim=750+anim%5
+trigger22=fvar(12):=(p2dist x>0)*(p2dist x-(p2dist x-50)*(p2dist x>50))||fvar(13):=-10-(50-p2dist x)
+trigger23=anim=[760,771]
+trigger23=fvar(12):=30+(p2dist x>30)*(p2dist x-30-(p2dist x-70)*(p2dist x>70))||fvar(13):=-80+(p2dist y+50)*(p2dist y<-50)
+trigger24=0;!projcontacttime(1010)||!projcontacttime(1011)||!projcontacttime(1012)||!projcontacttime(1013)
+trigger24=fvar(12):=p2dist x-15||fvar(13):=-90
+trigger25=anim=1000+anim%5
+trigger25=fvar(12):=30+(p2dist x>30)*(p2dist x-30-(p2dist x-70)*(p2dist x>70))||fvar(13):=-90
+trigger26=anim=1100+anim%5
+trigger26=fvar(12):=30+(p2dist x>30)*(p2dist x-30-(p2dist x-50)*(p2dist x>50))||fvar(13):=-40+p2dist y
+trigger27=0
+trigger27=fvar(12):=30+(p2dist x>30)*(p2dist x-30-(p2dist x-50)*(p2dist x>50))||fvar(13):=-70
+trigger28=anim=1200+anim%5
+trigger28=fvar(12):=30+(p2dist x>30)*(p2dist x-30-(p2dist x-50)*(p2dist x>50))||fvar(13):=-110+(p2dist y+20)*(p2dist y<-20)
+trigger29=0;anim=1200
+trigger29=fvar(12):=30+(p2dist x>30)*(p2dist x-30-(p2dist x-50)*(p2dist x>50))||fvar(13):=-110+(p2dist y+20)*(p2dist y<-20)
+trigger30=0;anim=1200&&animelem=17,>=0||(anim=1150||anim=1250)&&animelem=5,>=0
+trigger30=fvar(12):=30+(p2dist x>30)*(p2dist x-30-(p2dist x-50)*(p2dist x>50))||fvar(13):=-110+(p2dist y+20)*(p2dist y<-20)
+trigger31=anim=[1300,1351]
+trigger31=fvar(12):=30+(p2dist x>30)*(p2dist x-30-(p2dist x-85)*(p2dist x>85))||fvar(13):=-60-(95-p2dist x)*.4
+trigger32=anim=1400+anim%5
+trigger32=fvar(12):=(p2dist x>0)*(p2dist x-(p2dist x-95)*(p2dist x>95))||fvar(13):=-110+(95-p2dist x)*.4
+trigger33=anim=1500+anim%5
+trigger33=fvar(12):=30+(p2dist x>30)*(p2dist x-30-(p2dist x-70)*(p2dist x>70))||fvar(13):=-40-(70-p2dist x)*.5-(p2dist y+20)*(p2dist y<-20)
+trigger34=0;anim=1510
+trigger34=fvar(12):=(p2dist x>0)*(p2dist x-(p2dist x-75)*(p2dist x>75))||fvar(13):=-10
+trigger35=anim=[2000,2051]
+trigger35=fvar(12):=p2dist x||fvar(13):=-65+(p2dist y+65)*(p2dist y<-65)
+trigger36=anim=3000+anim%5
+trigger36=fvar(12):=p2dist x||fvar(13):=-130+(p2dist y+130)*(p2dist y<-130)
+;--------------ヒットスパーク小
+[state ]
+type=explod
+triggerall=movecontact=1
+trigger1=(anim=[200,216])||anim=220+anim%5||(anim=[400,411])
+trigger2=(anim=[600,611])
+id=6000+(moveguarded=1)*10
+anim=6000+(moveguarded=1)*10
+scale=.5,.5
+pos=floor(fvar(12)),floor(fvar(13))
+removetime=-2
+sprpriority=6
+ownpal=1
+trans=add
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=playsnd
+trigger1=movecontact=1
+trigger1=(anim=[200,206])||anim=400+anim%5
+value=s250-(moveguarded=1)*130,0
+[state ]
+type=playsnd
+trigger1=movecontact=1
+trigger1=(anim=[210,216])||anim=410+anim%5||(anim=[600,611])
+value=s250-(moveguarded=1)*130,1-(moveguarded=1)
+[state ]
+type=playsnd
+trigger1=movecontact=1
+trigger1=anim=220+anim%5
+value=s250-(moveguarded=1)*130,2-(moveguarded=1)*2
+[state ]
+type=playsnd
+trigger1=movecontact=1
+trigger1=(anim=[230,236])||(anim=[430,431])||(anim=[620,631])||(anim=[700,711])||(anim=[730,771])||anim=745+anim%5
+value=s250-(moveguarded=1)*130,3-(moveguarded=1)*3
+[state ]
+type=playsnd
+trigger1=movehit=1
+trigger1=anim=225+anim%5||anim=420+anim%5
+trigger2=anim=725+anim%5&&animelem=8
+value=s250,4
+[state ]
+type=null;playsnd
+trigger1=movecontact=1
+trigger1=anim=[1000,1501]
+value=s1050-(moveguarded=1)*830,1
+[state ]
+type=playsnd
+trigger1=moveguarded=1
+trigger1=anim=225+anim%5||anim=420+anim%5
+value=s120,2
+[state ]
+type=playsnd
+trigger1=movehit=1
+trigger1=(anim=[1000,1501])
+value=s250,2
+[state ]
+type=playsnd
+trigger1=movehit=1
+trigger1=(anim=[2000,2051])||anim=3000+anim%5
+value=s250,3
+[state ]
+type=playsnd
+trigger1=moveguarded=1
+trigger1=(anim=[1000,1501])||(anim=[2000,2051])||anim=3000+anim%5
+value=s120,3
+;--------------ヒットスパーク中
+[state ]
+type=explod
+triggerall=movecontact=1
+trigger1=(anim=[230-(moveguarded=1)*5,236])||anim=420+anim%5&&moveguarded||anim=430+anim%5||anim=[620,631]
+trigger2=(anim=[700,771])&&(anim!=[720,726])&&anim!=[740,746]
+id=6001+(moveguarded=1)*10
+anim=6001+(moveguarded=1)*10
+scale=.5,.5
+pos=floor(fvar(12)),floor(fvar(13))
+removetime=-2
+sprpriority=6
+ownpal=1
+trans=add
+supermovetime=99999
+pausemovetime=99999
+;--------------ヒットスパーク大
+[state ]
+type=helper
+triggerall=movehit=1
+trigger1=anim=[1000,1750]
+trigger2=anim=[2000,2051]
+trigger3=anim=3000+anim%5
+id=6000
+stateno=6000
+scale=.5,.5
+pos=floor(fvar(12)),floor(fvar(13))
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=explod
+triggerall=moveguarded=1
+trigger1=anim=[1000,1750]
+trigger2=anim=[2000,2051]
+trigger3=anim=3000+anim%5
+id=6012
+anim=6012
+scale=.5,.5
+pos=floor(fvar(12)),floor(fvar(13))
+removetime=-2
+sprpriority=6
+ownpal=1
+trans=add
+supermovetime=99999
+pausemovetime=99999
+;--------------切り裂きエフェクト
+[state ]
+type=helper
+trigger1=movehit=1
+trigger1=anim=225+anim%5||anim=420+anim%5||anim=3000+anim%5
+trigger2=anim=725+anim%5&&animelem=8
+trigger3=anim=745+anim%5&&animelem=7
+id=6020
+stateno=6020
+pos=floor(fvar(12)),floor(fvar(13))
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+;--------------カウンターヒット
+[state ]
+type=helper
+triggerall=var(4)
+trigger1=movehit=1&&(anim=[200,711])
+trigger2=0;movehit=1&&(anim=725)
+trigger3=movehit=1&&(anim=[730,771])&&anim!=745+anim%5
+trigger4=movehit=1&&(anim=[1000,1550])
+trigger5=movehit=1&&anim=[2000,2051]
+trigger6=anim=725+anim%5&&animelem=8
+id=6025
+stateno=6025
+pos=floor(fvar(12)),floor(fvar(13))
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=envshake
+triggerall=var(4)
+trigger1=movehit=1&&(anim=[200,711])
+trigger2=0
+trigger3=movehit=1&&(anim=[730,771])&&anim!=745+anim%5
+trigger4=movehit=1&&(anim=[1000,1550])
+trigger5=movehit=1&&anim=[2000,2051]
+trigger6=!projhittime(1450)||!projhittime(1451)||!projhittime(1550)||!projhittime(1551)||!projhittime(1650)||!projhittime(1651)||!projhittime(2205)
+trigger7=anim=725+anim%5&&animelem=8
+time=8
+ampl=9
+freq=75
+phase=90
+[state ]
+type=playsnd
+triggerall=var(4)
+trigger1=movehit=1&&(anim=[200,711])
+trigger2=0
+trigger3=movehit=1&&(anim=[730,771])&&anim!=745+anim%5
+trigger4=movehit=1&&(anim=[1000,1550])
+trigger5=movehit=1&&anim=[2000,2051]
+trigger6=!projhittime(1450)||!projhittime(1451)||!projhittime(1550)||!projhittime(1551)||!projhittime(1650)||!projhittime(1651)||!projhittime(2205)
+trigger7=anim=725+anim%5&&animelem=8
+value=250,10
+;volume=255
+[state ]
+type=explod
+triggerall=var(4)
+triggerall=teamside=1
+trigger1=movehit=1&&(anim=[200,711])
+trigger2=0
+trigger3=movehit=1&&(anim=[730,771])&&anim!=745+anim%5
+trigger4=movehit=1&&(anim=[1000,1550])
+trigger5=movehit=1&&anim=[2000,2051]
+trigger6=!projhittime(1450)||!projhittime(1451)||!projhittime(1550)||!projhittime(1551)||!projhittime(1650)||!projhittime(1651)||!projhittime(2205)
+trigger7=anim=725+anim%5&&animelem=8
+id=34051
+anim=34051
+scale=.5,.5
+postype=left
+pos=40,100
+bindtime=-1
+removetime=-2
+sprpriority=-2
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=explod
+triggerall=var(4)
+triggerall=teamside=2
+trigger1=movehit=1&&(anim=[200,711])
+trigger2=0
+trigger3=movehit=1&&(anim=[730,771])&&anim!=745+anim%5
+trigger4=movehit=1&&(anim=[1000,1550])
+trigger5=movehit=1&&anim=[2000,2051]
+trigger6=!projhittime(1450)||!projhittime(1451)||!projhittime(1550)||!projhittime(1551)||!projhittime(1650)||!projhittime(1651)||!projhittime(2205)
+trigger7=anim=725+anim%5&&animelem=8
+id=34051
+anim=34051
+scale=.5,.5
+postype=left
+pos=270,100
+bindtime=-1
+removetime=-2
+sprpriority=-2
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+;--------------ヒットストップ処理
+;初期化
+[state ]
+type=varadd
+trigger1=!movecontact
+var(1)=-(var(1)&1)-(var(1)&2)
+[state ]
+type=varset
+trigger1=movecontact=1
+trigger1=(anim=[200,206])||anim=400+anim%5||anim=600+anim%5||anim=3000+anim%5
+var(0)=9
+[state ]
+type=varset
+trigger1=movecontact=1
+trigger1=(anim=[210,216])||anim=410+anim%5||anim=610+anim%5
+var(0)=11+1*!!var(4)
+[state ]
+type=varset
+trigger1=movecontact=1
+trigger1=(anim=[220,226])||anim=420+anim%5||(anim=[1000,1101])||anim=[1400,1501]
+var(0)=12+2*!!var(4)
+[state ]
+type=varset
+triggerall=movecontact=1
+trigger1=(anim=[230,236])||anim=430+anim%5||anim=[620,631]
+trigger2=(anim=[700,780])&&(anim!=[720,726])&&(anim!=[740,746])||anim=[1200,1351]
+trigger3=anim=[2000,2051]
+var(0)=13+4*!!var(4)
+[state ]
+type=varset
+triggerall=movehit=1&&var(4)
+trigger1=anim=630+anim%5||anim=[2000,2051]
+var(0)=19
+[state ]
+type=null;varset
+trigger1=anim=725+anim%5||anim=745+anim%5
+var(0)=0
+[state ]
+type=varadd
+trigger1=movecontact=1||movereversed=1
+var(1)=!animelemtime(animelemno(0))
+[state ]
+type=varadd
+trigger1=movecontact=1||movereversed=1
+var(1)=2
+[state ]
+type=changeanim
+trigger1=var(0)>(var(1)&1)
+value=anim
+elem=animelemno(0)-!animelemtime(animelemno(0))
+;--------------カウンターヒット初期化
+[state ]
+type=varset
+trigger1=enemynear,stateno!=var(4)
+trigger1=(anim!=[720,726])&&anim!=[740,746]
+var(4)=0
+;--------------こっち向け
+[state ]
+type=targetfacing
+trigger1=numtarget
+trigger1=movehit=1||!projhittime(1010)||!projhittime(1011)||!projhittime(1012)||!projhittime(1013)
+value=-1+2*(facing*(enemynear,pos x-pos x)<0)
+;------------移動処理
+;--------反転
+[state ]
+type=varset
+trigger1=var(1)&4
+sysfvar(0)=-sysfvar(0)
+[state ]
+type=varset
+trigger1=var(1)&4
+sysfvar(1)=-sysfvar(1)
+[state ]
+type=varset
+trigger1=var(1)&4
+sysfvar(2)=-sysfvar(2)
+[state ]
+type=varset
+trigger1=var(1)&4
+sysfvar(3)=-sysfvar(3)
+[state ]
+type=varadd
+trigger1=1
+var(1)=-(var(1)&4)
+[state ]
+type=varset
+trigger1=movetype=h
+sysfvar(0)=vel x*(statetype=a)
+[state ]
+type=varset
+trigger1=movetype=h
+trigger2=movecontact&&((anim=[720,726])||anim=[740,746])
+sysfvar(1)=0
+[state ]
+type=varset
+trigger1=movetype=h
+trigger2=movecontact&&((anim=[720,726])||anim=[740,746])
+sysfvar(2)=0
+[state ]
+type=varset
+trigger1=movetype=h
+trigger2=movecontact&&((anim=[720,726])||anim=[740,746])
+sysfvar(3)=0
+[state ]
+type=varset
+trigger1=movetype=h
+sysfvar(4)=vel y
+[state ]
+type=posadd
+trigger1=movetype!=h
+trigger1=var(0)<=0
+trigger1=!(var(1)&8192)
+x=sysfvar(0)+sysfvar(1)+sysfvar(2)+sysfvar(3)
+y=sysfvar(4)
+[state ]
+type=velset
+trigger1=movetype!=h
+trigger1=var(0)<=0
+trigger1=!(var(1)&8192)
+x=sysfvar(0)+sysfvar(1)+sysfvar(2)+sysfvar(3)
+y=sysfvar(4)
+[state ]
+type=posfreeze
+trigger1=movetype!=h
+[state ]
+type=varadd
+trigger1=anim=800&&statetype=a&&pos y>=0
+var(1)=-(var(1)&256)-(var(1)&512)
+[state ]
+type=statetypeset
+trigger1=movetype!=h
+trigger1=var(0)<=0
+trigger1=statetype=a
+trigger1=pos y>=0
+statetype=s
+[state ]
+type=posset
+trigger1=movetype!=h
+trigger1=var(0)<=0
+trigger1=pos y>=0
+y=0
+;--------ジャンプ慣性
+[state ]
+type=varset
+trigger1=!(var(1)&8192)
+trigger1=var(0)<=0
+trigger1=statetype!=a||pos y>=0
+sysfvar(0)=0
+;--------ブースト
+[state ]
+type=varset
+trigger1=!(var(1)&8192)
+trigger1=var(0)<=0
+trigger1=stateno!=800
+sysfvar(1)=sysfvar(1)*.92*(abs(sysfvar(1))>=1)
+;--------移動専用
+[state ]
+type=varset
+trigger1=!(var(1)&8192)
+trigger1=var(0)<=0
+trigger1=anim!=[1000,1300]
+sysfvar(2)=sysfvar(2)*ifelse(statetype=a,.9,.8)*(abs(sysfvar(2))>=1)
+[state ]
+type=varset
+trigger1=!(var(1)&8192)
+trigger1=var(0)<=0
+trigger1=anim=[1000,1300]
+sysfvar(2)=sysfvar(2)*.86*(abs(sysfvar(2))>=1)
+;--------ヒットバック
+[state ]
+type=varset
+trigger1=!(var(1)&8192)
+trigger1=var(0)<=0
+sysfvar(3)=sysfvar(3)*.84*(abs(sysfvar(3))>=1)
+;--------重力
+[state ]
+type=varadd
+trigger1=!(var(1)&8192)
+trigger1=var(0)<=0
+trigger1=pos y<0
+sysfvar(4)=.6
+[state ]
+type=varset
+trigger1=movetype!=h
+trigger1=var(0)<=0
+trigger1=pos y>=0
+sysfvar(4)=0
+;-----通常ヒットバック
+[state ]
+type=varset
+trigger1=!(var(1)&256)
+trigger1=!(var(1)&1024)
+trigger1=!(var(1)&16384)
+trigger1=enemynear,backedgebodydist<=5||enemynear,frontedgebodydist<=5
+trigger1=movehit=1
+trigger1=anim!=430&&(anim!=[720,726])&&(anim!=[740,746])
+sysfvar(3)=ifelse(facing*(enemynear,pos x-pos x)>=0,-1,1)*abs(enemynear,gethitvar(xvel))*ifelse(sysvar(3)+sysvar(4),1+.1*(sysvar(3)+sysvar(4)),1)*ifelse(statetype=a,.9,1)
+[state ]
+type=varset
+trigger1=!(var(1)&256)
+trigger1=!(var(1)&1024)
+trigger1=var(1)&16384
+trigger1=enemynear,backedgebodydist<=5||enemynear,frontedgebodydist<=5
+trigger1=movehit=1
+trigger1=!sysfvar(3)
+sysfvar(3)=ifelse(facing*(enemynear,pos x-pos x)>=0,-1,1)*abs(enemynear,gethitvar(xvel))
+[state ]
+type=varset
+trigger1=enemynear,backedgebodydist<=5||enemynear,frontedgebodydist<=5
+trigger1=moveguarded=1
+sysfvar(3)=ifelse(facing*(enemynear,pos x-pos x)>=0,-.8,.8)*abs(enemynear,gethitvar(xvel))
+;-----グレイブヒットバック
+[state ]
+type=varset
+trigger1=var(1)&256
+trigger1=!(var(1)&1024)
+trigger1=anim>=600
+trigger1=anim!=750+anim%5
+trigger1=movehit=1
+trigger1=numtarget
+trigger1=target,statetype=a
+sysfvar(4)=-6
+[state ]
+type=varset
+trigger1=var(1)&256
+trigger1=!(var(1)&1024)
+trigger1=anim=1500+anim%5
+trigger1=movehit=1
+trigger1=numtarget
+trigger1=target,statetype=a
+sysfvar(4)=-8
+;-------バニヒットバック
+[state ]
+type=varadd
+trigger1=!(var(1)&65536)
+trigger1=enemynear,stateno=30765
+var(1)=65536
+[state ]
+type=varset
+trigger1=var(1)&1024
+trigger1=var(0)>0
+trigger1=movehit
+trigger1=(anim=[760,766])||anim=[710,711]
+trigger1=numtarget
+trigger1=target,backedgebodydist<=50||target,frontedgebodydist<=50
+sysfvar(3)=ifelse(facing*(enemynear,pos x-pos x)>=0,-1,1)*15
+[state ]
+type=varset
+trigger1=var(1)&1024
+trigger1=var(1)&65536
+trigger1=movehit=1
+sysfvar(3)=ifelse(facing*(enemynear,pos x-pos x)>=0,-1,1)*sysvar(3)*(2-(statetype=a)*.5)
+[state ]
+type=varadd
+trigger1=enemynear,stateno=[30760,30764]
+trigger2=!(var(1)&1024)
+var(1)=-(var(1)&65536)
+;---------ヒット数換算
+[state ]
+type=varset
+trigger1=!numtarget
+sysvar(3)=0
+[state ]
+type=varset
+trigger1=!numtarget
+sysvar(4)=var(53)
+[state ]
+type=varadd
+triggerall=!enemynear,hitfall||var(1)&1024||enemynear,stateno=735||anim=725+anim%5||anim=745+anim%5
+trigger1=movehit=1||!projhittime(0)
+sysvar(3)=1
+[state ]
+type=varadd
+triggerall=enemynear,hitfall&&!(var(1)&1024)
+triggerall=enemy,stateno!=735
+triggerall=anim!=725+anim%5&&anim!=745+anim%5
+trigger1=movehit=1||!projhittime(0)
+sysvar(4)=1
+[state ]
+type=varset
+trigger1=1
+fvar(0)=!!sysvar(4)*sysvar(4)*.1*enemynear,hitfall
+;-----コンボ補正
+[state ]
+type=null
+trigger1=!(sysvar(3)+sysvar(4))
+trigger1=fvar(10):=1&&0
+trigger2=sysvar(3)+sysvar(4)=1
+trigger2=fvar(10):=.8&&0
+trigger3=sysvar(3)+sysvar(4)=2
+trigger3=fvar(10):=.6&&0
+trigger4=sysvar(3)+sysvar(4)=3
+trigger4=fvar(10):=.55&&0
+trigger5=sysvar(3)+sysvar(4)=4
+trigger5=fvar(10):=.5&&0
+trigger6=sysvar(3)+sysvar(4)=5
+trigger6=fvar(10):=.45&&0
+trigger7=sysvar(3)+sysvar(4)=6
+trigger7=fvar(10):=.4&&0
+trigger8=sysvar(3)+sysvar(4)=7
+trigger8=fvar(10):=.35&&0
+trigger9=sysvar(3)+sysvar(4)=8
+trigger9=fvar(10):=.3&&0
+trigger10=sysvar(3)+sysvar(4)=9
+trigger10=fvar(10):=.25&&0
+trigger11=sysvar(3)+sysvar(4)=10
+trigger11=fvar(10):=.2&&0
+trigger12=sysvar(3)+sysvar(4)=11
+trigger12=fvar(10):=.15&&0
+trigger13=sysvar(3)+sysvar(4)=12
+trigger13=fvar(10):=.1&&0
+trigger14=sysvar(3)+sysvar(4)=13
+trigger14=fvar(10):=.08&&0
+trigger15=sysvar(3)+sysvar(4)>13
+trigger15=fvar(10):=.05&&0
+;-----コンボ補正(ヘブン)
+[state ]
+type=null
+triggerall=fvar(4)>=0
+trigger1=!(sysvar(3)+sysvar(4))
+trigger1=fvar(10):=.4&&0
+trigger2=sysvar(3)+sysvar(4)=1
+trigger2=fvar(10):=.5&&0
+trigger3=sysvar(3)+sysvar(4)=2
+trigger3=fvar(10):=.5&&0
+trigger4=sysvar(3)+sysvar(4)=3
+trigger4=fvar(10):=.6&&0
+trigger5=sysvar(3)+sysvar(4)=4
+trigger5=fvar(10):=.6&&0
+trigger6=sysvar(3)+sysvar(4)=5
+trigger6=fvar(10):=.7&&0
+trigger7=sysvar(3)+sysvar(4)=6
+trigger7=fvar(10):=.7&&0
+trigger8=sysvar(3)+sysvar(4)=7
+trigger8=fvar(10):=.8&&0
+trigger9=sysvar(3)+sysvar(4)=8
+trigger9=fvar(10):=.9&&0
+trigger10=sysvar(3)+sysvar(4)=9
+trigger10=fvar(10):=1&&0
+trigger11=sysvar(3)+sysvar(4)=10
+trigger11=fvar(10):=.9&&0
+trigger12=sysvar(3)+sysvar(4)=11
+trigger12=fvar(10):=.8&&0
+trigger13=sysvar(3)+sysvar(4)=12
+trigger13=fvar(10):=.7&&0
+trigger14=sysvar(3)+sysvar(4)=13
+trigger14=fvar(10):=.6&&0
+trigger15=sysvar(3)+sysvar(4)>13
+trigger15=fvar(10):=.5&&0
+;-----各種補正
+[state ]
+type=null
+trigger1=fvar(16):=1
+trigger1=(sysvar(4)||var(1)&16384)&&anim=[200,780]
+trigger1=fvar(16):=fvar(16)*.5&&0
+trigger2=var(1)&256&&anim=[1000,2000]
+trigger2=fvar(16):=fvar(16)*(.8-.1*(sysvar(3)+sysvar(4)>2)-.1*(sysvar(3)+sysvar(4)>5)-.1*(sysvar(3)+sysvar(4)>6))&&0
+trigger3=var(1)&1024&&anim=[200,780]
+trigger3=fvar(16):=fvar(16)*(.7-.1*(sysvar(3)>2)-.1*(sysvar(3)>5)-.1*(sysvar(3)>6))&&0
+trigger4=var(1)&1024&&anim=[1000,2000]
+trigger4=fvar(16):=fvar(16)*(.85-.25*(sysvar(3)>2)-.1*(sysvar(3)>5))&&0
+trigger5=var(1)&128
+trigger5=fvar(16):=fvar(16)*.8&&0
+trigger6=(enemynear,statetype=c||enemynear,statetype=a)
+trigger6=fvar(16):=fvar(16)*1.1&&0
+trigger7=var(4)
+trigger7=fvar(16):=fvar(16)*1.2&&0
+;trigger8=fvar(16):=fvar(16)*(1-.15*(enemynear,life<=enemynear,lifemax*.5)-.05*(enemynear,life<=enemynear,lifemax*.33)-.05*(enemynear,life<=enemynear,lifemax*.25))&&0
+;---------蓄積
+[state ]
+type=varset
+triggerall=var(1)&4194304
+trigger1=!enemynear,anim||(enemynear,anim=[10,12])
+trigger2=enemynear,movetype=h
+trigger2=enemynear,stateno=5000
+fvar(17)=0
+[state ]
+type=varadd
+trigger1=numtarget
+trigger1=sysvar(3)+sysvar(4)>0
+trigger1=movetype=a
+fvar(17)=ifelse(var(1)&256||var(1)&1024,.0002,.0004)
+[state ]
+type=varadd
+trigger1=var(1):=var(1)-(var(1)&4194304)||1
+trigger1=!enemynear,anim||enemynear,anim=[10,12]
+var(1)=4194304
+;------------ブースト
+[state ]
+type=varadd
+trigger1=roundstate=2&&!(var(1)&131072)
+trigger1=fvar(2)>=185||fvar(2)>=37&&var(1)&128
+trigger1=command="z"&&command!="holdback"
+trigger1=(anim=[200,720])||anim=730+anim%5||((anim=[720,723])||anim=740+anim%5)&&!movecontact||(anim=[750,766])||(anim=[1000,1201])||anim=1500+anim%5
+trigger1=var(0)>(var(1)&1)
+sysfvar(4)=2
+[state ]
+type=varset
+trigger1=roundstate=2&&!(var(1)&131072)
+trigger1=fvar(2)>=185||fvar(2)>=37&&var(1)&128
+trigger1=command="z"&&command!="holdback"
+trigger1=(anim=[200,720])||anim=730+anim%5||((anim=[720,723])||anim=740+anim%5)&&!movecontact||(anim=[750,766])||(anim=[1000,1701])
+trigger1=var(0)>(var(1)&1)
+var(0)=(var(1)&1)
+;---------初期化
+[state ]
+type=varadd
+trigger1=statetype!=a
+var(1)=-(var(1)&8)-(var(1)&16)
+;------------先行入力
+[state ]
+type=null
+triggerall=var(0)>0
+triggerall=roundstate=2&&!(var(1)&131072)
+trigger1=1||var(3):=(var(3)|(command="a"))
+trigger1=1||var(3):=(var(3)|(command="b")*2)
+trigger1=1||var(3):=(var(3)|(command="x")*4)
+trigger1=1||var(3):=(var(3)|(command="y")*8)
+trigger1=1||var(3):=(var(3)|(command="start")*16)
+trigger1=1||var(3):=(var(3)|(command="A+B")*32)
+trigger1=1||var(3):=(var(3)|(command="B+D")*64)
+trigger1=1||var(3):=(var(3)|(command="A+C")*128)
+trigger1=1||var(3):=(var(3)|(command="C+D")*256)
+trigger1=1||var(3):=(var(3)|(command="236A")*512)
+trigger1=1||var(3):=(var(3)|(command="623A")*1024)
+trigger1=1||var(3):=(var(3)|(command="214A")*2048)
+trigger1=1||var(3):=(var(3)|(command="623B")*4096)
+trigger1=1||var(3):=(var(3)|(command="236C")*8192)
+trigger1=1||var(3):=(var(3)|(command="623C")*16384)
+trigger1=1||var(3):=(var(3)|(command="214C")*32768)
+trigger1=1||var(3):=(var(3)|(command="236D")*65536)
+trigger1=1||var(3):=(var(3)|(command="2141236A")*131072)
+trigger1=1||var(3):=(var(3)|(command="214214C")*262144)
+trigger1=1||var(3):=(var(3)|(command="236236C")*524288)
+trigger1=1||var(3):=(var(3)|(command="236C+D")*1048576)
+trigger1=1||var(3):=(var(3)|(command="HJ")*2097152)
+trigger1=1||var(3):=(var(3)|(command="holdup")*4194304)
+trigger1=1||var(3):=(var(3)|(command="holdfwd")*8388608)
+trigger1=1||var(3):=(var(3)|(command="holddown")*16777216)
+[state ]
+type=varset
+trigger1=var(0)<0
+var(3)=0
+;------------リバーサル
+[state ]
+type=explod
+triggerall=prevstateno%10000=5120
+triggerall=teamside=1
+triggerall=!anim&&time=1
+trigger1=command="6A"||command="6B"
+trigger2=command="A+B"||command="B+D"||command="A+C"||command="C+D"
+trigger3=command="236A"||command="623A"||command="214A"
+trigger4=command="623B"||command="236C"||command="214C"
+trigger5=command="236D"||command="2141236A"||command="236236C"
+trigger6=command="214214C"||command="236C+D"
+id=34050
+anim=34050
+scale=.5,.5
+postype=left
+pos=40,120
+bindtime=-1
+removetime=-2
+sprpriority=-2
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=explod
+triggerall=prevstateno%10000=5120
+triggerall=teamside=2
+triggerall=!anim&&time=1
+trigger1=command="6A"||command="6B"
+trigger2=command="A+B"||command="B+D"||command="A+C"||command="C+D"
+trigger3=command="236A"||command="623A"||command="214A"
+trigger4=command="623B"||command="236C"||command="214C"
+trigger5=command="236D"||command="2141236A"||command="236236C"
+trigger6=command="214214C"||command="236C+D"
+id=34050
+anim=34050
+scale=.5,.5
+postype=left
+pos=270,120
+bindtime=-1
+removetime=-2
+sprpriority=-2
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=explod
+triggerall=prevstateno%10000=5120
+triggerall=!anim&&time=1
+trigger1=command="6A"||command="6B"
+trigger2=command="A+B"||command="B+D"||command="A+C"||command="C+D"
+trigger3=command="236A"||command="623A"||command="214A"
+trigger4=command="623B"||command="236C"||command="214C"
+trigger5=command="236D"||command="2141236A"||command="236236C"
+trigger6=command="214214C"||command="236C+D"
+id=34000
+anim=34000
+scale=.5,.5
+pos=0,0
+removetime=-2
+sprpriority=2
+trans=add
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+;------------movetype=h
+;-------起き上がり
+[state ]
+type=selfstate
+triggerall=alive
+triggerall=stateno=[5110,5111]
+trigger1=time>=10+20*(command="holddown")
+trigger2=time>=2
+trigger2=var(1)&67108864
+value=5120
+;-------受身
+[state ]
+type=selfstate
+trigger1=movetype=h&&hitfall&&canrecover&&hitshakeover
+trigger1=statetype=a&&stateno=5050&&alive&&pos y<=-15
+trigger1=command="a"||command="b"||command="x"||command="y"||command="z"
+value=5200
+;-------アーマー
+[state ]
+type=selfstate
+trigger1=alive&&movetype=h&&!time&&life>gethitvar(damage)
+trigger1=anim=1400+anim%5
+trigger1=anim=stateno
+trigger1=!(var(1)&2097152)
+trigger1=var(1):=var(1)+2097152
+value=anim
+[state ]
+type=selfstate
+trigger1=movetype=h
+trigger1=!time
+value=ifelse(gethitvar(guarded),150,5000+(statetype=c)*10+(statetype=a)*20+(statetype=s&&(gethitvar(type)=3||stateno=5070))*70+(statetype=l)*80)
+[state ]
+type=selfstate
+trigger1=!alive
+trigger1=stateno!=[5000,5150]
+value=5050
+;---------強制ニュートラル
+[state ]
+type=selfstate
+trigger1=var(1)&131072
+trigger1=(anim=[10,12])||(anim=[20,21])||(anim=[41,43])||anim=[130,132]
+value=ifelse((anim=[41,43])||statetype=a,50,0)
+;------------一撃必殺
+[state ]
+type=selfstate
+triggerall=fvar(1)<=0
+triggerall=var(0)<=0
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=statetype!=a
+triggerall=command="236C+D"
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])||anim=800
+trigger2=movecontact
+trigger2=(anim=[200,236])||anim=[400,431]
+value=3000+(fvar(4)>0)
+;------------究極奥義
+;------聖帝十字陵
+[state ]
+type=selfstate
+triggerall=fvar(8)<=0
+triggerall=var(0)<=0
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=power>=1000||power>=powermax/2
+triggerall=statetype!=a
+triggerall=command="236236C"
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])||anim=800
+trigger2=movecontact
+trigger2=(anim=[200,236])||anim=[400,431]
+value=2200+(fvar(4)>0)
+;追加入力
+[state ]
+type=varadd
+trigger1=!(var(1)&2048)
+trigger1=anim=2200+anim%5&&animelem=4,>0||anim=2202||anim=2210&&animelem=7,<0
+trigger1=command="623C"
+trigger1=power>=1000||power>=powermax/2
+var(1)=2048
+;------鳳凰呼闘塊天
+[state ]
+type=selfstate
+triggerall=var(0)<=0
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=power>=1000||power>=powermax/2
+triggerall=statetype!=a
+triggerall=command="214214C"
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])||anim=800
+trigger2=movecontact
+trigger2=(anim=[200,236])||anim=[400,431]
+value=2100
+;------彷翔十字鳳
+[state ]
+type=selfstate
+triggerall=var(0)<=0
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=power>=1000||power>=powermax/2
+triggerall=command="2141236A"
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[41,43])||(anim=[110,119])||(anim=[130,132])||anim=800
+trigger2=movecontact
+trigger2=(anim=[200,236])||(anim=[400,431])||anim=[600,631]
+trigger3=fvar(4)>0
+trigger3=anim=1301||anim=1351
+trigger3=animelem=8,>0
+value=2000+(statetype=a)*50+(fvar(4)>0)
+;------------ブースト
+[state ]
+type=removeexplod
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=fvar(2)>=185||fvar(2)>=37&&var(1)&128
+triggerall=command="z"&&command!="holdback"||(anim=710+anim%5||anim=[760,766])&&movehit&&var(0)<=0&&(command="holdfwd"||var(3)&8388608)&&var(1)&1024
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||(anim=[41,43])||(anim=[100,115])||(anim=[130,132])||anim=800
+trigger2=(anim=[200,720])||anim=730+anim%5||((anim=[720,723])||anim=740+anim%5)&&!movecontact||(anim=[750,766])||(anim=[1000,1701])
+id=6800
+[state ]
+type=explod
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=fvar(2)>=185||fvar(2)>=37&&var(1)&128
+triggerall=command="z"&&command!="holdback"||(anim=710+anim%5||anim=[760,766])&&movehit&&var(0)<=0&&(command="holdfwd"||var(3)&8388608)&&var(1)&1024
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||(anim=[41,43])||(anim=[100,115])||(anim=[130,132])||anim=800
+trigger2=(anim=[200,720])||anim=730+anim%5||((anim=[720,723])||anim=740+anim%5)&&!movecontact||(anim=[750,766])||(anim=[1000,1701])
+id=6800
+anim=6800
+scale=.5,.5
+pos=-5,-70
+trans=add
+removetime=-2
+ontop=1
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=varset
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=fvar(2)>=185||fvar(2)>=37&&var(1)&128
+triggerall=command="z"&&command!="holdback"||(anim=710+anim%5||anim=[760,766])&&movehit&&var(0)<=0&&(command="holdfwd"||var(3)&8388608)&&var(1)&1024
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||(anim=[41,43])||(anim=[100,115])||(anim=[130,132])||anim=800
+trigger2=(anim=[200,720])||anim=730+anim%5||((anim=[720,723])||anim=740+anim%5)&&!movecontact||(anim=[750,766])||(anim=[1000,1701])
+fvar(9)=288
+[state ]
+type=palfx
+trigger1=fvar(9)>0
+time=1
+add=256-floor(256-fvar(9)),256-floor(256-fvar(9)),256-floor(256-fvar(9))
+[state ]
+type=varadd
+trigger1=1
+fvar(9)=-32
+[state ]
+type=movehitreset
+triggerall=var(0)<(var(1)&1)
+trigger1=anim=1300&&animelem=8
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=fvar(2)>=185||fvar(2)>=37&&var(1)&128
+triggerall=command="z"&&command!="holdback"||(anim=710+anim%5||anim=[760,766])&&movehit&&var(0)<=0&&(command="holdfwd"||var(3)&8388608)&&var(1)&1024
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||(anim=[41,43])||(anim=[130,132])
+trigger2=anim=200+anim%5&&(movecontact||animelem=5,>=0)||anim=205+anim%5&&(movecontact||animelem=5,>=0)
+trigger3=anim=210+anim%5&&(movecontact||animelem=4,>=0)||anim=215+anim%5&&(movecontact||animelem=3,>=0)
+trigger4=anim=220+anim%5&&(movecontact||animelem=5,>=0)||anim=225+anim%5&&(movecontact||animelem=4,>=0)
+trigger5=anim=230+anim%5&&(movecontact||animelem=6,>=0)||anim=235+anim%5&&(movecontact||animelem=8,>=0)
+trigger6=anim=400+anim%5&&(movecontact||animelem=4,>=0)||anim=410+anim%5&&(movecontact||animelem=4,>=0)
+trigger7=anim=420+anim%5&&(movecontact||animelem=4,>=0)||anim=430+anim%5&&(movecontact||animelem=7,>=0)
+trigger8=anim=600+anim%5&&(movecontact||animelem=6,>=0)||anim=610+anim%5&&(movecontact||animelem=6,>=0)
+trigger9=anim=620+anim%5&&(movecontact||animelem=10,>=0)
+trigger10=anim=700+anim%5&&(movecontact||animelem=6,>=0)||anim=710+anim%5&&(movecontact||animelem=7,>=0)
+trigger11=anim=730+anim%5&&(movecontact||animelem=8,>=0)||anim=750+anim%5&&(movecontact||animelem=5,>=0)
+trigger12=anim=760+anim%5&&(movecontact||animelem=29,>=0)||anim=765+anim%5&&(movecontact||animelem=5,>=0)
+trigger13=anim=1000&&(animelem=7,>=0)||anim=1001&&(animelem=11,>=0)
+trigger14=anim=1100+anim%5&&(animelem=7,>=0)
+trigger15=anim=1200&&(movecontact||animelem=10,>=0)||anim=1201&&(movecontact||animelem=15,>=0)
+trigger16=(anim=1300||anim=1350)&&(movecontact&&animelem=8,>=0||animelem=9,>0)
+trigger17=(anim=1301||anim=1351)&&(movecontact&&animelem=9,>=0||animelem=10,>0)
+trigger18=anim=1400&&(movecontact||animelem=15,>0)||anim=1401&&(movecontact||animelem=10,>0)
+trigger19=anim=1500+anim%5&&(movecontact||animelem=11,>=0)
+value=800
+;------------移動ブースト
+[state ]
+type=varset
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=fvar(2)>=185||fvar(2)>=37&&var(1)&128
+triggerall=command="z"&&command!="holdback"
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||(anim=[41,43])||(anim=[100,115])||(anim=[130,132])
+trigger2=(anim=[200,720])||anim=730+anim%5||((anim=[720,723])||anim=740+anim%5)&&!movecontact||(anim=[750,766])||(anim=[1000,1701])
+sysfvar(1)=12
+[state ]
+type=varadd
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=fvar(2)>=185
+triggerall=!(var(1)&128)
+triggerall=command="z"&&command!="holdback"
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||(anim=[41,43])||(anim=[100,115])||(anim=[130,132])
+trigger2=(anim=[200,720])||anim=730+anim%5||((anim=[720,723])||anim=740+anim%5)&&!movecontact||(anim=[750,766])||(anim=[1000,1701])
+var(1)=128
+[state ]
+type=varadd
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=fvar(2)>=185||fvar(2)>=37&&var(1)&128
+triggerall=command="z"&&command!="holdback"
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||(anim=[41,43])||(anim=[100,115])||(anim=[130,132])
+trigger2=(anim=[200,720])||anim=730+anim%5||((anim=[720,723])||anim=740+anim%5)&&!movecontact||(anim=[750,766])||(anim=[1000,1701])
+fvar(2)=-37
+;------------必殺技
+;------投槍・強
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype!=a
+triggerall=command="623C"||var(3)&16384
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||(anim=[41,43])||(anim=[110,119])||(anim=[130,132])||anim=800
+trigger2=movecontact
+trigger2=(anim=[200,236])||(anim=[400,431])||(anim=[600,631])
+value=1700+(fvar(4)>0)
+;------投槍・弱
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype!=a
+triggerall=command="623A"||var(3)&1024
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||(anim=[41,43])||(anim=[110,119])||(anim=[130,132])||anim=800
+trigger2=movecontact
+trigger2=(anim=[200,236])||(anim=[400,431])||(anim=[600,631])
+value=1600+(fvar(4)>0)
+;------南斗爆星波
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype=a
+triggerall=!numhelper(1550)
+triggerall=command="214A"||var(3)&2048
+trigger1=(anim=[41,43])||(anim=[110,119])||anim=132||anim=800
+trigger2=movecontact
+trigger2=anim=[600,631]
+value=1500+(fvar(4)>0)
+;------極星十字衝破風
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype!=a
+triggerall=!numhelper(1450)
+triggerall=command="214A"||var(3)&4096
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])||anim=800
+trigger2=movecontact
+trigger2=(anim=[200,236])||anim=[400,431]
+value=1400+(fvar(4)>0)
+;------極星十字拳(不省)
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype!=a
+triggerall=command="236D"||var(3)&65536
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])||anim=800
+trigger2=movecontact
+trigger2=(anim=[200,236])||anim=[400,431]
+trigger3=anim=1100&&animelem=7,>0||anim=1200&&animelem=9,>0
+trigger4=anim=1101&&animelem=10,>0||anim=1201&&(animelem=14,>0)
+value=1300+(anim=[1100,1201])*50+(fvar(4)>0)
+;------極星十字拳(不媚・上段)
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype!=a
+triggerall=command="236C"||var(3)&8192
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])||anim=800
+trigger2=movecontact
+trigger2=(anim=[200,236])||anim=[400,431]
+trigger3=anim=1000&&animelem=6,>0
+trigger4=anim=1001&&animelem=10,>0
+value=1200+(fvar(4)>0)
+;------極星十字拳(不媚・下段)
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype!=a
+triggerall=command="236B"||var(3)&8192
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])||anim=800
+trigger2=movecontact
+trigger2=(anim=[200,236])||anim=[400,431]
+trigger3=anim=1000&&animelem=6,>0
+trigger4=anim=1001&&animelem=10,>0
+value=1100+(fvar(4)>0)
+;------極星十字拳(不退)
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype!=a
+triggerall=command="236A"||var(3)&512
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])||anim=800
+trigger2=movecontact
+trigger2=(anim=[200,236])||anim=[400,431]
+value=1000+(fvar(4)>0)
+;------挑発
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype!=a
+triggerall=command="start"||var(3)&16
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])||anim=800
+trigger2=anim=200&&(animelem=4,>0||movecontact)
+trigger3=anim=205&&(animelem=5,>0||movecontact)
+trigger4=anim=210&&(animelem=5,>0||movecontact)
+trigger5=anim=215&&(animelem=5,>0||movecontact)
+trigger6=anim=220&&(animelem=7,>0||movecontact)
+trigger7=anim=225&&(animelem=8,>0||movecontact)
+trigger8=anim=230&&(animelem=5,>0||movecontact)
+trigger9=anim=235&&(animelem=5,>0||movecontact)
+trigger10=anim=400&&(animelem=4,>0||movecontact)
+trigger11=anim=410&&(animelem=4,>0||movecontact)
+trigger12=anim=420&&(animelem=5,>0||movecontact)
+trigger13=anim=430&&(animelem=7,>0||movecontact)
+value=780
+;------------特殊技
+;------ガードキャンセル
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=power>=1000
+triggerall=statetype!=a
+triggerall=command="C+D"&&command="holdfwd"
+trigger1=stateno=[150,153]
+trigger1=movetype=h
+value=770
+;------バニシングストライク
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype!=a
+triggerall=command="C+D"||var(3)&256
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])||anim=800||(stateno=[200,430])&&animelem=2,<0
+trigger2=anim=200+anim%5&&(animelem=4,>0||movecontact)
+trigger3=anim=205+anim%5&&(animelem=5,>0||movecontact)
+trigger4=anim=210+anim%5&&(animelem=5,>0||movecontact)
+trigger5=anim=215+anim%5&&(animelem=5,>0||movecontact)
+trigger6=anim=220+anim%5&&(animelem=7,>0||movecontact)
+trigger7=anim=225+anim%5&&(animelem=8,>0||movecontact)
+trigger8=anim=230+anim%5&&(animelem=5,>0||movecontact)
+trigger9=anim=235+anim%5&&(animelem=5,>0||movecontact)
+trigger10=anim=400+anim%5&&(animelem=4,>0||movecontact)
+trigger11=anim=410+anim%5&&(animelem=4,>0||movecontact)
+trigger12=anim=420+anim%5&&(animelem=5,>0||movecontact)
+trigger13=anim=430+anim%5&&(animelem=7,>0||movecontact)
+value=760+(fvar(4)>0)
+;------グレイブシュート
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype!=a
+triggerall=command="A+C"||var(3)&128
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])||anim=800||(stateno=[200,430])&&animelem=2,<0
+trigger2=anim=200+anim%5&&(animelem=4,>0||movecontact)
+trigger3=anim=205+anim%5&&(animelem=5,>0||movecontact)
+trigger4=anim=210+anim%5&&(animelem=5,>0||movecontact)
+trigger5=anim=215+anim%5&&(animelem=5,>0||movecontact)
+trigger6=anim=220+anim%5&&(animelem=7,>0||movecontact)
+trigger7=anim=225+anim%5&&(animelem=8,>0||movecontact)
+trigger8=anim=230+anim%5&&(animelem=5,>0||movecontact)
+trigger9=anim=235+anim%5&&(animelem=5,>0||movecontact)
+trigger10=anim=400+anim%5&&(animelem=4,>0||movecontact)
+trigger11=anim=410+anim%5&&(animelem=4,>0||movecontact)
+trigger12=anim=420+anim%5&&(animelem=5,>0||movecontact)
+trigger13=anim=430+anim%5&&(animelem=7,>0||movecontact)
+value=750+(fvar(4)>0)
+;------掴み投げ
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype!=a
+triggerall=command="B+D"||var(3)&64
+triggerall=enemynear,movetype!=h&&!numtarget&&enemynear,statetype!=l
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])||anim=800||(stateno=[200,430])&&animelem=2,<0
+trigger2=anim=200+anim%5&&(animelem=4,>0||movecontact)
+trigger3=anim=205+anim%5&&(animelem=5,>0||movecontact)
+trigger4=anim=210+anim%5&&(animelem=5,>0||movecontact)
+trigger5=anim=215+anim%5&&(animelem=5,>0||movecontact)
+trigger6=anim=220+anim%5&&(animelem=7,>0||movecontact)
+trigger7=anim=225+anim%5&&(animelem=8,>0||movecontact)
+trigger8=anim=230+anim%5&&(animelem=5,>0||movecontact)
+trigger9=anim=235+anim%5&&(animelem=5,>0||movecontact)
+trigger10=anim=400+anim%5&&(animelem=4,>0||movecontact)
+trigger11=anim=410+anim%5&&(animelem=4,>0||movecontact)
+trigger12=anim=420+anim%5&&(animelem=5,>0||movecontact)
+trigger13=anim=430+anim%5&&(animelem=7,>0||movecontact)
+value=740+(fvar(4)>0)
+;------ヘヴィストライク
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype!=a
+triggerall=command="A+B"||var(3)&32
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])||anim=800||(stateno=[200,430])&&animelem=2,<0
+trigger2=anim=200+anim%5&&(animelem=4,>0||movecontact)
+trigger3=anim=205+anim%5&&(animelem=5,>0||movecontact)
+trigger4=anim=210+anim%5&&(animelem=5,>0||movecontact)
+trigger5=anim=215+anim%5&&(animelem=5,>0||movecontact)
+trigger6=anim=220+anim%5&&(animelem=7,>0||movecontact)
+trigger7=anim=225+anim%5&&(animelem=8,>0||movecontact)
+trigger8=anim=230+anim%5&&(animelem=5,>0||movecontact)
+trigger9=anim=235+anim%5&&(animelem=5,>0||movecontact)
+trigger10=anim=400+anim%5&&(animelem=4,>0||movecontact)
+trigger11=anim=410+anim%5&&(animelem=4,>0||movecontact)
+trigger12=anim=420+anim%5&&(animelem=5,>0||movecontact)
+trigger13=anim=430+anim%5&&(animelem=7,>0||movecontact)
+value=730+(fvar(4)>0)
+;------投げ
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype!=a
+triggerall=(command="holdfwd"||command="holdback")&&command!="holddown"&&command="x"
+triggerall=enemynear,movetype!=h&&!numtarget&&enemynear,statetype!=l&&enemynear,statetype!=a
+trigger1=p2bodydist x<=8
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100&&animelem=3,>0||(anim=[130,131])
+value=720+(command="holdback")+2*(fvar(4)>0)
+;------6B
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype!=a
+triggerall=((command="holdfwd"||var(3)&8388608)&&command!="holddown"&&(command="b"||var(3)&2)||command="6B")
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])||anim=800
+trigger2=anim=200+anim%5&&(animelem=4,>0||movecontact)
+trigger3=anim=205+anim%5&&(animelem=5,>0||movecontact)
+trigger4=anim=210+anim%5&&(animelem=5,>0||movecontact)
+trigger5=anim=215+anim%5&&(animelem=5,>0||movecontact)
+trigger6=anim=220+anim%5&&(animelem=7,>0||movecontact)
+trigger7=anim=225+anim%5&&(animelem=8,>0||movecontact)
+trigger8=anim=230+anim%5&&(animelem=5,>0||movecontact)
+trigger9=anim=235+anim%5&&(animelem=5,>0||movecontact)
+trigger10=anim=400+anim%5&&(animelem=4,>0||movecontact)
+trigger11=anim=410+anim%5&&(animelem=4,>0||movecontact)
+trigger12=anim=420+anim%5&&(animelem=5,>0||movecontact)
+trigger13=anim=430+anim%5&&(animelem=7,>0||movecontact)
+value=710+(fvar(4)>0)
+;------6A
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype!=a
+triggerall=((command="holdfwd"||var(3)&8388608)&&command!="holddown"&&(command="a"||var(3)&1)||command="6A")
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])||anim=800
+trigger2=anim=200+anim%5&&(animelem=4,>0||movecontact)
+trigger3=anim=205+anim%5&&(animelem=5,>0||movecontact)
+trigger4=anim=210+anim%5&&(animelem=5,>0||movecontact)
+trigger5=anim=215+anim%5&&(animelem=5,>0||movecontact)
+trigger6=anim=220+anim%5&&(animelem=7,>0||movecontact)
+trigger7=anim=225+anim%5&&(animelem=8,>0||movecontact)
+trigger8=anim=230+anim%5&&(animelem=5,>0||movecontact)
+trigger9=anim=235+anim%5&&(animelem=5,>0||movecontact)
+trigger10=anim=400+anim%5&&(animelem=4,>0||movecontact)
+trigger11=anim=410+anim%5&&(animelem=4,>0||movecontact)
+trigger12=anim=420+anim%5&&(animelem=5,>0||movecontact)
+trigger13=anim=430+anim%5&&(animelem=7,>0||movecontact)
+value=700+(fvar(4)>0)
+;------------通常技
+;------連打キャンセル
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+trigger1=(command="a"||var(3)&1)&&command!="holddown"
+trigger1=anim=200+anim%5&&p2bodydist x<=10&&(animelem=4,>0||movecontact)
+trigger2=(command="a"||var(3)&1)&&command!="holddown"
+trigger2=anim=205+anim%5&&p2bodydist x>10&&(animelem=5,>0||movecontact)
+trigger3=(command="b"||var(3)&2)&&command!="holddown"
+trigger3=anim=210+anim%5&&p2bodydist x<=10&&(animelem=5,>0||movecontact)
+trigger4=(command="b"||var(3)&2)&&command!="holddown"
+trigger4=anim=215+anim%5&&p2bodydist x>10&&(animelem=5,>0||movecontact)
+trigger5=(command="a"||var(3)&1)&&(command="holddown"||var(3)&16777216)
+trigger5=anim=400+anim%5&&(animelem=4,>0||movecontact)
+trigger6=(command="b"||var(3)&2)&&(command="holddown"||var(3)&16777216)
+trigger6=anim=410+anim%5&&(animelem=4,>0||movecontact)
+trigger7=(command="x"||var(3)&4)&&(command="holddown"||var(3)&16777216)
+trigger7=anim=420+anim%5&&movecontact
+value=240
+;------JD
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype=a
+triggerall=command="y"||var(3)&8
+trigger1=(anim=[41,43])||(anim=[110,119])||anim=132||anim=800
+trigger2=anim=600+anim%5&&(animelem=4,>0||movecontact)
+trigger3=anim=610+anim%5&&(animelem=7,>0||movecontact)
+trigger4=anim=620+anim%5&&(animelem=7,>0||movecontact)
+value=630+(fvar(4)>0)
+;------JC
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype=a
+triggerall=command="x"||var(3)&4
+trigger1=(anim=[41,43])||(anim=[110,119])||anim=132||anim=800
+trigger2=anim=600+anim%5&&(animelem=4,>0||movecontact)
+trigger3=anim=610+anim%5&&(animelem=7,>0||movecontact)
+value=620+(fvar(4)>0)
+;------JB
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype=a
+triggerall=command="b"||var(3)&2
+trigger1=(anim=[41,43])||(anim=[110,119])||anim=132||anim=800
+trigger2=anim=600+anim%5&&(animelem=4,>0||movecontact)
+value=610+(fvar(4)>0)
+;------JA
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype=a
+triggerall=command="a"||var(3)&1
+trigger1=(anim=[41,43])||(anim=[110,119])||anim=132||anim=800
+trigger2=palno=12
+trigger2=anim=610+anim%5&&(animelem=7,>0||movecontact)
+value=600+(fvar(4)>0)
+;------2D
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype!=a
+triggerall=(command="y"||var(3)&8)&&(command="holddown"||var(3)&16777216)
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])||anim=800
+trigger2=anim=200+anim%5&&(animelem=4,>0||movecontact)
+trigger3=anim=205+anim%5&&(animelem=5,>0||movecontact)
+trigger4=anim=210+anim%5&&(animelem=5,>0||movecontact)
+trigger5=anim=215+anim%5&&(animelem=5,>0||movecontact)
+trigger6=anim=220+anim%5&&(animelem=7,>0||movecontact)
+trigger7=anim=225+anim%5&&(animelem=8,>0||movecontact)
+trigger8=anim=230+anim%5&&(animelem=5,>0||movecontact)
+trigger9=anim=235+anim%5&&(animelem=5,>0||movecontact)
+trigger10=anim=400+anim%5&&(animelem=4,>0||movecontact)
+trigger11=anim=410+anim%5&&(animelem=4,>0||movecontact)
+trigger12=anim=420+anim%5&&(animelem=5,>0||movecontact)
+value=430+(fvar(4)>0)
+;------2C
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype!=a
+triggerall=(command="x"||var(3)&4)&&(command="holddown"||var(3)&16777216)
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])||anim=800
+trigger2=anim=200+anim%5&&(animelem=4,>0||movecontact)
+trigger3=anim=205+anim%5&&(animelem=5,>0||movecontact)
+trigger4=anim=210+anim%5&&(animelem=5,>0||movecontact)
+trigger5=anim=215+anim%5&&(animelem=5,>0||movecontact)
+trigger6=anim=220+anim%5&&(animelem=7,>0||movecontact)
+trigger7=anim=225+anim%5&&(animelem=8,>0||movecontact)
+trigger8=anim=400+anim%5&&(animelem=4,>0||movecontact)
+trigger9=anim=410+anim%5&&(animelem=4,>0||movecontact)
+trigger10=anim=420+anim%5&&(animelem=5,>0||movecontact)
+value=420+(fvar(4)>0)
+;------2B
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype!=a
+triggerall=(command="b"||var(3)&2)&&(command="holddown"||var(3)&16777216)
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])||anim=800
+trigger2=anim=200+anim%5&&(animelem=4,>0||movecontact)
+trigger3=anim=205+anim%5&&(animelem=5,>0||movecontact)
+trigger4=anim=210+anim%5&&(animelem=5,>0||movecontact)
+trigger5=anim=400+anim%5&&(animelem=4,>0||movecontact)
+trigger6=anim=410+anim%5&&(animelem=4,>0||movecontact)
+value=410+(fvar(4)>0)
+;------2A
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype!=a
+triggerall=(command="a"||var(3)&1)&&(command="holddown"||var(3)&16777216)
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])||anim=800
+trigger2=anim=200+anim%5&&(animelem=4,>0||movecontact)
+trigger3=anim=205+anim%5&&(animelem=5,>0||movecontact)
+trigger4=anim=210+anim%5&&(animelem=5,>0||movecontact)
+trigger5=anim=400+anim%5&&(animelem=4,>0||movecontact)
+trigger6=anim=410+anim%5&&(animelem=4,>0||movecontact)
+value=400+(fvar(4)>0)
+;------D
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype!=a
+triggerall=command="y"||var(3)&8
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])||anim=800
+trigger2=anim=200+anim%5&&(animelem=4,>0||movecontact)
+trigger3=anim=205+anim%5&&(animelem=5,>0||movecontact)
+trigger4=anim=210+anim%5&&(animelem=5,>0||movecontact)
+trigger5=anim=215+anim%5&&(animelem=5,>0||movecontact)
+trigger6=anim=220+anim%5&&(animelem=7,>0||movecontact)
+trigger7=anim=225+anim%5&&(animelem=8,>0||movecontact)
+trigger8=anim=230+anim%5&&(animelem=5,>0||movecontact)
+trigger9=anim=400+anim%5&&(animelem=4,>0||movecontact)
+trigger10=anim=410+anim%5&&(animelem=4,>0||movecontact)
+trigger11=anim=420+anim%5&&(animelem=5,>0||movecontact)
+value=230+(p2bodydist x>=40||anim=230+anim%5)*5+(fvar(4)>0)
+;------C
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype!=a
+triggerall=command="x"||var(3)&4
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])||anim=800
+trigger2=anim=200+anim%5&&(animelem=4,>0||movecontact)
+trigger3=anim=205+anim%5&&(animelem=5,>0||movecontact)
+trigger4=anim=210+anim%5&&(animelem=5,>0||movecontact)
+trigger5=anim=215+anim%5&&(animelem=5,>0||movecontact)
+trigger6=anim=220+anim%5&&(animelem=7,>0||movecontact)
+trigger7=anim=400+anim%5&&(animelem=4,>0||movecontact)
+trigger8=anim=410+anim%5&&(animelem=4,>0||movecontact)
+trigger9=anim=420+anim%5&&(animelem=5,>0||movecontact)
+value=220+(p2bodydist x>=40||anim=220+anim%5)*5+(fvar(4)>0)
+;------B
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype!=a
+triggerall=command="b"||var(3)&2
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])||anim=800
+trigger2=anim=200+anim%5&&(animelem=4,>0||movecontact)
+trigger3=anim=205+anim%5&&(animelem=5,>0||movecontact)
+trigger4=anim=210+anim%5&&(animelem=5,>0||movecontact)
+trigger5=anim=215+anim%5&&(animelem=5,>0||movecontact)
+trigger6=anim=400+anim%5&&(animelem=4,>0||movecontact)
+trigger7=anim=410+anim%5&&(animelem=4,>0||movecontact)
+value=210+(p2bodydist x>10)*5+(fvar(4)>0)
+;------A
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=statetype!=a
+triggerall=command="a"||var(3)&1
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])||anim=800
+trigger2=anim=200+anim%5&&(animelem=4,>0||movecontact)
+trigger3=anim=205+anim%5&&(animelem=5,>0||movecontact)
+trigger4=anim=400+anim%5&&(animelem=4,>0||movecontact)
+value=200+(p2bodydist x>10)*5+(fvar(4)>0)
+;---------空中ダッシュ
+[state ]
+type=selfstate
+trigger1=roundstate=2&&!(var(1)&131072)
+trigger1=var(0)<=0
+trigger1=command="JFF"
+trigger1=(anim=[41,43])||anim=132
+trigger1=pos y<=-60
+trigger1=(var(1)&16)=0
+value=110
+;---------空中バックダッシュ
+[state ]
+type=selfstate
+trigger1=roundstate=2&&!(var(1)&131072)
+trigger1=var(0)<=0
+trigger1=command="JBB"
+trigger1=(anim=[41,43])||anim=132
+trigger1=pos y<=-60
+trigger1=(var(1)&16)=0
+value=115
+;---------チェイスジャンプ
+[state ]
+type=selfstate
+trigger1=roundstate=2&&!(var(1)&131072)
+trigger1=var(0)<=0&&var(1)&256
+trigger1=statetype!=a
+trigger1=anim=220+anim%5||anim=750+anim%5||anim=800
+value=41
+;---------△ジャンプ
+[state ]
+type=selfstate
+trigger1=roundstate=2&&!(var(1)&131072)
+trigger1=var(0)<=0
+trigger1=anim=[41,43]
+trigger1=command="AJ"&&command="holdfwd"
+trigger1=backedgebodydist<=5
+trigger1=(var(1)&16)=0
+trigger1=pos y<=-60
+value=46
+;---------HJ
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=command="HJ"||var(3)&2097152
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])
+trigger2=movecontact&&anim=230+anim%5
+trigger3=palno=12
+trigger3=movecontact
+trigger3=(anim=[200,236])||anim=[400,431]
+trigger4=palno>9
+trigger4=movehit
+trigger4=anim=1400&&animelem=15,>0||anim=1401&&animelem=10,>0
+value=41
+;---------空中ジャンプ
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=!(var(1)&256)
+triggerall=command="AJ"||var(3)&4194304
+triggerall=(var(1)&8)+(var(1)&16)=0||anim=1500+anim%5
+trigger1=movecontact&&anim=630+anim%5
+trigger2=palno>9
+trigger2=movehit
+trigger2=(anim=1300||anim=1350)&&animelem=8,>0||(anim=1301||anim=1351)&&animelem=9,>0||anim=1500+anim%5&&animelem=10,>0&&palno=12
+value=47
+;---------空中ジャンプ
+[state ]
+type=selfstate
+trigger1=roundstate=2&&!(var(1)&131072)
+trigger1=var(0)<=0
+trigger1=(anim=[41,43])||anim=132
+trigger1=command="AJ"
+trigger1=(var(1)&8)+(var(1)&16)=0
+trigger1=pos y<=-60
+value=45
+;---------ジャンプ
+[state ]
+type=selfstate
+triggerall=roundstate=2&&!(var(1)&131072)
+triggerall=var(0)<=0
+triggerall=command="holdup"||var(3)&4194304
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])
+trigger2=movecontact&&anim=230+anim%5
+trigger3=palno=12
+trigger3=movecontact
+trigger3=(anim=[200,236])||anim=[400,431]
+trigger4=palno>9
+trigger4=movehit
+trigger4=anim=1400&&animelem=15,>0||anim=1401&&animelem=10,>0
+value=40
+;---------地上ダッシュ
+[state ]
+type=selfstate
+trigger1=roundstate=2&&!(var(1)&131072)
+trigger1=var(0)<=0
+trigger1=command="FF"
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||(anim=[130,131])||anim=780&&animelem=6,>0
+value=100
+;---------バックステップ
+[state ]
+type=selfstate
+trigger1=roundstate=2&&!(var(1)&131072)
+trigger1=var(0)<=0
+trigger1=command="BB"
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||(anim=[130,131])||anim=780&&animelem=6,>0
+value=105
+;---------ガード
+[state ]
+type=selfstate
+trigger1=roundstate=2&&!(var(1)&131072)
+trigger1=var(0)<=0
+trigger1=command="holdback"
+trigger1=inguarddist
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||(anim=[41,43])||anim=100&&animelem=3,>0||(anim=[130,132])
+value=130
+;---------屈み
+[state ]
+type=selfstate
+trigger1=roundstate=2&&!(var(1)&131072)
+trigger1=var(0)<=0
+trigger1=movetype!=h
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[130,131])
+trigger1=command="holddown"
+value=10
+;---------歩行
+[state ]
+type=selfstate
+trigger1=roundstate=2&&!(var(1)&131072)
+trigger1=var(0)<=0
+trigger1=movetype!=h
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||(anim=[130,131])
+trigger1=command="holdfwd"||command="holdback"
+value=20
+;---------ニュートラル
+[state ]
+type=selfstate
+trigger1=stateno=130
+trigger1=!anim||(anim=[10,12])||(anim=[20,21])||(anim=[41,43])
+trigger2=!time&&(stateno=10||stateno=40)
+value=ifelse((anim=[41,43])||statetype=a,50,0)
+;---------------------------------------------------------------
+[remap]
+x=y
+y=b
+z=z
+a=x
+b=a
+c=c
+s=s
+[defaults]
+command.time=15
+command.buffer.time=1
+[command]
+name="236C+D"
+command=~D,DF,F,x+y
+buffer.time=5
+[command]
+name="214214C"
+command=~D,DB,B,D,DB,B,x
+time=25
+buffer.time=5
+[command]
+name="236236C"
+command=~D,DF,F,D,DF,F,x
+time=25
+buffer.time=5
+[command]
+name="2141236A"
+command=~D,DB,B,DB,D,DF,F,a
+time=25
+buffer.time=5
+[command]
+name="236D"
+command=~D,DF,F,y
+buffer.time=5
+[command]
+name="214C"
+command=~D,DB,B,x
+buffer.time=5
+[command]
+name="623C"
+command=~F,D,DF,x
+buffer.time=5
+[command]
+name="236C"
+command=~D,DF,F,x
+buffer.time=5
+[command]
+name="623B"
+command=~F,D,DF,b
+buffer.time=5
+[command]
+name="236B"
+command=~D,DF,F,b
+buffer.time=5
+[command]
+name="214A"
+command=~D,DB,B,a
+buffer.time=5
+[command]
+name="623A"
+command=~F,D,DF,a
+buffer.time=5
+[command]
+name="236A"
+command=~D,DF,F,a
+buffer.time=5
+[command]
+name="holdC+D"
+command=/x+y
+[command]
+name="C+D"
+command=x+y
+buffer.time=5
+[command]
+name="A+C"
+command=a+x
+buffer.time=5
+[command]
+name="B+D"
+command=b+y
+buffer.time=5
+[command]
+name="A+B"
+command=a+b
+buffer.time=5
+[command]
+name="6A"
+command=/F,a
+time=1
+buffer.time=5
+[command]
+name="6B"
+command=/F,b
+time=1
+buffer.time=5
+[command]
+name="AJ"
+command=$U
+time=1
+[command]
+name="HJ"
+command=~D,$U
+[command]
+name="JFF"
+command=~F,F
+time=5
+buffer.time=10
+[command]
+name="JFF2"
+command=~UF,UF
+time=5
+buffer.time=10
+[command]
+name="JBB"
+command=~B,B
+time=5
+buffer.time=10
+[command]
+name="JBB2"
+command=~UB,UB
+time=5
+buffer.time=10
+[command]
+name="FF"
+command=F,F
+time=10
+[command]
+name="BB"
+command=B,B
+time=10
+[command]
+name="recovery"
+command=x+y
+time=1
+[command]
+name="holdE"
+command=/z
+[command]
+name="fwd"
+command=F
+time=1
+[command]
+name="down"
+command=D
+time=1
+[command]
+name="back"
+command=B
+time=1
+[command]
+name="up"
+command=U
+time=1
+[command]
+name="a"
+command=a
+time=1
+[command]
+name="b"
+command=b
+time=1
+[command]
+name="c"
+command=c
+time=1
+[command]
+name="x"
+command=x
+time=1
+[command]
+name="y"
+command=y
+time=1
+[command]
+name="z"
+command=z
+time=1
+[command]
+name="start"
+command=s
+time=1
+[command]
+name="holdfwd"
+command=/$F
+time=1
+[command]
+name="holdback"
+command=/$B
+time=1
+[command]
+name="holdup"
+command=/$U
+time=1
+[command]
+name="holddown"
+command=/$D
+time=1
+[command]
+name="AI0"
+command=a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a
+time=0
+[command]
+name="AI1"
+command=b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b
+time=0
+[command]
+name="AI2"
+command=c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c
+time=0
+[command]
+name="AI3"
+command=x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x
+time=0
+[command]
+name="AI4"
+command=y,y,y,y,y,y,y,y,y,y,y,y,y,y,y,y,y,y,y
+time=0
+[command]
+name="AI5"
+command=z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,z
+time=0
+[command]
+name="AI6"
+command=s,s,s,s,s,s,s,s,s,s,s,s,s,s,s,s,s,s,s
+time=0
+[command]
+name="AI7"
+command=F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F
+time=0
+[command]
+name="AI8"
+command=D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D
+time=0
+[command]
+name="AI9"
+command=B,B,B,B,B,B,B,B,B,B,B,B,B,B,B,B,B,B,B
+time=0
+[command]
+name="AI10"
+command=U,U,U,U,U,U,U,U,U,U,U,U,U,U,U,U,U,U,U
+time=0
+[command]
+name="AI11"
+command=a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a
+time=0
+[command]
+name="AI12"
+command=c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c
+time=0
+[command]
+name="AI13"
+command=x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x
+time=0
+[command]
+name="AI14"
+command=y,y,y,y,y,y,y,y,y,y,y,y,y,y,y,y,y,y,y
+time=0
+[command]
+name="AI15"
+command=z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,z
+time=0
+[command]
+name="AI16"
+command=s,s,s,s,s,s,s,s,s,s,s,s,s,s,s,s,s,s,s
+time=0
+[command]
+name="AI17"
+command=a,B,c,x,y,z,s,B,D,F,U,a,b,c,x,y,z,s,s
+time=0
+[command]
+name="AI18"
+command=a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a
+time=0
+[command]
+name="AI19"
+command=b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b
+time=0
+[command]
+name="AI20"
+command=c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c
+time=0
+[command]
+name="AI21"
+command=x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x
+time=0
+[command]
+name="AI22"
+command=y,y,y,y,y,y,y,y,y,y,y,y,y,y,y,y,y,y,y
+time=0
+[command]
+name="AI23"
+command=z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,z
+time=0
+[command]
+name="AI24"
+command=s,s,s,s,s,s,s,s,s,s,s,s,s,s,s,s,s,s,s
+time=0
+[command]
+name="AI25"
+command=F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F
+time=0
+[command]
+name="AI26"
+command=D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D
+time=0
+[command]
+name="AI27"
+command=B,B,B,B,B,B,B,B,B,B,B,B,B,B,B,B,B,B,B
+time=0
+[command]
+name="AI28"
+command=U,U,U,U,U,U,U,U,U,U,U,U,U,U,U,U,U,U,U
+time=0
+[command]
+name="AI29"
+command=a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a
+time=0
+[command]
+name="AI30"
+command=c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c
+time=0
+[command]
+name="AI31"
+command=x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x
+time=0
+[command]
+name="AI32"
+command=y,y,y,y,y,y,y,y,y,y,y,y,y,y,y,y,y,y,y
+time=0
+[command]
+name="AI33"
+command=z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,z
+time=0
+[command]
+name="AI34"
+command=s,s,s,s,s,s,s,s,s,s,s,s,s,s,s,s,s,s,s
+time=0
+[command]
+name="AI35"
+command=z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,z
+time=0
+[command]
+name="AI36"
+command=z,z,z,z,z,z,a,a,a,z,z,z,z,z,z,z,z,z,z
+time=0
+[command]
+name="AI37"
+command=z,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,z,z,z
+time=0
+[command]
+name="AI38"
+command=z,z,z,z,z,a,a,a,z,z,z,z,z,a,a,a,z,z,z
+time=0
+[command]
+name="AI39"
+command=z,z,z,z,z,a,a,a,z,z,z,z,z,z,a,a,z,z,z
+time=0
+[command]
+name="AI40"
+command=z,z,z,z,a,a,a,z,z,z,z,a,z,z,a,a,z,z,z
+time=0
+[command]
+name="AI41"
+command=z,z,z,a,z,z,z,z,z,z,z,z,z,a,a,z,z,z,z
+time=0
+[command]
+name="AI42"
+command=z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,z
+time=0
+[command]
+name="AI43"
+command=z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,z,a,a,z
+time=0
+[command]
+name="AI44"
+command=z,z,a,a,a,a,z,z,z,z,z,z,z,z,z,a,a,a,z
+time=0
+[command]
+name="AI45"
+command=z,z,z,z,z,z,a,a,z,z,z,z,z,a,a,a,a,z,z
+time=0
+[command]
+name="AI46"
+command=z,z,z,z,z,z,z,z,a,a,a,a,a,a,z,z,z,z,z
+time=0
+[command]
+name="AI47"
+command=z,z,z,a,a,a,a,z,z,z,z,z,z,z,z,z,z,z,z
+time=0
+[command]
+name="AI48"
+command=z,z,z,z,z,a,a,a,z,z,z,a,a,a,z,z,a,z,a
+time=0
+[command]
+name="AI49"
+command=z,z,z,z,a,a,a,z,z,z,z,z,a,a,a,z,z,z,z
+time=0
+[command]
+name="AI50"
+command=z,z,z,a,a,z,z,z,z,z,z,z,z,z,a,a,z,z,z
+time=0

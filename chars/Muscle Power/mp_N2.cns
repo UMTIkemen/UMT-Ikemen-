@@ -1,0 +1,1995 @@
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; 投げ掴みモーション
+[Statedef 800]
+type    = S
+movetype= A
+physics = S
+juggle  = 0
+velset = 0,0
+ctrl = 0
+;anim = 800+(command="holddown")
+facep2 = (prevstateno!=40)
+
+[State 900, ステート変更]
+type = ChangeState
+Trigger1 = time = 0
+Trigger1 = prevstateno = 40
+Trigger1 = anim = 40
+Trigger1 = animtime = 0
+value = 40
+
+[State -1, Varset]
+type = Varset
+trigger1 = Time = 0
+var(55) = 0
+
+[State -2, ChangeAnim]
+type = ChangeAnim
+trigger1 = time = 0
+trigger1 = anim != 40
+value = 800+(command="holddown")
+
+[State 800, Hi to Lo]
+type = StateTypeSet
+trigger1 = command = "holddown"
+statetype = C
+physics = C
+
+[State -3, Width]
+type = Width
+trigger1 = statetype = C
+value = 5,0
+
+[State -2, varset]
+type = varset
+trigger1 = Time = 0
+var(11) = ifelse(prevstateno=40,40,ifelse(command = "holddown",420,221))
+
+[State 800, 1]
+type = HitDef
+trigger1 = time = 0
+trigger1 = P2BodyDist X = [-20,17]
+trigger1 = p2movetype != H
+trigger1 = p2stateno != 40
+trigger1 = p2stateno != [150,155]
+attr = S, NT
+hitflag = M-
+guard.dist = 0
+priority = 1, Miss
+sparkno = -1
+p1facing = 1
+p2facing = 1
+p1stateno = ifelse(Command = "holdback"||Command = "holdup",860,ifelse(Command = "holddown",880,810))
+;p2stateno = ifelse(Command = "holdback"||Command = "holdup",870,ifelse(Command = "holddown",890,820))
+hitsound = -1;S800,0
+getpower = 0
+givepower = 0
+ID = 800
+
+[State 800, ステート変更]
+type = ChangeState
+Trigger1 = Time = 1
+value = var(11)
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; ヘッドバット(投げた側)
+[Statedef 810]
+type    = S
+movetype= A
+physics = N
+anim = 810
+SprPriority = 2
+
+[State -2, TargetState]
+type = TargetState
+Trigger1 = time = 0
+value = 820
+
+[State 810, SprPriority]
+type = SprPriority
+trigger1 = animelem = 4
+value = 0
+
+[State 810, VarSet]
+type = VarSet
+trigger1 = time = 0
+var(12) = 0
+
+[State 810, Throw Reversal]
+type = VarSet
+Triggerall = fvar(8)
+Triggerall = animelemtime(2) < 0
+Trigger1 = (target,Command = "holdfwd") || (target,Command = "holdback") 
+Trigger1 = (target,Command = "y") || (target,Command = "z") || (target,Command = "b") || (target,Command = "c")
+var(12) = 1
+persistent = 0
+
+[State 810, ChangeState]
+type = ChangeState
+trigger1 = animelemtime(2) = 0
+trigger1 = var(12) = 1
+value = 830
+
+[State 1200, 9]
+type = Width
+trigger1 = 1
+edge = 60,0
+
+[State 810, Playerpush]
+type = Playerpush
+trigger1 = 1
+value = 0
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 1
+pos = ceil(60*const(size.xscale)), 0
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 2
+pos = ceil(60*const(size.xscale)), 0
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 3
+pos = ceil(30*const(size.xscale)), 0
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 4
+pos = ceil(45*const(size.xscale)), ceil(-85*const(size.yscale))
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 5
+pos = ceil(40*const(size.xscale)), ceil(-75*const(size.yscale))
+
+[State -2, EnvShake]
+type = EnvShake
+trigger1 = AnimElem = 5
+time = 15
+ampl = 4
+freq = 90
+
+[State -2, TargetLifeadd]
+type = TargetLifeadd
+trigger1 = AnimElem = 5
+value = ceil(-270*fvar(3)*fvar(4)*(const(data.attack)*0.01))
+
+[State -2, PowerAdd]
+type = PowerAdd
+trigger1 = AnimElem = 5
+value = 160
+
+[State -2, TargetPowerAdd]
+type = TargetPowerAdd
+trigger1 = AnimElem = 5
+value = 80
+
+[State 810, 6]
+type = PlaySnd
+trigger1 = AnimElem = 2
+value = S800,0
+
+[State 810, 6]
+type = PlaySnd
+trigger1 = AnimElemTime(2) = 4
+value = S3000,0
+channel = 0
+
+[State 810, Explod]
+type = Explod
+trigger1 = AnimElem = 5
+ID = 8020
+anim = 8020
+postype = p1
+pos = 40,-75
+persistent = 0
+velocity = 0, 0
+accel = 0, 0
+sprpriority = 10
+ownpal = 1
+
+[State -2, EnvShake]
+type = EnvShake
+trigger1 = AnimElemTime(5) = 0
+time = 15
+ampl = 4
+freq = 90
+
+[State 810, 6]
+type = PlaySnd
+trigger1 = AnimElem = 5
+value = S2,6
+
+[State 810, TargetState]
+type = TargetState
+trigger1 = AnimTime = 0
+value = 821
+
+[State 810, State End]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 0
+ctrl = 1
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; ヘッドバット(投げられた側)
+[Statedef 820]
+type    = S
+movetype= H
+physics = N
+ctrl = 0
+SprPriority = 1
+
+[State -2, ScreenBound]
+type = ScreenBound
+trigger1 = 1
+value = 1
+movecamera = 1,0
+
+[State 820, ChangeAnim2]
+type = ChangeAnim2
+Trigger1 = Time = 0
+value = 820
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; ヘッドバット(投げられた側)
+[Statedef 821]
+type    = A
+movetype= H
+physics = N
+ctrl = 0
+
+[State 820, posset]
+type = posset
+Trigger1 = Time = 0
+y = 0
+
+[State -2, nothitby]
+type = nothitby
+Trigger1 = 1
+value = SCA
+
+[State 820, ChangeAnim2]
+type = ChangeAnim
+Trigger1 = Time = 0
+value = 5030
+
+[State 820, ChangeAnim2]
+type = ChangeAnim
+trigger1 = SelfAnimExist(5035)
+Trigger1 = anim = 5030
+Trigger1 = AnimTime = 0
+value = 5035
+
+[State 820, ChangeAnim2]
+type = ChangeAnim
+trigger1 = SelfAnimExist(5035)
+Trigger1 = anim = 5035
+Trigger1 = AnimTime = 0
+trigger2 = !SelfAnimExist(5035)
+Trigger2 = anim = 5030
+Trigger2 = AnimTime = 0
+value = 5050
+
+[State 5050, 2]
+type = ChangeAnim
+trigger1 = anim = 5050
+trigger1 = Vel Y >= 1
+trigger1 = SelfAnimExist(anim+10)
+value = anim+10
+persistent = 0
+
+[State 5030, 2]
+type = VelSet
+trigger1 = Time = 0
+x = -3.0
+y = -4.0
+
+[State 5030, 1]
+type = veladd
+trigger1 = 1
+y = .30
+
+[State 5030, 4]
+type = SelfState
+trigger1 = time > 0
+trigger1 = Vel Y > 0
+trigger1 = Pos Y >= 25
+value = 5100
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+;投げ失敗(投げた側)
+[Statedef 830]
+type    = S
+movetype= I
+physics = S
+anim = 830
+ctrl = 0
+velset = 0,0
+
+[STate 3000]
+type = NotHitby
+trigger1 = 1
+value = SAC
+
+[State 830, 音を鳴らす]
+type = PlaySnd
+trigger1 = time = 0
+value = 420, 0
+
+[State 830, 音を鳴らす]
+type = PlaySnd
+trigger1 = time = 1
+value = 5000, 0
+channel = 0
+
+[State 810, Explod]
+type = Explod
+trigger1 = time = 0
+ID = 8100
+anim = 8100
+postype = p1
+pos = 60,-75
+persistent = 0
+velocity = 0, 0
+accel = 0, 0
+sprpriority = 10
+ownpal = 1
+
+[State 830, TargetState]
+type = TargetState
+trigger1 = time = 0
+value = 840
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 1
+pos = 100, 0
+
+[State 830, velset]
+type = velset
+trigger1 = time = 0
+x = -6.0
+
+[State 830, velset]
+type = velmul
+trigger1 = 1
+x = .99
+
+[State 830, velset]
+type = velset
+trigger1 = time = 25
+x = 0
+
+[State 830, ChangeState]
+type = ChangeState
+trigger1 = Animtime = 0
+value = ifelse(command="holddown",11,0)
+ctrl = 1
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+;投げ失敗(投げられた側)
+[Statedef 840]
+type    = S
+movetype= H
+physics = S
+ctrl = 0
+velset = 0,0
+
+[STate 840, NotHitby]
+type = NotHitby
+trigger1 = 1
+value = SAC
+
+[State 840, selfstate]
+type = null;selfstate
+Trigger1 = time = 0
+trigger1 = authorname = "GM"
+trigger1 = name = "Ryu" || name = "Ken" || name = "Gouki" || name = "Alex" || name = "Hugo"
+value = 850
+
+[State 840,ChangeAnim];クリエーターズジャパン指定anim
+type = ChangeAnim
+triggerall = Time = 0
+triggerall = SelfAnimExist(5940)
+trigger1 = authorname = "H”" || authorname = "Warusaki3" || authorname = "M.M.R."
+trigger2 = authorname = "Mouser" || authorname = "Nyankoro" || authorname = "ryokucha"
+trigger3 = authorname = "Bad Darkness" || authorname = "Third" || authorname = "adamskie"
+value = 5940
+
+[State 840, ChangeAnim]
+type = ChangeAnim
+Trigger1 = anim != 5940
+value = 130
+
+[State 840, velset]
+type = velset
+trigger1 = time = 0
+x = -4.0
+
+[State 830, velset]
+type = velmul
+trigger1 = 1
+x = .99
+
+[State 840, SelfState]
+type = SelfState
+trigger1 = time = 30
+value = 0
+ctrl = 1
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; ブレーンバスター(投げた側)
+[Statedef 860]
+type    = S
+movetype= A
+physics = N
+anim = 860
+SprPriority = 1
+
+[State -2, TargetState]
+type = TargetState
+Trigger1 = time = 0
+value = 870
+
+[State 810, VarSet]
+type = VarSet
+trigger1 = time = 0
+var(12) = 0
+
+[State 810, Throw Reversal]
+type = VarSet
+Triggerall = fvar(8)
+Triggerall = animelemtime(2) < 0
+Trigger1 = (target,Command = "holdfwd") || (target,Command = "holdback") 
+Trigger1 = (target,Command = "y") || (target,Command = "z") || (target,Command = "b") || (target,Command = "c")
+var(12) = 1
+persistent = 0
+
+[State 810, ChangeState]
+type = ChangeState
+trigger1 = animelemtime(2) = 0
+trigger1 = var(12) = 1
+value = 830
+
+[State 1200, 9]
+type = Width
+trigger1 = animelemtime(7) < 0
+edge = 60,0
+
+[State 1200, 9]
+type = Width
+trigger1 = animelemtime(7) >= 0
+edge = 60,80
+
+[State 810, Playerpush]
+type = Playerpush
+trigger1 = 1
+value = 0
+
+[State 810, posadd]
+type = posadd
+trigger1 = AnimElem = 8
+x = ceil(-30*const(size.xscale))
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 1
+pos = ceil(60*const(size.xscale)), 0
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 2
+pos = ceil(60*const(size.xscale)), 0
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 3
+pos = ceil(30*const(size.xscale)), 0
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 4
+pos = ceil(30*const(size.xscale)), 0
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 5
+pos = ceil(30*const(size.xscale)), ceil(-70*const(size.yscale))
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 6
+pos = ceil(-10*const(size.xscale)), ceil(-140*const(size.yscale))
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 7
+pos = ceil(-100*const(size.xscale)), ceil(-70*const(size.yscale))
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElemTime(8) = 0
+pos = ceil(-90*const(size.xscale)), 0
+
+[State -2, EnvShake]
+type = EnvShake
+trigger1 = AnimElemTime(8) = 0
+time = 20
+ampl = 4
+freq = 60
+
+[State -2, TargetLifeadd]
+type = TargetLifeadd
+trigger1 = AnimElem = 8
+value = ceil(-270*fvar(3)*fvar(4)*(const(data.attack)*0.01))
+
+[State -2, PowerAdd]
+type = PowerAdd
+trigger1 = AnimElem = 8
+value = 160
+
+[State -2, TargetPowerAdd]
+type = TargetPowerAdd
+trigger1 = AnimElem = 8
+value = 80
+
+[State 810, 6]
+type = PlaySnd
+trigger1 = AnimElem = 2
+value = S800,0
+
+[State -2, 音を鳴らす]
+type = PlaySnd
+trigger1 = animelem = 4
+value = 0,2
+channel = 0
+
+[State 810, 6]
+type = PlaySnd
+trigger1 = AnimElem = 8
+value = S2,7
+
+[State 810, State End]
+type = ChangeState
+triggerall = var(59) = 1
+triggerall = AnimElemTime(6) = 19
+trigger1 = var(50) = 0
+trigger1 = command = "holddown"
+trigger2 = var(50) = 1
+trigger2 = random < 500
+value = 865
+
+[State 810, State End]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 0
+ctrl = 1
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; ブレーンバスター(投げられた側)
+[Statedef 870]
+type    = S
+movetype= H
+physics = N
+ctrl = 0
+SprPriority = 0
+
+[State 820, ChangeAnim2]
+type = ChangeAnim2
+Trigger1 = Time = 0
+value = 870
+
+[State 5030, 4]
+type = ChangeState
+trigger1 = animtime = 0
+value = 871
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; ブレーンバスター(投げられた側)
+[Statedef 871]
+type    = A
+movetype= H
+physics = N
+ctrl = 0
+
+[State 820, posset]
+type = posset
+Trigger1 = Time = 0
+y = 0
+
+[State -2, nothitby]
+type = nothitby
+Trigger1 = 1
+value = SCA
+
+[State 820, ChangeAnim2]
+type = ChangeAnim
+Trigger1 = Time = 0
+value = 5030
+
+[State 820, ChangeAnim2]
+type = ChangeAnim
+trigger1 = SelfAnimExist(5035)
+Trigger1 = anim = 5030
+Trigger1 = AnimTime = 0
+value = 5035
+
+[State 820, ChangeAnim2]
+type = ChangeAnim
+trigger1 = SelfAnimExist(5035)
+Trigger1 = anim = 5035
+Trigger1 = AnimTime = 0
+trigger2 = !SelfAnimExist(5035)
+Trigger2 = anim = 5030
+Trigger2 = AnimTime = 0
+value = 5050
+
+[State 5050, 2]
+type = ChangeAnim
+trigger1 = anim = 5050
+trigger1 = Vel Y >= 1
+trigger1 = SelfAnimExist(anim+10)
+value = anim+10
+persistent = 0
+
+[State 5030, 2]
+type = VelSet
+trigger1 = Time = 0
+x = 3.0
+y = -4.0
+
+[State 5030, 1]
+type = veladd
+trigger1 = 1
+y = .30
+
+[State 5030, 4]
+type = SelfState
+trigger1 = time > 0
+trigger1 = Vel Y > 0
+trigger1 = Pos Y >= 25
+value = 5100
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; ジャックハマー(投げた側)
+[Statedef 865]
+type    = S
+movetype= A
+physics = N
+anim = 865
+velset = 0,0
+SprPriority = 2
+ctrl = 0
+
+[State -2, targetstate]
+type = targetstate
+trigger1 = time = 0
+value = 875
+
+[State 1200, 9]
+type = Width
+trigger1 = AnimElemTime(2) >= 0
+trigger1 = AnimElemTime(5) < 0
+edge = 0,60
+
+[State 810, Playerpush]
+type = Playerpush
+trigger1 = 1
+value = 0
+
+[State -2, posadd]
+type = posadd
+trigger1 = AnimElemTime(3) = 0
+x = ceil(-60*const(size.xscale))
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 1
+pos = 0, ceil(-120*const(size.yscale))
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 2
+pos = ceil(-30*const(size.xscale)), ceil(-100*const(size.yscale))
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 3
+pos = ceil(-30*const(size.xscale)), ceil(-40*const(size.yscale))
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 4
+pos = 0,0
+
+[State -2, EnvShake]
+type = EnvShake
+trigger1 = AnimElemTime(4) = 0
+time = 20
+ampl = 4
+freq = 60
+
+[State -2, TargetLifeadd]
+type = TargetLifeadd
+trigger1 = AnimElem = 4
+value = ceil(-270*fvar(3)*fvar(4)*(const(data.attack)*0.01))
+
+[State -2, PowerAdd]
+type = PowerAdd
+trigger1 = AnimElem = 4
+value = 160
+
+[State -2, TargetPowerAdd]
+type = TargetPowerAdd
+trigger1 = AnimElem = 4
+value = 80
+
+[State 810, 6]
+type = PlaySnd
+trigger1 = AnimElem = 4
+value = S2,7
+
+[State -2, turn]
+type = turn
+trigger1 = AnimElem = 5
+
+[State 810, State End]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 0
+ctrl = 1
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; ジャックハマー(投げられた側)
+[Statedef 875]
+type    = A
+movetype= H
+physics = N
+ctrl = 0
+SprPriority = 1
+
+[State 820, ChangeAnim2]
+type = ChangeAnim2
+Trigger1 = Time = 0
+value = 875
+
+[State 810, ChangeState]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 1121
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; ボディスラム(投げた側)
+[Statedef 880]
+type    = S
+movetype= A
+physics = N
+anim = 880
+SprPriority = 1
+
+[State -2, TargetState]
+type = TargetState
+Trigger1 = time = 0
+value = 890
+
+[State 810, VarSet]
+type = VarSet
+trigger1 = time = 0
+var(12) = 0
+
+[State 810, Throw Reversal]
+type = VarSet
+Triggerall = fvar(8)
+Triggerall = animelemtime(2) < 0
+Trigger1 = (target,Command = "holdfwd") || (target,Command = "holdback") 
+Trigger1 = (target,Command = "y") || (target,Command = "z") || (target,Command = "b") || (target,Command = "c")
+var(12) = 1
+persistent = 0
+
+[State 810, ChangeState]
+type = ChangeState
+trigger1 = animelemtime(2) = 0
+trigger1 = var(12) = 1
+value = 830
+
+[State 1200, 9]
+type = Width
+trigger1 = animelemtime(6) < 0
+edge = 60,0
+
+[State 1200, 9]
+type = Width
+trigger1 = animelemtime(6) >= 0
+edge = 80,0
+
+[State 810, Playerpush]
+type = Playerpush
+trigger1 = 1
+value = 0
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 1
+pos = ceil(60*const(size.xscale)), 0
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 2
+pos = ceil(60*const(size.xscale)), 0
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 3
+pos = ceil(30*const(size.xscale)), 0
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 4
+pos = ceil(50*const(size.xscale)), ceil(-65*const(size.yscale))
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 5
+pos = ceil(-25*const(size.xscale)), ceil(-105*const(size.yscale))
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 6
+pos = ceil(15*const(size.xscale)), ceil(-65*const(size.yscale))
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElemTime(7) >= 0
+trigger1 = AnimElemTime(7) < 6
+pos = ceil(70*const(size.xscale)), ceil(-25*const(size.yscale))
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElemTime(7) = 6
+pos = ceil(90*const(size.xscale)), 0
+
+[State -2, EnvShake]
+type = EnvShake
+trigger1 = AnimElemTime(7) = 0
+time = 20
+ampl = 4
+freq = 60
+
+[State -2, TargetLifeadd]
+type = TargetLifeadd
+trigger1 = AnimElem = 7
+value = ceil(-200*fvar(3)*fvar(4)*(const(data.attack)*0.01))
+
+[State -2, PowerAdd]
+type = PowerAdd
+trigger1 = AnimElem = 7
+value = 140
+
+[State -2, TargetPowerAdd]
+type = TargetPowerAdd
+trigger1 = AnimElem = 7
+value = 70
+
+[State 810, 6]
+type = PlaySnd
+trigger1 = AnimElem = 2
+value = S800,0
+
+[State -2, 音を鳴らす]
+type = PlaySnd
+trigger1 = animelem = 5
+value = 0,4
+channel = 0
+
+[State 810, 6]
+type = PlaySnd
+trigger1 = AnimElem = 7
+value = S2,7
+
+[State 810, State End]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 0
+ctrl = 1
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; ボディスラム(投げられた側)
+[Statedef 890]
+type    = S
+movetype= H
+physics = N
+ctrl = 0
+SprPriority = 0
+
+[State 820, ChangeAnim2]
+type = ChangeAnim2
+Trigger1 = Time = 0
+value = 890
+
+[State -2, turn]
+type = turn
+Trigger1 = animelem = 5
+
+[State 5030, 4]
+type = ChangeState
+trigger1 = animtime = 0
+value = 891
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; ボディスラム(投げられた側)
+[Statedef 891]
+type    = A
+movetype= H
+physics = N
+ctrl = 0
+
+[State 820, posset]
+type = posset
+Trigger1 = Time = 0
+y = 0
+
+[State -2, nothitby]
+type = nothitby
+Trigger1 = 1
+value = SCA
+
+[State 820, ChangeAnim2]
+type = ChangeAnim
+Trigger1 = Time = 0
+value = 5030
+
+[State 820, ChangeAnim2]
+type = ChangeAnim
+trigger1 = SelfAnimExist(5035)
+Trigger1 = anim = 5030
+Trigger1 = AnimTime = 0
+value = 5035
+
+[State 820, ChangeAnim2]
+type = ChangeAnim
+trigger1 = SelfAnimExist(5035)
+Trigger1 = anim = 5035
+Trigger1 = AnimTime = 0
+trigger2 = !SelfAnimExist(5035)
+Trigger2 = anim = 5030
+Trigger2 = AnimTime = 0
+value = 5050
+
+[State 5050, 2]
+type = ChangeAnim
+trigger1 = anim = 5050
+trigger1 = Vel Y >= 1
+trigger1 = SelfAnimExist(anim+10)
+value = anim+10
+persistent = 0
+
+[State 5030, 2]
+type = VelSet
+trigger1 = Time = 0
+x = 2.5
+y = -5.0
+
+[State 5030, 1]
+type = veladd
+trigger1 = 1
+y = .30
+
+[State 5030, 4]
+type = SelfState
+trigger1 = time > 0
+trigger1 = Vel Y > 0
+trigger1 = Pos Y >= 25
+value = 5100
+
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; 投げ掴みモーション
+[Statedef 900]
+type    = S
+movetype= A
+physics = S
+juggle  = 0
+velset = 0,0
+ctrl = 0
+;anim = 800+(command="holddown")
+facep2 = (prevstateno!=40)
+
+[State 900, ステート変更]
+type = ChangeState
+Trigger1 = time = 0
+Trigger1 = prevstateno = 40
+Trigger1 = anim = 40
+Trigger1 = animtime = 0
+value = 40
+
+[State -1, Varset]
+type = Varset
+trigger1 = Time = 0
+var(55) = 0
+
+[State -2, ChangeAnim]
+type = ChangeAnim
+trigger1 = time = 0
+trigger1 = anim != 40
+value = 800+(command="holddown")
+
+[State -2, varset]
+type = varset
+trigger1 = Time = 0
+var(11) = ifelse(prevstateno=40,40,ifelse(command = "holddown",450,250))
+
+[State 900, 1]
+type = HitDef
+trigger1 = var(59) = 1
+trigger1 = time = 0
+trigger1 = P2BodyDist X = [-20,17]
+trigger1 = p2movetype != H
+trigger1 = p2stateno != 40
+trigger1 = p2stateno != [150,155]
+attr = S, NT
+hitflag = M-
+guard.dist = 0
+priority = 1, Miss
+sparkno = -1
+p1facing = 1
+p2facing = 1
+p1stateno = ifelse(Command = "holdback"||Command = "holdup",950,ifelse(Command = "holddown",910,930))
+;p2stateno = ifelse(Command = "holdback"||Command = "holdup",960,ifelse(Command = "holddown",920,940))
+hitsound = -1;S800,0
+getpower = 0
+givepower = 0
+ID = 900
+
+[State 900, 1]
+type = HitDef
+trigger1 = var(59) = 0
+trigger1 = time = 0
+trigger1 = P2BodyDist X = [-20,17]
+trigger1 = p2movetype != H
+trigger1 = p2stateno != 40
+trigger1 = p2stateno != [150,155]
+attr = S, NT
+hitflag = M-
+guard.dist = 0
+priority = 1, Miss
+sparkno = -1
+p1facing = 1
+p2facing = 1
+p1stateno = ifelse(Command = "holdback",930,910)
+;p2stateno = ifelse(Command = "holdback",940,920)
+hitsound = -1;S800,0
+getpower = 0
+givepower = 0
+ID = 900
+
+[State 900, ステート変更]
+type = ChangeState
+Trigger1 = Time = 1
+value = var(11)
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; アトミックドロップ(投げた側)
+[Statedef 910]
+type    = S
+movetype= A
+physics = N
+anim = 910
+SprPriority = 1
+
+[State -2, TargetState]
+type = TargetState
+Trigger1 = time = 0
+value = 920
+
+[State 810, VarSet]
+type = VarSet
+trigger1 = time = 0
+var(12) = 0
+
+[State 810, Throw Reversal]
+type = VarSet
+Triggerall = fvar(8)
+Triggerall = animelemtime(2) < 0
+Trigger1 = (target,Command = "holdfwd") || (target,Command = "holdback") 
+Trigger1 = (target,Command = "y") || (target,Command = "z") || (target,Command = "b") || (target,Command = "c")
+var(12) = 1
+persistent = 0
+
+[State 810, ChangeState]
+type = ChangeState
+trigger1 = animelemtime(2) = 0
+trigger1 = var(12) = 1
+value = 830
+
+[State 1200, 9]
+type = Width
+trigger1 = 1
+edge = 60,0
+
+[State 810, Playerpush]
+type = Playerpush
+trigger1 = 1
+value = 0
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 1
+pos = ceil(60*const(size.xscale)), 0
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 2
+pos = ceil(60*const(size.xscale)), 0
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 3
+pos = ceil(30*const(size.xscale)), 0
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 4
+pos = ceil(40*const(size.xscale)), 0
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 5
+pos = ceil(10*const(size.xscale)), ceil(-80*const(size.yscale))
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 6
+pos = ceil(-25*const(size.xscale)), ceil(-125*const(size.yscale))
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 7
+pos = ceil(15*const(size.xscale)), ceil(-100*const(size.yscale))
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 8
+pos = ceil(40*const(size.xscale)), ceil(-50*const(size.yscale))
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 9,=0
+pos = ceil(40*const(size.xscale)), ceil(-50*const(size.yscale))
+
+[State -2, EnvShake]
+type = EnvShake
+trigger1 = AnimElemTime(8) = 0
+time = 20
+ampl = 4
+freq = 60
+
+[State -2, TargetLifeadd]
+type = TargetLifeadd
+trigger1 = AnimElem = 8
+value = ceil(-200*fvar(3)*fvar(4)*(const(data.attack)*0.01))
+
+[State -2, PowerAdd]
+type = PowerAdd
+trigger1 = AnimElem = 8
+value = 140
+
+[State -2, TargetPowerAdd]
+type = TargetPowerAdd
+trigger1 = AnimElem = 8
+value = 70
+
+[State 810, 6]
+type = PlaySnd
+trigger1 = AnimElem = 2
+value = S800,0
+
+[State -2, 音を鳴らす]
+type = PlaySnd
+trigger1 = animelem = 4
+value = 0,3
+channel = 0
+
+[State 810, 6]
+type = PlaySnd
+trigger1 = AnimElem = 8
+value = S2,7
+
+[State -2, Explod]
+type = Explod
+trigger1 = AnimElemTime(8) = 0
+anim = 8020
+pos = ceil(55*const(size.xscale)),ceil(-40*const(size.yscale))
+postype = p1
+sprpriority = 10
+bindtime = 1
+ignorehitpause = 1
+ownpal = 1
+facing = 1
+scale = const(size.xscale),const(size.yscale)
+
+[State 810, State End]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 0
+ctrl = 1
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; アトミックドロップ(投げられた側)
+[Statedef 920]
+type    = S
+movetype= H
+physics = N
+ctrl = 0
+SprPriority = 0
+
+[State 820, ChangeAnim2]
+type = ChangeAnim2
+Trigger1 = Time = 0
+value = 920
+
+[State 810, turn]
+type = turn
+trigger1 = AnimElem = 4
+
+[State 5030, 4]
+type = ChangeState
+trigger1 = animtime = 0
+value = 921
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; アトミックドロップ(投げられた側)
+[Statedef 921]
+type    = A
+movetype= H
+physics = N
+ctrl = 0
+
+[State 820, posset]
+type = posset
+Trigger1 = Time = 0
+y = 0
+
+[State -2, nothitby]
+type = nothitby
+Trigger1 = 1
+value = SCA
+
+[State 820, ChangeAnim2]
+type = ChangeAnim
+Trigger1 = Time = 0
+value = 5030
+
+[State 820, ChangeAnim2]
+type = ChangeAnim
+trigger1 = SelfAnimExist(5035)
+Trigger1 = anim = 5030
+Trigger1 = AnimTime = 0
+value = 5035
+
+[State 820, ChangeAnim2]
+type = ChangeAnim
+trigger1 = SelfAnimExist(5035)
+Trigger1 = anim = 5035
+Trigger1 = AnimTime = 0
+trigger2 = !SelfAnimExist(5035)
+Trigger2 = anim = 5030
+Trigger2 = AnimTime = 0
+value = 5050
+
+[State 5050, 2]
+type = ChangeAnim
+trigger1 = anim = 5050
+trigger1 = Vel Y >= 1
+trigger1 = SelfAnimExist(anim+10)
+value = anim+10
+persistent = 0
+
+[State 5030, 2]
+type = VelSet
+trigger1 = Time = 0
+x = 3.0
+y = -4.0
+
+[State 5030, 1]
+type = veladd
+trigger1 = 1
+y = .30
+
+[State 5030, 4]
+type = SelfState
+trigger1 = time > 0
+trigger1 = Vel Y > 0
+trigger1 = Pos Y >= 25
+value = 5100
+
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; ネックハンギング(投げた側)1
+[Statedef 930]
+type    = S
+movetype= A
+physics = N
+anim = 930
+sprpriority = 2
+
+[State -2, TargetState]
+type = TargetState
+Trigger1 = time = 0
+value = 940
+
+[State 810, VarSet]
+type = VarSet
+trigger1 = time = 0
+var(12) = 0
+
+[State 810, Throw Reversal]
+type = VarSet
+Triggerall = fvar(8)
+Triggerall = animelemtime(2) < 0
+Trigger1 = (target,Command = "holdfwd") || (target,Command = "holdback") 
+Trigger1 = (target,Command = "y") || (target,Command = "z") || (target,Command = "b") || (target,Command = "c")
+var(12) = 1
+persistent = 0
+
+[State 810, ChangeState]
+type = ChangeState
+trigger1 = animelemtime(2) = 0
+trigger1 = var(12) = 1
+value = 830
+
+[State -2, Varadd]
+type = Varset
+trigger1 = time = 0
+var(26) = 0
+
+[State 1200, 9]
+type = Width
+trigger1 = 1
+value = 60,0
+
+[State 860, Playerpush]
+type = Playerpush
+trigger1 = 1
+value = 0
+
+[State 860, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 1
+pos = ceil(60*const(size.xscale)), 0
+
+[State 860, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 2
+pos = ceil(60*const(size.xscale)), 0
+
+[State 860, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 3
+pos = ceil(30*const(size.xscale)), 0
+
+[State 810, 6]
+type = PlaySnd
+trigger1 = AnimElem = 2
+value = S800,0
+
+[State 860, Changestate]
+type = ChangeState
+trigger1 = animtime = 0
+value = 931
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; ネックハンギング(投げた側)2
+[Statedef 931]
+type    = S
+movetype= A
+physics = N
+anim = 931
+sprpriority = 2
+
+[State 861, targetstate]
+type = targetstate
+trigger1 = time = 0
+value = 941
+
+[State -2, Varadd]
+type = Varadd
+trigger1 = time = 0
+var(26) = 1
+
+[State 860, Playerpush]
+type = Playerpush
+trigger1 = 1
+value = 0
+
+[State 860, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 1
+pos = ceil(10*const(size.xscale)), ceil(-110*const(size.yscale))
+
+[State 860, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 2
+pos = ceil(10*const(size.xscale)), ceil(-130*const(size.yscale))
+
+[State 811, TargetLifeadd]
+type = TargetLifeadd
+trigger1 = time = 0
+value = ceil(-35*fvar(3)*fvar(4)*(const(data.attack)*0.01))
+
+[State -2, PowerAdd]
+type = PowerAdd
+trigger1 = time = 0
+value = 30
+
+[State -2, TargetPowerAdd]
+type = TargetPowerAdd
+trigger1 = time = 0
+value = 15
+
+[State -2, varadd]
+type = varadd
+triggerall = var(40) < 56 && var(41) != 100
+trigger1 = time = 0
+var(40) = 6
+ignorehitpause = 1
+
+[State 1000, 3]
+type = EnvShake
+trigger1 = time = 0
+time = 5
+freq = 80
+ampl = 4
+
+[State -2, Explod]
+type = Explod
+trigger1 = AnimElemTime(1) = 0
+anim = 8800
+pos = ceil(10*const(size.xscale)),ceil(-110*const(size.yscale))
+postype = p1
+sprpriority = 10
+bindtime = 1
+ignorehitpause = 1
+ownpal = 1
+facing = 1
+scale = const(size.xscale),const(size.yscale)
+
+[State 5110, 6]
+type = PlaySnd
+trigger1 = AnimElem = 1
+value = 0,1
+channel = 0
+
+[State 5110, 6]
+type = PlaySnd
+trigger1 = AnimElem = 1
+value = 930,0
+
+[State 860, Changestate]
+type = ChangeState
+trigger1 = animtime = 0
+trigger1 = var(26) < 5
+trigger1 = target,life > 0
+value = 931
+
+[State 860, Changestate]
+type = ChangeState
+triggerall = animtime = 0
+trigger1 = var(26) = 5
+trigger2 = target,life = 0
+value = 932
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; ネックハンギング(終了)
+[Statedef 932]
+type    = S
+movetype= I
+physics = N
+anim = 932
+sprpriority = 2
+
+[State 863, targetstate]
+type = targetstate
+trigger1 = time = 0
+value = 942
+
+[State 860, TargetBind]
+type = TargetBind
+trigger1 = animelem = 1
+pos = ceil(10*const(size.xscale)), ceil(-130*const(size.yscale))
+
+[State 863, State End]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 0
+ctrl = 1
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; ネックハンギング(投げられた側)1
+[Statedef 940]
+type    = S
+movetype= H
+physics = N
+ctrl = 0
+sprpriority = 1
+
+[State 811, ChangeAnim2]
+type = ChangeAnim2
+Trigger1 = Time = 0
+value = 940
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; ネックハンギング(投げられた側)2
+[Statedef 941]
+type    = A
+movetype= H
+physics = N
+ctrl = 0
+sprpriority = 1
+
+[State 810, 0]
+type = ScreenBound
+trigger1 = 1
+value = 1
+movecamera = 1,0
+
+[State -2, PlaySnd]
+type = PlaySnd
+triggerall = !alive
+triggerall = time = 0
+trigger1 = authorname = "GM"
+value = 11,1
+
+[State -2, PlaySnd]
+type = PlaySnd
+triggerall = !alive
+triggerall = time = 0
+trigger1 = authorname = "warusaki3"
+value = 110,0
+
+[State 810, 6]
+type = PlaySnd
+triggerall = !alive
+trigger1 = time = 0
+value = 11,0
+
+[State 811, ChangeAnim2]
+type = ChangeAnim2
+Trigger1 = Time = 0
+value = 941
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; ネックハンギング(投げられた側)4
+[Statedef 942]
+type    = A
+movetype= H
+physics = N
+ctrl = 0
+sprpriority = 1
+
+[State 811, ChangeAnim2]
+type = ChangeAnim2
+Trigger1 = Time = 0
+value = 942
+
+[State 810, 0]
+type = ScreenBound
+trigger1 = 1
+value = 1
+movecamera = 1,0
+
+[State 5030, 4]
+type = ChangeState
+trigger1 = animtime = 0
+value = 943
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; ネックハンギング(投げられた側)5
+[Statedef 943]
+type    = A
+movetype= H
+physics = N
+ctrl = 0
+
+[State 820, posset]
+type = posadd
+Trigger1 = Time = 0
+y = -const(size.mid.pos.Y)
+
+[State -2, nothitby]
+type = nothitby
+Trigger1 = 1
+value = SCA
+
+[State 820, ChangeAnim2]
+type = ChangeAnim
+Trigger1 = Time = 0
+value = 5030
+
+[State 820, ChangeAnim2]
+type = ChangeAnim
+trigger1 = SelfAnimExist(5035)
+Trigger1 = anim = 5030
+Trigger1 = AnimTime = 0
+value = 5035
+
+[State 820, ChangeAnim2]
+type = ChangeAnim
+trigger1 = SelfAnimExist(5035)
+Trigger1 = anim = 5035
+Trigger1 = AnimTime = 0
+trigger2 = !SelfAnimExist(5035)
+Trigger2 = anim = 5030
+Trigger2 = AnimTime = 0
+value = 5050
+
+[State 5050, 2]
+type = ChangeAnim
+trigger1 = anim = 5050
+trigger1 = Vel Y >= 1
+trigger1 = SelfAnimExist(anim+10)
+value = anim+10
+persistent = 0
+
+[State 5030, 2]
+type = VelSet
+trigger1 = Time = 0
+x = -3.0
+y = -4.0
+
+[State 5030, 1]
+type = veladd
+trigger1 = 1
+y = .30
+
+[State 5030, 4]
+type = SelfState
+trigger1 = time > 0
+trigger1 = Vel Y > 0
+trigger1 = Pos Y >= 25
+value = 5100
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; バックドロップ(投げた側)
+[Statedef 950]
+type    = S
+movetype= A
+physics = N
+anim = 950
+SprPriority = 1
+
+[State -2, TargetState]
+type = TargetState
+Trigger1 = time = 0
+value = 960
+
+[State 810, VarSet]
+type = VarSet
+trigger1 = time = 0
+var(12) = 0
+
+[State 810, Throw Reversal]
+type = VarSet
+Triggerall = fvar(8)
+Triggerall = animelemtime(2) < 0
+Trigger1 = (target,Command = "holdfwd") || (target,Command = "holdback") 
+Trigger1 = (target,Command = "y") || (target,Command = "z") || (target,Command = "b") || (target,Command = "c")
+var(12) = 1
+persistent = 0
+
+[State 810, ChangeState]
+type = ChangeState
+trigger1 = animelemtime(2) = 0
+trigger1 = var(12) = 1
+value = 830
+
+[State -2, VarSet]
+type = VarSet
+trigger1 = time = 0
+var(10) = 1
+
+[State 1200, 9]
+type = Width
+trigger1 = animelemtime(7) < 0
+edge = 60,0
+
+[State 1200, 9]
+type = Width
+trigger1 = animelemtime(7) >= 0
+edge = 60,80
+
+[State 810, Playerpush]
+type = Playerpush
+trigger1 = 1
+value = 0
+
+[State 810, posadd]
+type = posadd
+trigger1 = AnimElem = 8
+x = ceil(-30*const(size.xscale))
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 1
+pos = ceil(60*const(size.xscale)), 0
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 2
+pos = ceil(60*const(size.xscale)), 0
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 3
+pos = ceil(30*const(size.xscale)), 0
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 4
+pos = ceil(40*const(size.xscale)), 0
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 5
+pos = ceil(10*const(size.xscale)), ceil(-80*const(size.yscale))
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 6
+pos = ceil(-10*const(size.xscale)), ceil(-120*const(size.yscale))
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 7
+pos = ceil(-85*const(size.xscale)), ceil(-70*const(size.yscale))
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElemTime(8) = 0
+pos = ceil(-70*const(size.xscale)), ceil(-20*const(size.yscale))
+
+[State -2, EnvShake]
+type = EnvShake
+trigger1 = AnimElemTime(8) = 0
+time = 20
+ampl = 4
+freq = 60
+
+[State -2, TargetLifeadd]
+type = TargetLifeadd
+trigger1 = AnimElem = 8
+value = ceil(-270*fvar(3)*fvar(4)*(const(data.attack)*0.01))
+
+[State -2, PowerAdd]
+type = PowerAdd
+trigger1 = AnimElem = 8
+value = 160
+
+[State -2, TargetPowerAdd]
+type = TargetPowerAdd
+trigger1 = AnimElem = 8
+value = 80
+
+[State 810, 6]
+type = PlaySnd
+trigger1 = AnimElem = 2
+value = S800,0
+
+[State -2, 音を鳴らす]
+type = PlaySnd
+trigger1 = animelem = 4
+value = 0,5
+channel = 0
+
+[State 810, 6]
+type = PlaySnd
+trigger1 = AnimElem = 8
+value = S2,7
+
+[State 810, State End]
+type = ChangeState
+triggerall = AnimElemTime(6) = 19
+trigger1 = var(50) = 0
+trigger1 = command = "holddown"
+trigger2 = var(50) = 1
+trigger2 = random < 500
+value = 955
+
+[State 810, State End]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 0
+ctrl = 1
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; バックドロップ(投げられた側)
+[Statedef 960]
+type    = S
+movetype= H
+physics = N
+ctrl = 0
+SprPriority = 0
+
+[State 820, ChangeAnim2]
+type = ChangeAnim2
+Trigger1 = Time = 0
+value = 960
+
+[State 810, turn]
+type = turn
+trigger1 = AnimElem = 4
+
+[State 5030, 4]
+type = ChangeState
+trigger1 = animtime = 0
+value = 961
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; バックドロップ(投げられた側)
+[Statedef 961]
+type    = A
+movetype= H
+physics = N
+ctrl = 0
+
+[State 820, posset]
+type = posset
+Trigger1 = Time = 0
+y = 0
+
+[State -2, nothitby]
+type = nothitby
+Trigger1 = 1
+value = SCA
+
+[State 820, ChangeAnim2]
+type = ChangeAnim
+Trigger1 = Time = 0
+value = 5030
+
+[State 820, ChangeAnim2]
+type = ChangeAnim
+trigger1 = SelfAnimExist(5035)
+Trigger1 = anim = 5030
+Trigger1 = AnimTime = 0
+value = 5035
+
+[State 820, ChangeAnim2]
+type = ChangeAnim
+trigger1 = SelfAnimExist(5035)
+Trigger1 = anim = 5035
+Trigger1 = AnimTime = 0
+trigger2 = !SelfAnimExist(5035)
+Trigger2 = anim = 5030
+Trigger2 = AnimTime = 0
+value = 5050
+
+[State 5050, 2]
+type = ChangeAnim
+trigger1 = anim = 5050
+trigger1 = Vel Y >= 1
+trigger1 = SelfAnimExist(anim+10)
+value = anim+10
+persistent = 0
+
+[State 5030, 2]
+type = VelSet
+trigger1 = Time = 0
+x = -3.0
+y = -4.0
+
+[State 5030, 1]
+type = veladd
+trigger1 = 1
+y = .30
+
+[State 5030, 4]
+type = SelfState
+trigger1 = time > 0
+trigger1 = Vel Y > 0
+trigger1 = Pos Y >= 25
+value = 5100
+
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; バックブリーカー(投げた側)
+[Statedef 955]
+type    = S
+movetype= A
+physics = N
+velset = 0,0
+anim = 955
+SprPriority = 0
+ctrl = 0
+
+[State 810, TargetState]
+type = TargetState
+trigger1 = Time = 0
+value = 965
+
+[State 820, posset]
+type = posset
+Trigger1 = Time = 0
+y = 0
+
+[State 1200, 9]
+type = Width
+trigger1 = 1
+edge = 60,0
+
+[State 810, Playerpush]
+type = Playerpush
+trigger1 = 1
+value = 0
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElem = 1
+pos = 0, ceil(-110*const(size.yscale))
+
+[State 810, TargetBind]
+type = TargetBind
+trigger1 = AnimElemTime(2) = 0
+pos = 0, ceil(-35*const(size.yscale))
+
+[State -2, EnvShake]
+type = EnvShake
+trigger1 = AnimElemTime(2) = 0
+time = 20
+ampl = 4
+freq = 60
+
+[State -2, TargetLifeadd]
+type = TargetLifeadd
+trigger1 = AnimElem = 2
+value = ceil(-270*fvar(3)*fvar(4)*(const(data.attack)*0.01))
+
+[State -2, PowerAdd]
+type = PowerAdd
+trigger1 = AnimElem = 8
+value = 160
+
+[State -2, TargetPowerAdd]
+type = TargetPowerAdd
+trigger1 = AnimElem = 8
+value = 80
+
+[State -2, varadd]
+type = varadd
+triggerall = var(40) < 56 && var(41) != 100
+trigger1 = AnimElem = 2
+var(40) = 6
+ignorehitpause = 1
+
+[State 810, 6]
+type = PlaySnd
+trigger1 = AnimElem = 2
+value = S2,7
+
+[State 810, State End]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 0
+ctrl = 1
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+; バックブリーカー(投げられた側)
+[Statedef 965]
+type    = A
+movetype= H
+physics = N
+ctrl = 0
+SprPriority = 1
+
+[State 820, ChangeAnim2]
+type = ChangeAnim2
+Trigger1 = Time = 0
+value = 965
+
+[State 810, ChangeState]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 1366

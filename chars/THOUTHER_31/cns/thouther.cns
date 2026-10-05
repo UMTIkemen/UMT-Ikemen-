@@ -1,0 +1,421 @@
+[data]
+life=1000
+power=2000
+attack=110
+defence=95
+fall.defence_up=100
+liedown.time=60
+airjuggle=0
+sparkno=0
+guard.sparkno=0
+ko.echo=0
+volume=0
+intpersistindex=0
+floatpersistindex=0
+[size]
+xscale=.47
+yscale=.47
+ground.back=17
+ground.front=17
+air.back=20
+air.front=20
+height=60
+attack.dist=160
+proj.attack.dist=90
+proj.doscale=0
+head.pos=0,-120
+mid.pos=0,-90
+shadowoffset=0
+draw.offset=0,0
+[velocity]
+walk.fwd=0
+walk.back=0
+run.fwd=0
+run.back=0
+jump.neu=0
+jump.back=0
+jump.fwd=0
+runjump.back=0
+runjump.fwd=0
+airjump.neu=0
+airjump.back=0
+airjump.fwd=0
+[Movement]
+airjump.num=0
+airjump.height=0
+yaccel=.6
+stand.friction=.8
+crouch.friction=.8
+;///////////////////////////////////////////////////////////////////////////////////
+; イントロ、試合終了
+;///////////////////////////////////////////////////////////////////////////////////
+;---------------タイムオーバー（負けた時）
+[statedef 170]
+[state ]
+type=selfstate
+trigger1=1
+value=171+drawgame
+[statedef 171]
+[state ]
+type=changeanim
+trigger1=anim!=171
+value=171
+[state ]
+type=assertspecial
+trigger1=animelem=9,<0
+flag=roundnotover
+[statedef 172]
+[state ]
+type=changeanim
+trigger1=anim!=172
+value=172
+[state ]
+type=assertspecial
+trigger1=animelem=5,<0
+flag=roundnotover
+;timeover
+[Statedef 175]
+[state ]
+type=selfstate
+trigger1=1
+value=170
+;WIN
+[statedef 180]
+[state ]
+type=changeanim
+trigger1=anim=3250
+value=3250
+[state ]
+type=selfstate
+trigger1=anim=3250
+value=189
+[state ]
+type=selfstate
+trigger1=wintime
+value=181
+[state ]
+type=selfstate
+trigger1=enemy,name="shin"
+trigger1=enemy,authorname="ahuron"||enemy,authorname="konpeitou"
+trigger1=var(1)&268435456
+value=185
+[state ]
+type=selfstate
+trigger1=1
+value=182
+;------------------TIMEUP
+[statedef 181]
+[state ]
+type=changeanim
+trigger1=anim!=181
+value=181
+;通常
+[state ]
+type=playsnd
+trigger1=anim=181
+trigger1=animelem=1
+value=s185,random%2
+channel=1
+;ケン
+[state ]
+type=playsnd
+trigger1=anim=181
+trigger1=animelem=1
+trigger1=random%2
+trigger1=enemy,name="kenshiro"
+trigger1=enemy,authorname="Drowin hokuto"||enemy,authorname="SAIKEI"||enemy,authorname="Cameron"
+value=s185,3+random%2
+channel=1
+;トキ
+[state ]
+type=playsnd
+trigger1=anim=181
+trigger1=animelem=1
+trigger1=random%2
+trigger1=enemy,name="toki"||enemy,name="TOKI-(NERICYA)"
+trigger1=enemy,authorname="Drowin hokuto"||enemy,authorname="Ts"||enemy,authorname="NERICYA"
+value=s185,5
+channel=1
+;ハート様
+[state ]
+type=playsnd
+trigger1=anim=181
+trigger1=animelem=1
+trigger1=random%2
+trigger1=enemy,name="Mr.HEART"
+value=s185,6
+channel=1
+;南斗勢
+[state ]
+type=playsnd
+triggerall=anim=181
+triggerall=animelem=1
+triggerall=random%2
+trigger1=enemy,name="shin"
+trigger1=enemy,authorname="ahuron"||enemy,authorname="konpeitou"
+trigger2=enemy,name="REI"
+trigger2=enemy,authorname="ahuron"
+trigger3=enemy,name="JUDA-(NERICYA)"&&enemy,authorname="NERICYA"
+value=s185,7
+channel=1
+[state ]
+type=assertspecial
+trigger1=animelem=4,<0
+flag=roundnotover
+;-------------------踏みつけ
+[statedef 182]
+[state ]
+type=changeanim
+trigger1=anim!=[182,183]
+value=182
+;通常
+[state ]
+type=playsnd
+trigger1=anim=182
+trigger1=animelem=1
+value=s185,random%2
+channel=1
+;ケン
+[state ]
+type=playsnd
+trigger1=anim=182
+trigger1=animelem=1
+trigger1=random%2
+trigger1=enemy,name="kenshiro"
+trigger1=enemy,authorname="Drowin hokuto"||enemy,authorname="SAIKEI"||enemy,authorname="Cameron"
+value=s185,3+random%2
+channel=1
+;トキ
+[state ]
+type=playsnd
+trigger1=anim=182
+trigger1=animelem=1
+trigger1=random%2
+trigger1=enemy,name="toki"||enemy,name="TOKI-(NERICYA)"
+trigger1=enemy,authorname="Drowin hokuto"||enemy,authorname="Ts"||enemy,authorname="NERICYA"
+value=s185,5
+channel=1
+;ハート様
+[state ]
+type=playsnd
+trigger1=anim=182
+trigger1=animelem=1
+trigger1=random%2
+trigger1=enemy,name="Mr.HEART"
+value=s185,6
+channel=1
+;南斗勢
+[state ]
+type=playsnd
+triggerall=anim=182
+triggerall=animelem=1
+triggerall=random%2
+trigger1=enemy,name="shin"
+trigger1=enemy,authorname="ahuron"||enemy,authorname="konpeitou"
+trigger2=enemy,name="REI"
+trigger2=enemy,authorname="ahuron"
+trigger3=enemy,name="JUDA-(NERICYA)"&&enemy,authorname="NERICYA"
+value=s185,7
+channel=1
+;誰も俺を倒すことはできんのだ！
+[state ]
+type=playsnd
+trigger1=anim=182
+trigger1=animelem=1
+trigger1=var(1)&134217728
+value=s185,2
+channel=1
+[state ]
+type=changeanim
+trigger1=anim!=183
+trigger1=facing*(enemynear,pos x-pos x)<=ifelse(enemynear,facing!=facing,5,55)||frontedgebodydist<=5
+value=183
+[state ]
+type=posadd
+trigger1=anim=182
+x=1.5
+[state ]
+type=assertspecial
+trigger1=animelem=56,<0
+trigger2=anim=182
+flag=roundnotover
+;---------解せぬ
+[statedef 185]
+[state ]
+type=changeanim
+trigger1=anim!=185
+value=185
+[state ]
+type=playsnd
+trigger1=animelem=1
+value=s185,8
+channel=1
+[state ]
+type=assertspecial
+trigger1=animelem=5,<0
+flag=roundnotover
+;FATAL K.O
+[statedef 189]
+[state ]
+type=changeanim
+trigger1=anim!=189
+value=189
+[state ]
+type=explod
+trigger1=animelem=5
+id=3105
+anim=3105
+scale=.6,.6
+removetime=-1
+pos=90,-170
+sprpriority=6
+ownpal=1
+trans=add
+[state ]
+type=explod
+trigger1=animelem=5
+id=3106
+anim=3106
+scale=.5,.5
+removetime=-1
+pos=90,-170
+sprpriority=7
+ownpal=1
+;trans=add
+[state ]
+type=modifyexplod
+trigger1=1
+id=3105
+trans=addalpha
+alpha=16*animelemtime(5),256
+[state ]
+type=modifyexplod
+trigger1=1
+id=3106
+trans=addalpha
+alpha=16*animelemtime(5),0
+[state ]
+type=modifyexplod
+trigger1=animelem=5,>=16
+id=3106
+trans=none
+[state ]
+type=modifyexplod
+trigger1=animelem=5,>=16
+id=3105
+trans=addalpha
+alpha=256-floor(abs(sin(gametime*pi/8))*32),256
+[state ]
+type=playsnd
+trigger1=animelem=5
+value=s3250,0
+volume=255
+channel=0
+[state ]
+type=assertspecial
+trigger1=animelem=6,<0
+flag=roundnotover
+[statedef 190]
+[state ]
+type=selfstate
+trigger1=1
+value=191
+;----------------イントロ
+[statedef 191]
+[state ]
+type=changeanim
+trigger1=!roundstate
+trigger2=enemy,name="kenshiro"
+trigger2=enemy,authorname="Drowin hokuto"&&time<=160||enemy,authorname="SAIKEI"&&(enemy,stateno||enemy,time<=80)||enemy,authorname="Cameron"&&time<=200
+trigger3=enemy,name="Mr.HEART"
+trigger3=time<=240
+trigger4=enemy,name="MAMIYA"
+trigger4=enemy,authorname="YU-TOHARU"
+trigger4=time<=200
+value=191
+;通常
+[state ]
+type=playsnd
+trigger1=animelem=1,=1
+value=s195,0
+channel=1
+volume=255
+;ケン
+[state ]
+type=playsnd
+trigger1=animelem=1,=1
+trigger1=enemy,name="kenshiro"
+trigger1=enemy,authorname="Drowin hokuto"||enemy,authorname="SAIKEI"||enemy,authorname="Cameron"
+value=s195,1
+channel=1
+;ラオウ
+[state ]
+type=playsnd
+trigger1=animelem=1,=1
+trigger1=enemy,name="raoh"||enemy,name="raoh ATL"
+trigger1=enemy,authorname="Drowin hokuto"||enemy,authorname="shikkoku"||enemy,authorname="Bat"||enemy,authorname="Ataru"
+value=s195,2
+channel=1
+;トキ
+[state ]
+type=playsnd
+trigger1=animelem=1,=1
+trigger1=enemy,name="toki"||enemy,name="TOKI-(NERICYA)"
+trigger1=enemy,authorname="Drowin hokuto"||enemy,authorname="Ts"||enemy,authorname="NERICYA"
+value=s195,3
+channel=1
+;ジャギ様、ハート様
+[state ]
+type=playsnd
+triggerall=animelem=1,=1
+trigger1=enemy,name="Mr.HEART"
+trigger2=enemy,name="jagi"
+trigger2=enemy,authorname="Drowin hokuto"||enemy,authorname="ahuron"||enemy,authorname="Ts"
+value=s195,4
+channel=1
+;マミヤ
+[state ]
+type=playsnd
+trigger1=animelem=1,=1
+trigger1=enemy,name="MAMIYA"
+trigger1=enemy,authorname="YU-TOHARU"
+value=s195,5
+channel=1
+[state ]
+type=helper
+trigger1=!numhelper(192)
+id=192
+stateno=192
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=playsnd
+trigger1=animelem=13
+value=s41,0
+[state ]
+type=offset
+trigger1=animelem=12,>=0
+y=-72-15.5*animelemtime(12)+.6*animelemtime(12)*animelemtime(12)/2
+[state ]
+type=assertspecial
+trigger1=1
+flag=intro
+[state ]
+type=selfstate
+trigger1=-72-15.5*animelemtime(12)+.6*animelemtime(12)*animelemtime(12)/2>=0
+trigger1=animelem=15,>0
+value=52
+[statedef 192]
+sprpriority=-5
+[state ]
+type=changeanim
+trigger1=roundstate<2
+value=192
+[state ]
+type=trans
+trigger1=1
+trans=addalpha
+alpha=256-animelemtime(1)*12,animelemtime(1)*12
+[state ]
+type=destroyself
+trigger1=!animtime

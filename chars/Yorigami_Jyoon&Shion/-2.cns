@@ -1,0 +1,899 @@
+;var(11)=スペカ宣言有無
+;var(14)=霊力回復クールタイム
+;var(15)=霊力ゲージ
+;var(16)=スタン値
+;fvar(6)=怪奇ゲージクールタイム制御
+;fvar(7)=怪奇ゲージ一時保存
+;fvar(8)=怪奇ゲージ
+;fvar(9)=rate
+;fvar(10)=スペルゲージ
+
+;怪奇ゲージクールタイム
+;完全憑依姉妹、転移・・・5秒
+;攻勢憑依・・・6秒
+
+
+[Statedef -2]
+
+[State 0, DisplayToClipboard]
+type = DisplayToClipboard
+trigger1 = 1
+text = "numhelper = %d var(9) = %d NumprojID(110) = %d"
+params = numhelper,var(9),NumprojID(110)
+ignorehitpause = 1
+
+[State 0, Helper]
+type = Helper
+trigger1 = !Numhelper(3000)
+helpertype = normal
+name = "Shion"
+ID = 3000
+stateno = Ifelse(roundno=1,3190,3000)
+pos = Ifelse(roundno=1,-80,-40),Ifelse(roundno=1,-60,-20)
+postype = p1
+ownpal = 1
+
+[State 0, Helper]
+type = Helper
+trigger1 = !Numhelper(8750)
+trigger1 = var(10) = [1,3]
+helpertype = normal
+name = "Hyoui-Guage"
+ID = 8750
+stateno = 8750+(teamside=2)
+pos = 0,0
+postype = p1
+pausemovetime = 2147483647
+supermovetime = 2147483647
+ownpal = 1
+
+[State 0, Helper]
+type = Helper
+trigger1 = var(25)
+trigger1 = gametime%10 = 0
+helpertype = normal
+name = "Moji"
+ID = 705
+stateno = 705
+pos = 0,-40
+postype = p1
+ownpal = 1
+
+[State 0, Helper]
+type = Helper
+trigger1 = var(25)
+trigger1 = gametime%30 = 0
+helpertype = normal
+name = "Blackk-Aura"
+ID = 706
+stateno = 706
+pos = 0,-40
+postype = p1
+ownpal = 1
+
+[State 0, Helper]
+type = Helper
+trigger1 = Numhelper(3000)
+trigger1 = helper(3000),stateno = 3500
+trigger1 = movetype = H
+trigger1 = !Numhelper(651)
+helpertype = normal
+name = "Effect"
+ID = 651
+stateno = 651
+pos = 0,-40
+postype = p1
+ownpal = 1
+size.xscale = 0.5
+size.yscale = 0.5
+
+[State 0, NotHitBy]
+type = NotHitBy
+trigger1 = !ctrl&&!stateno
+trigger2 = roundstate != 2
+value = SCA
+time = 1
+
+;弾幕展開制御
+[State 0, Null]
+type = Null
+triggerall = var(59) <= 0
+triggerall = var(9)
+triggerall = !(stateno = 600||stateno = 610||stateno = 620||stateno = 630||stateno = 640)
+trigger1 = command = "b"
+trigger1 = 0&&var(9):= 10
+trigger2 = command != "b"
+trigger2 = 0&&var(9):= var(9)-1
+trigger3 = !(command = "holdb"||command = "b")
+trigger3 = !(stateno = 1||stateno = 25)
+trigger3 = 0&&var(9):= 0
+
+[State -3,tag];相手ﾀｯｸﾞ時生死確認
+type = Null
+trigger1 = !Numtarget||Numenemy = 1
+trigger1 = var(58):= IfElse((!EnemyNear,Alive && NumEnemy = 2),1,0)
+trigger2 = Numenemy > 1
+trigger2 = !enemy(0),Alive||!enemy(1),Alive
+trigger2 = var(58):= IfElse((!EnemyNear,Alive && NumEnemy = 2),1,0)
+trigger3 = Numenemy > 1
+trigger3 = enemy(0),Alive&&enemy(1),Alive
+trigger3 = Numtarget
+trigger3 = target,Alive
+trigger3 = var(58):= IfElse(target,pos X*target,facing<enemynear,pos X*enemynear,facing,1,0)
+
+[State 0, Null]
+type = Null
+trigger1 = !Numtarget
+trigger1 = var(30)
+trigger1 = 1||var(30):= 0
+trigger2 = Numtarget
+trigger2 = 1||var(30):= target,ID
+
+;結界ガード使用判断
+[State 0, Null]
+type = Null
+trigger1 = stateno = [150,155]
+trigger1 = 0&&var(31):= var(31)+1
+trigger2 = stateno != [120,155]
+trigger2 = var(31) > 0
+trigger2 = 0&&var(31):= var(31)-1
+
+[State 0, VarAdd]
+type = VarAdd
+triggerall = fvar(9) < 1.0
+;完全憑依姉妹
+trigger1 = ProjHitTime(3800) = 0||ProjHitTime(3801) = 0||ProjHitTime(3802) = 0
+trigger2 = ProjHitTime(3803) = 0||ProjHitTime(3804) = 0||ProjHitTime(3805) = 0
+trigger3 = ProjHitTime(3806) = 0||ProjHitTime(3807) = 0||ProjHitTime(3808) = 0
+fv = 9
+value = -0.01
+
+[State 0, VarAdd]
+type = VarAdd
+triggerall = fvar(9) < 1.0
+trigger1 = ProjHitTime(600) = 0||ProjHitTime(601) = 0||ProjHitTime(602) = 0
+trigger2 = ProjHitTime(603) = 0||ProjHitTime(604) = 0||ProjHitTime(605) = 0
+trigger3 = ProjHitTime(606) = 0
+trigger4 = ProjHitTime(650) = 0||ProjHitTime(651) = 0||ProjHitTime(652) = 0
+trigger5 = ProjHitTime(653) = 0||ProjHitTime(654) = 0||ProjHitTime(655) = 0
+trigger6 = ProjHitTime(656) = 0
+trigger7 = ProjHitTime(610) = 0||ProjHitTime(611) = 0||ProjHitTime(612) = 0
+trigger8 = ProjHitTime(613) = 0||ProjHitTime(615) = 0||ProjHitTime(616) = 0
+trigger9 = ProjHitTime(616) = 0
+trigger10 = ProjHitTime(660) = 0||ProjHitTime(661) = 0||ProjHitTime(662) = 0
+trigger11 = ProjHitTime(663) = 0||ProjHitTime(664) = 0||ProjHitTime(665) = 0
+trigger12 = ProjHitTime(666) = 0
+trigger13 = ProjHitTime(620) = 0
+trigger14 = ProjHitTime(630) = 0||ProjHitTime(631) = 0||ProjHitTime(632) = 0
+trigger15 = ProjHitTime(633) = 0||ProjHitTime(634) = 0||ProjHitTime(635) = 0
+trigger16 = ProjHitTime(636) = 0
+trigger17 = ProjHitTime(680) = 0||ProjHitTime(681) = 0||ProjHitTime(682) = 0
+trigger18 = ProjHitTime(683) = 0||ProjHitTime(684) = 0||ProjHitTime(685) = 0
+trigger19 = ProjHitTime(686) = 0
+;攻勢憑依
+trigger20 = ProjHitTime(3500) = 0||ProjHitTime(3501) = 0||ProjHitTime(3502) = 0
+trigger21 = ProjHitTime(3503) = 0||ProjHitTime(3504) = 0||ProjHitTime(3505) = 0
+trigger22 = ProjHitTime(3506) = 0||ProjHitTime(3507) = 0
+;弾幕展開
+trigger23 = ProjHitTime(3640) = 0||ProjHitTime(3641) = 0||ProjHitTime(3642) = 0
+trigger24 = ProjHitTime(3643) = 0||ProjHitTime(3644) = 0||ProjHitTime(3645) = 0
+trigger25 = ProjHitTime(3646) = 0||ProjHitTime(3647) = 0||ProjHitTime(3648) = 0
+trigger26 = ProjHitTime(3649) = 0||ProjHitTime(3650) = 0||ProjHitTime(3651) = 0
+trigger27 = ProjHitTime(3652) = 0||ProjHitTime(3653) = 0||ProjHitTime(3654) = 0
+trigger28 = ProjHitTime(3655) = 0||ProjHitTime(3656) = 0||ProjHitTime(3657) = 0
+trigger29 = ProjHitTime(3658) = 0||ProjHitTime(3659) = 0||ProjHitTime(3660) = 0
+fv = 9
+value = -0.02
+
+[State 0, VarAdd]
+type = VarAdd
+triggerall = fvar(9) < 1.0
+trigger1 = ProjHitTime(1100) = 0
+trigger2 = ProjHitTime(1400) = 0
+fv = 9
+value = -0.03
+
+[State 0, VarAdd]
+type = VarAdd
+triggerall = fvar(9) < 1.0
+trigger1 = ProjHitTime(1000) = 0
+trigger2 = ProjHitTime(1300) = 0
+trigger3 = ProjHitTime(2300) = 0
+fv = 9
+value = -0.05
+
+[State 0, VarAdd]
+type = VarAdd
+triggerall = fvar(9) < 1.0
+trigger1 = ProjHitTime(1200) = 0
+trigger2 = ProjHitTime(2210) = 0
+trigger3 = ProjHitTime(3755) = 0
+fv = 9
+value = -0.1
+
+[State 0, VarAdd]
+type = VarAdd
+triggerall = fvar(9) < 1.0
+trigger1 = ProjHitTime(2210) = 0
+fv = 9
+value = -0.2
+
+[State 0, VarSet]
+type = VarSet
+triggerall = fvar(9) >= 1.0
+trigger1 = ProjHitTime(600) = 0||ProjHitTime(601) = 0||ProjHitTime(602) = 0
+trigger2 = ProjHitTime(603) = 0||ProjHitTime(604) = 0||ProjHitTime(605) = 0
+trigger3 = ProjHitTime(606) = 0
+trigger4 = ProjHitTime(650) = 0||ProjHitTime(651) = 0||ProjHitTime(652) = 0
+trigger5 = ProjHitTime(653) = 0||ProjHitTime(654) = 0||ProjHitTime(655) = 0
+trigger6 = ProjHitTime(656) = 0
+trigger7 = ProjHitTime(610) = 0||ProjHitTime(611) = 0||ProjHitTime(612) = 0
+trigger8 = ProjHitTime(613) = 0||ProjHitTime(615) = 0||ProjHitTime(616) = 0
+trigger9 = ProjHitTime(616) = 0
+trigger10 = ProjHitTime(660) = 0||ProjHitTime(661) = 0||ProjHitTime(662) = 0
+trigger11 = ProjHitTime(663) = 0||ProjHitTime(664) = 0||ProjHitTime(665) = 0
+trigger12 = ProjHitTime(666) = 0
+trigger13 = ProjHitTime(620) = 0
+trigger14 = ProjHitTime(630) = 0||ProjHitTime(631) = 0||ProjHitTime(632) = 0
+trigger15 = ProjHitTime(633) = 0||ProjHitTime(634) = 0||ProjHitTime(635) = 0
+trigger16 = ProjHitTime(636) = 0
+trigger17 = ProjHitTime(680) = 0||ProjHitTime(681) = 0||ProjHitTime(682) = 0
+trigger18 = ProjHitTime(683) = 0||ProjHitTime(684) = 0||ProjHitTime(685) = 0
+trigger19 = ProjHitTime(686) = 0
+trigger20 = ProjHitTime(1200) = 0
+trigger21 = ProjHitTime(1400) = 0
+fv = 9
+value = 0.75
+
+[State 0, VarSet]
+type = VarSet
+triggerall = fvar(9) >= 1.0
+trigger1 = ProjHitTime(620) = 0
+trigger2 = ProjHitTime(1100) = 0
+trigger3 = ProjHitTime(1415) = 0
+trigger4 = ProjHitTime(2310) = 0
+;弾幕展開
+trigger5 = ProjHitTime(3640) = 0||ProjHitTime(3641) = 0||ProjHitTime(3642) = 0
+trigger6 = ProjHitTime(3643) = 0||ProjHitTime(3644) = 0||ProjHitTime(3645) = 0
+trigger7 = ProjHitTime(3646) = 0||ProjHitTime(3647) = 0||ProjHitTime(3648) = 0
+trigger8 = ProjHitTime(3649) = 0||ProjHitTime(3650) = 0||ProjHitTime(3651) = 0
+trigger9 = ProjHitTime(3649) = 0||ProjHitTime(3650) = 0||ProjHitTime(3651) = 0
+trigger10 = ProjHitTime(3652) = 0||ProjHitTime(3653) = 0||ProjHitTime(3654) = 0
+trigger11 = ProjHitTime(3655) = 0||ProjHitTime(3656) = 0||ProjHitTime(3657) = 0
+trigger12 = ProjHitTime(3658) = 0||ProjHitTime(3659) = 0||ProjHitTime(3660) = 0
+;溜め射撃
+trigger13 = ProjHitTime(3755) = 0
+;完全憑依姉妹
+trigger14 = ProjHitTime(3800) = 0||ProjHitTime(3801) = 0||ProjHitTime(3802) = 0
+trigger15 = ProjHitTime(3803) = 0||ProjHitTime(3804) = 0||ProjHitTime(3805) = 0
+trigger16 = ProjHitTime(3806) = 0||ProjHitTime(3807) = 0||ProjHitTime(3808) = 0
+fv = 9
+value = 0.8
+
+[State 0, VarSet]
+type = VarSet
+triggerall = fvar(9) >= 1.0
+trigger1 = ProjHitTime(2210) = 0
+fv = 9
+value = 0.9
+
+[State 0, VarSet]
+type = VarSet
+triggerall = fvar(9) >= 1.0
+trigger1 = ProjHitTime(1000) = 0
+trigger2 = ProjHitTime(1300) = 0
+trigger3 = ProjHitTime(2300) = 0
+fv = 9
+value = 0.95
+
+[State 0, VarSet]
+type = VarSet
+trigger1 = fvar(9) < 0.1
+fv = 9
+value = 0.1
+
+[State 0, VarSet]
+type = VarSet
+trigger1 = fvar(9) < 0.25
+trigger1 = stateno = [2100,2513]
+fv = 9
+value = 0.25
+
+[State 0, VarSet]
+type = VarSet
+trigger1 = !Numtarget
+fv = 9
+value = 1.0
+
+;カウンター補正
+[State 0, VarSet]
+type = VarSet
+trigger1 = !Numtarget
+trigger1 = var(18)
+trigger1 = stateno != [200,201]
+trigger1 = !(stateno = 600||stateno = 610||stateno = 620||stateno = 630||stateno = 640)
+trigger1 = !(stateno = 750||stateno = 800||stateno = 1100||stateno = 1300||stateno = 2310)
+fv = 9
+value = 1.2
+
+;rate
+[State 0, AttackMulSet]
+type = AttackMulSet
+trigger1 = 1
+value = abs(fvar(9))
+
+;根性値
+[State 0, DefenceMulSet]
+type = DefenceMulSet
+trigger1 = 1
+value = 1.0-(LifeMax-Life)*0.0004
+ignorehitpause = 1
+
+;射撃ヒット音
+[State 0, PlaySnd]
+type = PlaySnd
+trigger1 = ProjHitTime(1000) = 0
+trigger2 = ProjHitTime(1200) = 0
+trigger3 = ProjHitTime(1400) = 0
+value = S0,Ifelse(var(18),22,56)
+
+;カウンターヒット判別
+[State 0, Null]
+type = Null
+trigger1 = enemynear(var(58)),movetype = A
+trigger1 = stateno != [200,201]
+trigger1 = !(stateno = 600||stateno = 610||stateno = 620||stateno = 630||stateno = 640)
+trigger1 = !(stateno = 750||stateno = 800||stateno = 1100||stateno = 1300||stateno = 2310)
+trigger1 = 0&&var(18):= 1
+trigger2 = enemynear(var(58)),movetype != A
+trigger2 = ProjHitTime(0) = 1||movehit
+trigger2 = 0&&var(18):= 0
+trigger3 = stateno = [200,201]
+trigger3 = 0&&var(18):= 0
+trigger4 = (stateno = 600||stateno = 610||stateno = 620||stateno = 630||stateno = 640)
+trigger4 = 0&&var(18):= 0
+trigger5 = (stateno = 750||stateno = 800||stateno = 1100||stateno = 1300||stateno = 2310)
+trigger5 = 0&&var(18):= 0
+
+;ジャンプキャンセル制御
+[State 0, VarSet]
+type = VarSet
+trigger1 = statetype != A
+trigger1 = var(5)
+v = 5
+value = 0
+
+;溜め解除
+[State 0, VarSet]
+type = VarSet
+trigger1 = var(25)
+trigger1 = movetype = H
+v = 25
+value = 0
+
+[State 0, RemoveExplod]
+type = RemoveExplod
+trigger1 = !var(25)
+trigger1 = NumExplod(8130)
+id = 8130
+
+;溜め音
+[State 0, PlaySnd]
+type = PlaySnd
+trigger1 = var(25)
+trigger1 = gametime%30 = 0
+value = S0,19
+
+[State 0, VarSet]
+type = VarSet
+trigger1 = Numtarget(2400)
+trigger1 = ProjHitTime(2400) = 0
+trigger2 = Numtarget(3755)
+trigger2 = ProjHitTime(3755) = 0
+v = 26
+value = target,ID
+
+[State 0, Null]
+type = Null
+trigger1 = var(10) = [1,3]
+trigger1 = fvar(10) > 2.0
+trigger1 = 1||fvar(10):= 2.0
+trigger2 = var(10) = 10
+trigger2 = fvar(10) > 1.0
+trigger2 = 1||fvar(10):= 1.0
+trigger3 = var(10) = 20
+trigger3 = fvar(10) > 1.4
+trigger3 = 1||fvar(10):= 1.4
+trigger4 = var(10) = 30
+trigger4 = fvar(10) > 1.2
+trigger4 = 1||fvar(10):= 1.2
+ignorehitpause = 1
+
+[State 0, VarSet]
+type = VarSet
+trigger1 = fvar(8) >= 0
+trigger1 = fvar(6)
+fv = 6
+value = 0
+
+[State 0, VarSet]
+type = VarSet
+trigger1 = fvar(7)
+trigger1 = fvar(8) >= 0
+fv = 7
+value = 0
+
+;怪奇ゲージ
+[State 0, VarAdd]
+type = VarAdd
+triggerall = var(10) < 10
+triggerall = roundstate = 2
+trigger1 = fvar(8) <= 0
+trigger2 = gametime%30 = 0
+trigger2 = fvar(8) = [0,0.5]
+fv = 8
+value = 0.01-fvar(6)
+ignorehitpause = 1
+
+[State 0, VarSet]
+type = VarSet
+trigger1 = var(10) >= 10
+fv = 8
+value = -1.05
+ignorehitpause = 1
+
+[State 0, Null]
+type = Null
+trigger1 = fvar(7)&&fvar(8) >= 0
+trigger1 = 1||fvar(8):= fvar(7)
+trigger1 = 1||fvar(7):= 0
+ignorehitpause = 1
+
+[State 0, VarSet]
+type = VarSet
+trigger1 = stateno = [120,153]
+trigger1 = Anim = 160
+v = 14
+value = 30
+
+;霊力回復タイマー
+[State 0, VarAdd]
+type = VarAdd
+trigger1 = var(14) > 0
+v = 14
+value = -1
+ignorehitpause = 1
+
+;結界展開中霊力減少
+[State 0, VarAdd]
+type = VarAdd
+trigger1 = var(15) > 0
+trigger1 = gametime%2 = 0
+trigger1 = stateno = [120,153]
+trigger1 = Anim = 160
+v = 15
+value = -1
+
+;霊力
+[State 0, VarAdd]
+type = VarAdd
+trigger1 = var(14) <= 0
+trigger1 = var(15) < 125
+v = 15
+value = 1+(var(15)%5=0)
+ignorehitpause = 1
+
+;疑似スタン値リセット
+[State 0, VarSet]
+type = VarSet
+triggerall = var(16)
+trigger1 = !Numtarget
+trigger2 = 0;NumPartner
+trigger3 = Numtarget
+trigger3 = Numenemy > 1
+trigger3 = enemynear(var(58)),ID != target,ID
+v = 16
+value = 0
+
+[State 0, VarAdd]
+type = VarAdd
+trigger1 = ProjHitTime(600) = 0||ProjHitTime(601) = 0||ProjHitTime(602) = 0
+trigger2 = ProjHitTime(603) = 0||ProjHitTime(604) = 0||ProjHitTime(605) = 0
+trigger3 = ProjHitTime(606) = 0
+trigger4 = ProjHitTime(650) = 0||ProjHitTime(651) = 0||ProjHitTime(652) = 0
+trigger5 = ProjHitTime(653) = 0||ProjHitTime(654) = 0||ProjHitTime(655) = 0
+trigger6 = ProjHitTime(656) = 0
+trigger7 = ProjHitTime(610) = 0||ProjHitTime(611) = 0||ProjHitTime(612) = 0
+trigger8 = ProjHitTime(613) = 0||ProjHitTime(615) = 0||ProjHitTime(616) = 0
+trigger9 = ProjHitTime(616) = 0
+trigger10 = ProjHitTime(660) = 0||ProjHitTime(661) = 0||ProjHitTime(662) = 0
+trigger11 = ProjHitTime(663) = 0||ProjHitTime(664) = 0||ProjHitTime(665) = 0
+trigger12 = ProjHitTime(666) = 0
+trigger13 = ProjHitTime(620) = 0
+trigger14 = ProjHitTime(630) = 0||ProjHitTime(631) = 0||ProjHitTime(632) = 0
+trigger15 = ProjHitTime(633) = 0||ProjHitTime(634) = 0||ProjHitTime(635) = 0
+trigger16 = ProjHitTime(636) = 0
+trigger17 = ProjHitTime(680) = 0||ProjHitTime(681) = 0||ProjHitTime(682) = 0
+trigger18 = ProjHitTime(683) = 0||ProjHitTime(684) = 0||ProjHitTime(685) = 0
+trigger19 = ProjHitTime(686) = 0
+v = 16
+value = 5
+
+[State 0, VarAdd]
+type = VarAdd
+trigger1 = ProjHitTime(1000) = 0
+trigger2 = ProjHitTime(1100) = 0
+trigger3 = ProjHitTime(1400) = 0
+v = 16
+value = 10
+
+[State 0, VarAdd]
+type = VarAdd
+trigger1 = ProjHitTime(1200) = 0
+trigger2 = ProjHitTime(1300) = 0
+v = 16
+value = 40
+
+[State 0, VarAdd]
+type = VarSet
+trigger1 = ProjHitTime(2210) = 0
+trigger2 = ProjHitTime(2300) = 0
+trigger3 = ProjHitTime(2310) = 0
+trigger4 = ProjHitTime(3500) = 0||ProjHitTime(3501) = 0||ProjHitTime(3502) = 0
+trigger5 = ProjHitTime(3503) = 0||ProjHitTime(3504) = 0||ProjHitTime(3505) = 0
+trigger6 = ProjHitTime(3506) = 0||ProjHitTime(3507) = 0
+v = 16
+value = 100
+
+[State 0, TargetState]
+type = TargetState
+triggerall = NumTarget
+triggerall = var(16) >= 100
+trigger1 = ProjHitTime(0) = 0
+value = 1500
+
+[State 0, Helper]
+type = Helper
+trigger1 = !Numhelper(7150)
+trigger1 = movehit = 1||ProjHitTime(0) = 0
+trigger1 = var(16) >= 100
+helpertype = normal
+name = "Stun-Effect"
+ID = 7150
+stateno = 7150
+pos = 0,0
+postype = p1
+facing = 1
+keyctrl = 0
+ownpal = 1
+size.xscale = 1
+size.yscale = 1
+
+;スペルゲージデバッグ用
+[State 0, VarSet]
+type = Varset
+trigger1 = 0
+fv = 10
+value = 2
+
+[State 0, Null]
+type = Null
+triggerall = !var(11)
+trigger1 = GetHitVar(Damage)
+trigger1 = 1||fvar(10):= fvar(10)+GetHitVar(Damage)*0.001
+trigger2 = !GetHitVar(Damage)
+trigger2 = var(12) > Life
+trigger2 = 1||fvar(10):= fvar(10)+(var(12)-Life)*0.001
+ignorehitpause = 1
+
+[State 0, VarSet]
+type = VarSet
+trigger1 = Life != var(12)
+v = 12
+value = Life
+ignorehitpause = 1
+
+[State 0, Null]
+type = Null
+triggerall = !var(11)
+trigger1 = movetype = H
+trigger1 = var(13) < Power
+trigger1 = 0;1||fvar(10):= fvar(10)+(Power-var(13))*0.001
+ignorehitpause = 1
+
+[State 0, VarSet]
+type = VarSet
+trigger1 = Power != var(13)
+v = 13
+value = Power
+ignorehitpause = 1
+
+;スレイブロバー追加ダメージ計算（未使用）
+[State 0, Null]
+type = Null
+trigger1 = var(30)
+trigger1 = PlayerID(var(30)),GetHitVar(Damage)
+trigger1 = 1||var(17):= var(17)+PlayerID(var(30)),GetHitVar(Damage)
+trigger2 = !var(30)&&var(17)
+trigger2 = 1||var(17):= 0
+ignorehitpause = 1
+
+[State 0, VarAdd]
+type = VarAdd
+trigger1 = ProjHitTime(0) = 0
+fv = 8
+value = 0.025
+ignorehitpause = 1
+
+[State 0, VarAdd]
+type = VarAdd
+triggerall = !var(11)
+trigger1 = ProjHitTime(600) = 0||ProjHitTime(601) = 0||ProjHitTime(602) = 0
+trigger2 = ProjHitTime(603) = 0||ProjHitTime(604) = 0||ProjHitTime(605) = 0
+trigger3 = ProjHitTime(606) = 0
+trigger4 = ProjHitTime(650) = 0||ProjHitTime(651) = 0||ProjHitTime(652) = 0
+trigger5 = ProjHitTime(653) = 0||ProjHitTime(654) = 0||ProjHitTime(655) = 0
+trigger6 = ProjHitTime(656) = 0
+trigger7 = ProjHitTime(610) = 0||ProjHitTime(611) = 0||ProjHitTime(612) = 0
+trigger8 = ProjHitTime(613) = 0||ProjHitTime(615) = 0||ProjHitTime(616) = 0
+trigger9 = ProjHitTime(616) = 0
+trigger10 = ProjHitTime(660) = 0||ProjHitTime(661) = 0||ProjHitTime(662) = 0
+trigger11 = ProjHitTime(663) = 0||ProjHitTime(664) = 0||ProjHitTime(665) = 0
+trigger12 = ProjHitTime(666) = 0
+trigger13 = ProjHitTime(620) = 0
+trigger14 = ProjHitTime(630) = 0||ProjHitTime(631) = 0||ProjHitTime(632) = 0
+trigger15 = ProjHitTime(633) = 0||ProjHitTime(634) = 0||ProjHitTime(635) = 0
+trigger16 = ProjHitTime(636) = 0
+trigger17 = ProjHitTime(680) = 0||ProjHitTime(681) = 0||ProjHitTime(682) = 0
+trigger18 = ProjHitTime(683) = 0||ProjHitTime(684) = 0||ProjHitTime(685) = 0
+trigger19 = ProjHitTime(686) = 0
+fv = 10
+value = 0.01
+ignorehitpause = 1
+
+[State 0, VarAdd]
+type = VarAdd
+triggerall = !var(11)
+trigger1 = ProjGuardedTime(600) = 0||ProjGuardedTime(601) = 0||ProjGuardedTime(602) = 0
+trigger2 = ProjGuardedTime(603) = 0||ProjGuardedTime(604) = 0||ProjGuardedTime(605) = 0
+trigger3 = ProjGuardedTime(606) = 0
+trigger4 = ProjGuardedTime(650) = 0||ProjGuardedTime(651) = 0||ProjGuardedTime(652) = 0
+trigger5 = ProjGuardedTime(653) = 0||ProjGuardedTime(654) = 0||ProjGuardedTime(655) = 0
+trigger6 = ProjGuardedTime(656) = 0
+trigger7 = ProjGuardedTime(610) = 0||ProjGuardedTime(611) = 0||ProjGuardedTime(612) = 0
+trigger8 = ProjGuardedTime(613) = 0||ProjGuardedTime(615) = 0||ProjGuardedTime(616) = 0
+trigger9 = ProjGuardedTime(616) = 0
+trigger10 = ProjGuardedTime(660) = 0||ProjGuardedTime(661) = 0||ProjGuardedTime(662) = 0
+trigger11 = ProjGuardedTime(663) = 0||ProjGuardedTime(664) = 0||ProjGuardedTime(665) = 0
+trigger12 = ProjGuardedTime(666) = 0
+trigger13 = ProjGuardedTime(620) = 0
+trigger14 = ProjGuardedTime(630) = 0||ProjGuardedTime(631) = 0||ProjGuardedTime(632) = 0
+trigger15 = ProjGuardedTime(633) = 0||ProjGuardedTime(634) = 0||ProjGuardedTime(635) = 0
+trigger16 = ProjGuardedTime(636) = 0
+trigger17 = ProjGuardedTime(680) = 0||ProjGuardedTime(681) = 0||ProjGuardedTime(682) = 0
+trigger18 = ProjGuardedTime(683) = 0||ProjGuardedTime(684) = 0||ProjGuardedTime(685) = 0
+trigger19 = ProjGuardedTime(686) = 0
+trigger20 = ProjHitTime(3640) = 0||ProjHitTime(3641) = 0||ProjHitTime(3642) = 0
+trigger21 = ProjHitTime(3643) = 0||ProjHitTime(3644) = 0||ProjHitTime(3645) = 0
+trigger22 = ProjHitTime(3646) = 0||ProjHitTime(3647) = 0||ProjHitTime(3648) = 0
+trigger23 = ProjHitTime(3649) = 0||ProjHitTime(3650) = 0||ProjHitTime(3651) = 0
+trigger24 = ProjHitTime(3652) = 0||ProjHitTime(3653) = 0||ProjHitTime(3654) = 0
+trigger25 = ProjHitTime(3655) = 0||ProjHitTime(3656) = 0||ProjHitTime(3657) = 0
+trigger26 = ProjHitTime(3658) = 0||ProjHitTime(3659) = 0||ProjHitTime(3660) = 0
+trigger27 = ProjHitTime(3661) = 0||ProjHitTime(3662) = 0||ProjHitTime(3663) = 0
+trigger28 = ProjHitTime(3664) = 0||ProjHitTime(3665) = 0||ProjHitTime(3666) = 0
+trigger29 = ProjHitTime(3667) = 0||ProjHitTime(3668) = 0||ProjHitTime(3669) = 0
+trigger30 = ProjHitTime(3670) = 0||ProjHitTime(3671) = 0||ProjHitTime(3672) = 0
+trigger31 = ProjHitTime(3800) = 0||ProjHitTime(3801) = 0||ProjHitTime(3802) = 0
+trigger32 = ProjHitTime(3803) = 0||ProjHitTime(3804) = 0||ProjHitTime(3805) = 0
+trigger33 = ProjHitTime(3806) = 0||ProjHitTime(3807) = 0||ProjHitTime(3808) = 0
+trigger34 = ProjHitTime(3809) = 0
+fv = 10
+value = 0.005
+ignorehitpause = 1
+
+[State 0, VarAdd]
+type = VarAdd
+triggerall = !var(11)
+trigger1 = ProjGuardedTime(3640) = 0||ProjGuardedTime(3641) = 0||ProjGuardedTime(3642) = 0
+trigger2 = ProjGuardedTime(3643) = 0||ProjGuardedTime(3644) = 0||ProjGuardedTime(3645) = 0
+trigger3 = ProjGuardedTime(3646) = 0||ProjGuardedTime(3647) = 0||ProjGuardedTime(3648) = 0
+trigger4 = ProjGuardedTime(3649) = 0||ProjGuardedTime(3650) = 0||ProjGuardedTime(3651) = 0
+trigger5 = ProjGuardedTime(3652) = 0||ProjGuardedTime(3653) = 0||ProjGuardedTime(3654) = 0
+trigger6 = ProjGuardedTime(3655) = 0||ProjGuardedTime(3656) = 0||ProjGuardedTime(3657) = 0
+trigger7 = ProjGuardedTime(3658) = 0||ProjGuardedTime(3659) = 0||ProjGuardedTime(3660) = 0
+trigger8 = ProjGuardedTime(3661) = 0||ProjGuardedTime(3662) = 0||ProjGuardedTime(3663) = 0
+trigger9 = ProjGuardedTime(3664) = 0||ProjGuardedTime(3665) = 0||ProjGuardedTime(3666) = 0
+trigger10 = ProjGuardedTime(3667) = 0||ProjGuardedTime(3668) = 0||ProjGuardedTime(3669) = 0
+trigger11 = ProjGuardedTime(3670) = 0||ProjGuardedTime(3671) = 0||ProjGuardedTime(3672) = 0
+trigger12 = ProjGuardedTime(3800) = 0||ProjGuardedTime(3801) = 0||ProjGuardedTime(3802) = 0
+trigger13 = ProjGuardedTime(3803) = 0||ProjGuardedTime(3804) = 0||ProjGuardedTime(3805) = 0
+trigger14 = ProjGuardedTime(3806) = 0||ProjGuardedTime(3807) = 0||ProjGuardedTime(3808) = 0
+trigger15 = ProjGuardedTime(3809) = 0
+fv = 10
+value = 0.0025
+ignorehitpause = 1
+
+[State 0, VarAdd]
+type = VarAdd
+triggerall = !var(11)
+trigger1 = ProjContactTime(1000) = 0
+fv = 10
+value = 0.03*Ifelse(ProjContactTime(1000)=ProjHitTime(1000),1,0.5)
+ignorehitpause = 1
+
+[State 0, VarAdd]
+type = VarAdd
+triggerall = !var(11)
+trigger1 = ProjHitTime(1100) = 0
+trigger2 = ProjHitTime(1300) = 0
+trigger3 = ProjHitTime(1400) = 0
+fv = 10
+value = 0.025
+ignorehitpause = 1
+
+[State 0, VarAdd]
+type = VarAdd
+triggerall = !var(11)
+trigger1 = ProjGuardedTime(1100) = 0
+trigger2 = ProjGuardedTime(1300) = 0
+trigger3 = ProjGuardedTime(1400) = 0
+fv = 10
+value = 0.0125
+ignorehitpause = 1
+
+[State 0, VarAdd]
+type = VarAdd
+triggerall = !var(11)
+trigger1 = ProjHitTime(1200) = 0
+trigger2 = ProjHitTime(3500) = 0||ProjHitTime(3501) = 0||ProjHitTime(3502) = 0
+trigger3 = ProjHitTime(3503) = 0||ProjHitTime(3504) = 0||ProjHitTime(3505) = 0
+trigger4 = ProjHitTime(3506) = 0||ProjHitTime(3507) = 0||ProjHitTime(3508) = 0
+fv = 10
+value = 0.1
+ignorehitpause = 1
+
+[State 0, VarAdd]
+type = VarAdd
+triggerall = !var(11)
+trigger1 = ProjGuardedTime(1200) = 0
+trigger2 = ProjGuardedTime(3500) = 0||ProjGuardedTime(3501) = 0||ProjGuardedTime(3502) = 0
+trigger3 = ProjGuardedTime(3503) = 0||ProjGuardedTime(3504) = 0||ProjGuardedTime(3505) = 0
+trigger4 = ProjGuardedTime(3506) = 0||ProjGuardedTime(3507) = 0||ProjGuardedTime(3508) = 0
+fv = 10
+value = 0.05
+ignorehitpause = 1
+
+[State , 距離]
+Type=null
+;X座標
+Trigger1=1||var(56):=Ifelse((EnemyNear(var(58)),StateType!=A),Ifelse((Pos X<= EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),(EnemyNear(var(58)),Const(Size.Ground.Front)),(EnemyNear(var(58)),Const(Size.Ground.back))),0);地上
+Trigger1=1||var(56):=Ifelse((EnemyNear(var(58)),StateType=A),Ifelse((Pos X<= EnemyNear(var(58)),Pos X^^EnemyNear(var(58)),Facing=1),(EnemyNear(var(58)),Const(Size.Air.Front)),(EnemyNear(var(58)),Const(Size.Air.back))),var(56));空中
+Trigger1=1||var(55):=Floor((Pos X-EnemyNear(var(58)),Pos X)*Facing*-1);相手までの距離
+Trigger1=1||var(55):=var(55)-var(56);相手への距離
+;Trigger1=1||var(55):=var(55)-Ifelse((StateType!=A),(Const(Size.Ground.Front)),(Const(Size.Air.Front)) ) ;自分情報
+;Y座標
+Trigger1=1||var(56):=Floor(EnemyNear(var(58)),Pos Y-Pos Y)
+;相手空中喰らい計算用
+Trigger1=1||var(53):=Ifelse((enemynear(var(58)),movetype=H&&enemynear(var(58)),statetype=A),enemynear(var(58)),const(size.mid.pos.y),0)
+
+[State 0, ガードステート認識]
+type = Null
+triggerall = Alive
+trigger1 = statetype != A
+trigger1 = stateno = [120,153]
+trigger1 = fvar(20):= (statetype = S)+(statetype = C)*2+(!HitShakeOver)*10
+trigger2 = stateno != [120,153]
+trigger2 = movetype != H
+trigger2 = fvar(20)
+trigger2 = fvar(20):= 0
+trigger3 = !fvar(21)
+trigger3 = fvar(21):=-1
+trigger4 = !fvar(22)
+trigger4 = fvar(22):=-1
+trigger5 = !fvar(23)
+trigger5 = fvar(23):=-1
+trigger6 = !fvar(24)
+trigger6 = fvar(24):=-1
+trigger7 = !fvar(25)
+trigger7 = fvar(25):=-1
+trigger8 = !fvar(26)
+trigger8 = fvar(26):=-1
+ignorehitpause = 1
+
+[State 0, 下段学習]
+type = Null
+triggerall = Alive
+triggerall = Numenemy = 1
+triggerall = movetype = H
+triggerall = stateno != [120,155]
+triggerall = prevstateno = [120,155]
+triggerall = enemynear(var(58)),movetype = A
+triggerall = fvar(20) = 1
+trigger1 = fvar(21)=-1
+trigger1 = !(enemynear(var(58)),stateno=abs(fvar(23))||enemynear(var(58)),stateno=abs(fvar(25)))
+trigger1 = !(enemynear(var(58)),stateno=abs(fvar(22))||enemynear(var(58)),stateno=abs(fvar(24))||enemynear(var(58)),stateno=abs(fvar(26)))
+trigger1 = fvar(21):= enemynear(var(58)),stateno
+trigger2 = !(enemynear(var(58)),stateno=abs(fvar(21))||enemynear(var(58)),stateno=abs(fvar(25)))
+trigger2 = !(enemynear(var(58)),stateno=abs(fvar(22))||enemynear(var(58)),stateno=abs(fvar(24))||enemynear(var(58)),stateno=abs(fvar(26)))
+trigger2 = fvar(21)!=-1&&fvar(23)=-1
+trigger2 = fvar(23):= enemynear(var(58)),stateno
+trigger3 = !(enemynear(var(58)),stateno = fvar(21)||enemynear(var(58)),stateno = fvar(23))
+trigger3 = !(enemynear(var(58)),stateno=abs(fvar(22))||enemynear(var(58)),stateno=abs(fvar(24))||enemynear(var(58)),stateno=abs(fvar(26)))
+trigger3 = fvar(21)!=-1&&fvar(23)!=-1&&fvar(25)=-1
+trigger3 = fvar(25):= enemynear(var(58)),stateno
+ignorehitpause = 1
+
+[State 0, 中段学習]
+type = Null
+triggerall = Alive
+triggerall = Numenemy = 1
+triggerall = movetype = H
+triggerall = stateno != [120,155]
+triggerall = prevstateno = [120,155]
+triggerall = enemynear(var(58)),movetype = A
+triggerall = fvar(20) = 2
+trigger1 = fvar(22)=-1
+trigger1 = !(enemynear(var(58)),stateno = fvar(24)||enemynear(var(58)),stateno = fvar(26))
+trigger1 = !(enemynear(var(58)),stateno=abs(fvar(21))||enemynear(var(58)),stateno=abs(fvar(23))||enemynear(var(58)),stateno=abs(fvar(25)))
+trigger1 = fvar(22):= enemynear(var(58)),stateno
+trigger2 = !(enemynear(var(58)),stateno = fvar(22)||enemynear(var(58)),stateno = fvar(26))
+trigger2 = !(enemynear(var(58)),stateno=abs(fvar(21))||enemynear(var(58)),stateno=abs(fvar(23))||enemynear(var(58)),stateno=abs(fvar(25)))
+trigger2 = fvar(22)!=-1&&fvar(24)=-1
+trigger2 = fvar(24):= enemynear(var(58)),stateno
+trigger3 = !(enemynear(var(58)),stateno = fvar(22)||enemynear(var(58)),stateno = fvar(24))
+trigger3 = !(enemynear(var(58)),stateno=abs(fvar(21))||enemynear(var(58)),stateno=abs(fvar(23))||enemynear(var(58)),stateno=abs(fvar(25)))
+trigger3 = fvar(22)!=-1&&fvar(24)!=-1&&fvar(26)=-1
+trigger3 = fvar(26):= enemynear(var(58)),stateno
+ignorehitpause = 1
+
+[State 0, ガー不学習]
+type = Null
+triggerall = Alive
+triggerall = Numenemy = 1
+triggerall = movetype = H
+triggerall = stateno != [120,155]
+triggerall = prevstateno = [120,155]
+triggerall = enemynear(var(58)),movetype = A
+trigger1 = fvar(20)=2&&fvar(21)>0
+trigger1 = enemynear(var(58)),stateno=fvar(21)
+trigger1 = fvar(21):= -fvar(21)
+trigger2 = fvar(20)=1&&fvar(22)>0
+trigger2 = enemynear(var(58)),stateno=fvar(22)
+trigger2 = fvar(22):= -fvar(22)
+trigger3 = fvar(20)=2&&fvar(23)>0
+trigger3 = enemynear(var(58)),stateno=fvar(23)
+trigger3 = fvar(23):= -fvar(23)
+trigger4 = fvar(20)=1&&fvar(24)>0
+trigger4 = enemynear(var(58)),stateno=fvar(24)
+trigger4 = fvar(24):= -fvar(24)
+trigger5 = fvar(20)=2&&fvar(25)>0
+trigger5 = enemynear(var(58)),stateno=fvar(25)
+trigger5 = fvar(25):= -fvar(25)
+trigger6 = fvar(20)=1&&fvar(26)>0
+trigger6 = enemynear(var(58)),stateno=fvar(26)
+trigger6 = fvar(26):= -fvar(26)
+;ガード硬直中
+trigger7 = fvar(20) > 10
+trigger7 = fvar(27):= enemynear(var(58)),stateno
+trigger8 = fvar(20) > 10
+trigger8 = enemynear(var(58)),stateno != fvar(27)
+trigger8 = fvar(28):= enemynear(var(58)),stateno
+trigger9 = fvar(20) > 10
+trigger9 = !(enemynear(var(58)),stateno=fvar(27)||enemynear(var(58)),stateno=fvar(28))
+trigger9 = fvar(29):= enemynear(var(58)),stateno
+ignorehitpause = 1
+
+[State 0, VarSet]
+type = VarSet
+trigger1 = win
+v = 52
+value = 1
+
+;ジャンプ制御
+[State 0, VarSet]
+type = VarSet
+trigger1 = var(54)
+trigger1 = ctrl
+v = 54
+value = 0

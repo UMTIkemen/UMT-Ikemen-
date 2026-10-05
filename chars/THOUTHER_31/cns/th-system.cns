@@ -1,0 +1,3091 @@
+[statedef -2]
+[state ]
+type=attackmulset
+trigger1=1
+value=1
+[state ]
+type=assertspecial
+trigger1=1
+flag=noautoturn
+flag2=nowalk
+;-------------ニュートラルフラグ
+[state ]
+type=varadd
+trigger1=!(var(1)&131072)
+trigger1=roundstate!=2
+var(1)=131072
+[state ]
+type=varadd
+trigger1=roundstate=2
+trigger1=ctrl||movetype=h
+var(1)=-(var(1)&131072)
+[state ]
+type=nothitby
+trigger1=var(1)&131072
+trigger1=movetype=i
+trigger1=roundstate>1
+value=sac
+;-------------動作管理ヘルパー
+[state ]
+type=helper
+trigger1=!numhelper(1)
+id=1
+stateno=1
+ownpal=1
+supermovetime=99999999
+pausemovetime=99999999
+[state ]
+type=helper
+triggerall=!numhelper(9978)
+trigger1 = win
+trigger2 = lose
+trigger3 = drawgame
+id=9978
+stateno=9978
+ownpal=1
+supermovetime=99999999
+pausemovetime=99999999
+;------------暗転初期化
+[state ]
+type=varadd
+trigger1=1
+var(1)=-(var(1)&8192)
+;------------ヒットストップ
+[state ]
+type=varadd
+trigger1=!numhelper(1)
+var(0)=-1
+;------------ガードゲージ
+[state ]
+type=varset
+trigger1=1
+fvar(5)=0
+[state ]
+type=varadd
+trigger1=movetype!=h
+trigger1=fvar(6)>0
+fvar(6)=-1
+[state ]
+type=varadd
+trigger1=movetype=h
+trigger1=fvar(7)<gethitvar(hitshaketime)
+trigger1=gethitvar(guarded)
+fvar(6)=gethitvar(hittime)*2
+[state ]
+type=varset
+trigger1=fvar(6)>180
+fvar(6)=180
+;------------オーラゲージ
+[state ]
+type=varadd
+trigger1=1
+fvar(18)=-1
+;------------
+[state ]
+type=powerset
+trigger1=anim=[3000,3100]
+trigger1=movetype=h
+trigger1=fvar(1)=-1
+value=0
+[state ]
+type=varset
+trigger1=anim=[3000,3100]
+trigger1=movetype=h
+trigger1=fvar(1)=-1
+fvar(2)=0
+[state ]
+type=varset
+trigger1=anim=[3000,3100]
+trigger1=movetype=h
+trigger1=fvar(1)=-1
+fvar(1)=1
+;----------------塊天カウント
+[state ]
+type=varadd
+trigger1=!(var(1)&8192)
+fvar(4)=-1
+[state ]
+type=palfx
+trigger1=fvar(4)>0
+trigger1=gametime%2
+add=120,120,0
+time=1
+;----------------ダメージボイス
+[state ]
+type=playsnd
+trigger1=!time
+trigger1=alive
+trigger1=gethitvar(damage)>0
+trigger1=!gethitvar(guarded)
+trigger1=movetype=h
+trigger1=stateno!=[120,155]
+trigger1=stateno!=1400+anim%5
+value=5000,random%3
+channel=27
+volume=255
+;------究極奥義ＫＯ
+[state ]
+type=varadd
+trigger1=!(var(1)&134217728)
+trigger1=numexplod(10040)
+var(1)=134217728
+;----------------速度保存
+[state ]
+type=varset
+trigger1=movetype=h
+sysfvar(0)=vel x*(statetype=a)
+[state ]
+type=varset
+trigger1=movetype=h
+sysfvar(4)=vel y
+;-----------エフェクト消去
+;-------退かぬ
+[state ]
+type=removeexplod
+trigger1=anim!=[1000,1001]
+trigger2=movetype=h
+id=1005
+[state ]
+type=removeexplod
+trigger1=anim!=[1000,1001]
+trigger2=movetype=h
+id=1006
+[state ]
+type=removeexplod
+trigger1=anim!=[1000,1001]
+trigger2=movetype=h
+id=1007
+[state ]
+type=removeexplod
+trigger1=anim!=[1000,1001]
+trigger2=movetype=h
+id=1008
+[state ]
+type=removeexplod
+trigger1=anim!=[1000,1001]
+trigger2=movetype=h
+id=1009
+;------媚びぬ下段
+[state ]
+type=removeexplod
+trigger1=anim!=[1100,1101]
+trigger2=movetype=h
+id=1105
+;------羽ばたき
+[state ]
+type=removeexplod
+trigger1=anim!=[2000,2051]
+trigger2=movetype=h
+id=2055
+[state ]
+type=removeexplod
+trigger1=anim!=[2000,2051]
+trigger2=movetype=h
+id=2056
+[state ]
+type=removeexplod
+trigger1=anim!=[2000,2051]
+trigger2=movetype=h
+id=2057
+[state ]
+type=removeexplod
+trigger1=anim!=[2000,2051]
+trigger2=movetype=h
+id=2058
+[state ]
+type=removeexplod
+trigger1=anim!=[2090,2091]
+trigger2=movetype=h
+id=2091
+[state ]
+type=removeexplod
+trigger1=anim!=[2090,2091]
+trigger2=movetype=h
+id=2092
+;------究極奥義暗転
+[state ]
+type=removeexplod
+trigger1=anim!=[2000,3000]
+trigger2=roundstate>2
+trigger2=winko
+trigger3=movetype=h
+id=10010
+;------一撃必殺
+[state ]
+type=removeexplod
+trigger1=anim!=[3000,3100]
+trigger2=movetype=h
+id=3000
+[state ]
+type=removeexplod
+trigger1=anim!=[3000,3100]
+trigger2=movetype=h
+id=3051
+[state ]
+type=removeexplod
+trigger1=anim!=[3000,3100]
+trigger2=movetype=h
+id=3052
+[state ]
+type=removeexplod
+trigger1=anim!=[3000,3100]
+trigger2=movetype=h
+id=3053
+[state ]
+type=removeexplod
+trigger1=anim!=[3000,3100]
+trigger2=movetype=h
+id=10020
+[state ]
+type=removeexplod
+trigger1=anim!=[3000,3100]
+trigger2=movetype=h
+id=10021
+[state ]
+type=removeexplod
+trigger1=anim!=[3000,3100]
+trigger2=movetype=h
+id=10022
+[state ]
+type=removeexplod
+trigger1=anim!=3100
+trigger2=movetype=h
+id=3125
+;----------------KOボイス
+;対北斗神拳
+[state ]
+type=playsnd
+triggerall=!(var(1)&16777216)
+triggerall=!alive
+trigger1=enemy,name="kenshiro"
+trigger1=enemy,authorname="Drowin hokuto"||enemy,authorname="SAIKEI"||enemy,authorname="Cameron"
+trigger1=var(1):=var(1)+16777216
+trigger2=enemy,name="toki"||enemy,name="TOKI-(NERICYA)"
+trigger2=enemy,authorname="Drowin hokuto"||enemy,authorname="Ts"||enemy,authorname="NERICYA"
+trigger2=var(1):=var(1)+16777216
+trigger3=enemy,name="raoh"||enemy,name="raoh ATL"
+trigger3=enemy,authorname="Drowin hokuto"||enemy,authorname="shikkoku"||enemy,authorname="Bat"||enemy,authorname="Ataru"
+trigger3=var(1):=var(1)+16777216
+trigger4=enemy,name="amiba"
+trigger4=enemy,authorname="Drowin hokuto"
+trigger4=var(1):=var(1)+16777216
+value=5150,1
+channel=27
+volume=255
+;対汚物
+[state ]
+type=playsnd
+trigger1=!(var(1)&16777216)
+trigger1=!alive
+trigger1=enemy,name="jagi"
+trigger1=enemy,authorname="Drowin hokuto"||enemy,authorname="ahuron"||enemy,authorname="Ts"
+trigger1=var(1):=var(1)+16777216
+value=5150,2
+channel=27
+;対女
+[state ]
+type=playsnd
+trigger1=!(var(1)&16777216)
+trigger1=!alive
+trigger1=enemy,name="MAMIYA"
+trigger1=enemy,authorname="YU-TOHARU"
+trigger1=var(1):=var(1)+16777216
+value=5150,3
+channel=27
+[state ]
+type=playsnd
+trigger1=!(var(1)&16777216)
+trigger1=!alive
+trigger1=var(1):=var(1)+16777216
+value=5150,0
+channel=27
+volume=255
+;-------------ブースト管理
+[state ]
+type=varadd
+trigger1=1
+fvar(3)=-1
+[state ]
+type=varadd
+triggerall=fvar(3)<=0&&!(var(1)&128)
+trigger1=movecontact=1
+trigger1=(anim=[200,206])||anim=400+anim%5||anim=600+anim%5
+fvar(2)=ceil(185*(.025+fvar(17))*fvar(10)*ifelse(var(1)&256,.01,1))
+[state ]
+type=varadd
+triggerall=fvar(3)<=0&&!(var(1)&128)
+trigger1=movecontact=1
+trigger1=(anim=[210,216])||anim=410+anim%5||anim=610+anim%5
+fvar(2)=ceil(185*(.05+fvar(17))*fvar(10)*ifelse(var(1)&256,.01,1))
+[state ]
+type=varadd
+triggerall=fvar(3)<=0&&!(var(1)&128)
+trigger1=!projcontacttime(1450)||!projcontacttime(1451)
+fvar(2)=ceil(185*(.05+fvar(17))*fvar(10)*ifelse(var(1)&256,.01,1))
+[state ]
+type=varadd
+triggerall=fvar(3)<=0&&!(var(1)&128)
+trigger1=movecontact=1
+trigger1=(anim=[220,226])||anim=420+anim%5||(anim=[1000,1101])||anim=[1400,1501]
+fvar(2)=ceil(185*(.07+fvar(17))*fvar(10)*ifelse(var(1)&256,.01,1))
+[state ]
+type=varadd
+triggerall=fvar(3)<=0&&!(var(1)&128)
+trigger1=!projcontacttime(1550)||!projcontacttime(1551)
+fvar(2)=ceil(185*(.07+fvar(17))*fvar(10)*ifelse(var(1)&256,.01,1))
+[state ]
+type=varadd
+triggerall=fvar(3)<=0&&!(var(1)&128)
+triggerall=movecontact=1
+trigger1=(anim=[230,236])||anim=430+anim%5||anim=[620,631]
+trigger2=(anim=[700,780])||anim=[1200,1351]
+trigger3=anim=[2000,2051]
+fvar(2)=ceil(185*(.1+fvar(17))*fvar(10)*ifelse(var(1)&256,.01,1))
+[state ]
+type=varadd
+triggerall=fvar(3)<=0&&!(var(1)&128)
+trigger1=!projcontacttime(1650)||!projcontacttime(1651)
+fvar(2)=ceil(185*(.1+fvar(17))*fvar(10)*ifelse(var(1)&256,.01,1))
+[state ]
+type=varadd
+triggerall=fvar(3)<=0&&!(var(1)&128)
+triggerall=movecontact=1
+trigger1=anim=630
+fvar(2)=ceil(185*(.15+fvar(17))*fvar(10)*ifelse(var(1)&256,.01,1))
+[state ]
+type=varadd
+triggerall=fvar(3)<=0&&!(var(1)&128)
+trigger1=movecontact=1
+trigger1=anim=710+anim%5||(anim=[760,765])||(anim=[740,746])
+fvar(2)=ceil(185*(.24+.26*(moveguarded)+fvar(17))*fvar(10)*ifelse(var(1)&256,.01,1))
+[state ]
+type=varadd
+triggerall=fvar(3)<=0&&!(var(1)&128)
+triggerall=fvar(7)<gethitvar(hitshaketime)
+trigger1=gethitvar(hittime)-gethitvar(guarded)*2<12
+fvar(2)=ceil(185*.05*.3)
+[state ]
+type=varadd
+triggerall=fvar(3)<=0&&!(var(1)&128)
+triggerall=fvar(7)<gethitvar(hitshaketime)
+trigger1=gethitvar(hittime)-gethitvar(guarded)*2=[12,13]
+fvar(2)=ceil(185*.07*.3)
+[state ]
+type=varadd
+triggerall=fvar(3)<=0&&!(var(1)&128)
+triggerall=fvar(7)<gethitvar(hitshaketime)
+trigger1=gethitvar(hittime)-gethitvar(guarded)*2=[14,16]
+fvar(2)=ceil(185*.1*.3)
+[state ]
+type=varadd
+triggerall=fvar(3)<=0&&!(var(1)&128)
+triggerall=fvar(7)<gethitvar(hitshaketime)
+trigger1=gethitvar(hittime)-gethitvar(guarded)*2=[17,19]
+fvar(2)=ceil(185*.12*.3)
+[state ]
+type=varadd
+triggerall=fvar(3)<=0&&!(var(1)&128)
+triggerall=fvar(7)<gethitvar(hitshaketime)
+trigger1=gethitvar(hittime)-gethitvar(guarded)*2>=20
+fvar(2)=ceil(185*.14*.3)
+[state ]
+type=varset
+trigger1=movetype=h
+fvar(7)=gethitvar(hitshaketime)
+;////////////////////////////////////////////////////////////////////////
+; P2Name
+;////////////////////////////////////////////////////////////////////////
+;-----挑発増加
+[state ]
+type=poweradd
+triggerall=roundstate=2
+trigger1=enemy,name="kenshiro"
+trigger1=enemy,authorname="SAIKEI"
+trigger1=enemy,movetype=i
+trigger1=enemy,anim=780&&enemy,animelem=6
+trigger2=enemy,name="kenshiro"
+trigger2=enemy,authorname="Drowin hokuto"
+trigger2=enemy,movetype=a
+trigger2=enemy,stateno=198
+trigger2=enemy,animelem=6
+trigger3=enemy,name="kenshiro"
+trigger3=enemy,authorname="Cameron"
+trigger3=enemy,movetype=i
+trigger3=enemy,stateno=199
+trigger3=enemy,animelem=6
+trigger4=enemy,name="raoh ATL"
+trigger4=enemy,authorname="Ataru"
+trigger4=enemy,stateno=195
+trigger4=enemy,movetype=i
+trigger4=enemy,animelem=3
+trigger5=enemy,name="raoh"
+trigger5=enemy,authorname="shikkoku"||enemy,authorname="Bat"
+trigger5=enemy,movetype=i
+trigger5=enemy,stateno=195
+trigger5=enemy,animelem=3
+trigger6=enemy,name="toki"
+trigger6=enemy,authorname="Drowin hokuto"
+trigger6=enemy,movetype=a
+trigger6=enemy,stateno=199
+trigger6=enemy,animelem=4
+trigger7=enemy,name="toki"
+trigger7=enemy,authorname="Ts"
+trigger7=enemy,movetype=i
+trigger7=enemy,stateno=198
+trigger7=enemy,animelem=4
+trigger8=enemy,name="jagi"
+trigger8=enemy,authorname="ahuron"
+trigger8=enemy,movetype=i
+trigger8=enemy,stateno=199
+trigger8=enemy,animelem=9
+trigger9=enemy,name="jagi"
+trigger9=enemy,authorname="Ts"
+trigger9=enemy,movetype=i
+trigger9=enemy,stateno=198
+trigger9=enemy,animelem=10
+trigger10=enemy,name="jagimeirin"
+trigger10=enemy,authorname="Ts"
+trigger10=enemy,movetype=i
+trigger10=enemy,stateno=195
+trigger10=enemy,animelem=18
+trigger11=enemy,name="shin"
+trigger11=enemy,authorname="ahuron"
+trigger11=enemy,movetype=i
+trigger11=enemy,stateno=199
+trigger11=enemy,animelem=5
+trigger12=enemy,name="REI"
+trigger12=enemy,authorname="ahuron"
+trigger12=enemy,movetype=i
+trigger12=enemy,stateno=199
+trigger12=enemy,animelem=4
+trigger13=enemy,name="tenshi_rei"
+trigger13=enemy,authorname="Tamago Kanten"
+trigger13=enemy,movetype=i
+trigger13=enemy,stateno=195
+trigger13=enemy,animelem=3
+trigger14=enemy,name="JUDA-(NERICYA)"&&enemy,authorname="NERICYA"
+trigger14=enemy,movetype=i
+trigger14=enemy,stateno=195
+trigger14=enemy,animelem=3
+trigger15=enemy,name="ikusan_juda"
+trigger15=enemy,authorname="Tamago Kanten"
+trigger15=enemy,movetype=i
+trigger15=enemy,stateno=195
+trigger15=enemy,animelem=5
+trigger16=enemy,name="thouther"
+trigger16=enemy,authorname="ahuron"
+trigger16=enemy,movetype=i
+trigger16=enemy,stateno=199
+trigger16=enemy,animelem=6
+trigger17=enemy,name="thouther"
+trigger17=enemy,authorname="SAIKEI"
+trigger17=enemy,movetype=i
+trigger17=enemy,anim=780&&enemy,animelem=6
+trigger18=enemy,name="Mr.HEART"
+trigger18=enemy,authorname="rei"
+trigger18=enemy,movetype=i
+trigger18=enemy,stateno=195
+trigger18=enemy,animelem=4
+trigger19=enemy,name="MAMIYA"
+trigger19=enemy,authorname="YU-TOHARU"
+trigger19=enemy,movetype=i
+trigger19=enemy,stateno=195
+trigger19=enemy,animelem=6
+trigger20=enemy,name="SHYU"
+trigger20=enemy,authorname="Fixxxer"
+trigger20=enemy,movetype=i
+trigger20=enemy,stateno=195
+trigger20=enemy,animelem=2
+trigger21=enemy,name="TOKI-(NERICYA)"
+trigger21=enemy,authorname="NERICYA"
+trigger21=enemy,movetype=i
+trigger21=enemy,stateno=333
+trigger21=enemy,animelem=4
+value=1000
+[state ]
+type=varadd
+triggerall=roundstate=2
+trigger1=enemy,name="kenshiro"
+trigger1=enemy,authorname="SAIKEI"
+trigger1=enemy,movetype=i
+trigger1=enemy,anim=780&&enemy,animelem=6
+trigger2=enemy,name="kenshiro"
+trigger2=enemy,authorname="Drowin hokuto"
+trigger2=enemy,movetype=a
+trigger2=enemy,stateno=198
+trigger2=enemy,animelem=6
+trigger3=enemy,name="kenshiro"
+trigger3=enemy,authorname="Cameron"
+trigger3=enemy,movetype=i
+trigger3=enemy,stateno=199
+trigger3=enemy,animelem=6
+trigger4=enemy,name="raoh ATL"
+trigger4=enemy,authorname="Ataru"
+trigger4=enemy,stateno=195
+trigger4=enemy,movetype=i
+trigger4=enemy,animelem=3
+trigger5=enemy,name="raoh"
+trigger5=enemy,authorname="shikkoku"||enemy,authorname="Bat"
+trigger5=enemy,movetype=i
+trigger5=enemy,stateno=195
+trigger5=enemy,animelem=3
+trigger6=enemy,name="toki"
+trigger6=enemy,authorname="Drowin hokuto"
+trigger6=enemy,movetype=a
+trigger6=enemy,stateno=199
+trigger6=enemy,animelem=4
+trigger7=enemy,name="toki"
+trigger7=enemy,authorname="Ts"
+trigger7=enemy,movetype=i
+trigger7=enemy,stateno=198
+trigger7=enemy,animelem=4
+trigger8=enemy,name="jagi"
+trigger8=enemy,authorname="ahuron"
+trigger8=enemy,movetype=i
+trigger8=enemy,stateno=199
+trigger8=enemy,animelem=9
+trigger9=enemy,name="jagi"
+trigger9=enemy,authorname="Ts"
+trigger9=enemy,movetype=i
+trigger9=enemy,stateno=198
+trigger9=enemy,animelem=10
+trigger10=enemy,name="jagimeirin"
+trigger10=enemy,authorname="Ts"
+trigger10=enemy,movetype=i
+trigger10=enemy,stateno=195
+trigger10=enemy,animelem=18
+trigger11=enemy,name="shin"
+trigger11=enemy,authorname="ahuron"
+trigger11=enemy,movetype=i
+trigger11=enemy,stateno=199
+trigger11=enemy,animelem=5
+trigger12=enemy,name="REI"
+trigger12=enemy,authorname="ahuron"
+trigger12=enemy,movetype=i
+trigger12=enemy,stateno=199
+trigger12=enemy,animelem=4
+trigger13=enemy,name="tenshi_rei"
+trigger13=enemy,authorname="Tamago Kanten"
+trigger13=enemy,movetype=i
+trigger13=enemy,stateno=195
+trigger13=enemy,animelem=3
+trigger14=enemy,name="JUDA-(NERICYA)"&&enemy,authorname="NERICYA"
+trigger14=enemy,movetype=i
+trigger14=enemy,stateno=195
+trigger14=enemy,animelem=3
+trigger15=enemy,name="ikusan_juda"
+trigger15=enemy,authorname="Tamago Kanten"
+trigger15=enemy,movetype=i
+trigger15=enemy,stateno=195
+trigger15=enemy,animelem=5
+trigger16=enemy,name="thouther"
+trigger16=enemy,authorname="ahuron"
+trigger16=enemy,movetype=i
+trigger16=enemy,stateno=199
+trigger16=enemy,animelem=6
+trigger17=enemy,name="thouther"
+trigger17=enemy,authorname="SAIKEI"
+trigger17=enemy,movetype=i
+trigger17=enemy,anim=780&&enemy,animelem=6
+trigger18=enemy,name="Mr.HEART"
+trigger18=enemy,authorname="rei"
+trigger18=enemy,movetype=i
+trigger18=enemy,stateno=195
+trigger18=enemy,animelem=4
+trigger19=enemy,name="MAMIYA"
+trigger19=enemy,authorname="YU-TOHARU"
+trigger19=enemy,movetype=i
+trigger19=enemy,stateno=195
+trigger19=enemy,animelem=6
+trigger20=enemy,name="SHYU"
+trigger20=enemy,authorname="Fixxxer"
+trigger20=enemy,movetype=i
+trigger20=enemy,stateno=195
+trigger20=enemy,animelem=2
+trigger21=enemy,name="TOKI-(NERICYA)"
+trigger21=enemy,authorname="NERICYA"
+trigger21=enemy,movetype=i
+trigger21=enemy,stateno=333
+trigger21=enemy,animelem=4
+fvar(2)=185
+[state ]
+type=poweradd
+triggerall=numenemy>1
+triggerall=roundstate=2
+trigger1=enemy(1),name="kenshiro"
+trigger1=enemy(1),authorname="SAIKEI"
+trigger1=enemy(1),movetype=i
+trigger1=enemy(1),anim=780&&enemy(1),animelem=6
+trigger2=enemy(1),name="kenshiro"
+trigger2=enemy(1),authorname="Drowin hokuto"
+trigger2=enemy(1),movetype=a
+trigger2=enemy(1),stateno=198
+trigger2=enemy(1),animelem=6
+trigger3=enemy(1),name="kenshiro"
+trigger3=enemy(1),authorname="Cameron"
+trigger3=enemy(1),movetype=i
+trigger3=enemy(1),stateno=199
+trigger3=enemy(1),animelem=6
+trigger4=enemy(1),name="raoh ATL"
+trigger4=enemy(1),authorname="Ataru"
+trigger4=enemy(1),stateno=195
+trigger4=enemy(1),movetype=i
+trigger4=enemy(1),animelem=3
+trigger5=enemy(1),name="raoh"
+trigger5=enemy(1),authorname="shikkoku"||enemy(1),authorname="Bat"
+trigger5=enemy(1),movetype=i
+trigger5=enemy(1),stateno=195
+trigger5=enemy(1),animelem=3
+trigger6=enemy(1),name="toki"
+trigger6=enemy(1),authorname="Drowin hokuto"
+trigger6=enemy(1),movetype=a
+trigger6=enemy(1),stateno=199
+trigger6=enemy(1),animelem=4
+trigger7=enemy(1),name="toki"
+trigger7=enemy(1),authorname="Ts"
+trigger7=enemy(1),movetype=i
+trigger7=enemy(1),stateno=198
+trigger7=enemy(1),animelem=4
+trigger8=enemy(1),name="jagi"
+trigger8=enemy(1),authorname="ahuron"
+trigger8=enemy(1),movetype=i
+trigger8=enemy(1),stateno=199
+trigger8=enemy(1),animelem=9
+trigger9=enemy(1),name="jagi"
+trigger9=enemy(1),authorname="Ts"
+trigger9=enemy(1),movetype=i
+trigger9=enemy(1),stateno=198
+trigger9=enemy(1),animelem=10
+trigger10=enemy(1),name="jagimeirin"
+trigger10=enemy(1),authorname="Ts"
+trigger10=enemy(1),movetype=i
+trigger10=enemy(1),stateno=195
+trigger10=enemy(1),animelem=18
+trigger11=enemy(1),name="shin"
+trigger11=enemy(1),authorname="ahuron"
+trigger11=enemy(1),movetype=i
+trigger11=enemy(1),stateno=199
+trigger11=enemy(1),animelem=5
+trigger12=enemy(1),name="REI"
+trigger12=enemy(1),authorname="ahuron"
+trigger12=enemy(1),movetype=i
+trigger12=enemy(1),stateno=199
+trigger12=enemy(1),animelem=4
+trigger13=enemy(1),name="tenshi_rei"
+trigger13=enemy(1),authorname="Tamago Kanten"
+trigger13=enemy(1),movetype=i
+trigger13=enemy(1),stateno=195
+trigger13=enemy(1),animelem=3
+trigger14=enemy(1),name="JUDA-(NERICYA)"&&enemy(1),authorname="NERICYA"
+trigger14=enemy(1),movetype=i
+trigger14=enemy(1),stateno=195
+trigger14=enemy(1),animelem=3
+trigger15=enemy(1),name="ikusan_juda"
+trigger15=enemy(1),authorname="Tamago Kanten"
+trigger15=enemy(1),movetype=i
+trigger15=enemy(1),stateno=195
+trigger15=enemy(1),animelem=5
+trigger16=enemy(1),name="thouther"
+trigger16=enemy(1),authorname="ahuron"
+trigger16=enemy(1),movetype=i
+trigger16=enemy(1),stateno=199
+trigger16=enemy(1),animelem=6
+trigger17=enemy(1),name="thouther"
+trigger17=enemy(1),authorname="SAIKEI"
+trigger17=enemy(1),movetype=i
+trigger17=enemy(1),anim=780&&enemy(1),animelem=6
+trigger18=enemy(1),name="Mr.HEART"
+trigger18=enemy(1),authorname="rei"
+trigger18=enemy(1),movetype=i
+trigger18=enemy(1),stateno=195
+trigger18=enemy(1),animelem=4
+trigger19=enemy(1),name="MAMIYA"
+trigger19=enemy(1),authorname="YU-TOHARU"
+trigger19=enemy(1),movetype=i
+trigger19=enemy(1),stateno=195
+trigger19=enemy(1),animelem=6
+trigger20=enemy(1),name="SHYU"
+trigger20=enemy(1),authorname="Fixxxer"
+trigger20=enemy(1),movetype=i
+trigger20=enemy(1),stateno=195
+trigger20=enemy(1),animelem=2
+trigger21=enemy(1),name="TOKI-(NERICYA)"
+trigger21=enemy(1),authorname="NERICYA"
+trigger21=enemy(1),movetype=i
+trigger21=enemy(1),stateno=333
+trigger21=enemy(1),animelem=4
+value=1000
+[state ]
+type=varadd
+triggerall=numenemy>1
+triggerall=roundstate=2
+trigger1=enemy(1),name="kenshiro"
+trigger1=enemy(1),authorname="SAIKEI"
+trigger1=enemy(1),movetype=i
+trigger1=enemy(1),anim=780&&enemy(1),animelem=6
+trigger2=enemy(1),name="kenshiro"
+trigger2=enemy(1),authorname="Drowin hokuto"
+trigger2=enemy(1),movetype=a
+trigger2=enemy(1),stateno=198
+trigger2=enemy(1),animelem=6
+trigger3=enemy(1),name="kenshiro"
+trigger3=enemy(1),authorname="Cameron"
+trigger3=enemy(1),movetype=i
+trigger3=enemy(1),stateno=199
+trigger3=enemy(1),animelem=6
+trigger4=enemy(1),name="raoh ATL"
+trigger4=enemy(1),authorname="Ataru"
+trigger4=enemy(1),stateno=195
+trigger4=enemy(1),movetype=i
+trigger4=enemy(1),animelem=3
+trigger5=enemy(1),name="raoh"
+trigger5=enemy(1),authorname="shikkoku"||enemy(1),authorname="Bat"
+trigger5=enemy(1),movetype=i
+trigger5=enemy(1),stateno=195
+trigger5=enemy(1),animelem=3
+trigger6=enemy(1),name="toki"
+trigger6=enemy(1),authorname="Drowin hokuto"
+trigger6=enemy(1),movetype=a
+trigger6=enemy(1),stateno=199
+trigger6=enemy(1),animelem=4
+trigger7=enemy(1),name="toki"
+trigger7=enemy(1),authorname="Ts"
+trigger7=enemy(1),movetype=i
+trigger7=enemy(1),stateno=198
+trigger7=enemy(1),animelem=4
+trigger8=enemy(1),name="jagi"
+trigger8=enemy(1),authorname="ahuron"
+trigger8=enemy(1),movetype=i
+trigger8=enemy(1),stateno=199
+trigger8=enemy(1),animelem=9
+trigger9=enemy(1),name="jagi"
+trigger9=enemy(1),authorname="Ts"
+trigger9=enemy(1),movetype=i
+trigger9=enemy(1),stateno=198
+trigger9=enemy(1),animelem=10
+trigger10=enemy(1),name="jagimeirin"
+trigger10=enemy(1),authorname="Ts"
+trigger10=enemy(1),movetype=i
+trigger10=enemy(1),stateno=195
+trigger10=enemy(1),animelem=18
+trigger11=enemy(1),name="shin"
+trigger11=enemy(1),authorname="ahuron"
+trigger11=enemy(1),movetype=i
+trigger11=enemy(1),stateno=199
+trigger11=enemy(1),animelem=5
+trigger12=enemy(1),name="REI"
+trigger12=enemy(1),authorname="ahuron"
+trigger12=enemy(1),movetype=i
+trigger12=enemy(1),stateno=199
+trigger12=enemy(1),animelem=4
+trigger13=enemy(1),name="tenshi_rei"
+trigger13=enemy(1),authorname="Tamago Kanten"
+trigger13=enemy(1),movetype=i
+trigger13=enemy(1),stateno=195
+trigger13=enemy(1),animelem=3
+trigger14=enemy(1),name="JUDA-(NERICYA)"&&enemy(1),authorname="NERICYA"
+trigger14=enemy(1),movetype=i
+trigger14=enemy(1),stateno=195
+trigger14=enemy(1),animelem=3
+trigger15=enemy(1),name="ikusan_juda"
+trigger15=enemy(1),authorname="Tamago Kanten"
+trigger15=enemy(1),movetype=i
+trigger15=enemy(1),stateno=195
+trigger15=enemy(1),animelem=5
+trigger16=enemy(1),name="thouther"
+trigger16=enemy(1),authorname="ahuron"
+trigger16=enemy(1),movetype=i
+trigger16=enemy(1),stateno=199
+trigger16=enemy(1),animelem=6
+trigger17=enemy(1),name="thouther"
+trigger17=enemy(1),authorname="SAIKEI"
+trigger17=enemy(1),movetype=i
+trigger17=enemy(1),anim=780&&enemy(1),animelem=6
+trigger18=enemy(1),name="Mr.HEART"
+trigger18=enemy(1),authorname="rei"
+trigger18=enemy(1),movetype=i
+trigger18=enemy(1),stateno=195
+trigger18=enemy(1),animelem=4
+trigger19=enemy(1),name="MAMIYA"
+trigger19=enemy(1),authorname="YU-TOHARU"
+trigger19=enemy(1),movetype=i
+trigger19=enemy(1),stateno=195
+trigger19=enemy(1),animelem=6
+trigger20=enemy(1),name="SHYU"
+trigger20=enemy(1),authorname="Fixxxer"
+trigger20=enemy(1),movetype=i
+trigger20=enemy(1),stateno=195
+trigger20=enemy(1),animelem=2
+trigger21=enemy(1),name="TOKI-(NERICYA)"
+trigger21=enemy(1),authorname="NERICYA"
+trigger21=enemy(1),movetype=i
+trigger21=enemy(1),stateno=333
+trigger21=enemy(1),animelem=4
+fvar(2)=185
+[state ]
+type=null
+trigger1=fvar(2)<0
+trigger1=fvar(2):=0
+trigger2=fvar(2)>555
+trigger2=fvar(2):=555
+[state ]
+type=varset
+trigger1=var(1)&128||!roundstate
+fvar(3)=480
+[state ]
+type=varadd
+trigger1=!fvar(2)||fvar(2)=185||fvar(2)=370||fvar(2)=555||roundstate!=2
+var(1)=-(var(1)&128)
+[state ]
+type=varadd
+trigger1=var(1)&128
+trigger1=fvar(2)>0
+trigger1=!(var(1)&8192)
+fvar(2)=-1
+;----------------おい、そこに座れ！
+[state ]
+type=changeanim
+triggerall=movetype=h
+trigger1=stateno=805&&anim=11
+trigger1=enemy,name="jagi"||enemy,name="jagimeirin"
+trigger1=enemy,authorname="ahuron"||enemy,authorname="Ts"
+trigger1=enemy,stateno=801
+trigger2=stateno=805&&anim=11&&numenemy>1
+trigger2=enemy(1),name="jagi"||enemy(1),name="jagimeirin"
+trigger2=enemy(1),authorname="ahuron"||enemy(1),authorname="Ts"
+trigger2=enemy(1),stateno=801
+value=15
+[state ]
+type=explod
+triggerall=!numexplod(17)
+triggerall=anim=15
+trigger1=enemy,name="jagi"
+trigger1=enemy,authorname="ahuron"
+trigger1=enemy,stateno=801
+trigger2=numenemy>1
+trigger2=enemy(1),name="jagi"
+trigger2=enemy(1),authorname="ahuron"
+trigger2=enemy(1),stateno=801
+id=17
+anim=17
+scale=.5,.5
+sprpriority=4
+bindtime=-1
+removetime=-1
+ownpal=1
+[state ]
+type=removeexplod
+trigger1=movetype!=h
+trigger2=stateno!=805
+trigger3=anim!=15
+id=17
+;----------------ん？七つの傷がない
+[state ]
+type=changeanim
+triggerall=movetype=h
+trigger1=stateno=807&&anim=806
+trigger1=enemy,name="rei"
+trigger1=enemy,authorname="ahuron"
+trigger1=enemy,stateno=801
+trigger2=stateno=807&&anim=806&&numenemy>1
+trigger2=enemy(1),name="rei"
+trigger2=enemy(1),authorname="ahuron"
+trigger2=enemy(1),stateno=801
+trigger3=stateno=755&&anim=5000
+trigger3=enemy,name="tenshi_rei"
+trigger3=enemy,authorname="Tamago Kanten"
+trigger3=enemy,stateno=[750,761]
+trigger4=stateno=755&&anim=5000&&numenemy>1
+trigger4=enemy(1),name="tenshi_rei"
+trigger4=enemy(1),authorname="Tamago Kanten"
+trigger4=enemy(1),stateno=[750,761]
+value=16
+;----------------ｻﾗﾀﾞﾊﾞｰ!&うわらば！
+[state ]
+type=varadd
+triggerall=!(var(1)&268435456)
+trigger1=enemy,name="shin"
+trigger1=enemy,authorname="ahuron"
+trigger1=enemy,stateno=2200
+trigger1=enemy,animelem=25,>=0
+trigger2=numenemy>1
+trigger2=enemy(1),name="shin"
+trigger2=enemy(1),authorname="ahuron"
+trigger2=enemy(1),stateno=2200
+trigger2=enemy(1),animelem=25,>=0
+trigger3=enemy,name="amiba"
+trigger3=enemy,authorname="Drowin hokuto"
+trigger3=enemy,stateno=220011
+trigger3=enemy,animelem=25,>=0
+trigger4=numenemy>1
+trigger4=enemy(1),name="amiba"
+trigger4=enemy(1),authorname="Drowin hokuto"
+trigger4=enemy(1),stateno=220011
+trigger4=enemy(1),animelem=25,>=0
+var(1)=268435456
+;--------------獣を焦がす(黒秋葉)　相手ステータス変化
+[state -2]
+type = LifeAdd
+triggerall = Enemy,AuthorName = "tukemon&HAL" && Enemy,Name = "Akiha"
+trigger1 = Enemy,Var(56) = 1
+value = -8
+kill = 0
+[state -2]
+type = PowerAdd
+triggerall = Enemy,AuthorName = "tukemon&HAL" && Enemy,Name = "Akiha"
+trigger1 = Enemy,Var(51)%10 = 2
+trigger1 = Enemy,Var(56) = 1
+value = -33
+;--------------獣を焦がす　相手用
+[state -2]
+type = LifeAdd
+triggerall = Enemy,AuthorName = "?" && Enemy,Name = "Akiha_Vermilion"
+trigger1 = Enemy,Var(47) = 1
+value = -5
+kill = 0
+[state -2]
+type = PowerAdd
+triggerall = Enemy,AuthorName = "?" && Enemy,Name = "Akiha_Vermilion"
+trigger1 = Enemy,Var(47) = 1
+value = -26
+;--------------パウダースノウ　相手用
+[state -2]
+type = LifeAdd
+triggerall = Enemy,AuthorName = "?" && Enemy,Name = "Len"
+trigger1 = Enemy,Var(47) = 1 || Enemy,Var(48) = 1
+value = -Enemy,Var(47)*4-Enemy,Var(48)*4
+kill = 0
+;--------------じょうろ　相手用
+[state -2]
+type = LifeAdd
+triggerall = Enemy,AuthorName = "?" && Enemy,Name = "Hisui"
+trigger1 = Enemy,Var(47) = 1
+value = -10
+kill = 0
+[state -2]
+type = PowerAdd
+triggerall = Enemy,AuthorName = "?" && Enemy,Name = "Hisui"
+trigger1 = Enemy,Var(47) = 1
+value = -150
+;--------------ブラック・クラック　相手用
+[state -2]
+type = LifeAdd
+triggerall = Enemy,AuthorName = "?" && Enemy,Name = "Warachia"
+trigger1 = Enemy,Var(47) = 1
+value = -10
+kill = 0
+[state -2]
+type = LifeAdd
+triggerall = Enemy,AuthorName = "?" && Enemy,Name = "Warachia"
+trigger1 = Enemy,Var(47) = 2 || Enemy,Var(47) = 4
+value = -15
+kill = 0
+[state -2]
+type = LifeAdd
+triggerall = Enemy,AuthorName = "?" && Enemy,Name = "Warachia"
+trigger1 = Enemy,Var(47) = 3
+value = -30
+kill = 0
+[state -2]
+type = PowerAdd
+triggerall = Enemy,AuthorName = "?" && Enemy,Name = "Warachia"
+trigger1 = Enemy,Var(47) = 1
+value = 6
+[state -2]
+type = PowerAdd
+triggerall = Enemy,AuthorName = "?" && Enemy,Name = "Warachia"
+trigger1 = Enemy,Var(47) = 2 || Enemy,Var(47) = 3 || Enemy,Var(47) = 4
+value = 15
+;--------------現代医学の犠牲者です。　相手用
+[state -2]
+type = LifeAdd
+triggerall = Enemy,AuthorName = "?" && Enemy,Name = "Kohaku"
+trigger1 = Enemy,Var(47) = 1
+value = -5
+kill = 0
+;--------------毒効果（ドロウィンアルカナ)
+[state -2]
+type = PowerAdd
+triggerall = Enemy,AuthorName = "Drowin arcana"
+triggerall = Enemy,FVar(20) > 0
+trigger1 = Power > 0
+value = -1
+[state -2]
+type = LifeAdd
+triggerall = Enemy,AuthorName = "Drowin arcana"
+triggerall = Enemy,FVar(20) > 0
+trigger1 = GameTime % 7 = 0
+value = -1
+kill = 0
+[state -2]
+type = Palfx
+triggerall = Enemy,AuthorName = "Drowin arcana"
+trigger1 = Enemy,FVar(20) > 0
+Add = 100,0,110
+Mul = 220,220,220
+Time = 5
+;--------------西行寺幽々子　霊符及び寿命相手ステート
+[state -2]
+Type       = LifeAdd
+triggerall = Enemy,AuthorName    = "Souki" && Enemy,Name = "Yuyuko Saigyouji"
+trigger1   = Enemy,Var(3)        = 1 || Enemy,Var(3) = 2
+trigger1   = GameTime%6          = 0
+value      = IfElse(Enemy,Var(3) = 1, -2, -3)
+kill       = 0
+;--------------うどんげ　毒煙幕用（シロト氏）
+[state -2]
+type = LifeAdd
+triggerall = EnemyNear,AuthorName = "Shiroto"
+triggerall = EnemyNear,Name = "Reisen Udongein Inaba"
+trigger1 = EnemyNear,Var(40) != 0
+trigger1 = Pos Y = [-30,10]
+trigger1 = GameTime%3 = 0
+value = -EnemyNear,Var(40)
+kill = 0
+;--------------脱魂の儀 制御（AuthorName = "mikage_th"）
+;移動
+[State pos moving]
+type = PosAdd
+triggerall = (Enemynear,Name = "Komachi Onoduka")*(Enemynear,AuthorName = "mikage_th")*(TeamMode = single)
+trigger1 = (EnemyNear,StateNo = 820)*(EnemyNear,Anim = 823)*(EnemyNear,AnimElem = 6,13)
+trigger2 = (EnemyNear,StateNo = 821)*(EnemyNear,Anim = 823)*(EnemyNear,AnimElem = 6,43)
+X = -Ceil(EnemyNear,FVar(36))*Facing*EnemyNear,Facing
+Y = -Ceil(EnemyNear,FVar(37))*(StateType != L)
+;StateType != A + StateType != L の場合強制落下Stateへ
+[State pos moving]
+type = ChangeState
+triggerall = (Enemynear,Name = "Komachi Onoduka")*(Enemynear,AuthorName = "mikage_th")*(TeamMode = single)
+triggerall = (StateType != A)*(Pos Y != 0)*(StateType != L)
+trigger1 = (EnemyNear,StateNo = 820)*(EnemyNear,Anim = 823)*(EnemyNear,AnimElem = 6,13)
+trigger2 = (EnemyNear,StateNo = 821)*(EnemyNear,Anim = 823)*(EnemyNear,AnimElem = 6,43)
+value = 50
+;--------------脱魂の儀 制御（AuthorName = "mikage_th105"）
+;移動
+[State pos moving]
+type = PosAdd
+triggerall = (Enemynear,Name = "Komachi Onoduka")*(Enemynear,AuthorName = "mikage_th105")*(TeamMode = Single)
+trigger1 = (EnemyNear,StateNo = 820)*(EnemyNear,Anim = 823)*(EnemyNear,AnimElem = 6,13)
+trigger2 = (EnemyNear,StateNo = 821)*(EnemyNear,Anim = 823)*(EnemyNear,AnimElem = 6,43)
+X = -Ceil(EnemyNear,FVar(24))*Facing*EnemyNear,Facing
+Y = -Ceil(EnemyNear,FVar(25))*(StateType != L)
+;StateType != A + StateType != L の場合強制落下Stateへ
+[State pos moving]
+type = ChangeState
+triggerall = (Enemynear,Name = "Komachi Onoduka")*(Enemynear,AuthorName = "mikage_th105")*(TeamMode = Single)
+triggerall = (StateType != A)*(Pos Y != 0)*(StateType != L)
+trigger1 = (EnemyNear,StateNo = 820)*(EnemyNear,anim = 823)*(EnemyNear,AnimElem = 6,13)
+trigger2 = (EnemyNear,StateNo = 821)*(EnemyNear,anim = 823)*(EnemyNear,AnimElem = 6,43)
+value = 50
+;--------------毒煙幕「瓦斯織物の玉」 制御（AuthorName = "mikage_th"）
+[State LifeAdd]
+type = LifeAdd
+trigger1 = NumEnemy = 1
+trigger1 = Pos Y > -240
+trigger1 = (Enemy(0),Name = "Reisen Udongein Inaba")*(Enemy(0),AuthorName = "mikage_th")*(Enemy(0),FVar(35))
+value = -Floor(Enemy(0),FVar(35))*2
+Absolute = 1
+kill = 0
+[State LifeAdd]
+type = LifeAdd
+triggerall = NumEnemy = 2
+triggerall = Pos Y > -240
+trigger1 = (Enemy(0),Name = "Reisen Udongein Inaba")*(Enemy(0),AuthorName = "mikage_th")*(Enemy(0),FVar(35))
+trigger2 = (Enemy(1),Name = "Reisen Udongein Inaba")*(Enemy(1),AuthorName = "mikage_th")*(Enemy(1),FVar(35))
+value = -Floor(Enemy(0),FVar(35))*2-Floor(Enemy(1),FVar(35))*2
+Absolute = 1
+kill = 0
+;--------------毒煙幕「瓦斯織物の玉」 制御（AuthorName = "mikage_th105"）
+[State LifeAdd]
+type = LifeAdd
+trigger1 = NumEnemy = 1
+trigger1 = Pos Y > -240
+trigger1 = (Enemy(0),Name = "Reisen Udongein Inaba")*(Enemy(0),AuthorName = "mikage_th105")*(Enemy(0),FVar(21))
+value = -Floor(Enemy(0),FVar(21))*2
+Absolute = 1
+kill = 0
+[State LifeAdd]
+type = LifeAdd
+triggerall = NumEnemy = 2
+triggerall = Pos Y > -240
+trigger1 = (Enemy(0),Name = "Reisen Udongein Inaba")*(Enemy(0),AuthorName = "mikage_th105")*(Enemy(0),FVar(21))
+trigger2 = (Enemy(1),Name = "Reisen Udongein Inaba")*(Enemy(1),AuthorName = "mikage_th105")*(Enemy(1),FVar(21))
+value = -Floor(Enemy(0),FVar(21))*2-Floor(Enemy(1),FVar(21))*2
+Absolute = 1
+kill = 0
+;--------------土着神の祟り＆ミシャグジさまの祟り 制御
+;土着神の祟り
+[State LifeAdd]
+type = LifeAdd
+trigger1 = NumEnemy
+trigger1 = (Enemynear,Name = "Suwako Moriya")*(Enemynear,AuthorName = "mikage_th")*(TeamMode = Single)
+trigger1 = Floor((Enemynear,Var(42)%100)*0.1) = [0,1]
+trigger1 = (Floor(Enemynear,FVar(38)))%1000 > 0
+trigger1 = Floor(Enemynear,FVar(38)*0.001) = 2
+value = Floor(Enemynear,FVar(36)*(LifeMax/10000.000000))
+Absolute = 1
+kill = 0
+;ミシャグジさまの祟り
+[State LifeAdd]
+type = LifeAdd
+triggerall = NumEnemy
+triggerall = (Enemynear,Name = "Suwako Moriya")*(Enemynear,AuthorName = "mikage_th")*(TeamMode = Single)
+trigger1 = Floor(EnemyNear,FVar(35)) = 1
+trigger1 = MoveType = H
+trigger1 = StateNo != [150,155]
+trigger2 = Floor(EnemyNear,FVar(35)) = 2
+trigger2 = MoveType = H
+trigger2 = StateNo = [150,155]
+value = Floor(EnemyNear,FVar(33))
+Absolute = 1
+kill = 0
+;--------------神尾観鈴　呪い効果付加
+[state -2, LifeAdd]
+type = LifeAdd
+triggerall = (Enemy,TeamMode = Simul) = 0
+triggerall = (TeamMode = Simul) = 0
+triggerall = NumEnemy
+triggerall = Enemy,AuthorName = "586"
+triggerall = Enemy,Name = "Misuzu Kamio"
+triggerall = Enemy,fvar(11) > 0
+trigger1 = Enemy,var(13) = 1
+trigger1 = GameTime % 13 = 0
+trigger2 = Enemy,var(13) = 2
+trigger2 = GameTime % 11 = 0
+trigger3 = Enemy,var(13) = 3
+trigger3 = GameTime % 8 = 0
+trigger4 = Enemy,var(13) = 4
+trigger4 = GameTime % 6 = 0
+trigger5 = Enemy,var(13) = 5
+trigger5 = GameTime % 3 = 0
+value = -1
+kill = 0
+[state -2, PalFX]
+type = PalFX
+triggerall = (Enemy,TeamMode = Simul) = 0
+triggerall = (TeamMode = Simul) = 0
+triggerall = NumEnemy
+triggerall = Enemy,AuthorName = "586"
+triggerall = Enemy,Name = "Misuzu Kamio"
+trigger1 = Enemy,fvar(11) > 0
+add = -50,150,150
+time = 1
+;--------------愛原奈都美「挑発」対応ステート
+[state -2]
+type = PowerAdd
+triggerall = numenemy
+triggerall = enemynear,name = "AIHARA NATSUMI" &&  enemynear,authorname = "YU-TOHARU"
+trigger1 = enemynear,stateno = 197 && enemynear,statetime = 70
+value = -45
+;--------------アル･アジフ「挑発」対応ステート
+[state -2]
+type = PowerAdd
+triggerall = numenemy
+triggerall = enemynear,name = "AL AZIF" &&  enemynear,authorname = "YU-TOHARU"
+trigger1 = enemynear,stateno = 195 && enemynear,statetime = 30
+value = -45
+;///////////////////////////////////////////////////////////////////////////////////
+; システム管理ヘルパー
+;///////////////////////////////////////////////////////////////////////////////////
+[statedef 1]
+[state ]
+type=parentvaradd
+trigger1=1
+var(0)=-1
+[state ]
+type=assertspecial
+trigger1=1
+flag=invisible
+[state ]
+type=changeanim
+trigger1=1
+value=!(root,var(1)&1024)
+[state ]
+type=posset
+trigger1=1
+x=root,pos x
+y=enemynear,pos y
+[state ]
+type=turn
+trigger1=facing!=root,facing
+[state ]
+type=playerpush
+trigger1=root,p2dist y=[-60-50*(root,statetype!=c),enemynear,const(size.height)]
+value=!!(root,var(1)&1024)
+[state ]
+type=statetypeset
+trigger1=1
+statetype=s
+[state ]
+type=statetypeset
+trigger1=root,statetype=a
+statetype=a
+[state ]
+type=hitoverride
+trigger1=1
+time=1
+attr=sca,aa,at,ap
+stateno=10000
+[state ]
+type=nothitby
+trigger1=1
+value=sac
+[state ]
+type=assertspecial
+trigger1=root,var(1)&8388608
+flag=nomusic
+[state ]
+type=stopsnd
+trigger1=root,var(1)&8388608
+trigger1=root,projhittime(3050)=1
+channel=30
+[state ]
+type=playsnd
+triggerall=root,var(1)&8388608
+trigger1=root,projhittime(3050)>=1
+value=s3100,0
+loop=1
+channel=30
+lowpriority=1
+;-------------暗転
+[state ]
+type=assertspecial
+trigger1=root,anim=2010+root,anim%5||root,anim=2050+root,anim%5||root,anim=2200+root,anim%5
+trigger1=root,animelem=3,>=0
+trigger2=root,anim=2090+root,anim%5||root,anim=2100+root,anim%5||(root,anim=[2201,2210])||root,anim=3050||root,anim=3100
+trigger3=root,anim=3000+root,anim%5&&root,animelem=18,>=0
+flag=nobg
+flag2=nofg
+;-------------七星ゲージ
+[state ]
+type=explod
+trigger1=!numexplod(7000)
+trigger1=teamside=1
+id=7000
+anim=7000
+postype=left
+pos=230,40
+scale=.5,.5
+sprpriority=6
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+trigger1=!numexplod(7000)
+trigger1=teamside=2
+id=7000
+anim=7000
+postype=right
+pos=-230,40
+facing=-1
+scale=.5,.5
+sprpriority=6
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+;--------死兆星
+[state ]
+type=explod
+trigger1=!numexplod(7002)
+trigger1=root,fvar(1)<=0
+trigger1=teamside=1
+trigger1=!numexplod(7011)
+trigger1=!numhelper(7015)
+id=7002
+anim=7002
+postype=left
+pos=245,53
+scale=.5,.5
+sprpriority=6
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=helper
+trigger1=root,fvar(1)<=0
+trigger1=numexplod(7011)
+id=7006
+stateno=7006
+supermovetime=999999
+pausemovetime=999999
+[state ]
+type=explod
+trigger1=!numexplod(7002)
+trigger1=root,fvar(1)<=0
+trigger1=teamside=2
+trigger1=!numexplod(7011)
+trigger1=!numhelper(7015)
+id=7002
+anim=7002
+postype=right
+pos=-245,53
+facing=-1
+scale=.5,.5
+sprpriority=6
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+trigger1=!numexplod(7003)
+trigger1=root,fvar(1)<=0
+trigger1=teamside=1
+trigger1=!numexplod(7011)
+trigger1=!numhelper(7015)
+id=7003
+anim=7003
+postype=left
+pos=251,55
+scale=.5,.5
+sprpriority=7
+trans=add
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+trigger1=!numexplod(7003)
+trigger1=root,fvar(1)<=0
+trigger1=teamside=2
+trigger1=!numexplod(7011)
+trigger1=!numhelper(7015)
+id=7003
+anim=7003
+postype=right
+pos=-251,55
+facing=-1
+trans=add
+scale=.5,.5
+sprpriority=7
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=helper
+trigger1=root,fvar(1)>0
+trigger1=numexplod(7002)
+id=7006
+stateno=7007
+supermovetime=999999
+pausemovetime=999999
+[state ]
+type=removeexplod
+trigger1=root,fvar(1)>0
+id=7002
+[state ]
+type=removeexplod
+trigger1=root,fvar(1)>0
+id=7003
+;--------★7
+[state ]
+type=explod
+trigger1=!numexplod(7071)
+trigger1=root,fvar(1)>=7
+trigger1=teamside=1
+id=7071
+anim=7001
+postype=left
+pos=282,46
+scale=.5,.5
+sprpriority=7
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+trigger1=!numexplod(7071)
+trigger1=root,fvar(1)>=7
+trigger1=teamside=2
+id=7071
+anim=7001
+postype=right
+pos=-282,46
+facing=-1
+scale=.5,.5
+sprpriority=7
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=helper
+trigger1=numexplod(7071)
+trigger1=root,fvar(1)<7
+id=7075
+stateno=7005
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=removeexplod
+trigger1=root,fvar(1)<7
+id=7071
+;--------★6
+[state ]
+type=explod
+trigger1=!numexplod(7061)
+trigger1=root,fvar(1)>=6
+trigger1=teamside=1
+id=7061
+anim=7001
+postype=left
+pos=277,41
+scale=.5,.5
+sprpriority=7
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+trigger1=!numexplod(7061)
+trigger1=root,fvar(1)>=6
+trigger1=teamside=2
+id=7061
+anim=7001
+postype=right
+pos=-277,41
+facing=-1
+scale=.5,.5
+sprpriority=7
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=helper
+trigger1=numexplod(7061)
+trigger1=root,fvar(1)<6
+id=7065
+stateno=7005
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=removeexplod
+trigger1=root,fvar(1)<6
+id=7061
+;--------★5
+[state ]
+type=explod
+trigger1=!numexplod(7051)
+trigger1=root,fvar(1)>=5
+trigger1=teamside=1
+id=7051
+anim=7001
+postype=left
+pos=269,41
+scale=.5,.5
+sprpriority=7
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+trigger1=!numexplod(7051)
+trigger1=root,fvar(1)>=5
+trigger1=teamside=2
+id=7051
+anim=7001
+postype=right
+pos=-269,41
+facing=-1
+scale=.5,.5
+sprpriority=7
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=helper
+trigger1=numexplod(7051)
+trigger1=root,fvar(1)<5
+id=7055
+stateno=7005
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=removeexplod
+trigger1=root,fvar(1)<5
+id=7051
+;--------★4
+[state ]
+type=explod
+trigger1=!numexplod(7041)
+trigger1=root,fvar(1)>=4
+trigger1=teamside=1
+id=7041
+anim=7001
+postype=left
+pos=263,46
+scale=.5,.5
+sprpriority=7
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+trigger1=!numexplod(7041)
+trigger1=root,fvar(1)>=4
+trigger1=teamside=2
+id=7041
+anim=7001
+postype=right
+pos=-263,46
+facing=-1
+scale=.5,.5
+sprpriority=7
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=helper
+trigger1=numexplod(7041)
+trigger1=root,fvar(1)<4
+id=7045
+stateno=7005
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=removeexplod
+trigger1=root,fvar(1)<4
+id=7041
+;--------★3
+[state ]
+type=explod
+trigger1=!numexplod(7031)
+trigger1=root,fvar(1)>=3
+trigger1=teamside=1
+id=7031
+anim=7001
+postype=left
+pos=255,46
+scale=.5,.5
+sprpriority=7
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+trigger1=!numexplod(7031)
+trigger1=root,fvar(1)>=3
+trigger1=teamside=2
+id=7031
+anim=7001
+postype=right
+pos=-255,46
+facing=-1
+scale=.5,.5
+sprpriority=7
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=helper
+trigger1=numexplod(7031)
+trigger1=root,fvar(1)<3
+id=7035
+stateno=7005
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=removeexplod
+trigger1=root,fvar(1)<3
+id=7031
+;--------★2
+[state ]
+type=explod
+trigger1=!numexplod(7021)
+trigger1=root,fvar(1)>=2
+trigger1=teamside=1
+id=7021
+anim=7001
+postype=left
+pos=247,46
+scale=.5,.5
+sprpriority=7
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+trigger1=!numexplod(7021)
+trigger1=root,fvar(1)>=2
+trigger1=teamside=2
+id=7021
+anim=7001
+postype=right
+pos=-247,46
+facing=-1
+scale=.5,.5
+sprpriority=7
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=helper
+trigger1=numexplod(7021)
+trigger1=root,fvar(1)<2
+id=7025
+stateno=7005
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=removeexplod
+trigger1=root,fvar(1)<2
+id=7021
+;--------★1
+[state ]
+type=explod
+trigger1=!numexplod(7011)
+trigger1=root,fvar(1)>=1
+trigger1=teamside=1
+trigger1=!numhelper(7006)
+id=7011
+anim=7001
+postype=left
+pos=242,41
+scale=.5,.5
+sprpriority=7
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+trigger1=!numexplod(7011)
+trigger1=root,fvar(1)>=1
+trigger1=teamside=2
+trigger1=!numhelper(7006)
+id=7011
+anim=7001
+postype=right
+pos=-242,41
+facing=-1
+scale=.5,.5
+sprpriority=7
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=helper
+trigger1=numexplod(7011)
+trigger1=root,fvar(1)<1
+id=7015
+stateno=7005
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=removeexplod
+trigger1=root,fvar(1)<1
+id=7011
+;--------------死兆星点灯
+[State -2, ex]
+type = VarSet
+triggerall = Var(1) = 0
+triggerall = RoundState >= 2
+trigger1 = Enemynear,Name = "KENSHIRO" && Enemynear,Authorname = "SAIKEI";自分
+trigger1 = Enemynear,fvar(1)<=0
+trigger2 = Enemynear,Name = "RAOH" && Enemynear,Authorname = "Shikkoku";漆黒氏・ラオウ
+trigger2 = Enemynear,Var(7) = 7
+trigger3 = Enemynear,Name = "Mr.HEART" && Enemynear,Authorname = "Rei";ハート様
+trigger3 = Enemynear,Var(27) = 0
+trigger4 = Enemynear,Name = "JUDA-(NERICYA)" && Enemynear,Authorname = "NERICYA";ユダ
+trigger4 = Enemynear,Var(20) = 0
+trigger5 = Enemynear,Name = "TOKI-(NERICYA)" && Enemynear,Authorname = "NERICYA";練り茶氏・トキ
+trigger5 = Enemynear,Var(20) = 0
+trigger6 = Enemynear,Name = "REI" && Enemynear,Authorname = "ahuron";レイ
+trigger6 = Enemynear,Var(4) = 7
+trigger7 = Enemynear,Name = "SHIN" && Enemynear,Authorname = "ahuron";シン
+trigger7 = Enemynear,Var(4) = 7
+trigger8 = Enemynear,Name = "THOUTHER" && Enemynear,Authorname = "ahuron";サウザー
+trigger8 = Enemynear,Var(4) = 7
+trigger9 = Enemynear,Name = "JAGI" && Enemynear,Authorname = "ahuron";アフロン氏・ジャギ様
+trigger9 = Enemynear,Var(4) = 7
+trigger10 = Enemynear,Name = "KENSHIRO" && Enemynear,Authorname = "Drowin hokuto";ドロウィン氏・ケンシロウ
+trigger10 = Enemynear,Var(24) = 7
+trigger11 = Enemynear,Name = "RAOH" && Enemynear,Authorname = "Drowin hokuto";ドロウィン氏・ラオウ
+trigger11 = Enemynear,Var(24) = 7
+trigger12 = Enemynear,Name = "TOKI" && Enemynear,Authorname = "Drowin hokuto";ドロウィン氏・トキ
+trigger12 = Enemynear,Var(24) = 7
+trigger13 = Enemynear,Name = "JAGI" && Enemynear,Authorname = "Drowin hokuto";ドロウィン氏・ジャギ様
+trigger13 = Enemynear,Var(24) = 7
+trigger14 = Enemynear,Name = "AMIBA" && Enemynear,Authorname = "NERICYA";アミバ
+trigger14 = Enemynear,Var(20) = 0
+trigger15 = Enemynear,Name = "Toki Hakurei" && Enemynear,Authorname = "shuu";博霊トキ
+trigger15 = Enemynear,Var(20) = 0
+trigger16 = Enemynear,Name = "THOUTHER" && Enemynear,Authorname = "TS";聖帝レミリア
+trigger16 = Enemynear,Var(4) = 7
+trigger17 = Enemynear,Name = "CHENSHIROU" && Enemynear,Authorname = "seapon";チェンシロウ
+trigger17 = Enemynear,Var(24) = 7
+trigger18 = Enemynear,Name = "tenshi_rei" && Enemynear,Authorname = "Tamago Kanten";卵寒天氏・レイ天子
+trigger18 = Enemynear,Var(35) = 7
+trigger19 = Enemynear,Name = "ikusan_juda" && Enemynear,Authorname = "Tamago Kanten";卵寒天氏・ユダイクさん
+trigger19 = Enemynear,Var(20) = 7
+trigger20 = Enemynear,Name = "THOUTHER" && Enemynear,Authorname = "SAIKEI";自分
+trigger20 = Enemynear,fvar(1)<=0
+var(1) = 1
+[State 999, ex]
+type = Explod
+trigger1 = Var(1) = 1
+anim = 7790
+ID = 7790
+postype = left
+pos = ifelse(teamside = 1,0,320),50
+sprpriority = -4
+ownpal = 1
+facing = ifelse(teamside = 1,1,-1)
+bindtime = -1
+scale = 0.5,0.5
+pausemovetime = 99999
+supermovetime = 99999
+[State 999, ex]
+type = PlaySnd
+trigger1 = Var(1) = 1
+trigger1 = RoundState = 2
+value = s7005,0  ;←任意のボイス
+volume=255
+channel = 9
+[State 999, ex]
+type = StopSnd
+trigger1 = Var(1) = 1
+trigger1 = RoundState > 2
+channel = 9
+[State 999, ex]
+type = VarAdd
+trigger1 = Var(1) = 1
+var(1) = 1
+;/////////////////////////////////////////////////////////////////////////////////
+; ブーストゲージ
+;/////////////////////////////////////////////////////////////////////////////////
+;--------------ゲージ網かけ
+[state ]
+type=explod
+;trigger1=!numexplod(7101)
+trigger1=teamside=1
+id=7101
+anim=7101
+postype=left
+pos=6,215
+scale=.5,.5
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+;trigger1=!numexplod(7101)
+trigger1=teamside=2
+id=7101
+anim=7101
+postype=right
+pos=-6,215
+facing=-1
+scale=.5,.5
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+;-------ゲージ上昇
+[state ]
+type=explod
+;trigger1=!numexplod(7150)
+trigger1=teamside=1
+id=7150
+anim=7150
+postype=left
+pos=7,216
+scale=0,1
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+;trigger1=!numexplod(7150)
+trigger1=teamside=2
+id=7150
+anim=7150
+postype=right
+pos=-7,216
+facing=-1
+scale=0,1
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=modifyexplod
+trigger1=1
+id=7150
+scale=ifelse(root,fvar(2)<=185,.005*root,fvar(2)/185*100,.5+.0045*(root,fvar(2)-185)/185*100),1
+;-------１本目
+[state ]
+type=explod
+;trigger1=!numexplod(7151)
+trigger1=teamside=1
+trigger1=root,fvar(2)>=185
+id=7151
+anim=7151
+postype=left
+pos=7,216
+scale=.5,1
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+;;trigger1=!numexplod(7151)
+trigger1=teamside=2
+trigger1=root,fvar(2)>=185
+id=7151
+anim=7151
+postype=right
+pos=-7,216
+facing=-1
+scale=.5,1
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+;-------２本目
+[state ]
+type=explod
+;trigger1=!numexplod(7152)
+trigger1=teamside=1
+trigger1=root,fvar(2)>=370
+id=7152
+anim=7152
+postype=left
+pos=48,216
+scale=.5,1
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+;trigger1=!numexplod(7152)
+trigger1=teamside=2
+trigger1=root,fvar(2)>=370
+id=7152
+anim=7152
+postype=right
+pos=-48,216
+facing=-1
+scale=.5,1
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+;-------３本目
+[state ]
+type=explod
+;trigger1=!numexplod(7153)
+trigger1=teamside=1
+trigger1=root,fvar(2)>=555
+id=7153
+anim=7153
+postype=left
+pos=85,216
+scale=.5,1
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+;trigger1=!numexplod(7153)
+trigger1=teamside=2
+trigger1=root,fvar(2)>=555
+id=7153
+anim=7153
+postype=right
+pos=-85,216
+facing=-1
+scale=.5,1
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=removeexplod
+trigger1=root,fvar(2)<185
+id=7151
+[state ]
+type=removeexplod
+trigger1=root,fvar(2)<370
+id=7152
+[state ]
+type=removeexplod
+trigger1=root,fvar(2)<555
+id=7153
+[state ]
+type=explod
+;trigger1=!numexplod(7190)
+trigger1=teamside=1
+trigger1=!root,fvar(20)&&(roundstate||root,time>1)
+trigger1=root,fvar(2)>=185
+trigger1=gametime%50=[0,17]
+id=7190
+anim=8100+gametime%50 ;7190
+postype=left
+pos=6,215
+scale=.5,.8
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+trans=add
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+;trigger1=!numexplod(7190)
+trigger1=teamside=2
+trigger1=!root,fvar(20)&&(roundstate||root,time>1)
+trigger1=root,fvar(2)>=185
+trigger1=gametime%50=[0,17]
+id=7190
+anim=8100+gametime%50 ;7190
+postype=right
+pos=-6,215
+facing=-1
+scale=.5,.8
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+trans=add
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=removeexplod
+trigger1=power<1000
+id=7290
+[state ]
+type=explod
+;trigger1=!numexplod(7191)
+trigger1=teamside=1
+trigger1=!root,fvar(20)&&(roundstate||root,time>1)
+trigger1=root,fvar(2)>=370
+trigger1=gametime%50=[11,26]
+id=7191
+anim=8120+(gametime%50-11);7191
+postype=left
+pos=48,215
+scale=.5,.8
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+trans=add
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+;trigger1=!numexplod(7191)
+trigger1=teamside=2
+trigger1=!root,fvar(20)&&(roundstate||root,time>1)
+trigger1=root,fvar(2)>=370
+trigger1=gametime%50=[11,26]
+id=7191
+anim=8120+(gametime%50-11);7191
+postype=right
+pos=-48,215
+facing=-1
+scale=.5,.8
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+trans=add
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+;trigger1=!numexplod(7192)
+trigger1=teamside=1
+trigger1=!root,fvar(20)&&(roundstate||root,time>1)
+trigger1=root,fvar(2)>=555
+trigger1=gametime%50=[22,37]
+id=7192
+anim=8120+(gametime%50-22);7191
+postype=left
+pos=85,215
+scale=.5,.8
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+trans=add
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+;trigger1=!numexplod(7192)
+trigger1=teamside=2
+trigger1=!root,fvar(20)&&(roundstate||root,time>1)
+trigger1=root,fvar(2)>=555
+trigger1=gametime%50=[22,37]
+id=7192
+anim=8120+(gametime%50-22);7191
+postype=right
+pos=-85,215
+facing=-1
+scale=.5,.8
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+trans=add
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=removeexplod
+trigger1=root,fvar(2)<185
+id=7190
+[state ]
+type=removeexplod
+trigger1=root,fvar(2)<370
+id=7191
+[state ]
+type=removeexplod
+trigger1=root,fvar(2)<555
+id=7192
+;-----------------ゲージ枠
+[state ]
+type=explod
+;trigger1=!numexplod(7100)
+trigger1=teamside=1
+id=7100
+anim=7100
+postype=left
+pos=6,215
+scale=.5,.5
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+;trigger1=!numexplod(7102)
+trigger1=teamside=2
+id=7102
+anim=7102
+postype=right
+pos=-6,215
+scale=.5,.5
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+;/////////////////////////////////////////////////////////////////////////////////
+; オーラゲージ
+;/////////////////////////////////////////////////////////////////////////////////
+;-------ゲージ上昇
+[state ]
+type=varset
+trigger1=!fvar(1)
+trigger2=abs(power-fvar(0))>abs(fvar(1))
+fvar(1)=power-fvar(0)
+[state ]
+type=varadd
+trigger1=1
+fvar(0)=fvar(1)*.075
+[state ]
+type=varset
+trigger1=fvar(0)>power&&fvar(1)>0
+trigger2=fvar(0)<power&&fvar(1)<0
+fvar(0)=power
+[state ]
+type=varset
+trigger1=fvar(0)=power
+fvar(1)=0
+;------------------ゲージ網かけ
+[state ]
+type=explod
+;trigger1=!numexplod(7202)
+trigger1=teamside=1
+trigger1=!root,fvar(20)&&(roundstate||root,time>1)
+id=7202
+anim=7202
+postype=left
+pos=11,224
+scale=.5,.5
+sprpriority=3
+bindtime=-1
+ontop=1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+;trigger1=!numexplod(7203)
+trigger1=teamside=2
+trigger1=!root,fvar(20)&&(roundstate||root,time>1)
+id=7203
+anim=7202
+postype=right
+pos=-11,224
+scale=.5,.5
+ontop=1
+facing=-1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+;-----------ゲージ青
+[state ]
+type=explod
+;trigger1=!numexplod(7250)
+trigger1=teamside=1
+trigger1=!root,fvar(20)&&(roundstate||root,time>1)
+id=7250
+anim=7250
+postype=left
+pos=11,224
+scale=.5,.5
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+;trigger1=!numexplod(7250)
+trigger1=teamside=2
+trigger1=!root,fvar(20)&&(roundstate||root,time>1)
+id=7250
+anim=7250
+postype=right
+pos=-11,224
+scale=.5,.5
+facing=-1
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+;-------------------ゲージ橙
+[state ]
+type=explod
+;trigger1=!numexplod(7260)
+trigger1=teamside=1
+trigger1=!root,fvar(20)&&(roundstate||root,time>1)
+id=7260
+anim=7260
+postype=left
+pos=11,224
+scale=.5,.5
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+;trigger1=!numexplod(7260)
+trigger1=teamside=2
+trigger1=!root,fvar(20)&&(roundstate||root,time>1)
+id=7260
+anim=7260
+postype=right
+pos=-11,224
+scale=.5,.5
+facing=-1
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+;---------------ゲージ光沢
+[state ]
+type=explod
+;trigger1=!numexplod(7290)
+trigger1=teamside=1
+trigger1=power>=1000
+trigger1=!root,fvar(20)&&(roundstate||root,time>1)
+trigger1=gametime%110=0||numexplod(7290)
+id=7290
+anim=8000+gametime%110
+postype=left
+pos=13,224
+scale=.5,.8
+bindtime=-1
+ontop=1
+removetime=1
+ownpal=1
+trans=add
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+;trigger1=!numexplod(7290)
+trigger1=teamside=2
+trigger1=power>=1000
+trigger1=!root,fvar(20)&&(roundstate||root,time>1)
+trigger1=gametime%110=0||numexplod(7290)&&gametime%110<=95
+id=7290
+anim=8000+gametime%110
+postype=right
+pos=-13,224
+scale=.5,.8
+ontop=1
+facing=-1
+bindtime=-1
+removetime=1
+ownpal=1
+trans=add
+supermovetime=999999999
+pausemovetime=999999999
+;--------------ゲージ枠
+[state ]
+type=explod
+;trigger1=!numexplod(7200)
+trigger1=teamside=1
+trigger1=!root,fvar(20)&&(roundstate||root,time>1)
+id=7200
+anim=7200
+postype=left
+pos=11,224
+scale=.5,.5
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+;trigger1=!numexplod(7201)
+trigger1=teamside=2
+trigger1=!root,fvar(20)&&(roundstate||root,time>1)
+id=7201
+anim=7201
+postype=right
+pos=-11,224
+scale=.5,.5
+ontop=1
+facing=-1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+;------------------調整
+[state ]
+type=modifyexplod
+trigger1=1
+id=7250
+scale=ifelse(fvar(0)<1000,.5*fvar(0)/1000,.5),.5
+[state ]
+type=modifyexplod
+trigger1=1
+id=7260
+scale=ifelse(fvar(0)<2000,.5*(fvar(0)-1000)/1000*(fvar(0)>1000),.5),.5
+[state ]
+type=removeexplod
+trigger1=power<1000
+id=7290
+;/////////////////////////////////////////////////////////////////////////////////
+; 文字
+;/////////////////////////////////////////////////////////////////////////////////
+;---------GOD FIST BLOW
+[state ]
+type=varset
+trigger1=var(2):=var(2)+1
+trigger1=gametime%150=2||gametime%150=76
+var(2)=0
+[state ]
+type=removeexplod
+trigger1=power>=1000
+trigger1=gametime%150=0
+trigger2=root,fvar(1)>0
+id=7302
+[state ]
+type=explod
+trigger1=!numexplod(7300)
+trigger1=teamside=1
+trigger1=!root,fvar(20)&&roundstate
+trigger1=power>=1000
+trigger1=!numexplod(7302)
+id=7300
+anim=7300
+postype=left
+pos=90,222
+scale=.5,.5
+ontop=1
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+trigger1=!numexplod(7300)
+trigger1=teamside=2
+trigger1=!root,fvar(20)&&roundstate
+trigger1=power>=1000
+trigger1=!numexplod(7302)
+id=7300
+anim=7300
+postype=left
+pos=176,222
+scale=.5,.5
+ontop=1
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=removeexplod
+trigger1=root,fvar(1)<=0
+trigger1=gametime%150=75
+trigger2=power<1000
+id=7300
+;---------DEADTY FIST BLOW
+[state ]
+type=explod
+trigger1=!numexplod(7302)
+trigger1=teamside=1
+trigger1=!root,fvar(20)&&roundstate
+trigger1=root,fvar(1)<=0
+trigger1=!numexplod(7300)
+id=7302
+anim=7302
+postype=left
+pos=86,222
+scale=.5,.5
+ontop=1
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+trigger1=!numexplod(7302)
+trigger1=teamside=2
+trigger1=!root,fvar(20)&&roundstate
+trigger1=root,fvar(1)<=0
+trigger1=!numexplod(7300)
+id=7302
+anim=7302
+postype=left
+pos=172,222
+scale=.5,.5
+ontop=1
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+;---------------文字エフェクト
+[state ]
+type=explod
+trigger1=numexplod(7300)||numexplod(7302)
+trigger1=teamside=1
+trigger1=(gametime%150=[2,12])||gametime%150=[76,86]
+id=7301
+anim=7301+2*numexplod(7302)
+postype=left
+pos=115+2*numexplod(7302),226
+scale=.5,.5
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+trigger1=numexplod(7300)||numexplod(7302)
+trigger1=teamside=2
+trigger1=(gametime%150=[2,12])||gametime%150=[76,86]
+id=7301
+anim=7301+2*numexplod(7302)
+postype=left
+pos=202+numexplod(7302),226
+scale=.5,.5
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=modifyexplod
+trigger1=1
+id=7301
+scale=.5+.014*var(2),.5+.014*var(2)
+trans=addalpha
+alpha=256-25*var(2),256
+;-----------塊天オブジェクト
+[state ]
+type=explod
+trigger1=!numexplod(2110)
+trigger1=teamside=1
+trigger1=root,fvar(4)>0
+id=2110
+anim=2110
+postype=left
+pos=14,207
+scale=.5,.5
+ontop=1
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+trigger1=!numexplod(2110)
+trigger1=teamside=2
+trigger1=root,fvar(4)>0
+id=2110
+anim=2110
+postype=left
+pos=307,207
+scale=.5,.5
+ontop=1
+bindtime=-1
+removetime=-1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=removeexplod
+trigger1=root,fvar(4)<=0
+id=2110
+;-----塊天ゲージ網
+[state ]
+type=explod
+trigger1=teamside=1
+trigger1=root,fvar(4)>0
+id=2106
+anim=2106
+postype=left
+pos=48,210
+scale=.5,.5
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+trigger1=teamside=2
+trigger1=root,fvar(4)>0
+id=2106
+anim=2106
+postype=left
+pos=272,210
+facing=-1
+scale=.5,.5
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+;-----塊天ゲージ
+[state ]
+type=explod
+trigger1=teamside=1
+trigger1=root,fvar(4)>0
+id=2109
+anim=2109
+postype=left
+pos=48,210
+scale=.5,.5
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+trigger1=teamside=2
+trigger1=root,fvar(4)>0
+id=2109
+anim=2109
+postype=right
+pos=-48,210
+facing=-1
+scale=.5,.5
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=modifyexplod
+trigger1=1
+id=2109
+scale=ifelse(root,fvar(4)<600+300*(root,palno>9),.51*root,fvar(4)/(600+300*(root,palno>9)),.51),.5
+;-----塊天ゲージ枠
+[state ]
+type=explod
+trigger1=teamside=1
+trigger1=root,fvar(4)>0
+id=2105
+anim=2105
+postype=left
+pos=48,210
+scale=.5,.5
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+[state ]
+type=explod
+trigger1=teamside=2
+trigger1=root,fvar(4)>0
+id=2107
+anim=2107
+postype=left
+pos=272,210
+scale=.5,.5
+ontop=1
+bindtime=-1
+removetime=1
+ownpal=1
+supermovetime=999999999
+pausemovetime=999999999
+;////////////////////////////////////////////////////////////////////////
+; ブースト
+;////////////////////////////////////////////////////////////////////////
+[statedef 800]
+type=u
+movetype=a
+[state ]
+type=varset
+trigger1=anim=710||anim=[760,765]
+sysfvar(3)=0
+[state ]
+type=varadd
+trigger1=(anim=[200,750])||anim=[1000,1750]
+fvar(2)=-55
+[state ]
+type=changeanim
+trigger1=anim!=800
+trigger2=anim=800
+trigger2=fvar(2)>=185||fvar(2)>=37&&var(1)&128
+trigger2=command="z"&&command!="holdback"
+value=800
+[state ]
+type=playsnd
+trigger1=prevstateno!=[760,766]
+trigger1=animelem=1
+trigger1=random%4=0
+value=s800,0
+volume=255
+channel=0
+[state ]
+type=attackdist
+trigger1=1
+value=0
+[state ]
+type=varadd
+trigger1=animelem=1
+fvar(2)=-37
+[state ]
+type=varset
+trigger1=animelem=1
+sysfvar(1)=12
+[state ]
+type=varset
+trigger1=animelem=1
+sysfvar(3)=0
+[state ]
+type=varadd
+trigger1=!(var(1)&128)
+var(1)=128
+[state ]
+type=statetypeset
+trigger1=pos y<0
+statetype=a
+[state ]
+type=varset
+trigger1=1
+sysfvar(1)=12.5-2.5*(animelemtime(1)>1||statetype=a)
+[state ]
+type=varset
+triggerall=animelem=2,>=0
+triggerall=statetype!=a
+trigger1=p2bodydist x<=3
+trigger1=enemynear,backedgebodydist<=5||enemynear,frontedgebodydist<=5
+trigger2=frontedgebodydist<=5
+sysfvar(1)=0
+[state ]
+type=selfstate
+trigger1=!animtime
+trigger2=animelem=2,>=0
+trigger2=statetype!=a
+trigger2=p2bodydist x<=3
+trigger2=enemynear,backedgebodydist<=5||enemynear,frontedgebodydist<=5
+trigger3=animelem=2,>=0
+trigger3=statetype!=a
+trigger3=!fvar(2)||fvar(2)=185||fvar(2)=370
+trigger4=statetype!=a
+trigger4=animelem=2,>=0
+trigger4=frontedgebodydist<=2
+value=(statetype=a)*50
+;-----------------------------------------------------------------------------
+[Statedef 9977]
+type=a
+movetype=i
+anim=2
+[state ]
+type=assertspecial
+trigger1=1
+flag=noshadow
+[State 0, DestroySelf]
+type = DestroySelf
+trigger1=time=100
+trigger2=root,stateno=[180,189]
+;-----------------------------------------------------------------------------
+[Statedef 9978]
+type=a
+movetype=i
+anim=2
+[state ]
+type=assertspecial
+trigger1=1
+flag=noshadow
+[state ]
+type=helper
+triggerall=!numhelper(9977)
+trigger1=root,command="down"
+trigger2=root,command="back"
+trigger3=root,command="up" 
+trigger4=root,command="fwd"
+trigger5=root,command="holddown"
+trigger6=root,command="holdback" 
+trigger7=root,command="holdup"
+trigger8=root,command="holdfwd"
+trigger9=root,command="start"
+trigger10=root,command="x"
+trigger11=root,command="y"
+trigger12=root,command="z"
+trigger13=root,command="a"
+trigger14=root,command="b"
+trigger15=root,command="c"
+id=9977
+stateno=9977
+ownpal=1
+supermovetime=99999999
+pausemovetime=99999999
+
+[State 0, DestroySelf]
+type = DestroySelf
+trigger1=root,stateno=[180,189]
+
+;///////////////////////////////////////////////////////////////////////////////////
+; バニシング
+;///////////////////////////////////////////////////////////////////////////////////
+;---------初段
+[statedef 30760]
+type=a
+movetype=h
+[state ]
+type=changeanim2
+trigger1=1
+value=30760
+[state ]
+type=nothitby
+trigger1=1
+value=
+[state ]
+type=playerpush
+trigger1=1
+value=0
+[state ]
+type=turn
+trigger1=!time
+trigger1=facing*(enemynear,pos x-pos x)<0||enemynear,pos x=pos x&&enemynear,facing=facing
+[state ]
+type=velset
+trigger1=!time
+x=(1-2*(enemynear,facing!=facing))*14
+y=0
+[state ]
+type=posadd
+trigger1=!time
+y=-10
+[state ]
+type=posfreeze
+trigger1=!hitshakeover
+[state ]
+type=angledraw
+trigger1=1
+value=-90
+[state ]
+type=offset
+trigger1=1
+y=const(size.mid.pos.y);-70
+[State ]
+type=hitfallset
+trigger1=1
+value=1
+[state ]
+type=envshake
+trigger1=hitshakeover
+trigger1=backedgebodydist<=5||frontedgebodydist<=5
+time=10
+ampl=9
+freq=75
+phase=90
+[state ]
+type=changestate
+trigger1=hitshakeover
+trigger1=backedgebodydist<=5||frontedgebodydist<=5
+value=30765
+;---------追撃１
+[statedef 30761]
+type=a
+movetype=h
+[state ]
+type=changeanim2
+trigger1=1
+value=30760
+[state ]
+type=nothitby
+trigger1=1
+value=
+[state ]
+type=envshake
+trigger1=!time
+trigger1=backedgebodydist<=5||frontedgebodydist<=5
+time=10
+ampl=9
+freq=75
+phase=90
+[state ]
+type=playerpush
+trigger1=1
+value=0
+[state ]
+type=turn
+trigger1=!time
+trigger1=facing*(enemynear,pos x-pos x)<0||enemynear,pos x=pos x&&enemynear,facing=facing
+[state ]
+type=posadd
+trigger1=1
+y=vel y
+[state ]
+type=velset
+trigger1=!time
+x=(1-2*(enemynear,facing!=facing))*11
+[state ]
+type=velset
+trigger1=1
+y=0
+[state ]
+type=posfreeze
+trigger1=!hitshakeover
+[state ]
+type=angledraw
+trigger1=1
+value=-90
+[state ]
+type=offset
+trigger1=1
+y=const(size.mid.pos.y)
+[State ]
+type=hitfallset
+trigger1=1
+value=1
+[state ]
+type=envshake
+trigger1=hitshakeover||!time
+trigger1=backedgebodydist<=5||frontedgebodydist<=5
+time=10
+ampl=9
+freq=75
+phase=90
+persistent=0
+[state ]
+type=changestate
+triggerall=hitshakeover
+trigger1=backedgebodydist<=5||frontedgebodydist<=5
+trigger2=enemynear,pos x-pos x=[-60-50*(enemynear,statetype!=c),const(size.height)]
+trigger2=enemynear,backedgebodydist<=10||enemynear,frontedgebodydist<=10
+trigger2=facing*(enemynear,pos x-pos x)<0&&vel x<0||facing*(enemynear,pos x-pos x)>0&&vel x>0
+trigger2=backedgebodydist<=40||frontedgebodydist<=40
+value=30765
+[state ]
+type=posadd
+trigger1=enemynear,pos x-pos x=[-60-50*(enemynear,statetype!=c),const(size.height)]
+trigger1=enemynear,backedgebodydist<=10||enemynear,frontedgebodydist<=10
+trigger1=facing*(enemynear,pos x-pos x)<0&&vel x<0||facing*(enemynear,pos x-pos x)>0&&vel x>0
+trigger1=backedgebodydist<=40||frontedgebodydist<=40
+x=40-ifelse(BackEdgeBodyDist<FrontEdgeBodyDist,BackEdgeBodyDist,FrontEdgeBodyDist)
+;---------追撃２
+[statedef 30762]
+type=a
+movetype=h
+[state ]
+type=changeanim2
+trigger1=1
+value=30760
+[state ]
+type=nothitby
+trigger1=1
+value=
+[state ]
+type=playerpush
+trigger1=1
+value=0
+[state ]
+type=turn
+trigger1=!time
+trigger1=facing*(enemynear,pos x-pos x)<0||enemynear,pos x=pos x&&enemynear,facing=facing
+[state ]
+type=posadd
+trigger1=!time
+y=vel y
+[state ]
+type=velset
+trigger1=!time
+x=(1-2*(enemynear,facing!=facing))*11
+[state ]
+type=velset
+trigger1=1
+y=0
+[state ]
+type=posfreeze
+trigger1=!hitshakeover
+[state ]
+type=angledraw
+trigger1=1
+value=-90
+[state ]
+type=offset
+trigger1=1
+y=const(size.mid.pos.y)
+[State ]
+type=hitfallset
+trigger1=1
+value=1
+[state ]
+type=envshake
+triggerall=hitshakeover
+trigger1=backedgebodydist<=5||frontedgebodydist<=5
+time=10
+ampl=9
+freq=75
+phase=90
+[state ]
+type=changestate
+triggerall=hitshakeover
+trigger1=backedgebodydist<=5||frontedgebodydist<=5
+value=30765
+;---------バウンド
+[statedef 30765]
+type=a
+movetype=h
+[state ]
+type=nothitby
+trigger1=1
+value=
+[state ]
+type=lifeadd
+trigger1=!time
+value=-ceil(lifemax*.0112)
+kill=0
+absolute=1
+[state ]
+type=velset
+trigger1=!time
+x=0
+y=0
+[state ]
+type=playerpush
+trigger1=1
+value=1
+[state ]
+type=veladd
+;trigger1=anim=5070
+trigger1=time>=24
+y=.6
+[state ]
+type=changeanim2
+trigger1=!time
+value=30765
+[state ]
+type=changeanim
+trigger1=anim=30765
+trigger1=!animtime
+value=5070
+[state ]
+type=angledraw
+trigger1=1
+value=-90*(anim=30765)
+[state ]
+type=offset
+trigger1=anim=30765
+y=const(size.mid.pos.y)
+[state ]
+type=velmul
+trigger1=1
+x=.85
+[state ]
+type=velset
+;trigger1=anim=5070
+trigger1=time=12
+trigger1=prevstateno=[30760,30761]
+x=8
+[state ]
+type=velset
+trigger1=p2bodydist x<=3
+trigger1=enemynear,backedgebodydist>15&&enemynear,frontedgebodydist>15
+trigger1=enemynear,pos x-pos x=[-60-50*(enemynear,statetype!=c),const(size.height)]
+x=0
+[state ]
+type=angledraw
+trigger1=pos y>0
+value=0
+[state ]
+type=changestate
+trigger1=pos y>0
+value=30766
+;-----------------バニダウン
+[statedef 30766]
+type=l
+movetype=h
+[state ]
+type=statetypeset
+trigger1=time>1
+statetype=a
+[state ]
+type=nothitby
+trigger1=1
+value=
+[state ]
+type=changeanim
+trigger1=!time
+value=5100
+[state ]
+type=changeanim
+trigger1=anim=5100
+trigger1=selfanimexist(5101)
+value=5101
+[state ]
+type=changeanim
+trigger1=anim=5170
+trigger1=selfanimexist(5102)
+value=5102
+[state ]
+type=envshake
+trigger1=!time
+time=9
+ampl=9
+freq=60
+phase=90
+[state ]
+type=lifeadd
+trigger1=!time
+value=-ceil(lifemax*.0056)
+kill=0
+absolute=1
+[state ]
+type=defencemulset
+trigger1=1
+value=1
+[state ]
+type=velset
+trigger1=!time
+x=0
+y=-4
+[state ]
+type=posset
+trigger1=!time
+y=0
+[state ]
+type=veladd
+trigger1=time
+y=.6
+[state ]
+type=changeanim
+trigger1=anim=[5100,5102]
+trigger1=!animtime
+trigger2=vel y>0
+trigger2=pos y>=0
+value=5110+(anim%10)*(selfanimexist(5110+anim%10))
+[state ]
+type=selfstate
+trigger1=vel y>0
+trigger1=pos y>=0
+value=5110

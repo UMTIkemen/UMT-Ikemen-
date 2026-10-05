@@ -1,0 +1,3039 @@
+;---------------------------------------------------------------------------
+;///////////////////////////////////////////////////////////////////////////
+; 究極奥義・一撃必殺
+;///////////////////////////////////////////////////////////////////////////
+;---------------------------------------------------------------------------
+; 彷翔十字鳳
+;---------------------------------------------------------------------------
+[statedef 2000]
+movetype=a
+[state ]
+type=changeanim
+trigger1=anim!=2000
+value=2000
+[state ]
+type=varset
+trigger1=animelem=1
+fvar(18)=480
+[state ]
+type=poweradd
+trigger1=animelem=1
+value=-1000
+[state ]
+type=turn
+trigger1=animelem=1
+trigger1=(var(1):=var(1)+4*(facing*(enemynear(!enemynear,alive&&numenemy>1&&enemynear(numenemy>1),alive),pos x-pos x)<0))&4
+[state ]
+type=playsnd
+trigger1=animelem=1
+value=s2000,1
+channel=0
+[state ]
+type=posadd
+trigger1=animelem=1
+x=5
+[state ]
+type=posadd
+trigger1=animelem=2
+x=10
+[state ]
+type=posadd
+trigger1=animelem=3
+trigger1=var(0)<(var(1)&1)
+x=10
+[state ]
+type=posadd
+trigger1=animelem=4
+x=10
+[state ]
+type=varset
+trigger1=animelem=9,>=0
+sysfvar(4)=-18
+[state ]
+type=varset
+trigger1=1
+sysfvar(3)=0
+[state ]
+type=varadd
+trigger1=animelem=3&&palno>9||animelem=9
+trigger1=var(0)<(var(1)&1)
+var(1)=-(var(1)&2)
+[state ]
+type=hitdef
+trigger1=palno>9
+trigger1=var(0)<(var(1)&1)&&!(var(1)&2)
+attr=s,ha
+hitflag=maf
+guardflag=ma
+damage=ifelse(13*5.6*ifelse(fvar(10)*fvar(16)>.3,fvar(10)*fvar(16),.3)>6,ceil(13*5.6*ifelse(fvar(10)*fvar(16)>.3,fvar(10)*fvar(16),.3)),6),5
+getpower=ceil(1000*(.14+fvar(17))*fvar(10))*ifelse(var(1)&128,.6,1)*(fvar(18)<=0),ceil(1000*(.14+fvar(17))*fvar(10))*ifelse(var(1)&128,.6,1)*(fvar(18)<=0)
+givepower=ceil(500*.14*fvar(10))*ifelse(var(1)&128,.6,1),ceil(333*.14*fvar(10))*ifelse(var(1)&128,.6,1)
+animtype=hard
+priority=7,hit
+pausetime=0,13+6*!!var(4)
+ground.hittime=20+(enemynear,statetype=c)
+ground.slidetime=20+(enemynear,statetype=c)
+guard.hittime=18+(enemynear,statetype=c)
+ground.velocity=0
+air.hittime=0
+air.velocity=0*!(var(1)&256),ifelse(var(1)&256,-6,-10)
+air.fall=1
+yaccel=ifelse(enemynear,statetype=a||sysvar(4),.9,.6)+fvar(0)
+fall.recovertime=45+6*!!var(4)
+ground.cornerpush.veloff=0
+sparkno=-1
+hitsound=-1
+guard.sparkno=-1
+guardsound=-1
+;--------------
+[state ]
+type=hitdef
+trigger1=animelem=9,>=0
+trigger1=var(0)<(var(1)&1)&&!(var(1)&2)
+attr=s,na
+hitflag=maf
+guardflag=ma
+damage=ifelse(13*5.6*ifelse(fvar(10)*fvar(16)>.3,fvar(10)*fvar(16),.3)>6,ceil(13*5.6*ifelse(fvar(10)*fvar(16)>.3,fvar(10)*fvar(16),.3)),6),5
+getpower=0
+givepower=0
+animtype=diagup
+priority=7,hit
+pausetime=0,13+6*!!var(4)
+ground.hittime=20+(enemynear,statetype=c)
+ground.slidetime=20+(enemynear,statetype=c)
+guard.hittime=18+(enemynear,statetype=c)
+ground.velocity=-1,-12.5
+guard.velocity=-3
+air.hittime=0
+air.velocity=-1.5,ifelse(var(1)&256,-6.6,-12.6)
+fall=1
+yaccel=ifelse(enemynear,statetype=a||sysvar(4),.9,.6)+fvar(0)
+fall.recover=0
+ground.cornerpush.veloff=0
+sparkno=-1
+hitsound=-1
+guard.sparkno=-1
+guardsound=-1
+kill=0
+[state ]
+type=targetstate
+trigger1=!(var(1)&1024)
+trigger1=!(var(1)&16384)
+trigger1=animelem=9,>=0
+trigger1=movehit=1
+trigger1=numtarget
+value=2030
+[state ]
+type=hitby
+trigger1=1
+value=sac,at
+time=1
+[state ]
+type=selfstate
+trigger1=!animtime
+value=2010
+;-------------空中
+[statedef 2010]
+movetype=a
+[state ]
+type=changeanim
+trigger1=anim!=2010
+value=2010
+[state ]
+type=varset
+trigger1=1
+sysfvar(4)=0
+[state ]
+type=varset
+trigger1=animelem=10,>=0
+sysfvar(4)=6
+[state ]
+type=varset
+trigger1=animelem=10,>=0
+sysfvar(2)=9
+[state ]
+type=varset
+trigger1=1
+sysfvar(3)=0
+[state ]
+type=hitby
+trigger1=animelem=8,<0
+value=sac,at
+time=1
+;------------暗転
+[state ]
+type=superpause
+trigger1=animelem=3,>0&&animelem=8,<0
+time=2
+movetime=2
+darken=0
+anim=-1
+p2defmul=1
+[state ]
+type=playsnd
+trigger1=animelem=3
+trigger1=var(0)<(var(1)&1)
+value=s2500,0
+volume=255
+[state ]
+type=helper
+trigger1=animelem=3
+trigger1=var(0)<(var(1)&1)
+pos=8,-100
+id=2400
+stateno=2400
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=helper
+trigger1=animelem=3
+trigger1=var(0)<(var(1)&1)
+id=2500
+stateno=2500
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=explod
+trigger1=!numexplod(10010)
+trigger1=animelem=3
+trigger1=roundstate=2
+id=10010
+anim=10010
+removetime=-1
+scale=.5,.5
+postype=back
+bindtime=-1
+ownpal=1
+sprpriority=-7
+trans=add
+supermovetime=99999
+pausemovetime=99999
+;----------エフェクト
+[state ]
+type=explod
+trigger1=animelem=3
+trigger1=!numexplod(2055)
+trigger1=var(0)<(var(1)&1)
+id=2055
+anim=2055
+scale=.5,.5
+removetime=-1
+bindtime=-1
+ownpal=1
+sprpriority=-1
+trans=add
+[state ]
+type=removeexplod
+trigger1=animelem=8
+id=2055
+[state ]
+type=explod
+trigger1=animelem=8
+trigger1=!numexplod(2056)
+trigger1=var(0)<(var(1)&1)
+id=2056
+anim=2056
+scale=.5,.5
+removetime=-1
+bindtime=-1
+ownpal=1
+sprpriority=-1
+trans=add
+[state ]
+type=removeexplod
+trigger1=animelem=9
+id=2056
+[state ]
+type=removeexplod
+trigger1=var(0)>=(var(1)&1)
+id=2057
+[state ]
+type=explod
+trigger1=animelem=9,>=0
+trigger1=!numexplod(2057)
+trigger1=var(0)<(var(1)&1)
+id=2057
+anim=2057
+scale=.5,.5
+removetime=-1
+bindtime=-1
+ownpal=1
+sprpriority=2
+trans=add
+[state ]
+type=removeexplod
+trigger1=pos y>=0
+trigger2=var(0)>=(var(1)&1)
+id=2057
+[state ]
+type=explod
+trigger1=animelem=9,>=0
+trigger1=!numexplod(2058)
+trigger1=var(0)>=(var(1)&1)
+id=2058
+anim=2058
+scale=.5,.5
+removetime=-1
+bindtime=-1
+ownpal=1
+sprpriority=2
+trans=add
+[state ]
+type=removeexplod
+trigger1=animelem=9,>=0
+trigger1=var(0)<(var(1)&1)
+id=2058
+;----------
+[state ]
+type=playsnd
+trigger1=animelem=8
+trigger1=var(0)<(var(1)&1)
+value=s2000,10
+[state ]
+type=playerpush
+trigger1=1
+value=0
+[state ]
+type=width
+trigger1=1
+edge=40,0
+[state ]
+type=targetstate
+trigger1=!(var(1)&1024)
+trigger1=!(var(1)&16384)
+trigger1=animelem=20,<0
+trigger1=movehit=1
+trigger1=numtarget
+value=2031
+[state ]
+type=targetstate
+trigger1=!(var(1)&1024)
+trigger1=!(var(1)&16384)
+trigger1=animelem=20,>=0
+trigger1=movehit=1
+trigger1=numtarget
+value=2032
+[state ]
+type=changeanim
+trigger1=animelem=14
+value=anim
+elem=10
+[state ]
+type=changeanim
+trigger1=animelem=19
+value=anim
+elem=15
+[state ]
+type=changeanim
+trigger1=animelem=24
+value=anim
+elem=20
+[state ]
+type=changeanim
+trigger1=animelem=27
+value=anim
+elem=25
+[state ]
+type=changeanim
+trigger1=animelem=30
+value=anim
+elem=28
+[state ]
+type=changeanim
+trigger1=animelem=33
+value=anim
+elem=31
+[state ]
+type=changeanim
+trigger1=animelem=31,>=0&&animelem=33,<0
+trigger1=movecontact=1
+value=anim
+elem=34
+[state ]
+type=changeanim
+trigger1=animelem=28,>=0&&animelem=30,<0
+trigger1=movecontact=1
+value=anim
+elem=31
+[state ]
+type=changeanim
+trigger1=animelem=25,>=0&&animelem=27,<0
+trigger1=movecontact=1
+value=anim
+elem=28
+[state ]
+type=changeanim
+trigger1=animelem=20,>=0&&animelem=24,<0
+trigger1=movecontact=1
+value=anim
+elem=34-(palno>9)*9
+[state ]
+type=changeanim
+trigger1=animelem=15,>=0&&animelem=19,<0
+trigger1=movecontact=1
+value=anim
+elem=20+(palno>9)*2
+[state ]
+type=changeanim
+trigger1=animelem=10,>=0&&animelem=14,<0
+trigger1=movecontact=1
+value=anim
+elem=15+(palno>9)*2
+[state ]
+type=varadd
+trigger1=animelem=3||animelem=8||animelem=10||animelem=15||animelem=20||animelem=25||animelem=28||animelem=31
+trigger1=var(0)<(var(1)&1)
+var(1)=-(var(1)&2)
+[state ]
+type=hitdef
+trigger1=var(0)<(var(1)&1)&&!(var(1)&2)
+attr=a,na
+hitflag=maf
+guardflag=h
+damage=ifelse(16*5.6*ifelse(fvar(10)*fvar(16)>.3,fvar(10)*fvar(16),.3)>6,ceil(16*5.6*ifelse(fvar(10)*fvar(16)>.3,fvar(10)*fvar(16),.3)),6),5
+getpower=0
+givepower=0
+animtype=hard
+priority=7,hit
+pausetime=0,13+6*!!var(4)
+ground.hittime=20+(enemynear,statetype=c)
+ground.slidetime=20+(enemynear,statetype=c)
+guard.hittime=18+(enemynear,statetype=c)
+ground.velocity=0,0
+guard.velocity=-6
+air.hittime=0
+air.velocity=-3*!(var(1)&256),ifelse(var(1)&256,-.6,0)
+fall=1
+yaccel=.9
+fall.recover=0
+ground.cornerpush.veloff=0
+sparkno=-1
+hitsound=-1
+guard.sparkno=-1
+guardsound=-1
+;------------勝利
+[state ]
+type=explod
+trigger1=!numexplod(10040)
+trigger1=roundstate>2
+trigger1=winko
+id=10040
+anim=10040
+removetime=-2
+scale=.5,.5
+postype=back
+bindtime=-1
+ownpal=1
+sprpriority=-7
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=selfstate
+trigger1=pos y>=0
+value=2090
+;-------------空中
+[statedef 2050]
+type=a
+movetype=a
+[state ]
+type=changeanim
+trigger1=anim!=2050
+value=2050
+[state ]
+type=varset
+trigger1=animelem=1
+fvar(18)=480
+[state ]
+type=poweradd
+trigger1=animelem=1
+value=-1000
+[state ]
+type=playsnd
+trigger1=animelem=1
+value=s2000,1
+channel=0
+[state ]
+type=varset
+trigger1=1
+sysfvar(0)=0
+[state ]
+type=varset
+trigger1=1
+sysfvar(1)=0
+[state ]
+type=varset
+trigger1=1
+sysfvar(2)=0
+[state ]
+type=varset
+trigger1=1
+sysfvar(3)=0
+[state ]
+type=varset
+trigger1=1
+sysfvar(4)=0
+[state ]
+type=varset
+trigger1=animelem=10,>=0
+sysfvar(4)=6
+[state ]
+type=varset
+trigger1=animelem=10,>=0
+sysfvar(2)=9
+[state ]
+type=hitby
+trigger1=animelem=8,<0
+value=sac,at
+time=1
+;----------暗転
+[state ]
+type=superpause
+trigger1=animelem=3,>0&&animelem=8,<0
+time=2
+movetime=2
+darken=0
+anim=-1
+p2defmul=1
+[state ]
+type=playsnd
+trigger1=animelem=3
+trigger1=var(0)<(var(1)&1)
+value=s2500,0
+volume=255
+[state ]
+type=helper
+trigger1=animelem=3
+trigger1=var(0)<(var(1)&1)
+pos=8,-100
+id=2400
+stateno=2400
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=helper
+trigger1=animelem=3
+trigger1=var(0)<(var(1)&1)
+id=2500
+stateno=2500
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=explod
+trigger1=!numexplod(10010)
+trigger1=animelem=3
+trigger1=roundstate=2
+id=10010
+anim=10010
+removetime=-1
+scale=.5,.5
+postype=back
+bindtime=-1
+ownpal=1
+sprpriority=-7
+trans=add
+supermovetime=99999
+pausemovetime=99999
+;----------エフェクト
+[state ]
+type=explod
+trigger1=animelem=3
+trigger1=!numexplod(2055)
+trigger1=var(0)<(var(1)&1)
+id=2055
+anim=2055
+scale=.5,.5
+removetime=-1
+bindtime=-1
+ownpal=1
+sprpriority=-1
+trans=add
+[state ]
+type=removeexplod
+trigger1=animelem=8
+id=2055
+[state ]
+type=explod
+trigger1=animelem=8
+trigger1=!numexplod(2056)
+trigger1=var(0)<(var(1)&1)
+id=2056
+anim=2056
+scale=.5,.5
+removetime=-1
+bindtime=-1
+ownpal=1
+sprpriority=-1
+trans=add
+[state ]
+type=removeexplod
+trigger1=animelem=9
+id=2056
+[state ]
+type=explod
+trigger1=animelem=9,>=0
+trigger1=!numexplod(2057)
+trigger1=var(0)<(var(1)&1)
+id=2057
+anim=2057
+scale=.5,.5
+removetime=-1
+bindtime=-1
+ownpal=1
+sprpriority=2
+trans=add
+[state ]
+type=removeexplod
+trigger1=animelem=11,>0
+trigger1=pos y>=0
+trigger2=var(0)>=(var(1)&1)
+id=2057
+[state ]
+type=explod
+trigger1=animelem=9,>=0
+trigger1=!numexplod(2058)
+trigger1=var(0)>=(var(1)&1)
+id=2058
+anim=2058
+scale=.5,.5
+removetime=-1
+bindtime=-1
+ownpal=1
+sprpriority=2
+trans=add
+[state ]
+type=removeexplod
+trigger1=animelem=9,>=0
+trigger1=var(0)<(var(1)&1)
+id=2058
+[state ]
+type=playsnd
+trigger1=animelem=8
+trigger1=var(0)<(var(1)&1)
+value=s2000,10
+[state ]
+type=targetstate
+trigger1=!(var(1)&1024)
+trigger1=!(var(1)&16384)
+trigger1=animelem=20,<0
+trigger1=movehit=1
+trigger1=numtarget
+value=2031
+[state ]
+type=targetstate
+trigger1=!(var(1)&1024)
+trigger1=!(var(1)&16384)
+trigger1=animelem=20,>=0
+trigger1=movehit=1
+trigger1=numtarget
+value=2032
+[state ]
+type=playerpush
+trigger1=1
+value=0
+[state ]
+type=width
+trigger1=1
+edge=40,0
+[state ]
+type=changeanim
+trigger1=animelem=14
+value=anim
+elem=10
+[state ]
+type=changeanim
+trigger1=animelem=19
+value=anim
+elem=15
+[state ]
+type=changeanim
+trigger1=animelem=24
+value=anim
+elem=20
+[state ]
+type=changeanim
+trigger1=animelem=27
+value=anim
+elem=25
+[state ]
+type=changeanim
+trigger1=animelem=30
+value=anim
+elem=28
+[state ]
+type=changeanim
+trigger1=animelem=33
+value=anim
+elem=31
+[state ]
+type=changeanim
+trigger1=animelem=31,>=0&&animelem=33,<0
+trigger1=movecontact=1
+value=anim
+elem=34
+[state ]
+type=changeanim
+trigger1=animelem=28,>=0&&animelem=30,<0
+trigger1=movecontact=1
+value=anim
+elem=31
+[state ]
+type=changeanim
+trigger1=animelem=25,>=0&&animelem=27,<0
+trigger1=movecontact=1
+value=anim
+elem=28
+[state ]
+type=changeanim
+trigger1=animelem=20,>=0&&animelem=24,<0
+trigger1=movecontact=1
+value=anim
+elem=34-(palno>9)*9
+[state ]
+type=changeanim
+trigger1=animelem=15,>=0&&animelem=19,<0
+trigger1=movecontact=1
+value=anim
+elem=20+(palno>9)*2
+[state ]
+type=changeanim
+trigger1=animelem=10,>=0&&animelem=14,<0
+trigger1=movecontact=1
+value=anim
+elem=15+(palno>9)*2
+[state ]
+type=varadd
+trigger1=animelem=3||animelem=8||animelem=10||animelem=15||animelem=20||animelem=25||animelem=28||animelem=31
+trigger1=var(0)<(var(1)&1)
+var(1)=-(var(1)&2)
+[state ]
+type=hitdef
+trigger1=var(0)<(var(1)&1)&&!(var(1)&2)
+attr=a,na
+hitflag=maf
+guardflag=h
+damage=ifelse(16*5.6*ifelse(fvar(10)*fvar(16)>.3,fvar(10)*fvar(16),.3)>6,ceil(16*5.6*ifelse(fvar(10)*fvar(16)>.3,fvar(10)*fvar(16),.3)),6),5
+getpower=0
+givepower=0
+animtype=hard
+priority=7,hit
+pausetime=0,13+6*!!var(4)
+ground.hittime=20+(enemynear,statetype=c)
+ground.slidetime=20+(enemynear,statetype=c)
+guard.hittime=18+(enemynear,statetype=c)
+ground.velocity=0,2
+guard.velocity=-6
+air.hittime=0
+air.velocity=-4*!(var(1)&256),ifelse(var(1)&256,-.6,2)
+fall=1
+yaccel=.9
+fall.recover=0
+ground.cornerpush.veloff=0
+sparkno=-1
+hitsound=-1
+guard.sparkno=-1
+guardsound=-1
+;------------勝利
+[state ]
+type=explod
+trigger1=!numexplod(10040)
+trigger1=roundstate>2
+trigger1=winko
+id=10040
+anim=10040
+removetime=-2
+scale=.5,.5
+postype=back
+bindtime=-1
+ownpal=1
+sprpriority=-7
+supermovetime=99999
+pausemovetime=99999 
+[state ]
+type=selfstate
+trigger1=animelem=11,>0
+trigger1=pos y>=0
+value=2090
+;-------------硬直
+[statedef 2090]
+movetype=a
+[state ]
+type=changeanim
+trigger1=anim!=2090
+value=2090
+[state ]
+type=varset
+trigger1=1
+sysfvar(2)=0
+;----------エフェクト
+[state ]
+type=explod
+trigger1=animelem=1
+trigger1=!numexplod(2092)
+trigger1=var(0)<(var(1)&1)
+id=2092
+anim=2092
+scale=.5,.5
+removetime=-1
+bindtime=-1
+ownpal=1
+sprpriority=-1
+trans=add
+[state ]
+type=removeexplod
+trigger1=animelem=2
+id=2092
+[state ]
+type=explod
+trigger1=animelem=3
+trigger1=!numexplod(2093)
+trigger1=var(0)<(var(1)&1)
+id=2093
+anim=2093
+scale=.5,.5
+removetime=-2
+bindtime=-1
+ownpal=1
+sprpriority=-1
+trans=add
+[state ]
+type=removeexplod
+trigger1=animelem=4
+id=2093
+[state ]
+type=selfstate
+trigger1=!animtime
+value=0
+;-------敵動作
+;吹っ飛び
+[statedef 2030]
+type=a
+movetype=h
+[state ]
+type=changeanim
+trigger1=!hitshakeover
+value=5050+selfanimexist(5051)
+[state ]
+type=changeanim
+trigger1=!hitshakeover
+value=5050+selfanimexist(5052)*2
+[state ]
+type=changeanim
+trigger1=hitshakeover
+trigger1=vel y>=0
+trigger1=selfanimexist(anim+10)
+value=anim+10
+[state ]
+type=hitvelset
+trigger1=!time
+x=1
+y=1
+[state ]
+type=posfreeze
+trigger1=!hitshakeover
+[state ]
+type=veladd
+trigger1=hitshakeover
+y=gethitvar(yaccel)
+[state ]
+type=selfstate
+trigger1=vel y>0
+trigger1=pos y>=0
+value=5100
+;プレス
+[statedef 2031]
+type=a
+movetype=h
+[state ]
+type=changeanim
+trigger1=time<=19
+value=5050
+[state ]
+type=hitvelset
+trigger1=!time
+x=1
+y=1
+[state ]
+type=posfreeze
+trigger1=time<=19
+[state ]
+type=veladd
+trigger1=time>19
+y=gethitvar(yaccel)
+[state ]
+type=selfstate
+triggerall=time>19
+trigger1=vel y>0
+trigger1=pos y>=0
+value=5100
+;プレス2
+[statedef 2032]
+type=a
+movetype=h
+[state ]
+type=changeanim
+trigger1=!hitshakeover
+value=5050
+[state ]
+type=hitvelset
+trigger1=!time
+x=1
+y=1
+[state ]
+type=posfreeze
+trigger1=!hitshakeover
+[state ]
+type=veladd
+trigger1=hitshakeover
+y=gethitvar(yaccel)
+[state ]
+type=selfstate
+triggerall=hitshakeover
+trigger1=vel y>0
+trigger1=pos y>=0
+value=5100
+;---------------------------------------------------------------------------
+; 鳳凰呼闘塊天
+;---------------------------------------------------------------------------
+[statedef 2100]
+movetype=a
+[state ]
+type=changeanim
+trigger1=anim!=2100
+value=2100
+[state ]
+type=varset
+trigger1=animelem=1
+fvar(18)=480
+[state ]
+type=poweradd
+trigger1=animelem=1
+value=-1000
+[state ]
+type=turn
+trigger1=animelem=1
+trigger1=(var(1):=var(1)+4*(facing*(enemynear(!enemynear,alive&&numenemy>1&&enemynear(numenemy>1),alive),pos x-pos x)<0))&4
+[state ]
+type=playsnd
+trigger1=animelem=1
+value=s2100,0
+channel=0
+[state ]
+type=playsnd
+trigger1=animelem=1
+value=s2500,0
+volume=255
+[state ]
+type=changeanim
+trigger1=palno>9
+trigger1=animelem=3,=4
+value=anim
+elem=4
+[state ]
+type=changeanim
+trigger1=palno>9
+trigger1=animelem=4,=4
+value=anim
+elem=5
+[state ]
+type=playsnd
+trigger1=animelem=5
+value=s2000,10
+[state ]
+type=superpause
+trigger1=animelem=1,>0&&animelem=3,<0
+time=2
+movetime=2
+darken=0
+anim=-1
+p2defmul=1
+[state ]
+type=varset
+trigger1=animelem=5
+fvar(4)=600+300*(palno>9)
+[state ]
+type=assertspecial
+trigger1=animelem=1,>=0
+flag=nobg
+flag2=nofg
+[state ]
+type=helper
+trigger1=animelem=1
+pos=8,-100
+id=2400
+stateno=2400
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=helper
+trigger1=animelem=1
+id=2500
+stateno=2500
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=explod
+trigger1=!numexplod(10010)
+trigger1=animelem=1
+id=10010
+anim=10010
+removetime=-1
+scale=.5,.5
+postype=back
+bindtime=-1
+ownpal=1
+sprpriority=-7
+trans=add
+supermovetime=99999
+pausemovetime=99999
+;----------エフェクト
+[state ]
+type=explod
+trigger1=animelem=5
+id=2101
+anim=2101
+scale=.5,.5
+removetime=-2
+bindtime=-1
+ownpal=1
+sprpriority=2
+trans=add
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=explod
+trigger1=animelem=5,>=0&&animelem=7,<0
+trigger1=animelemtime(5)%2=0
+id=2103
+anim=2103
+scale=.5,.5
+pos=60-random%120,0
+removetime=-2
+bindtime=-1
+ownpal=1
+sprpriority=2
+trans=add
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=helper
+trigger1=animelem=5
+id=2105
+stateno=2105
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=changeanim
+triggerall=palno>9
+trigger1=animelem=5,=4
+trigger2=animelem=6,=4
+trigger3=animelem=7,=4
+value=anim
+elem=animelemno(0)+1
+[state ]
+type=selfstate
+trigger1=!animtime
+value=0
+;-----SPEED UP
+[statedef 2105]
+[state ]
+type=changeanim
+trigger1=anim!=2104
+value=2104
+[state ]
+type=turn
+trigger1=facing=-1
+[state ]
+type=posset
+trigger1=1
+x=root,pos x
+[state ]
+type=velset
+trigger1=animelem=1
+y=-3
+[state ]
+type=veladd
+trigger1=vel y<0
+y=.3
+[state ]
+type=veladd
+trigger1=vel y>=0
+y=0
+[state ]
+type=palfx
+trigger1=1
+add=floor(abs(sin(pi*animelemtime(1)/5))*255),floor(abs(sin(pi*animelemtime(1)/5))*255),floor(abs(sin(pi*animelemtime(1)/5))*255)
+time=1
+[state ]
+type=destroyself
+trigger1=!animtime
+;---------------------------------------------------------------------------
+; 聖帝十字陵
+;---------------------------------------------------------------------------
+[statedef 2200]
+movetype=a
+[state ]
+type=changeanim
+trigger1=anim!=2200
+value=2200
+[state ]
+type=varadd
+trigger1=animelem=1
+var(1)=-(var(1)&2048)
+[state ]
+type=varset
+trigger1=animelem=1
+fvar(18)=480
+[state ]
+type=poweradd
+trigger1=animelem=1
+value=-1000
+[state ]
+type=turn
+trigger1=animelem=1
+trigger1=(var(1):=var(1)+4*(facing*(enemynear(!enemynear,alive&&numenemy>1&&enemynear(numenemy>1),alive),pos x-pos x)<0))&4
+[state ]
+type=hitby
+trigger1=animelem=7,<0
+value=
+time=1
+[state ]
+type=playsnd
+trigger1=animelem=1
+value=s2200,0
+channel=0
+[state ]
+type=playsnd
+trigger1=animelem=3
+value=s2500,0
+volume=255
+[state ]
+type=superpause
+trigger1=animelem=3,>=0&&animelem=4,<0
+time=2
+movetime=2
+darken=0
+anim=-1
+p2defmul=1
+[state ]
+type=helper
+trigger1=animelem=3
+pos=8,-100
+id=2400
+stateno=2400
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=helper
+trigger1=animelem=3
+id=2500
+stateno=2500
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=explod
+trigger1=!numexplod(10010)
+trigger1=animelem=3
+id=10010
+anim=10010
+removetime=-1
+scale=.5,.5
+postype=back
+bindtime=-1
+ownpal=1
+sprpriority=-7
+trans=add
+supermovetime=99999
+pausemovetime=99999
+;----△
+[state ]
+type=playsnd
+trigger1=animelem=6
+value=s2200,10
+[state ]
+type=helper
+trigger1=animelem=6
+id=2205
+stateno=2205
+ownpal=1
+[state ]
+type=targetstate
+trigger1=numtarget
+trigger1=!target,hitfall
+trigger1=!projhittime(2205)
+value=2230
+[state ]
+type=selfstate
+trigger1=numtarget
+trigger1=!target,hitfall
+trigger1=!projhittime(2205)
+value=2202
+[state ]
+type=targetlifeadd
+trigger1=numtarget
+trigger1=target,hitfall
+trigger1=!projhittime(2205)
+value=-1
+absolute=1
+;------------勝利
+[state ]
+type=explod
+trigger1=!numexplod(10040)
+trigger1=roundstate>2
+trigger1=winko
+id=10040
+anim=10040
+removetime=-2
+scale=.5,.5
+postype=back
+bindtime=-1
+ownpal=1
+sprpriority=-7
+supermovetime=99999
+pausemovetime=99999 
+[state ]
+type=selfstate
+trigger1=!animtime
+value=0
+[statedef 2202]
+[state ]
+type=changeanim
+trigger1=anim!=2202
+value=2202
+[state ]
+type=targetfacing
+trigger1=animelem=1
+value=-1
+[state ]
+type=targetstate
+trigger1=numtarget
+value=2230
+[state ]
+type=width
+trigger1=1
+edge=0,15
+[state ]
+type=selfstate
+trigger1=!animtime
+value=2210
+;------------ロック動作
+[statedef 2210]
+movetype=a
+[state ]
+type=attackdist
+trigger1=1
+value=0
+[state ]
+type=changeanim
+trigger1=anim!=2210
+value=2210
+[state ]
+type=varset
+trigger1=fvar(4)=1
+fvar(4)=2
+[state ]
+type=targetstate
+trigger1=numtarget
+value=2231
+[state ]
+type=width
+trigger1=animelem=29,<0
+edge=0,15
+[state ]
+type=posadd
+trigger1=animelem=29,<0
+trigger1=backedgebodydist>=3
+x=-6
+[state ]
+type=angledraw
+trigger1=animelem=1,<10
+scale=1-animelemtime(1)*.01,1-animelemtime(1)*.01
+[state ]
+type=angledraw
+trigger1=animelem=1,>=10&&animelem=30,<0
+scale=.9,.9
+[state ]
+type=playsnd
+trigger1=animelem=2
+value=s2210,0
+channel=0
+[state ]
+type=playsnd
+trigger1=animelem=3
+value=s2210,10
+[state ]
+type=varset
+trigger1=animelem=7
+trigger1=var(1)&2048
+fvar(18)=480
+[state ]
+type=poweradd
+trigger1=animelem=7
+trigger1=var(1)&2048
+value=-1000
+[state ]
+type=changeanim
+trigger1=animelem=7
+trigger1=!(var(1)&2048)
+value=2210
+elem=28
+[state ]
+type=playsnd
+trigger1=animelem=8
+value=s2210,1
+channel=0
+[state ]
+type=playsnd
+trigger1=animelem=22
+value=s1600,10
+[state ]
+type=playsnd
+trigger1=animelem=22
+value=s1600,11
+[state ]
+type=helper
+trigger1=animelem=22
+id=2220
+stateno=2220
+pos=15,-120
+;pos=0,-130
+ownpal=1
+supermovetime=999999
+pausemovetime=999999
+[state ]
+type=targetstate
+trigger1=numtarget
+trigger1=animelem=28,>=80
+value=2232
+[state ]
+type=targetstate
+trigger1=numtarget
+trigger1=animelem=29,>=0
+value=2233
+[state ]
+type=angledraw
+trigger1=anim=2210
+trigger1=animelem=30,>=0&&animelem=30,<10
+scale=.9+animelemtime(30)*.01,.9+animelemtime(30)*.01
+[state ]
+type=angledraw
+trigger1=anim=2210
+trigger1=animelem=30,>=10
+scale=1,1
+;------------勝利
+[state ]
+type=explod
+trigger1=!numexplod(10040)
+trigger1=roundstate>2
+trigger1=winko
+id=10040
+anim=10040
+removetime=-2
+scale=.5,.5
+postype=back
+bindtime=-1
+ownpal=1
+sprpriority=-7
+supermovetime=99999
+pausemovetime=99999 
+[state ]
+type=selfstate
+trigger1=!animtime
+value=2250
+;------------ﾌﾊﾊﾊﾊ
+[statedef 2250]
+[state ]
+type=changeanim
+trigger1=anim!=2250
+value=2250
+[state ]
+type=varset
+trigger1=fvar(4)=1
+fvar(4)=2
+[state ]
+type=playsnd
+trigger1=animelem=1
+value=s2250,0
+channel=0
+[state ]
+type=removeexplod
+trigger1=1
+id=10010
+[state ]
+type=targetstate
+trigger1=numtarget
+trigger1=animelem=1
+value=2234
+[state ]
+type=selfstate
+trigger1=!animtime
+value=0
+;-------△1
+[statedef 2205]
+movetype=a
+sprpriority=3
+[state ]
+type=changeanim
+trigger1=anim!=2205
+value=2205
+[state ]
+type=assertspecial
+trigger1=1
+flag=noshadow
+[state ]
+type=varset
+trigger1=root,projhittime(2205)<0
+trigger1=root,projhittime(2205)<0
+var(2)=0
+[state ]
+type=varset
+trigger1=root,var(4)
+var(2)=1
+[state ]
+type=posset
+trigger1=animelem=1
+y=-250
+[state ]
+type=posset
+trigger1=1
+x=enemynear,pos x
+[state ]
+type=posadd
+trigger1=1
+y=15
+[state ]
+type=varset
+trigger1=root,projcontacttime(2205)=[0,1]
+var(0)=1
+;--------ヒット音
+[state ]
+type=playsnd 
+trigger1=root,projhittime(2205)=1
+value=s250,3
+[state ]
+type=playsnd
+trigger1=root,projguardedtime(2205)=1
+value=s120,4
+;--------------ヒットスパーク大
+[state ]
+type=helper
+trigger1=root,projhittime(2205)=1
+id=6000
+stateno=6000
+scale=.5,.5
+pos=floor(p2dist x)-30+random%60,floor(p2dist y)-80+random%60
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=helper
+trigger1=var(2)
+trigger1=root,projhittime(2205)=1
+id=6025
+stateno=6025
+pos=floor(fvar(12)),floor(fvar(13))
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=explod
+trigger1=root,projguardedtime(2205)=[0,1]
+id=6012
+anim=6012
+scale=.5,.5
+removetime=-2
+sprpriority=6
+ownpal=1
+trans=add
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=selfstate
+trigger1=root,anim=2202
+value=2215
+[state ]
+type=selfstate
+trigger1=pos y>=0
+value=2206
+[state ]
+type=projectile
+trigger1=!var(0)
+projanim=2207
+projid=2205
+projremove=1
+projremovetime=1
+projhitanim=-1
+postype=p1
+offset=0,0
+attr=s,hp
+hitflag=maf
+guardflag=ha
+damage=ifelse(22*5.6*ifelse(root,fvar(10)*root,fvar(16)>.3,root,fvar(10)*root,fvar(16),.3)>6,ceil(22*5.6*root,ifelse(root,fvar(10)*root,fvar(16)>.3,root,fvar(10)*root,fvar(16),.3)),6),5
+getpower=ceil(1000*(.05+root,fvar(17))*root,fvar(10))*ifelse(root,var(1)&128,.6,1)*(root,fvar(18)<=0),ceil(1000*(.05+root,fvar(17))*root,fvar(10))*ifelse(root,var(1)&128,.6,1)*(root,fvar(18)<=0)
+givepower=ceil(500*.05*root,fvar(10))*ifelse(root,var(1)&128,.6,1),ceil(333*.05*root,fvar(10))*ifelse(root,var(1)&128,.6,1)
+animtype=medium
+priority=4,hit
+pausetime=0,13+6*!!var(4)
+ground.hittime=20+(enemynear,statetype=c)
+ground.slidetime=20+(enemynear,statetype=c)
+guard.hittime=18+(enemynear,statetype=c)
+ground.velocity=-5.2
+air.hittime=0
+air.velocity=-2,-9.6
+air.fall=1
+yaccel=.9+root,fvar(0)
+fall.recovertime=40+2*!!root,var(4)
+ground.cornerpush.veloff=0
+sparkno=-1
+hitsound=-1
+guard.sparkno=-1
+guardsound=-1
+kill=0
+[statedef 2206]
+[state ]
+type=changeanim
+trigger1=anim!=2206
+value=2206
+[state ]
+type=assertspecial
+trigger1=1
+flag=noshadow
+[state ]
+type=velset
+trigger1=1
+x=0
+y=0
+[state ]
+type=posset
+trigger1=1
+y=0
+[state ]
+type=trans
+trigger1=1
+trans=addalpha
+alpha=256-animelemtime(1)*12,animelemtime(1)*12
+[state ]
+type=destroyself
+trigger1=!animtime
+;-----------△2
+[statedef 2215]
+sprpriority=3
+[state ]
+type=changeanim
+trigger1=anim!=2215
+value=2215
+[state ]
+type=assertspecial
+trigger1=1
+flag=noshadow
+[state ]
+type=posset
+trigger1=1
+x=enemynear,pos x
+y=enemynear,pos y
+[state ]
+type=offset
+trigger1=1
+y=-50
+[state ]
+type=offset
+trigger1=!enemynear,hitshakeover
+x=floor(abs(sin(pi*gametime/10))*3)
+y=-50
+[state ]
+type=offset
+trigger1=root,anim=2210
+trigger1=root,animelem=28,>=0
+y=floor(abs(sin(pi*root,animelemtime(28)/10))*3)-50
+;+enemynear,const(size.mid.pos.y)
+[state ]
+type=offset
+trigger1=root,anim=2210
+trigger1=root,animelem=28,>=80
+y=10
+[state ]
+type=playsnd
+trigger1=root,anim=2210
+trigger1=root,animelem=28,=80
+value=s250,2
+[state ]
+type=angledraw
+trigger1=root,anim=2210
+trigger1=root,animelem=1,<10
+scale=1-root,animelemtime(1)*.01,1-root,animelemtime(1)*.01
+[state ]
+type=angledraw
+trigger1=root,anim=2210
+trigger1=root,animelem=1,>=10
+scale=.9,.9
+;---ピラミッド
+[state ]
+type=helper
+trigger1=!numhelper(2216)
+id=2216
+stateno=2216
+supermovetime=99999
+pausemovetime=99999
+;---矢を放て
+[state ]
+type=helper
+trigger1=root,anim=2210
+trigger1=root,animelem=3
+id=2220
+stateno=2217
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=explod
+trigger1=root,anim=2210
+trigger1=root,animelem=28,=80
+id=2225
+anim=2225
+scale=.45,.45
+pos=0,0
+removetime=-2
+sprpriority=6
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=projectile
+trigger1=root,anim=2210
+trigger1=root,animelem=28,=79
+projanim=2207
+projid=2206
+projremove=1
+projremovetime=1
+projhitanim=-1
+postype=p1
+offset=0,0
+attr=s,ap
+hitflag=maf
+guardflag=ha
+damage=ifelse(22*5.6*ifelse(root,fvar(10)*root,fvar(16)>.3,root,fvar(10)*root,fvar(16),.3)>6,ceil(22*5.6*root,ifelse(root,fvar(10)*root,fvar(16)>.3,root,fvar(10)*root,fvar(16),.3)),6),5
+getpower=ceil(1000*(.05+root,fvar(17))*root,fvar(10))*ifelse(root,var(1)&128,.6,1)*(root,fvar(18)<=0),ceil(1000*(.05+root,fvar(17))*root,fvar(10))*ifelse(root,var(1)&128,.6,1)*(root,fvar(18)<=0)
+givepower=ceil(500*.05*root,fvar(10))*ifelse(root,var(1)&128,.6,1),ceil(333*.05*root,fvar(10))*ifelse(root,var(1)&128,.6,1)
+animtype=medium
+priority=4,hit
+pausetime=0,13+6*!!var(4)
+ground.hittime=20+(enemynear,statetype=c)
+ground.slidetime=20+(enemynear,statetype=c)
+guard.hittime=18+(enemynear,statetype=c)
+ground.velocity=-5.2
+air.hittime=0
+air.velocity=-2,-9.6
+air.fall=1
+yaccel=.9+root,fvar(0)
+fall.recovertime=40+2*!!root,var(4)
+ground.cornerpush.veloff=0
+sparkno=-1
+hitsound=-1
+guard.sparkno=-1
+guardsound=-1
+[state ]
+type=trans
+trigger1=root,anim=2210
+trigger1=root,animelem=29,>=0
+trans=addalpha
+alpha=256-root,animelemtime(29)*12,root,animelemtime(29)*12
+[state ]
+type=destroyself
+trigger1=root,anim!=[2200,2250]
+trigger2=root,anim=2210
+trigger2=root,animelem=29,>=22
+[statedef 2216]
+sprpriority=2
+[state ]
+type=changeanim
+trigger1=anim!=2216
+value=2216
+[state ]
+type=assertspecial
+trigger1=1
+flag=noshadow
+[state ]
+type=angledraw
+trigger1=root,anim=2210
+trigger1=root,animelem=1,<10
+scale=1-root,animelemtime(1)*.01,1-root,animelemtime(1)*.01
+[state ]
+type=angledraw
+trigger1=root,anim=2210
+trigger1=root,animelem=1,>=10
+scale=.9,.9
+[state ]
+type=posset
+trigger1=1
+x=parent,pos x
+y=parent,pos y+10
+[state ]
+type=trans
+trigger1=root,anim=2210
+trigger1=root,animelem=29,>=0
+trans=addalpha
+alpha=256-root,animelemtime(29)*12,root,animelemtime(29)*12
+[state ]
+type=destroyself
+trigger1=root,anim!=[2200,2250]
+trigger2=root,anim=2210
+trigger2=root,animelem=29,>=22
+;----------矢
+[statedef 2217]
+sprpriority=4
+[state ]
+type=changeanim
+trigger1=anim!=2217
+value=2217
+[state ]
+type=helper
+trigger1=ishelper(2220)
+trigger1=animelem=1
+id=2221
+stateno=2217
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=helper
+trigger1=ishelper(2220)
+trigger1=animelem=1
+id=2222
+stateno=2217
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=helper
+trigger1=ishelper(2220)
+trigger1=animelem=1
+id=2223
+stateno=2217
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=helper
+trigger1=ishelper(2220)
+trigger1=animelem=1
+id=2224
+stateno=2217
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=helper
+trigger1=ishelper(2220)
+trigger1=animelem=1
+id=2225
+stateno=2217
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=helper
+trigger1=ishelper(2220)
+trigger1=animelem=1
+id=2226
+stateno=2217
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=helper
+trigger1=ishelper(2220)
+trigger1=animelem=1
+id=2227
+stateno=2217
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=angledraw
+trigger1=1
+value=105*ishelper(2220)+65*ishelper(2221)+15*ishelper(2222)-15*ishelper(2223)-105*ishelper(2224)-65*ishelper(2225)+165*ishelper(2226)-165*ishelper(2227)
+scale=.9,.9
+[state ]
+type=posadd
+trigger1=ishelper(2220)
+trigger1=animelem=1
+x=-140
+y=50-40
+[state ]
+type=posadd
+trigger1=ishelper(2220)
+x=6
+y=-2
+[state ]
+type=posadd
+trigger1=ishelper(2221)
+trigger1=animelem=1
+x=-140
+y=-50-40
+[state ]
+type=posadd
+trigger1=ishelper(2221)
+x=6
+y=2
+[state ]
+type=posadd
+trigger1=ishelper(2222)
+trigger1=animelem=1
+x=-50
+y=-140-40
+[state ]
+type=posadd
+trigger1=ishelper(2222)
+x=2
+y=6
+[state ]
+type=posadd
+trigger1=ishelper(2223)
+trigger1=animelem=1
+x=50
+y=-140-40
+[state ]
+type=posadd
+trigger1=ishelper(2223)
+x=-2
+y=6
+[state ]
+type=posadd
+trigger1=ishelper(2224)
+trigger1=animelem=1
+x=140
+y=50-40
+[state ]
+type=posadd
+trigger1=ishelper(2224)
+x=-6
+y=-2
+[state ]
+type=posadd
+trigger1=ishelper(2225)
+trigger1=animelem=1
+x=140
+y=-50-40
+[state ]
+type=posadd
+trigger1=ishelper(2225)
+x=-6
+y=2
+[state ]
+type=posadd
+trigger1=ishelper(2226)
+trigger1=animelem=1
+x=-50
+y=140-40
+[state ]
+type=posadd
+trigger1=ishelper(2226)
+x=2
+y=-6
+[state ]
+type=posadd
+trigger1=ishelper(2227)
+trigger1=animelem=1
+x=50
+y=140-40
+[state ]
+type=posadd
+trigger1=ishelper(2227)
+x=-2
+y=-6
+[state ]
+type=projectile
+trigger1=!animtime
+projanim=2219
+projid=2217
+projremove=1
+projremovetime=8
+projhitanim=-1
+postype=p1
+offset=0,0
+attr=c,hp
+hitflag=maf
+guardflag=
+damage=ifelse(4*5.6*ifelse(root,fvar(10)*root,fvar(16)>.3,root,fvar(10)*root,fvar(16),.3)>6,ceil(4*5.6*root,ifelse(root,fvar(10)*root,fvar(16)>.3,root,fvar(10)*root,fvar(16),.3)),6),5
+getpower=ceil(1000*(.05+root,fvar(17))*root,fvar(10))*ifelse(root,var(1)&128,.6,1)*(root,fvar(18)<=0),ceil(1000*(.05+root,fvar(17))*root,fvar(10))*ifelse(root,var(1)&128,.6,1)*(root,fvar(18)<=0)
+givepower=ceil(500*.05*root,fvar(10))*ifelse(root,var(1)&128,.6,1),ceil(333*.05*root,fvar(10))*ifelse(root,var(1)&128,.6,1)
+animtype=medium
+priority=4,hit
+pausetime=0,13
+ground.hittime=14+(enemynear,statetype=c)
+ground.slidetime=14+(enemynear,statetype=c)
+guard.hittime=12+(enemynear,statetype=c)
+ground.velocity=-5.2
+air.hittime=0
+air.velocity=-2,0
+fall=1
+yaccel=.9
+fall.recovertime=40+2*!!root,var(4)
+ground.cornerpush.veloff=0
+sparkno=-1
+hitsound=-1
+guard.sparkno=-1
+guardsound=-1
+kill=0
+[state ]
+type=selfstate
+trigger1=!animtime
+value=2218
+;----矢が刺さった
+[statedef 2218]
+[state ]
+type=changeanim
+trigger1=anim!=2218
+value=2218
+[state ]
+type=posset
+trigger1=animelem=1
+x=enemynear,pos x
+y=enemynear,pos y-60
+[state ]
+type=playsnd
+trigger1=ishelper(2220)
+trigger1=animelem=1||animelem=1,=2||animelem=1,=4
+value=s250,1
+volume=256
+[state ]
+type=offset
+trigger1=!enemynear,hitshakeover
+x=floor(abs(sin(pi*gametime/10))*4)
+[state ]
+type=posadd
+trigger1=animelem=1
+trigger1=ishelper(2220)
+x=-7
+y=10
+[state ]
+type=posadd
+trigger1=animelem=1
+trigger1=ishelper(2221)
+x=-14
+y=18
+[state ]
+type=posadd
+trigger1=animelem=1
+trigger1=ishelper(2222)
+x=-18
+y=26
+[state ]
+type=posadd
+trigger1=animelem=1
+trigger1=ishelper(2223)
+x=10
+y=15
+[state ]
+type=posadd
+trigger1=animelem=1
+trigger1=ishelper(2224)
+x=17
+y=6
+[state ]
+type=posadd
+trigger1=animelem=1
+trigger1=ishelper(2225)
+x=8
+y=28
+[state ]
+type=posadd
+trigger1=animelem=1
+trigger1=ishelper(2226)
+x=17
+y=35
+[state ]
+type=posadd
+trigger1=animelem=1
+trigger1=ishelper(2227)
+x=20
+y=40
+[state ]
+type=angledraw
+trigger1=1
+value=95*ishelper(2220)+15*ishelper(2221)+75*ishelper(2222)+45*ishelper(2223)-100*ishelper(2224)+135*ishelper(2225)-15*ishelper(2226)-95*ishelper(2227)
+scale=.9,.9
+[state ]
+type=destroyself
+trigger1=root,anim!=[2200,2250]
+trigger2=root,anim=2210
+trigger2=root,animelem=28,=80
+;----------槍
+[statedef 2220]
+sprpriority=3
+[state ]
+type=changeanim
+trigger1=anim!=2220
+value=2220
+[state ]
+type=posadd
+trigger1=1
+x=13.2
+y=-4.4
+[state ]
+type=angledraw
+trigger1=1
+value=20
+scale=.9,.9
+[state ]
+type=assertspecial
+trigger1=1
+flag=noshadow
+;--------ヒット音
+[state ]
+type=playsnd
+trigger1=!animtime
+value=s250,2
+;--------------ヒットスパーク大
+[state ]
+type=helper
+trigger1=!animtime
+id=6000
+stateno=6000
+scale=.5,.5
+pos=45,-25
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=projectile
+trigger1=!animtime
+projanim=1651
+projid=2220
+projremove=1
+projremovetime=1
+projhitanim=-1
+postype=p1
+offset=0,0
+attr=c,hp
+hitflag=maf
+guardflag=ma
+damage=ifelse(23*5.6*ifelse(root,fvar(10)*root,fvar(16)>.3,root,fvar(10)*root,fvar(16),.3)>6,ceil(23*5.6*root,ifelse(root,fvar(10)*root,fvar(16)>.3,root,fvar(10)*root,fvar(16),.3)),6),5
+getpower=ceil(1000*(.05+root,fvar(17))*root,fvar(10))*ifelse(root,var(1)&128,.6,1)*(root,fvar(18)<=0),ceil(1000*(.05+root,fvar(17))*root,fvar(10))*ifelse(root,var(1)&128,.6,1)*(root,fvar(18)<=0)
+givepower=ceil(500*.05*root,fvar(10))*ifelse(root,var(1)&128,.6,1),ceil(333*.05*root,fvar(10))*ifelse(root,var(1)&128,.6,1)
+animtype=medium
+priority=4,hit
+pausetime=0,13
+ground.hittime=14+(enemynear,statetype=c)
+ground.slidetime=14+(enemynear,statetype=c)
+guard.hittime=12+(enemynear,statetype=c)
+ground.velocity=-5.2
+air.hittime=0
+air.velocity=-3,-9.6
+air.fall=1
+yaccel=.9
+fall.recovertime=40+2*!!root,var(4)
+ground.cornerpush.veloff=0
+sparkno=-1
+hitsound=-1
+guard.sparkno=-1
+guardsound=-1
+kill=0
+[state ]
+type=selfstate
+trigger1=!animtime
+value=2221
+[statedef 2221]
+[state ]
+type=changeanim
+trigger1=anim!=2221
+value=2221
+[state ]
+type=offset
+trigger1=!enemynear,hitshakeover
+x=floor(abs(sin(pi*gametime/10))*4)
+[state ]
+type=angledraw
+trigger1=1
+value=20
+scale=.9,.9
+[state ]
+type=destroyself
+trigger1=root,anim!=[2200,2250]
+trigger2=root,anim=2210
+trigger2=root,animelem=28,=80
+;----------敵動作
+[statedef 2230]
+movetype=h
+[state ]
+type=changeanim
+trigger1=1
+value=5002
+[state ]
+type=width
+trigger1=1
+edge=0,40
+[state ]
+type=posset
+trigger1=1
+y=0
+[state ]
+type=velset
+trigger1=1
+x=0
+y=0
+[state ]
+type=selfstate
+trigger1=time>=500
+value=5050
+[statedef 2231]
+movetype=h
+[state ]
+type=changeanim
+trigger1=1
+value=5002
+[state ]
+type=velset
+trigger1=1
+x=0
+y=0
+[state ]
+type=width
+trigger1=1
+edge=0,40
+[state ]
+type=angledraw
+trigger1=enemy,anim=2210
+trigger1=enemy,animelem=1,<10
+scale=1-enemy,animelemtime(1)*.01,1-enemy,animelemtime(1)*.01
+value=0
+[state ]
+type=angledraw
+trigger1=enemy,anim=2210
+trigger1=enemy,animelem=1,>=10
+scale=.9,.9
+[state ]
+type=offset
+trigger1=!hitshakeover
+x=floor(abs(sin(pi*gametime/10))*4)
+[state ]
+type=posadd
+trigger1=backedgebodydist>=3
+x=-6
+[state ]
+type=posadd
+trigger1=pos y>=-140;155
+y=-8
+[state ]
+type=hitfallset
+trigger1=1
+value=1
+[state ]
+type=selfstate
+trigger1=time>=100
+value=5030
+[statedef 2232]
+type=a
+movetype=h
+[state ]
+type=changeanim
+trigger1=1
+value=5030
+[state ]
+type=width
+trigger1=1
+edge=0,40
+[state ]
+type=angledraw
+trigger1=enemy,anim=2210
+trigger1=enemy,animelem=1,>=10
+scale=.9,.9
+[state ]
+type=assertspecial
+trigger1=1
+flag=invisible
+flag2=noshadow
+[state ]
+type=hitfallset
+trigger1=1
+value=1
+[state ]
+type=selfstate
+trigger1=time>=100
+value=5050
+[statedef 2233]
+type=a
+movetype=h
+[state ]
+type=changeanim
+trigger1=1
+value=5050
+[state ]
+type=hitfallset
+trigger1=1
+value=1
+[state ]
+type=width
+trigger1=enemy,animelem=29,<0
+edge=0,40
+[state ]
+type=angledraw
+trigger1=enemy,anim=2210
+trigger1=enemy,animelem=1,>=10&&enemy,animelem=30,<=0
+scale=.9,.9
+[state ]
+type=angledraw
+trigger1=enemy,anim=2210
+trigger1=enemy,animelem=30,>0&&enemy,animelem=30,<10
+scale=.9+enemy,animelemtime(30)*.01,.9+enemy,animelemtime(30)*.01
+[state ]
+type=angledraw
+trigger1=enemy,anim=2210
+trigger1=enemy,animelem=30,>=10
+scale=1,1
+[state ]
+type=velset
+trigger1=1
+x=0
+y=0
+[state ]
+type=selfstate
+trigger1=time>=60
+value=5050
+[statedef 2234]
+type=a
+movetype=h
+[state ]
+type=changeanim
+trigger1=!time
+value=5050
+[state ]
+type=hitfallset
+trigger1=1
+value=1
+[state ]
+type=velset
+trigger1=!time
+x=0
+y=-9.6
+[state ]
+type=veladd
+trigger1=1
+y=.9
+[state ]
+type=selfstate
+trigger1=pos y>=0
+value=5100
+;---------------------------------------------------------------------------
+; 天翔十字鳳
+;---------------------------------------------------------------------------
+[statedef 3000]
+movetype=a
+[state ]
+type=changeanim
+trigger1=anim!=3000
+value=3000
+[state ]
+type=varset
+trigger1=1
+fvar(1)=-1
+[state ]
+type=turn
+trigger1=animelem=1
+trigger1=(var(1):=var(1)+4*(facing*(enemynear(!enemynear,alive&&numenemy>1&&enemynear(numenemy>1),alive),pos x-pos x)<0))&4
+[state ]
+type=playsnd
+trigger1=animelem=1
+value=s3000,1
+channel=0
+[state ]
+type=playsnd
+trigger1=animelem=18
+value=s3000,2
+channel=0
+[state ]
+type=statetypeset
+trigger1=animelem=2,>=0
+statetype=a
+[state ]
+type=varset
+trigger1=animelem=1
+sysfvar(0)=0
+[state ]
+type=varset
+trigger1=animelem=1
+sysfvar(1)=0
+[state ]
+type=varset
+trigger1=animelem=1
+sysfvar(2)=0
+[state ]
+type=varset
+trigger1=animelem=1
+sysfvar(3)=0
+[state ]
+type=varset
+trigger1=animelem=2,>=0&&animelem=10,<0
+sysfvar(0)=-1.5
+[state ]
+type=varset
+trigger1=animelem=10,>=0
+sysfvar(0)=0
+[state ]
+type=varset
+trigger1=animelem=2
+sysfvar(4)=-12
+[state ]
+type=varset
+trigger1=animelem=10,>=0
+sysfvar(4)=0
+[state ]
+type=varadd
+trigger1=animelem=4||animelem=5
+trigger1=var(0)<(var(1)&1)
+var(1)=-(var(1)&2)
+[state ]
+type=hitdef
+trigger1=var(0)<(var(1)&1)&&!(var(1)&2)
+attr=s,ha
+hitflag=maf
+guardflag=ma
+damage=0
+getpower=0
+givepower=0
+animtype=up
+priority=6,hit
+pausetime=0,9
+ground.hittime=10
+ground.slidetime=10
+guard.hittime=8
+ground.velocity=-1.5,-10
+air.hittime=0
+air.velocity=-1.5,-10
+fall=1
+yaccel=.25
+fall.recover=0
+ground.cornerpush.veloff=0
+sparkno=-1
+hitsound=-1
+guard.sparkno=-1
+guardsound=-1
+kill=0
+[state ]
+type=targetstate
+trigger1=numtarget
+trigger1=movehit=1
+trigger1=!(var(1)&16384)
+value=3020
+[state ]
+type=superpause
+trigger1=animelem=18,>=0
+time=2
+movetime=2
+darken=0
+anim=-1
+p2defmul=1
+;----十字陵
+[state ]
+type=helper
+trigger1=animelem=10
+id=3005
+stateno=3005
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+;---鳳凰
+[state ]
+type=explod
+trigger1=animelem=20
+id=3000
+anim=3002
+removetime=-1
+scale=.5,.5
+ownpal=1
+sprpriority=-3
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=modifyexplod
+trigger1=1
+id=3000
+trans=addalpha
+alpha=(animelemtime(20)*16),256
+;---後光
+[state ]
+type=helper
+trigger1=animelem=20
+id=3010
+stateno=3010
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+;---------------暗転
+[state ]
+type=playsnd
+trigger1=animelem=18
+value=s3000,0
+volume=255
+[state ]
+type=explod
+trigger1=animelem=18
+id=3053
+anim=3053
+scale=.75,.75
+pos=0,-70
+removetime=-2
+bindtime=-1
+ownpal=1
+sprpriority=-1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=helper
+trigger1=animelem=18
+id=2500
+stateno=2500
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=explod
+trigger1=animelem=18,>=0
+;trigger1=animelemtime(1)%2
+id=10022
+anim=10022
+removetime=10
+scale=.25-(random%5)*.04,1-(random%5)*.1
+postype=back
+pos=random%320,240
+vel=0,-35
+ownpal=1
+sprpriority=-6
+trans=add
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=explod
+trigger1=animelem=18
+id=10020
+anim=10020
+removetime=-1
+scale=1,1
+ownpal=1
+postype=back
+pos=-320,0
+bindtime=-1
+sprpriority=-7
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=explod
+trigger1=animelem=18
+id=10021
+anim=10021
+removetime=-1
+scale=1,1
+ownpal=1
+postype=back
+pos=0,0
+bindtime=-1
+sprpriority=-7
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=modifyexplod
+trigger1=1
+id=10020
+trans=addalpha
+alpha=128-floor(128*sin(gametime*9*pi/180)),256
+[state ]
+type=modifyexplod
+trigger1=1
+id=10021
+trans=addalpha
+alpha=128-floor(128*cos(gametime*9*pi/180)),256
+;----------------
+[state ]
+type=selfstate
+trigger1=!animtime
+value=3050
+;--------------攻撃動作
+[statedef 3050]
+type=a
+movetype=a
+sprpriority=3
+[state ]
+type=changeanim
+trigger1=anim!=3050
+value=3050
+[state ]
+type=varset
+trigger1=1
+fvar(1)=-1
+[state ]
+type=varset
+trigger1=fvar(4)=1
+fvar(4)=2
+[state ]
+type=modifyexplod
+trigger1=1
+id=3000
+trans=addalpha
+alpha=256-animelemtime(1)*16,256
+[state ]
+type=removeexplod
+trigger1=animelem=1,16
+id=3000
+[state ]
+type=playsnd
+trigger1=animelem=1
+value=s3000,3
+channel=0
+[state ]
+type=varset
+trigger1=animelem=1
+sysfvar(4)=-8
+[state ]
+type=varset
+trigger1=animelem=1
+sysfvar(0)=7
+[state ]
+type=varset
+trigger1=animelem=4
+sysfvar(0)=-8
+[state ]
+type=varset
+trigger1=animelem=4
+sysfvar(4)=-8
+[state ]
+type=varset
+trigger1=animelem=8
+sysfvar(0)=0
+[state ]
+type=explod
+trigger1=animelem=2
+trigger1=!numexplod(3051)
+id=3051
+anim=3051
+scale=.5,.5
+removetime=-1
+bindtime=-1
+ownpal=1
+sprpriority=4
+trans=add
+[state ]
+type=removeexplod
+trigger1=animelem=3,>=0
+id=3051
+[state ]
+type=explod
+trigger1=animelem=3
+trigger1=!numexplod(3052)
+id=3052
+anim=3052
+scale=.5,.5
+removetime=-1
+bindtime=-1
+ownpal=1
+sprpriority=4
+trans=add
+[state ]
+type=removeexplod
+trigger1=animelem=4,>=0
+id=3052
+;----鳳凰
+[state ]
+type=helper
+trigger1=animelem=3
+id=3055
+stateno=3055
+ownpal=1
+pos=0,0
+[state ]
+type=helper
+trigger1=animelem=3
+id=3011
+stateno=3011
+ownpal=1
+pos=0,-70
+[state ]
+type=playsnd
+trigger1=animelem=3
+value=s3000,10
+;---------------暗転
+[state ]
+type=explod
+trigger1=roundstate=2
+id=10022
+anim=10022
+removetime=10
+scale=.25-(random%5)*.04,1-(random%5)*.1
+postype=back
+pos=random%320,240
+vel=0,-35
+ownpal=1
+sprpriority=-6
+trans=add
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=modifyexplod
+trigger1=1
+id=10020
+trans=addalpha
+alpha=128-floor(128*sin(gametime*9*pi/180)),256
+[state ]
+type=modifyexplod
+trigger1=1
+id=10021
+trans=addalpha
+alpha=128-floor(128*cos(gametime*9*pi/180)),256
+[state ]
+type=removeexplod
+trigger1=roundstate>2
+id=10022
+[state ]
+type=targetstate
+trigger1=!projhittime(3050)
+value=3070
+[state ]
+type=varadd
+trigger1=!projhittime(3050)
+trigger1=!(var(1)&8388608)
+var(1)=8388608
+[state ]
+type=selfstate
+trigger1=pos y>=0
+value=3100
+;----------------待機
+[statedef 3100]
+sprpriority=0
+[state ]
+type=changeanim
+trigger1=anim!=3100
+value=3100
+[state ]
+type=varset
+trigger1=1
+fvar(1)=-1
+[state ]
+type=targetstate
+trigger1=!projhittime(3050)
+value=3070
+[state ]
+type=varadd
+trigger1=!projhittime(3050)
+trigger1=!(var(1)&8388608)
+var(1)=8388608
+[state ]
+type=changeanim
+trigger1=!(var(1)&8388608)
+trigger1=animelem=3,=20
+value=3100
+elem=4
+[state ]
+type=selfstate
+trigger1=roundstate=3
+trigger1=animelem=3,>=0&&animelem=4,<0
+value=3250
+;---------------暗転
+[state ]
+type=explod
+trigger1=1
+id=10022
+anim=10022
+removetime=10
+scale=.25-(random%5)*.04,1-(random%5)*.1
+postype=back
+pos=random%320,240
+vel=0,-35
+ownpal=1
+sprpriority=-6
+trans=add
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=modifyexplod
+trigger1=1
+id=10020
+trans=addalpha
+alpha=128-floor(128*sin(gametime*9*pi/180)),256
+[state ]
+type=modifyexplod
+trigger1=1
+id=10021
+trans=addalpha
+alpha=128-floor(128*cos(gametime*9*pi/180)),256
+[state ]
+type=powerset
+trigger1=!animtime
+trigger1=!movehit
+value=0
+[state ]
+type=varset
+trigger1=!animtime
+trigger1=!movehit
+fvar(2)=0
+[state ]
+type=varset
+trigger1=!animtime
+trigger1=!movehit
+fvar(1)=1
+[state ]
+type=selfstate
+trigger1=!animtime
+value=0
+[statedef 3250]
+[state ]
+type=changeanim
+trigger1=anim!=3250
+value=3250
+;------------勝利
+[state ]
+type=explod
+trigger1=!numexplod(10040)
+trigger1=roundstate>2
+trigger1=winko
+id=10040
+anim=10040
+removetime=-2
+scale=.5,.5
+postype=back
+bindtime=-1
+ownpal=1
+sprpriority=-7
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=helper
+trigger1=!numhelper(3500)
+trigger1=roundstate>2
+trigger1=winko
+id=3500
+stateno=3500
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+;------十字陵
+[statedef 3005]
+[state ]
+type=changeanim
+trigger1=anim!=3005
+value=3005
+[state ]
+type=assertspecial
+trigger1=1
+flag=noshadow
+[state ]
+type=posset
+trigger1=1
+y=0
+[state ]
+type=turn
+trigger1=facing!=root,facing
+[state ]
+type=explod
+trigger1=!numexplod(3006)
+id=3006
+anim=3006
+removetime=-1
+scale=.5,.5
+ownpal=1
+bindtime=-1
+sprpriority=-2
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=explod
+trigger1=!numexplod(3007)
+id=3007
+anim=3007
+removetime=-1
+scale=.5,.5
+ownpal=1
+bindtime=-1
+sprpriority=-2
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=modifyexplod
+trigger1=1
+trans=addalpha
+alpha=root,animelemtime(10)*16,256-root,animelemtime(10)*16
+[state ]
+type=modifyexplod
+trigger1=root,animelem=10,>16
+trans=addalpha
+alpha=256,0
+[state ]
+type=modifyexplod
+trigger1=root,anim=3050
+trans=addalpha
+alpha=256-root,animelemtime(1)*16,root,animelemtime(1)*16
+[state ]
+type=removeexplod
+trigger1=root,anim!=[3000,3050]
+trigger2=root,movetype=h
+trigger3=root,anim=3050
+trigger3=root,animelem=1,>=16
+[state ]
+type=destroyself
+trigger1=root,anim!=[3000,3050]
+trigger2=root,movetype=h
+trigger3=root,anim=3050
+trigger3=root,animelem=1,>=16
+;----------後光
+[statedef 3010]
+sprpriority=-4
+[state ]
+type=changeanim
+trigger1=anim!=3010
+value=3010
+[state ]
+type=angledraw
+trigger1=1
+scale=1.5,4
+[state ]
+type=trans
+trigger1=1
+trans=addalpha
+alpha=animelemtime(1)*8,256
+[state ]
+type=assertspecial
+trigger1=1
+flag=noshadow
+[state ]
+type=changeanim
+trigger1=animelem=2,>=0
+trigger1=root,anim=3000+root,anim%5
+value=3010
+elem=2
+[state ]
+type=trans
+trigger1=animelem=2,>0
+trans=addalpha
+alpha=128-animelemtime(2)*8,256
+[state ]
+type=palfx
+trigger1=1
+add=-60,0,-120
+time=1
+[state ]
+type=destroyself
+trigger1=!animtime
+trigger2=root,anim!=[3000,3100]
+trigger3=root,movetype=h
+;-------後光２
+[statedef 3011]
+sprpriority=-3
+[state ]
+type=changeanim
+trigger1=anim!=3011
+value=3011
+[state ]
+type=assertspecial
+trigger1=1
+flag=noshadow
+[state ]
+type=angledraw
+trigger1=1
+scale=1.5,4
+value=45
+[state ]
+type=palfx
+trigger1=1
+add=-60,0,-120
+time=1
+[state ]
+type=trans
+trigger1=1
+trans=addalpha
+alpha=animelemtime(1)*8,256
+[state ]
+type=trans
+trigger1=animelem=2,>0
+trans=addalpha
+alpha=128,256
+[state ]
+type=trans
+trigger1=animelem=3,>0
+trans=addalpha
+alpha=128-animelemtime(3)*8,256
+[state ]
+type=destroyself
+trigger1=!animtime
+trigger2=root,anim!=[3000,3100]
+trigger3=root,movetype=h
+;----------鳳凰
+[statedef 3055]
+movetype=a
+[state ]
+type=changeanim
+trigger1=anim!=3055
+value=3055
+[state ]
+type=velset
+trigger1=1
+x=6
+y=6
+[state ]
+type=varset
+trigger1=root,projcontacttime(3050)=[0,1]
+var(0)=1
+[state ]
+type=explod
+trigger1=!numexplod(3055)
+id=3055
+anim=3056
+scale=.5,.5
+removetime=-1
+bindtime=-1
+sprpriority=2
+ownpal=1
+trans=add
+supermovetime=99999
+pausemovetime=99999
+;--------ヒット音
+[state ]
+type=playsnd
+trigger1=root,projhittime(3050)%4=1
+trigger1=root,projhittime(3050)=[1,31]
+value=s250,3
+[state ]
+type=playsnd
+trigger1=root,projhittime(3050)=1
+value=s3000,11
+volume=255
+[state ]
+type=playsnd
+trigger1=root,projguardedtime(3050)=[0,1]
+value=s120,4
+;--------------ヒットスパーク大
+[state ]
+type=helper
+trigger1=root,projhittime(3050)%6=1
+trigger1=root,projhittime(3050)=[1,31]
+id=6000
+stateno=6000
+scale=.5,.5
+pos=floor(p2dist x)-30+random%60,floor(p2dist y)-80+random%60
+ownpal=1
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=explod
+trigger1=root,projguardedtime(3050)=[0,1]
+id=6012
+anim=6012
+scale=.5,.5
+pos=floor(p2dist x),floor(p2dist y)-60
+removetime=-2
+sprpriority=6
+ownpal=1
+trans=add
+supermovetime=99999
+pausemovetime=99999
+[state ]
+type=selfstate
+trigger1=pos y>200
+trigger2=root,anim!=[3000,3100]
+trigger3=root,movetype=h
+value=3056
+[state ]
+type=projectile
+trigger1=!var(0)
+projanim=3055
+projid=3050
+projremove=1
+projremovetime=1
+projhitanim=-1
+postype=p1
+offset=0,0
+projedgebound=2000000000
+attr=s,ap
+hitflag=maf
+guardflag=ma
+animtype=medium
+priority=4,hit
+damage=ifelse(25*5.6*root,fvar(10)*root,fvar(16)>5,ceil(25*5.6*root,fvar(10)*root,fvar(16)),5),6
+getpower=0
+givepower=0
+pausetime=0,9
+ground.hittime=8
+ground.slidetime=8
+guard.hittime=8
+ground.velocity=-5.2
+air.hittime=0
+air.velocity=-2,0
+fall=1
+yaccel=.9
+fall.recovertime=40+2*!!root,var(4)
+ground.cornerpush.veloff=0
+sparkno=-1
+hitsound=-1
+guard.sparkno=-1
+guardsound=-1
+kill=0
+[statedef 3056]
+[state ]
+type=removeexplod
+trigger1=1
+[state ]
+type=destroyself
+trigger1=1
+;-----------敵やられ
+;初段吹っ飛び
+[statedef 3020]
+type=a
+movetype=h
+[state ]
+type=hitvelset
+trigger1=!time
+x=1
+y=1
+[state ]
+type=changeanim
+trigger1=!hitshakeover
+value=5050+selfanimexist(5051)
+[state ]
+type=changeanim
+trigger1=vel y>=0
+trigger1=selfanimexist(anim+10)
+trigger1=anim=[5050,5051]
+value=anim+10
+[state ]
+type=posfreeze
+trigger1=!hitshakeover
+[state ]
+type=veladd
+trigger1=hitshakeover
+y=.25
+[state ]
+type=nothitby
+trigger1=1
+value=
+[state ]
+type=selfstate
+trigger1=vel y>0
+trigger1=pos y>=0
+value=5100
+;-----ズダダダダ
+[statedef 3070]
+type=a
+movetype=h
+[state ]
+type=changeanim
+trigger1=time<=70
+trigger2=vel y<0
+value=5050
+[state ]
+type=lifeset
+trigger1=time>60
+value=0
+[state ]
+type=velset
+trigger1=!time
+x=-2
+y=-2
+[state ]
+type=posfreeze
+trigger1=time<=70
+[state ]
+type=veladd
+trigger1=time>70
+y=.9
+[state ]
+type=selfstate
+trigger1=vel y>0
+trigger1=pos y>=0
+value=5100
