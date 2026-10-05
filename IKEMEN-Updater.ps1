@@ -51,6 +51,7 @@ function Is-Excluded([string]$RepoPath) {
     $p = Normalize-RepoPath $RepoPath
     # Windows Explorer metadata is not game content, even when tracked by Git.
     $leaf = ($p -split '/')[-1]
+    if ($leaf -match '^\.updater-backup-[0-9a-f]{32}\.tmp$') { return $true }
     if ($leaf -ieq 'desktop.ini' -or $leaf -ieq 'Thumbs.db') { return $true }
     # Launcher control files are protected even when using older configs.
     if ($p -in @('IKEMEN-Updater.ps1', 'Update-and-Play.bat', 'updater-config.json', '.updater-manifest.json', '.updater-manifest.json.tmp', '.updater-pending.json', '.updater-pending.json.tmp', 'Prepare-Build.bat', 'Verify-and-Repair.bat', 'README-Updater.txt')) { return $true }
@@ -181,7 +182,12 @@ function Download-File([string]$Uri, [string]$Destination, $Entry, [hashtable]$H
         $outputStream = $null
         if (!(Test-Entry $tmp $Entry)) { throw "Hash/size verification failed for $($Entry.Path); original file preserved." }
         if ([IO.File]::Exists($Destination)) {
-            [IO.File]::Replace($tmp, $Destination, $null)
+            # Windows PowerShell can coerce $null to an empty string for a
+            # string parameter. Give File.Replace an explicit legal backup path.
+            $backup = [IO.Path]::Combine($parent, ('.updater-backup-' + [Guid]::NewGuid().ToString('N') + '.tmp'))
+            [IO.File]::Replace($tmp, $Destination, $backup)
+            try { [IO.File]::Delete($backup) }
+            catch { Write-Status "Installed successfully; temporary backup could not be removed: $backup" Yellow }
         } else { [IO.File]::Move($tmp, $Destination) }
     } catch {
         if ($outputStream) { $outputStream.Dispose(); $outputStream = $null }
