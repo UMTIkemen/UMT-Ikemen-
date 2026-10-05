@@ -135,27 +135,64 @@ function Invoke-GitHubJson([string]$Uri) {
 }
 
 function Download-File([string]$Uri, [string]$Destination, $Entry, [hashtable]$Headers) {
-    $ProgressPreference = "SilentlyContinue"
-    $parent = Split-Path -Parent $Destination
-    if ($parent -and !(Test-Path -LiteralPath $parent)) {
-        New-Item -ItemType Directory -Force -Path $parent | Out-Null
-    }
-
+    # .NET paths are literal: brackets and Unicode never become wildcard patterns.
+    $parent = [IO.Path]::GetDirectoryName($Destination)
+    if ($parent) { [void][IO.Directory]::CreateDirectory($parent) }
     $tmp = "$Destination.updater_tmp"
-    if (Test-Path -LiteralPath $tmp) {
-        Remove-Item -LiteralPath $tmp -Force
-    }
-
+    if ([IO.File]::Exists($tmp)) { [IO.File]::Delete($tmp) }
+    Add-Type -AssemblyName System.Net.Http
+    $client = [Net.Http.HttpClient]::new()
+    $client.Timeout = [TimeSpan]::FromMinutes(5)
+    $response = $null
+    $inputStream = $null
+    $outputStream = $null
     try {
-        Invoke-WebRequest -UseBasicParsing -Uri $Uri -Headers $Headers -OutFile $tmp
-        if (!(Test-Entry $tmp $Entry)) { throw "Hash/size verification failed for $($Entry.Path); original file preserved." }
-        Move-Item -LiteralPath $tmp -Destination $Destination -Force
-    }
-    catch {
-        if (Test-Path -LiteralPath $tmp) {
-            Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue
+        foreach ($key in $Headers.Keys) {
+            if (!$client.DefaultRequestHeaders.TryAddWithoutValidation([string]$key, [string]$Headers[$key])) {
+                throw "Unsupported download header: $key"
+            }
         }
+        $response = $client.GetAsync($Uri, [Net.Http.HttpCompletionOption]::ResponseHeadersRead).GetAwaiter().GetResult()
+        [void]$response.EnsureSuccessStatusCode()
+        $inputStream = $response.Content.ReadAsStreamAsync().GetAwaiter().GetResult()
+        $outputStream = [IO.File]::Open($tmp, [IO.FileMode]::Create, [IO.FileAccess]::Write, [IO.FileShare]::None)
+        $buffer = New-Object byte[] 1048576
+        $bytesDone = [long]0
+        $timer = [Diagnostics.Stopwatch]::StartNew()
+        $lastReport = -1.0
+        while ($true) {
+            $readTask = $inputStream.ReadAsync($buffer, 0, $buffer.Length)
+            if (!$readTask.Wait(300000)) { throw 'Download stalled for five minutes. Retry the launcher.' }
+            $count = $readTask.GetAwaiter().GetResult()
+            if ($count -eq 0) { break }
+            $outputStream.Write($buffer, 0, $count)
+            $bytesDone += $count
+            if ($timer.Elapsed.TotalSeconds - $lastReport -ge 0.25) {
+                $percent = [int][Math]::Min(100, [Math]::Floor(100.0 * $bytesDone / [Math]::Max(1, $Entry.Size)))
+                $eta = -1
+                if ($timer.Elapsed.TotalSeconds -ge 2 -and $bytesDone -gt 0) {
+                    $eta = [int][Math]::Min([int]::MaxValue, [Math]::Ceiling($timer.Elapsed.TotalSeconds * [Math]::Max(0, $Entry.Size - $bytesDone) / $bytesDone))
+                }
+                Write-Progress -Id 4 -Activity 'Downloading current file' -Status ("{0}% | {1:N1} / {2:N1} MB" -f $percent, ($bytesDone / 1MB), ($Entry.Size / 1MB)) -CurrentOperation $Entry.Path -PercentComplete $percent -SecondsRemaining $eta
+                $lastReport = $timer.Elapsed.TotalSeconds
+            }
+        }
+        $outputStream.Dispose()
+        $outputStream = $null
+        if (!(Test-Entry $tmp $Entry)) { throw "Hash/size verification failed for $($Entry.Path); original file preserved." }
+        if ([IO.File]::Exists($Destination)) {
+            [IO.File]::Replace($tmp, $Destination, $null)
+        } else { [IO.File]::Move($tmp, $Destination) }
+    } catch {
+        if ($outputStream) { $outputStream.Dispose(); $outputStream = $null }
+        if ([IO.File]::Exists($tmp)) { [IO.File]::Delete($tmp) }
         throw
+    } finally {
+        if ($outputStream) { $outputStream.Dispose() }
+        if ($inputStream) { $inputStream.Dispose() }
+        if ($response) { $response.Dispose() }
+        $client.Dispose()
+        Write-Progress -Id 4 -Activity 'Downloading current file' -Completed
     }
 }
 
