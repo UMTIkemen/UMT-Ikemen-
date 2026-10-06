@@ -183,6 +183,12 @@ name = "MAX‘åŽÖ“ã"
 command = ~D, DB, B, DB, F, x+y
 time = 30
 
+; Alternative controller input: double QCF + RT (c)
+[Command]
+name = "MAX‘åŽÖ“ã"
+command = ~D, DF, F, D, DF, F, c
+time = 30
+
 [Command]
 name = "MAX–³Ž®"
 command = ~D, DF, F, D, DF, F, x+y
@@ -229,6 +235,12 @@ time = 30
 [Command]
 name = "‘åŽÖ“ã ‹­"
 command = ~D, DB, B, DB, F, y
+time = 30
+
+; Alternative controller input: double QCF + RB (z)
+[Command]
+name = "‘åŽÖ“ã ‹­"
+command = ~D, DF, F, D, DF, F, z
 time = 30
 
 [Command]
@@ -823,6 +835,7 @@ trigger32 = stateno = 2760 && animelemtime(4) > 0 && animelemtime(5) < 0 && move
 trigger33 = stateno = 2770 && animelemtime(4) > 0 && animelemtime(6) < 0 && movecontact
 trigger34 = stateno = 1900 && animelemtime(5) > 0 && animelemtime(7) < 0 && movecontact
 trigger35 = stateno = 1950 && animelemtime(5) > 0 && animelemtime(7) < 0 && movecontact
+trigger36 = stateno = 1190 && animelemtime(7) >= 0 && animelemtime(8) < 0 && movehit
 v = 12
 value = 1
 ignorehitpause = 1
@@ -1149,6 +1162,7 @@ triggerall = var(15) = 1 && var(49) = 0
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
 trigger2 = var(11) = 1
 trigger3 = var(12) = 1 && (power >= 2000 || (fvar(2) && power >= 1000))
+trigger4 = (stateno = 1180 || stateno = 1182) && animelemtime(7) >= 0 && movehit
 
 ;‰Î‰Þ‹ï’Æ
 [State -1, Hinokazutsuchi]
@@ -1224,6 +1238,7 @@ triggerall = (var(15) = 0) || (var(15) = 1) || (var(15) = 3 && var(49) = 1) || (
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
 trigger2 = var(11) = 1
 trigger3 = var(12) = 1 && (power >= 2000 || (fvar(2) && power >= 1000))
+trigger4 = (stateno = 1180 || stateno = 1182) && animelemtime(7) >= 0 && movehit
 
 ;==============================================================================
 ; ’´•KŽE‹Z
@@ -1319,6 +1334,7 @@ triggerall = var(15) = 1 && var(49) = 0
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
 trigger2 = var(11) = 1
 trigger3 = var(12) = 1 && (power >= 2000 || (fvar(2) && power >= 1000))
+trigger4 = (stateno = 1180 || stateno = 1182) && animelemtime(7) >= 0 && movehit && (power >= 2000 || (fvar(2) && power >= 1000))
 
 ;ÅIŒˆí‰œ‹`E–³Ž®
 [State -1, Mushiki]
@@ -1394,10 +1410,11 @@ triggerall = roundstate = 2
 triggerall = helper(9999),var(29) > 0 || helper(9999),var(30) > 0
 triggerall = statetype != A
 triggerall = power >= 1000 || fvar(2)
-triggerall = !(var(15) = 3 && var(49) = 0) && !(var(15) = 3 && var(49) = 2) 
+triggerall = !(var(15) = 3 && var(49) = 0) && !(var(15) = 3 && var(49) = 2)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
 trigger2 = var(11) = 1
 trigger3 = var(12) = 1 && (power >= 2000 || (fvar(2) && power >= 1000))
+trigger4 = (stateno = 1180 || stateno = 1182) && animelemtime(7) >= 0 && movehit && (power >= 2000 || (fvar(2) && power >= 1000))
 
 ;==============================================================================
 ; EX•KŽE‹Z

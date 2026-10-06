@@ -142,8 +142,8 @@ value = 1
 [State 3000, ChangeState]
 type = changestate
 triggerall = animelemtime(11) >= 0
-trigger1 = command != "holdx" && command != "holdy"
-trigger2 = var(40) >= 120
+trigger1 = command != "holdx" && command != "holdy" && command != "holdz"
+trigger2 = var(40) > 120
 trigger3 = var(59) > 0
 value = 3010
 
@@ -264,7 +264,7 @@ trigger1 = var(28) <= 0
 v = 28
 value = root,var(28)
 
-;--- ŒÅ’è  ---
+;--- ŒÅ’è ---
 [State 3020, BindToParent]
 type = bindtoparent
 trigger1 = parent,stateno = 2660 || parent,stateno = 3010 || parent,stateno = 4420
@@ -319,7 +319,7 @@ affectteam = E
 priority = 4,Hit
 animtype = Back
 ground.type = Low
-damage = floor(250*root,fvar(0)*root,fvar(3)),20
+damage = floor(ifelse(root,var(40) > 120,500,ifelse(root,var(40) >= 61,375,250))*root,fvar(0)*root,fvar(3)),20
 getpower = 0,0
 givepower = 20,20
 pausetime = 0,12
@@ -366,7 +366,7 @@ affectteam = E
 priority = 4,Hit
 animtype = Back
 ground.type = Low
-damage = floor(250*root,fvar(0)*root,fvar(3)),20
+damage = floor(ifelse(root,var(40) > 120,500,ifelse(root,var(40) >= 61,375,250))*root,fvar(0)*root,fvar(3)),20
 getpower = 0,0
 givepower = 20,20
 pausetime = 0,12
@@ -587,20 +587,16 @@ value = 30
 [State 3020, Chain Var]
 type = parentvarset
 triggerall = numtarget
-triggerall = root,var(3) = 0
-trigger1 = movehit = 1 || (moveguarded = 1 && target,statetype = A)
-trigger1 = !ishelper(3420)
+trigger1 = movehit = 1
 v = 0
-value = 1
+value = 0
 ignorehitpause = 1
 
-[State 3020, Chain Var]
+[State 3020, Hit Reset]
 type = parentvarset
 triggerall = numtarget
-triggerall = root,var(3) = 0
-trigger1 = movehit = 1 || (moveguarded = 1 && target,statetype = A)
-trigger1 = ishelper(3420)
-v = 0
+trigger1 = movehit = 1
+v = 14
 value = 0
 ignorehitpause = 1
 
@@ -979,7 +975,7 @@ value = 1
 type = changestate
 triggerall = animelemtime(11) >= 0
 trigger1 = var(59) <= 0 && var(55) <= 0
-trigger1 = command != "holdx" && command != "holdy"
+trigger1 = command != "holdx" && command != "holdy" && command != "holdc"
 value = 3060
 
 [State 3050, ChangeState]
@@ -1011,7 +1007,7 @@ value = 3060
 [State 3050, ChangeState]
 type = changestate
 triggerall = animelemtime(11) >= 0
-trigger1 = var(40) >= 120
+trigger1 = var(40) > 120
 value = 3060
 
 ;------------------------------------------------------------
@@ -1334,7 +1330,7 @@ affectteam = E
 priority = 4,Hit
 animtype = Back
 ground.type = Low
-damage = floor(120*root,fvar(0)*root,fvar(3)),10
+damage = floor(ifelse(var(40) > 120,240,ifelse(var(40) >= 61,180,120))*root,fvar(0)*root,fvar(3)),10
 getpower = 0,0
 givepower = 20,20
 pausetime = 0,12
@@ -1381,7 +1377,7 @@ affectteam = E
 priority = 4,Hit
 animtype = Back
 ground.type = Low
-damage = floor(120*root,fvar(0)*root,fvar(3)),10
+damage = floor(ifelse(var(40) > 120,240,ifelse(var(40) >= 61,180,120))*root,fvar(0)*root,fvar(3)),10
 getpower = 0,0
 givepower = 20,20
 pausetime = 0,12
@@ -22529,4 +22525,3 @@ value = -0.05
 type = changestate
 trigger1 = animtime = 0
 value = 10100
-
