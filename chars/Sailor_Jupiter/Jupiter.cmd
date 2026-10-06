@@ -1387,7 +1387,13 @@ triggerall = ctrl
 triggerall = statetype!=A
 trigger1 = !inguarddist
 value = 100
-
+[State -1, AI Run]
+type = ChangeState
+triggerall = (!var(59)>0)&&(roundstate=2)
+triggerall = roundstate = 2
+triggerall = helper(7000),var(7) = 1                                                                                                                                       &&(command = "holdback"||command = "holdfwd") && numhelper(2201+1) != 0
+trigger1 = statetype != A                                                                                                                                                            && stateno = [0,100]  
+value = 100                                                                                                                                                                              +1300                        
 [State -1, AI loses player]
 type = VarSet
 triggerall = enemynear,SelfAnimExist(301630)
@@ -1763,6 +1769,15 @@ triggerall = !numhelper(3500)
 ;p2 dist
 trigger1 = fvar(20)>80
 trigger1 = ctrl
+
+[State -1]
+type = ChangeState
+value = 195                                                                                                                                                                                    +2905
+triggerall = (!var(59)>0)&&(roundstate=2)                                                                                                                                             && Power >= 2000
+triggerall = roundstate = 2
+triggerall = helper(7000),var(7) = 1                                                                                                                                         && command = "holddown" && numhelper(2201+1) != 0
+trigger1 = statetype != A                                                                                                                                                           && stateno = [0,100]  
+
 ;==========================================================================
 ;Movement (AI)
 ;--------------------------------------------------------------------------
@@ -2490,6 +2505,7 @@ triggerall = (statetype != A)||(var(20) = 3000)
 trigger1 = ctrl
 trigger2 = movecontact && (stateno = [200,799])
 trigger3 = stateno = [100,101]
+trigger4 = stateno = [0,52]
 [State -1, EX SSpecials]
 type = ChangeState
 value = var(20)+0*(var(21):=0)
@@ -2560,7 +2576,6 @@ var(20) = 0
 [State -1, Taunt]
 type = ChangeState
 value = 195
-triggerall = roundstate = 2
 triggerall = var(59) = 0
 triggerall = statetype != A
 triggerall = ctrl
@@ -2633,10 +2648,11 @@ triggerall = statetype != A
 trigger1 = ctrl
 trigger2 = stateno = 200 && time>6
 trigger3 = stateno = 400 && (time>7||movecontact)
+trigger4 = stateno != 412
 trigger4 = numhelper(3500)
 trigger4 = stateno = [205,799]
 trigger4 = movecontact
-trigger5 = stateno = 100
+;trigger5 = stateno = 100
 
 [State -1, S/CLK]
 type = ChangeState
@@ -2655,7 +2671,7 @@ trigger5 = numhelper(3500)
 trigger5 = stateno = [200,799]
 trigger5 = (stateno != 230)||(command = "holddown")
 trigger5 = movecontact
-trigger6 = stateno = 100
+;trigger6 = stateno = 100
 
 [State -1, Cross-up Attack]
 type = ChangeState
@@ -2739,5 +2755,5 @@ trigger1 = ctrl
 trigger2 = stateno=600
 trigger2 = movecontact
 trigger3 = numhelper(3500)
-trigger3 = stateno = [600,799]
+trigger3 = stateno = [600,799] 
 trigger3 = movecontact
