@@ -4,7 +4,7 @@
 [Data]
 life		= 1000		;ライフ（体力ゲージ）最大値
 power		= 3000		;パワーゲージ最大値（オプション・デフォルトは3000=Lv.3）
-attack		= 85		;攻撃力（デフォルトは１００％）
+attack		= 90		;攻撃力（デフォルトは１００％）
 defence		= 100		;防御力（デフォルトは１００％）
 fall.defence_up	= 50		;横に倒れている時に一時的に加える防御力（％）
 liedown.time	= 60		;横に倒れている時間（フレーム）
@@ -2746,6 +2746,7 @@ Ctrl=0
 faceP2=1
 Anim= 910
 sprPriority=2
+Juggle = 999
 
 [State 750, ゲージ減]
 type = PowerAdd
@@ -2850,6 +2851,7 @@ velset = 0,0
 Ctrl = 0
 faceP2 = 1
 Anim = 915
+Juggle = 999
 sprPriority = 2
 
 [State 755, ゲージ減]
@@ -7294,6 +7296,92 @@ type = DestroySelf
 trigger1= roundstate=2
 trigger2= roundstate=3
 
+;---------------------------------------------------------------------------
+; HIT_AIRFALLRECOVER
+[Statedef 5210]
+type    = A
+movetype= I
+physics = N
+anim = 5210
+ctrl = 0
+velset = 0,0
+
+[State 5210, 1] ;Blink white
+type = PalFX
+trigger1 = Time = 0
+time = 3
+add = 128,128,128 ;256,256,256
+
+[State 5210, 1]
+type = PosFreeze
+trigger1 = Time = 0
+value = 4
+
+[State 5210, 2] ;Turn if not facing opponent
+type = Turn
+trigger1 = Time = 0
+trigger1 = p2dist X < -20
+
+[State 5210, 2] ;Go fwd
+type = VelSet
+triggerall = Time = 1
+trigger1 = Command = "holdfwd"
+x = 5
+y = -5.5
+
+[State 5210, 2] ;Go back
+type = VelSet
+triggerall = Time = 1
+trigger1 = Command = "holdback"
+x = -5
+y = -5.5
+
+[State 5210, 2] ;Go down
+type = VelSet
+triggerall = Time = 1
+trigger1 = Command = "holddown"
+trigger1 = Command != "holdfwd"
+trigger1 = Command != "holdback"
+x = 0
+y = 0
+
+[State 5210, 2] ;Go up
+type = VelSet
+triggerall = Time = 1
+trigger1 = Command != "holddown"
+trigger1 = Command != "holdfwd"
+trigger1 = Command != "holdback"
+x = 0
+y = -5.5
+
+[State 0, snd]
+type = playsnd
+trigger1 = time = 1
+value = 200,5
+channel = 0
+
+[State 5210, 3]
+type = NotHitBy
+trigger1 = Time = 0
+value = SCA
+time = 15
+
+[State 5210, 4]
+type = CtrlSet
+trigger1 = Time = 20
+value = 1
+
+[State 5210, 5]
+type = VelAdd;Gravity
+trigger1 = Time >= 4
+y = .35
+
+[State 5210, 5] ;Land on ground
+type = ChangeState
+trigger1 = Vel Y > 0
+trigger1 = Pos Y >= 0
+value = 52 ;JUMP_LAND
+ctrl = 1
 
 ;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ;		常時監視ステート（Statedef -2)

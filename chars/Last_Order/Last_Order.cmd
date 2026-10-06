@@ -1030,7 +1030,7 @@ type = ChangeState
 value = 930
 triggerall = !var(59)
 TriggerAll = Alive
-triggerall = command =  "recovery"
+triggerall = command =  "b" && command =  "c"
 triggerall = MoveType = H
 triggerall = var(28) >= 100
 trigger1 = stateno = 5000 && time > 0

@@ -4914,6 +4914,7 @@ Ctrl=0
 faceP2=1
 Anim= 910
 sprPriority=2
+Juggle = 999
 
 [State 50, 1]
 type = VarSet
@@ -5016,6 +5017,7 @@ Ctrl = 0
 faceP2 = 1
 Anim = 915
 sprPriority = 2
+Juggle = 999
 
 [State 50, 1]
 type = VarSet
@@ -6666,8 +6668,8 @@ ground.type = High;Trip
 ground.slidetime = 20
 ground.hittime  = 34;15
 ground.velocity = -2.5,-4
-guard.hittime = 20
-guard.ctrltime = 20
+guard.hittime = 17
+guard.ctrltime = 17
 air.velocity = -2.5,-2
 guard.velocity = -10
 fall = 1
@@ -15459,6 +15461,92 @@ type = DestroySelf
 trigger1= roundstate=2
 trigger2= roundstate=3
 
+;---------------------------------------------------------------------------
+; HIT_AIRFALLRECOVER
+[Statedef 5210]
+type    = A
+movetype= I
+physics = N
+anim = 5210
+ctrl = 0
+velset = 0,0
+
+[State 5210, 1] ;Blink white
+type = PalFX
+trigger1 = Time = 0
+time = 3
+add = 128,128,128 ;256,256,256
+
+[State 5210, 1]
+type = PosFreeze
+trigger1 = Time = 0
+value = 4
+
+[State 5210, 2] ;Turn if not facing opponent
+type = Turn
+trigger1 = Time = 0
+trigger1 = p2dist X < -20
+
+[State 5210, 2] ;Go fwd
+type = VelSet
+triggerall = Time = 1
+trigger1 = Command = "holdfwd"
+x = 5
+y = -5.5
+
+[State 5210, 2] ;Go back
+type = VelSet
+triggerall = Time = 1
+trigger1 = Command = "holdback"
+x = -5
+y = -5.5
+
+[State 5210, 2] ;Go down
+type = VelSet
+triggerall = Time = 1
+trigger1 = Command = "holddown"
+trigger1 = Command != "holdfwd"
+trigger1 = Command != "holdback"
+x = 0
+y = 0
+
+[State 5210, 2] ;Go up
+type = VelSet
+triggerall = Time = 1
+trigger1 = Command != "holddown"
+trigger1 = Command != "holdfwd"
+trigger1 = Command != "holdback"
+x = 0
+y = -5.5
+
+[State 0, snd]
+type = playsnd
+trigger1 = time = 1
+value = 700,0
+channel = 0
+
+[State 5210, 3]
+type = NotHitBy
+trigger1 = Time = 0
+value = SCA
+time = 15
+
+[State 5210, 4]
+type = CtrlSet
+trigger1 = Time = 20
+value = 1
+
+[State 5210, 5]
+type = VelAdd;Gravity
+trigger1 = Time >= 4
+y = .35
+
+[State 5210, 5] ;Land on ground
+type = ChangeState
+trigger1 = Vel Y > 0
+trigger1 = Pos Y >= 0
+value = 52 ;JUMP_LAND
+ctrl = 1
 
 ;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ;		常時監視ステート（Statedef -2)

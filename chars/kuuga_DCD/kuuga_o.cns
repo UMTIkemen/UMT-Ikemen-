@@ -1997,6 +1997,7 @@ faceP2=1
 Anim= 900
 sprPriority=2
 poweradd = -1000
+Juggle = 999
 
 [state 2100 , ]
 type = Varadd
@@ -2096,6 +2097,7 @@ faceP2 = 1
 Anim = 905
 sprPriority = 2
 poweradd = -1000
+Juggle = 999
 
 [state 2100 , ]
 type = Varadd
@@ -2438,7 +2440,7 @@ channel = 0
 
 [State 1100, nothitby]
 type=nothitby
-trigger1 = 1
+trigger1 = !moveguarded && !movereversed
 value= ,NP,SP,HP
 
 [State 1011, 1]
@@ -2912,7 +2914,7 @@ IgnoreHitPause = 1
 
 [State 1100, nothitby]
 type=nothitby
-trigger1 = 1
+trigger1 = !moveguarded && !movereversed
 value= ,NP,SP,HP
 
 [State 1002, 1]
@@ -3053,6 +3055,7 @@ attr = S, SA
 animtype  = Light
 damage    = 20,2
 getpower  = 30,15
+hitflag = MAFD
 guardflag = MA
 pausetime = 10-(2**5!=64),10
 sparkno = S8000+(random%8)
@@ -3079,7 +3082,7 @@ attr = S, SA
 damage    = 20,2
 getpower  = 30,15
 animtype  = Medium
-hitflag = MAF
+hitflag = MAFD
 guardflag = MA
 pausetime = 16-(2**5!=64),16
 sparkno = S8000+(random%8)
@@ -7208,6 +7211,92 @@ type = DestroySelf
 trigger1= roundstate=2
 trigger2= roundstate=3
 
+;---------------------------------------------------------------------------
+; HIT_AIRFALLRECOVER
+[Statedef 5210]
+type    = A
+movetype= I
+physics = N
+anim = 5210
+ctrl = 0
+velset = 0,0
+
+[State 5210, 1] ;Blink white
+type = PalFX
+trigger1 = Time = 0
+time = 3
+add = 128,128,128 ;256,256,256
+
+[State 5210, 1]
+type = PosFreeze
+trigger1 = Time = 0
+value = 4
+
+[State 5210, 2] ;Turn if not facing opponent
+type = Turn
+trigger1 = Time = 0
+trigger1 = p2dist X < -20
+
+[State 5210, 2] ;Go fwd
+type = VelSet
+triggerall = Time = 1
+trigger1 = Command = "holdfwd"
+x = 5
+y = -5.5
+
+[State 5210, 2] ;Go back
+type = VelSet
+triggerall = Time = 1
+trigger1 = Command = "holdback"
+x = -5
+y = -5.5
+
+[State 5210, 2] ;Go down
+type = VelSet
+triggerall = Time = 1
+trigger1 = Command = "holddown"
+trigger1 = Command != "holdfwd"
+trigger1 = Command != "holdback"
+x = 0
+y = 0
+
+[State 5210, 2] ;Go up
+type = VelSet
+triggerall = Time = 1
+trigger1 = Command != "holddown"
+trigger1 = Command != "holdfwd"
+trigger1 = Command != "holdback"
+x = 0
+y = -5.5
+
+[State 0, snd]
+type = playsnd
+trigger1 = time = 1
+value = 50,2
+channel = 0
+
+[State 5210, 3]
+type = NotHitBy
+trigger1 = Time = 0
+value = SCA
+time = 15
+
+[State 5210, 4]
+type = CtrlSet
+trigger1 = Time = 20
+value = 1
+
+[State 5210, 5]
+type = VelAdd;Gravity
+trigger1 = Time >= 4
+y = .35
+
+[State 5210, 5] ;Land on ground
+type = ChangeState
+trigger1 = Vel Y > 0
+trigger1 = Pos Y >= 0
+value = 52 ;JUMP_LAND
+ctrl = 1
 
 ;---------------------------------------------------------------------------
 ; ここは-2のステートを書いてください、ヘルパー関係です

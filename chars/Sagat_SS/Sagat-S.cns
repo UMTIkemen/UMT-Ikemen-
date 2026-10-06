@@ -186,7 +186,7 @@ type = hitby
 trigger1 = 1
 value = SCA,AP
 time = -1
-ignorehitpause = 1 
+ignorehitpause = 1
 
 [State 1010, HitOverRide]
 type = hitoverride
@@ -420,9 +420,9 @@ ignorehitpause = 1
 type = parentvarset
 triggerall = numtarget
 triggerall = root,var(3) = 0
-trigger1 = movecontact = 1 && target,statetype = A
+trigger1 = movehit = 1 && target,statetype = A
 v = 0
-value = 1
+value = 0
 ignorehitpause = 1
 
 ;--- コンボ補正 ---
@@ -944,10 +944,10 @@ guard.sparkno = s6120
 sparkxy = -15,-155
 ground.hittime = 18
 ground.slidetime = 18
-ground.velocity = -2,-12
+ground.velocity = -2,-14
 ground.cornerpush.veloff = 0
 air.hittime = 18
-air.velocity = -2,-12
+air.velocity = -2,-13
 guard.hittime = 16
 guard.slidetime = 16
 guard.velocity = -10
@@ -975,7 +975,7 @@ ground.type = Low
 damage = floor(150*fvar(0)*fvar(3)),10
 getpower = floor(100*(fvar(2) = 0)*fvar(4)),floor(100*(fvar(2) = 0)*fvar(4))
 givepower = 20,20
-pausetime = 12,12
+pausetime = 12,18
 hitsound = s6020,1
 guardsound = s6120,0
 sparkno = s6020
@@ -983,10 +983,10 @@ guard.sparkno = s6120
 sparkxy = var(5),var(6)
 ground.hittime = 18
 ground.slidetime = 18
-ground.velocity = -2,-12
+ground.velocity = -2,-14
 ground.cornerpush.veloff = 0
 air.hittime = 18
-air.velocity = -2,-12
+air.velocity = -2,-13
 guard.hittime = 16
 guard.slidetime = 16
 guard.velocity = -10
@@ -1020,7 +1020,7 @@ ground.type = High
 damage = floor(150*fvar(0)*fvar(3)*fvar(5)),10
 getpower = floor(100*(fvar(2) = 0)*fvar(4)*fvar(5)),floor(100*(fvar(2) = 0)*fvar(4)*fvar(5))
 givepower = 20,20
-pausetime = 12,12
+pausetime = 12,18
 hitsound = s6020,0
 guardsound = s6120,0
 sparkno = s6020
@@ -1028,10 +1028,10 @@ guard.sparkno = s6120
 sparkxy = -15,-155
 ground.hittime = 18
 ground.slidetime = 18
-ground.velocity = -2,-12
+ground.velocity = -2,-13
 ground.cornerpush.veloff = 0
 air.hittime = 18
-air.velocity = -2,-12
+air.velocity = -2,-13
 guard.hittime = 16
 guard.slidetime = 16
 guard.velocity = -10
@@ -1066,7 +1066,7 @@ ground.type = Low
 damage = floor(170*fvar(0)*fvar(3)),10
 getpower = floor(100*(fvar(2) = 0)*fvar(4)),floor(100*(fvar(2) = 0)*fvar(4))
 givepower = 20,20
-pausetime = 12,12
+pausetime = 12,20
 hitsound = s6020,1
 guardsound = s6120,0
 sparkno = s6020
@@ -1111,7 +1111,7 @@ ground.type = High
 damage = floor(170*fvar(0)*fvar(3)*fvar(5)),10
 getpower = floor(100*(fvar(2) = 0)*fvar(4)*fvar(5)),floor(100*(fvar(2) = 0)*fvar(4)*fvar(5))
 givepower = 20,20
-pausetime = 12,12
+pausetime = 12,20
 hitsound = s6020,0
 guardsound = s6120,0
 sparkno = s6020
@@ -1310,6 +1310,15 @@ type = velmul
 trigger1 = animelemtime(8) >= 0
 x = ifelse(var(1) = 0,0.85,0.8)
 
+;--- HK Projectile Invincibility ---
+[State 1200, Projectile Invincibility]
+type = nothitby
+triggerall = var(1) = 1
+trigger1 = animelemno(0) = [4,7]
+value = SCA,NP,SP,HP
+time = 1
+ignorehitpause = 1
+
 [State 1200, VelAdd]
 type = veladd
 trigger1 = animelemtime(4) >= 0
@@ -1360,7 +1369,7 @@ trigger1 = var(5) := -15 || var(6) := -50
 trigger2 = animelemno(0) = 5
 trigger2 = var(5) := -15 || var(6) := -80
 
-;--- 攻撃判定 ---
+;--- LK First Hit ---
 [State 1200, HitDef]
 type = hitdef
 triggerall = var(0) = 0
@@ -1444,6 +1453,7 @@ fall.yvelocity = -3.5
 forcestand = 1
 ID = 1200
 
+;--- HK Sweet Spot ---
 [State 1200, HitDef]
 type = hitdef
 triggerall = var(0) = 0
@@ -1456,12 +1466,13 @@ hitflag = MAF
 guardflag = M
 affectteam = E
 priority = 4,Hit
-animtype = Hard
+animtype = DiagUp
+air.animtype = DiagUp
 ground.type = Low
-damage = floor(90*fvar(0)*fvar(3)),5
+damage = floor(155*fvar(0)*fvar(3)),5
 getpower = floor(100*(fvar(2) = 0)*fvar(4)),floor(100*(fvar(2) = 0)*fvar(4))
 givepower = 20,20
-pausetime = 12,12
+pausetime = 18,18
 hitsound = s6020,0
 guardsound = s6120,0
 sparkno = s6020
@@ -1469,20 +1480,25 @@ guard.sparkno = s6120
 sparkxy = -15,-50
 ground.hittime = 18
 ground.slidetime = 18
-ground.velocity = -10
+ground.velocity = -3,-8.5
 ground.cornerpush.veloff = 0
 air.hittime = 18
-air.velocity = -4,-6
+air.velocity = -3,-8.5
 guard.hittime = 16
 guard.slidetime = 16
 guard.velocity = -10
 airguard.ctrltime = 999999
 airguard.velocity = -4.5,0
 yaccel = .4
+fall = 1
 air.fall = 1
 fall.recover = 0
 fall.yvelocity = -3.5
 forcestand = 1
+envshake.time = 12
+envshake.freq = 90
+envshake.ampl = -4
+envshake.phase = 90
 ID = 1200
 
 [State 1200, HitDef]
@@ -1497,13 +1513,13 @@ hitflag = MAF
 guardflag = MA
 affectteam = E
 priority = 4,Hit
-animtype = Hard
-air.animtype = Up
+animtype = DiagUp
+air.animtype = DiagUp
 ground.type = Low
-damage = floor(90*fvar(0)*fvar(3)),5
+damage = floor(155*fvar(0)*fvar(3)),5
 getpower = floor(100*(fvar(2) = 0)*fvar(4)),floor(100*(fvar(2) = 0)*fvar(4))
 givepower = 20,20
-pausetime = 12,12
+pausetime = 18,18
 hitsound = s6020,0
 guardsound = s6120,0
 sparkno = s6020
@@ -1511,10 +1527,10 @@ guard.sparkno = s6120
 sparkxy = -15,-50
 ground.hittime = 18
 ground.slidetime = 18
-ground.velocity = -10
+ground.velocity = -3,-8.5
 ground.cornerpush.veloff = 0
 air.hittime = 18
-air.velocity = -4,-6
+air.velocity = -3,-8.5
 guard.hittime = 16
 guard.slidetime = 16
 guard.velocity = -10
@@ -1522,11 +1538,17 @@ airguard.ctrltime = 999999
 airguard.velocity = -4.5,0
 yaccel = .4
 fall = 1
+air.fall = 1
 fall.recover = 0
 fall.yvelocity = -3.5
 forcestand = 1
+envshake.time = 12
+envshake.freq = 90
+envshake.ampl = -4
+envshake.phase = 90
 ID = 1200
 
+;--- LK Second Hit ---
 [State 1200, HitDef]
 type = hitdef
 triggerall = var(0) = 0
@@ -1605,11 +1627,13 @@ fall.recover = 0
 fall.yvelocity = -3.5
 ID = 1200
 
+;--- HK Late Active Frames ---
 [State 1200, HitDef]
 type = hitdef
 triggerall = var(0) = 0
 triggerall = var(1) = 1
 triggerall = var(14) = 0
+triggerall = movecontact = 0
 triggerall = var(35) = 0
 trigger1 = animelemno(0) = [4,7]
 attr = A,SA
@@ -1632,7 +1656,7 @@ ground.slidetime = 18
 ground.velocity = -4,-6
 ground.cornerpush.veloff = 0
 air.hittime = 18
-air.velocity = -4,-6
+air.velocity = -4,-7
 guard.hittime = 16
 guard.slidetime = 16
 guard.velocity = -10
@@ -1644,13 +1668,21 @@ fall.recover = 0
 fall.yvelocity = -3.5
 ID = 1200
 
+;--- HK Sweet Spot Pushbox ---
+[State 1200, Width]
+type = width
+triggerall = var(1) = 1
+trigger1 = animelemno(0) = 5
+player = 30,40
+
 [State 1200, HitDef]
 type = hitdef
 triggerall = var(0) = 0
 triggerall = var(1) = 1
 triggerall = var(14) = 0
+triggerall = movecontact = 0
 triggerall = var(35)
-trigger1 = animelemno(0) = [4,7]
+trigger1 = animelemno(0) = [4,6]
 attr = A,SA
 hitflag = MAF
 guardflag = MA
@@ -1668,12 +1700,12 @@ guard.sparkno = s6120
 sparkxy = var(5),var(6)
 ground.hittime = 18
 ground.slidetime = 18
-ground.velocity = -4,-6
+ground.velocity = -3,-7.4
 ground.cornerpush.veloff = 0
 air.hittime = 18
 air.velocity = -4,-6
-guard.hittime = 16
-guard.slidetime = 16
+guard.hittime = 19
+guard.slidetime = 19
 guard.velocity = -10
 airguard.ctrltime = 999999
 airguard.velocity = -4.5,0
@@ -1682,7 +1714,6 @@ fall = 1
 fall.recover = 0
 fall.yvelocity = -3.5
 ID = 1200
-
 
 ;--- 攻撃判定消滅 ---
 [State 1200, StateTypeSet]
@@ -1708,7 +1739,6 @@ type = changestate
 triggerall = animelemtime(4) >= 0
 trigger1 = vel y > 0 && pos y >= 0
 value = 1210
-
 ;-------------------------------------------------------------------
 ; タイガーニークラッシュ 着地
 [Statedef 1210]

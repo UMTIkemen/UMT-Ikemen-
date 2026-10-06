@@ -608,6 +608,20 @@ trigger2 = (stateno = [200,299]) || (stateno = [400,499])
 trigger2 = stateno != 440 ;Except for sweep kick
 trigger2 = movecontact
 
+[State -1]
+type	= ChangeState
+value	= ifelse(StateType!=A,910,915)
+triggerAll = Var(59) <= 0
+triggerAll = Alive
+triggerAll = (Command = "x" && Command = "y")
+triggerAll = Power >= 2000
+trigger1 = StateNo = 5000 && time > 0
+trigger2 = StateNo = 5010 && time > 0
+trigger3 = StateNo = 5020 && time > 0
+trigger4 = StateNo = 5070 && time > 0
+trigger5 = StateNo = 5030 && time > 0
+trigger6 = StateNo = 5035 && time > 0
+trigger7 = StateNo = 5040 && time > 0
 
 ;---------------------------------------------------------------------------
 
