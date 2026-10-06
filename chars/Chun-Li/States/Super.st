@@ -768,9 +768,14 @@ value = 730,1
 channel = 0
 
 [State 3100, PosAdd]
-type = PosAdd
+type = Null;PosAdd
 trigger1 = AnimElem = 3
 x = 30
+
+[State 3100, VelSet]
+type = VelSet
+trigger1 = AnimElem = 3
+x = 12
 
 [State 3100, Dash sound]
 type = PlaySnd
@@ -791,7 +796,7 @@ superMoveTime = 255
 ownPal = 1
 
 [State 3100, PosAdd]
-type = PosAdd
+type = Null;PosAdd
 trigger1 = AnimElem = 4
 x = 19
 
@@ -802,16 +807,16 @@ x = 15
 
 [State 3100, VelSet]
 type = VelSet
-trigger1 = AnimElem = 5
+trigger1 = AnimElem = 6
 x = 0
 
 [State 3100, PosAdd]
-type = PosAdd
+type = Null;PosAdd
 trigger1 = AnimElem = 6
 x = 5
 
 [State 3100, PosAdd]
-type = PosAdd
+type = Null;PosAdd
 trigger1 = AnimElem = 7
 x = 2
 
@@ -828,9 +833,19 @@ trigger8 = AnimElem = 31
 value = 1,5
 
 [State 3100, PosAdd]
-type = PosAdd
+type = Null;PosAdd
 trigger1 = AnimElem = 20
 x = 32
+
+[State 3100, VelSet]
+type = VelSet
+trigger1 = AnimElem = 20
+x = 15
+
+[State 3100, VelSet]
+type = VelSet
+trigger1 = AnimElem = 22
+x = 0
 
 [State 3100, Voice 3]
 type = PlaySnd
@@ -844,7 +859,7 @@ trigger1 = AnimElemTime(36) = -1
 player = 12,12
 
 [State 3100, PosAdd]
-type = PosAdd
+type = Null;PosAdd
 trigger1 = AnimElem = 36
 x = 13
 
@@ -860,9 +875,25 @@ trigger1 = AnimElemTime(37) = -1
 player = 24,24
 
 [State 3100, PosAdd]
-type = PosAdd
+type = Null;PosAdd
 trigger1 = AnimElem = 37
 x = 18
+
+[State 3100, VelSet]
+type = VelSet
+trigger1 = AnimElem = 36
+x = 15
+
+[State 3100, VelSet]
+type = VelSet
+triggerall = p2movetype != H
+trigger1 = AnimElem = 38
+x = 0
+
+[State 3100, VelSet]
+type = VelSet
+trigger1 = AnimElem = 38 = 1
+x = 0
 
 [State 3100, Width]
 type = Width
@@ -870,7 +901,7 @@ trigger1 = AnimElemTime(38) = -1
 player = 32,32
 
 [State 3100, PosAdd]
-type = PosAdd
+type = Null;PosAdd
 trigger1 = AnimElem = 38
 x = 33
 
@@ -1238,9 +1269,14 @@ value = 730,1
 channel = 0
 
 [State 3150, PosAdd]
-type = PosAdd
+type = Null;PosAdd
 trigger1 = AnimElem = 3
 x = 30
+
+[State 3100, VelSet]
+type = VelSet
+trigger1 = AnimElem = 3
+x = 16
 
 [State 3150, Dash sound]
 type = PlaySnd
@@ -1261,12 +1297,12 @@ superMoveTime = 255
 ownPal = 1
 
 [State 3150, PosAdd]
-type = PosAdd
+type = Null;PosAdd
 trigger1 = AnimElem = 4
 x = 19
 
 [State 3150, VelSet]
-type = VelSet
+type = Null;VelSet
 trigger1 = AnimElem = 4
 x = 15
 
@@ -1275,13 +1311,23 @@ type = VelSet
 trigger1 = AnimElem = 5
 x = 0
 
+[State 3150, VelSet]
+type = VelSet
+trigger1 = AnimElem = 6
+x = 5
+
+[State 3150, VelSet]
+type = VelSet
+trigger1 = AnimElem = 7
+x = 0
+
 [State 3150, PosAdd]
-type = PosAdd
+type = Null;PosAdd
 trigger1 = AnimElem = 6
 x = 5
 
 [State 3150, PosAdd]
-type = PosAdd
+type = Null;PosAdd
 trigger1 = AnimElem = 7
 x = 2
 
@@ -1306,9 +1352,24 @@ trigger16 = AnimElem = 55
 value = 1,5
 
 [State 3150, PosAdd]
-type = PosAdd
+type = Null;PosAdd
 trigger1 = AnimElem = 32
 x = 32
+
+[State 3150, VelSet]
+type = VelSet
+trigger1 = AnimElem = 32
+x = 16
+
+[State 3150, VelSet]
+type = VelSet
+trigger1 = AnimElem = 32
+x = 16
+
+[State 3150, VelSet]
+type = VelSet
+trigger1 = AnimElem = 34 = 1
+x = 0
 
 [State 3150, Voice 3]
 type = PlaySnd
@@ -1322,9 +1383,25 @@ trigger1 = AnimElemTime(60) = -1
 player = 12,12
 
 [State 3150, PosAdd]
-type = PosAdd
+type = Null;PosAdd
 trigger1 = AnimElem = 60
 x = 13
+
+[State 3150, VelSet]
+type = VelSet
+trigger1 = AnimElem = 60
+x = 18
+
+[State 3100, VelSet]
+type = VelSet
+triggerall = p2movetype != H
+trigger1 = AnimElem = 62 = 1
+x = 0
+
+[State 3100, VelSet]
+type = VelSet
+trigger1 = AnimElem = 62 = 2
+x = 0
 
 [State 3150, Woosh Sound]
 type = PlaySnd
@@ -1338,7 +1415,7 @@ trigger1 = AnimElemTime(61) = -1
 player = 24,24
 
 [State 3150, PosAdd]
-type = PosAdd
+type = Null;PosAdd
 trigger1 = AnimElem = 61
 x = 18
 
@@ -1348,7 +1425,7 @@ trigger1 = AnimElemTime(62) = -1
 player = 32,32
 
 [State 3150, PosAdd]
-type = PosAdd
+type = Null;PosAdd
 trigger1 = AnimElem = 62
 x = 33
 
@@ -2412,14 +2489,14 @@ superMoveTime = 255
 ownPal = 1
 
 [State 3300, PosAdd]
-type = PosAdd
+type = Null;PosAdd
 trigger1 = AnimElem = 10
 x = 32
 
 [State 3300, VelSet]
 type = VelSet
 trigger1 = AnimElem = 10
-x = 12.5
+x = 14
 
 [State 3300, VelSet]
 type = VelSet
@@ -2445,22 +2522,32 @@ trigger8 = AnimElem = 38
 value = 1,5
 
 [State 3300, PosAdd]
-type = PosAdd
+type = Null;PosAdd
 trigger1 = AnimElem = 17
 x = 13
 
+[State 3300, VelSet]
+type = VelSet
+trigger1 = AnimElem = 17
+x = 5
+
+[State 3300, VelSet]
+type = VelSet
+trigger1 = AnimElem = 20 
+x = 0
+
 [State 3300, PosAdd]
-type = PosAdd
+type = Null;PosAdd
 trigger1 = AnimElem = 18
 x = 18
 
 [State 3300, PosAdd]
-type = PosAdd
+type = Null;PosAdd
 trigger1 = AnimElem = 19
 x = 5
 
 [State 3300, PosAdd]
-type = PosAdd
+type = Null;PosAdd
 trigger1 = AnimElem = 20
 x = 2
 
@@ -2479,8 +2566,24 @@ trigger1 = AnimElem = 44
 value = 4,3
 channel = 0
 
+[State 3300, VelSet]
+type = VelSet
+trigger1 = AnimElem = 44
+x = 12
+
+[State 3300, VelSet]
+type = VelSet
+triggerall = p2movetype != H
+trigger1 = AnimElem = 46 = 1
+x = 0
+
+[State 3300, VelSet]
+type = VelSet
+trigger1 = AnimElem = 46 = 2
+x = 0
+
 [State 3300, PosAdd]
-type = PosAdd
+type = Null;PosAdd
 trigger1 = AnimElem = 44
 x = 13
 
@@ -2491,12 +2594,12 @@ value = 1,5
 channel = 1
 
 [State 3300, PosAdd]
-type = PosAdd
+type = Null;PosAdd
 trigger1 = AnimElem = 45
 x = 18
 
 [State 3300, PosAdd]
-type = PosAdd
+type = Null;PosAdd
 trigger1 = AnimElem = 46
 x = 33
 
