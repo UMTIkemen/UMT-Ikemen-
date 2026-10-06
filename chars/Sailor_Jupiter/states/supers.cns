@@ -157,7 +157,7 @@ y = 0
 type = NotHitBy
 trigger1 = !time
 value = SCA
-time = 135
+time = 140
 [State -3, Super Move]
 type = PalFx
 trigger1 = time = 1
@@ -381,7 +381,7 @@ attr = S, HP
 priority = 6,Dodge
 Hitflag = MAF
 guardflag = MA
-damage    = 60+40*(parent,var(17)=0),15
+damage    = 60+40*(parent,var(17)=0),20
 pausetime = 0,15
 guard.pausetime = 0,10
 ;hitspark---------------
@@ -433,6 +433,23 @@ triggerall = movehit
 trigger1 = numtarget(stateno)
 var(17) = 1
 persistent = 0 
+ignorehitpause = 1
+
+[State helper]
+type = helper
+triggerall = movehit
+triggerall = numtarget
+trigger1 = movehit = 1  
+pos = 0,0
+name = "Uncomboable helper"
+stateno = 3052
+ID = 3052
+facing = 1
+ownpal = 1
+size.xscale = (.65+.1*(time=129)-.15*(time=165))*const(size.xscale)
+size.yscale = (.55+.1*(time=129)-.15*(time=165))*const(size.yscale)
+pausemovetime = 0
+supermovetime = 5
 ignorehitpause = 1
 
 [State 2060]
@@ -487,6 +504,27 @@ type = Trans
 trigger1 = time>=5
 trans = add
 ignorehitpause = 1
+
+;-----------------------------------------------------------------------------
+;Uncomboable helper
+[Statedef 3052]
+type     = S
+movetype = I
+physics  = N
+ctrl     = 0
+anim     = 9999
+sprpriority = 1
+
+[state 3052]
+type = AssertSpecial
+trigger1 = 1
+flag = noshadow
+flag2 = invisible
+
+[State 3052]
+type = DestroySelf
+trigger1 = p2movetype != H
+
 ;---------------------------------------------------------------------------
 ; Jupiter Kick Reversal
 [Statedef 3100]
@@ -982,9 +1020,10 @@ air.type = low
 ;movement---------------
 ground.slidetime = 20
 ground.hittime  = 25
+air.hittime  = 50
 guard.hittime  = 20
 ground.velocity = -4
-air.velocity = -2,-2.5
+air.velocity = -0.5,-5
 fall = 0
 fall.recover = 0
 yaccel = .35
@@ -1481,7 +1520,7 @@ ignorehitpause = 1
 type    = S
 movetype= A
 physics = N
-velset = 6+parent,vel x*.5,-3
+velset = 6.5+parent,vel x*.5,-5
 ctrl = 0
 anim = 3150
 poweradd = 0
@@ -1564,7 +1603,7 @@ triggerall = time>3
 trigger1 = !movecontact
 id = stateno
 attr = S, HT
-priority = 7,dodge
+priority = 7
 Hitflag = MAF
 guardflag = 
 damage    = 0

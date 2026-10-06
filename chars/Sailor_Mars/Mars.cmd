@@ -2311,6 +2311,7 @@ triggerall = statetype != A
 trigger1 = ctrl
 trigger2 = movecontact && (stateno = [200,799])
 trigger3 = stateno = [100,101]
+trigger4 = stateno = [0,52]
 [State -1, EX SSpecials]
 type = ChangeState
 value = var(20)+0*(var(21):=0)
@@ -2381,7 +2382,6 @@ var(20) = 0
 [State -1, Taunt]
 type = ChangeState
 value = 195
-triggerall = roundstate = 2
 triggerall = var(59) = 0
 triggerall = statetype != A
 triggerall = ctrl
@@ -2457,7 +2457,7 @@ trigger3 = stateno = 400 && (time>7||movecontact)
 trigger4 = numhelper(3500)
 trigger4 = stateno = [205,799]
 trigger4 = movecontact
-trigger5 = stateno = 100
+;trigger5 = stateno = 100
 
 [State -1, S/CLK]
 type = ChangeState
@@ -2471,12 +2471,12 @@ trigger2 = stateno = [200,499]
 trigger2 = (stateno%50=[0,9])
 trigger2 = movecontact
 trigger3 = stateno = 230 && time>12
-trigger4 = stateno = 430 && time>10
+trigger4 = stateno = 430 && time>8
 trigger5 = numhelper(3500)
 trigger5 = stateno = [200,799]
 trigger5 = (stateno != 230)||(command = "holddown")
 trigger5 = movecontact
-trigger6 = stateno = 100
+;trigger6 = stateno = 100
 
 [State -1, Cross-up Attack]
 type = ChangeState

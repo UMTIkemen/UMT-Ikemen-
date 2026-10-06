@@ -4251,7 +4251,7 @@ animtype = hard
 ground.type = high
 air.type = low
 ;movement---------------
-ground.slidetime = 15
+ground.slidetime = 15-10*numhelper(3500)
 ground.hittime  = 20+5*numhelper(3500)
 air.hittime  = 20+5*numhelper(3500)
 ground.velocity = -9,0
@@ -4310,9 +4310,17 @@ x = 0
 
 [State 230]
 type = PosAdd
-trigger1 = animelem = 5
-x = 5
+trigger1 = prevstateno != 100
+trigger1 = prevstateno != 230
+x = 10
 persistent = 0
+
+[State 100, PosAdd]
+type = PosAdd
+triggerall = prevstateno = 100
+triggerall = p2movetype = H
+trigger1 = time = 0
+x = -5
 
 [State 230, Voice]
 type = PlaySnd
@@ -4379,6 +4387,12 @@ trigger1 = var(59) = 0
 trigger1 = command = "x"
 value = 240
 ctrl = 0
+
+[State 210]
+type = VelSet
+triggerall = p2movetype = H
+trigger1 = animelem = 2
+x = 3
 
 [State 230]
 type = Width
@@ -4450,7 +4464,7 @@ attr = S, NA
 priority = 4,Hit
 Hitflag = MAF
 guardflag = MA
-damage    = 55,10*(numhelper(3500)>0)
+damage    = 45,10*(numhelper(3500)>0)
 pausetime = 12+2*numhelper(3500),12+2*numhelper(3500)
 guard.pausetime = 12,12
 ;hitspark---------------
@@ -4464,7 +4478,7 @@ animtype = hard
 ground.type = low
 air.type = low
 ;movement---------------
-ground.slidetime = 15
+ground.slidetime = 15-10*numhelper(3500)
 ground.hittime  = 20+5*numhelper(3500)
 air.hittime  = 20+5*numhelper(3500)
 ground.velocity = -9,0
@@ -4496,6 +4510,19 @@ trigger1 = var(59) = 0
 trigger1 = command = "x"
 value = 1000
 ctrl = 0
+
+[State 240]
+type = VelSet
+triggerall = p2movetype = H && p2statetype != L
+trigger1 = animelem = 3
+x = 5
+
+[State 210]
+type = VelSet
+triggerall = p2movetype = H && p2statetype != L
+triggerall = numhelper(3500) != 0
+trigger1 = animelem = 2
+x = 8
 
 [State 240]
 type = Width
@@ -4995,7 +5022,7 @@ air.velocity = -1,-7
 guard.velocity = -4
 fall = 0
 fall.recover = 1
-fall.recovertime = 30
+fall.recovertime = 40
 yaccel = .35
 ground.cornerpush.veloff = -6
 guard.cornerpush.veloff = -8

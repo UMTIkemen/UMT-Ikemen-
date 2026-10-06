@@ -1224,7 +1224,7 @@ x = ceil(10*const(size.xscale))
 type = VelSet
 trigger1 = anim != 1105
 trigger1 = animelemno(0)<3
-x = 4.5
+x = 4.5+2.5*(numhelper(827) != 0)
 
 [State 1110]
 type = Helper
@@ -1898,7 +1898,7 @@ persistent = 0
 type = VelSet
 trigger1 = prevstateno != 8000
 persistent = 0
-x = 4+3*(prevstateno = [200,799])
+x = 4+3.5*(prevstateno = [200,799])
 y = 0
 
 [State 1210]
@@ -2120,7 +2120,7 @@ ignorehitpause = 1
 
 [State 1210]
 type = ChangeState
-trigger1 = AnimTime = 0
+trigger1 = AnimTime = 0                                                                                                                                                                     || Time = 62 && numhelper(2202) != 0  
 value = 0
 ctrl = 1
 
@@ -3692,19 +3692,20 @@ value = S0,0
 [State 1400]
 type = VelSet
 trigger1 = animelem = 2
-x = 3.5
+x = 3.5 
 
 [State 1400]
 type = PosAdd
-trigger1 = animelem = 3
-x = ceil(10*const(size.xscale))
+trigger1 = animelem = 3                                                                                                                                                          -1*numhelper(2202) != 0
+x = ceil(15*const(size.xscale))
 
 [State 1400, HitDef]
 type = HitDef
+triggerall = p2stateno != [140,159]
 Trigger1 = animelem = 2
 attr = S, ST      
 hitflag = M        
-priority = 1, Miss
+priority = 8
 sparkno = -1
 sparkxy = -ceil(8*const(size.xscale)),-ceil(80*const(size.yscale))
 hitsound = S2,0
@@ -4034,8 +4035,8 @@ x = 5.5
 
 [State 1410]
 type = PosAdd
-trigger1 = animelem = 4
-x = ceil(10*const(size.xscale))
+trigger1 = animelem = 4                                                                                                                                                          -1*numhelper(2202) != 0
+x = ceil(15*const(size.xscale))
 
 [State 1410]
 type = Helper
@@ -4055,10 +4056,11 @@ ignorehitpause = 1
 
 [State 1410, HitDef]
 type = HitDef
+triggerall = p2stateno != [140,159]
 Trigger1 = animelem = 3
 attr = S, ST      
 hitflag = M        
-priority = 1, Miss
+priority = 8
 sparkno = -1
 sparkxy = -ceil(10*const(size.xscale)),-ceil(50*const(size.xscale))
 hitsound = S2,0
@@ -5525,7 +5527,7 @@ guard.velocity = -6*(time>=25)
 airguard.velocity = -3*(time>=25),-3
 fall = 1
 fall.recover = 0
-yaccel = cond(root,var(43)>2 && time>40,.4+.25*(root,var(43)-1),.4)
+yaccel = cond(root,var(43)>2 && time>40,.4+.05*(root,var(43)-1),.4)
 ;power------------------
 getpower = 0
 givepower = floor(28*root,fvar(1))
@@ -6551,11 +6553,11 @@ triggerall = animelemno(0)>12
 trigger1 = !movecontact
 id = stateno
 attr = S, SA
-priority = 5,Dodge
+priority = 8,Dodge
 Hitflag = MAF
 guardflag = HA
 damage    = 110,20
-pausetime = 12,12
+pausetime = 6,12
 guard.pausetime = 10,10
 ;hitspark---------------
 sparkno = -1
@@ -6672,7 +6674,7 @@ ctrl = 0
 type    = S
 movetype= I
 physics = S
-velset = 4,0
+velset = 0,0
 ctrl = 0
 anim = 2201
 sprpriority = 2
@@ -6693,6 +6695,22 @@ type = ChangeState
 trigger1 = AnimTime = 0
 value = 0
 ctrl = 1
+
+;-----------------------------------------------------------------------------
+;Fin lightning
+[Statedef 2202]
+type     = A
+movetype = I
+physics  = N
+ctrl     = 0
+anim     = 9999
+sprpriority = 1
+
+[state 4052, 0]
+type = AssertSpecial
+trigger1 = 1
+flag = noshadow
+flag2 = invisible
 
 ; lightning fist
 [Statedef 2250]

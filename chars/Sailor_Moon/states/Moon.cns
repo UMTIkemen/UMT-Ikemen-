@@ -3062,7 +3062,7 @@ ground.type = low
 air.type = low
 ;movement---------------
 ground.slidetime = 15
-ground.hittime  = 20+5*numhelper(3500)
+ground.hittime  = 20+10*numhelper(3500)
 guard.hittime = 13
 air.hittime = 20+5*numhelper(3500)
 ground.velocity = -2,0
@@ -3105,10 +3105,10 @@ ground.type = high
 air.type = low
 ;movement---------------
 ground.slidetime = 15
-ground.hittime  = 20+5*numhelper(3500)
+ground.hittime  = 16+10*numhelper(3500)
 guard.hittime = 7
-air.hittime = 20+5*numhelper(3500)
-ground.velocity = -6,0
+air.hittime = 20+10*numhelper(3500)
+ground.velocity = -7,0
 air.velocity = -4.5,-3.5
 guard.velocity = -6
 fall = 0
@@ -3116,8 +3116,8 @@ fall.recover = 1
 fall.recovertime = 20
 yaccel = .5
 yaccel = cond(var(43)>0,.35+.2*var(43),.35)
-ground.cornerpush.veloff = -5
-guard.cornerpush.veloff = -5
+ground.cornerpush.veloff = -10
+guard.cornerpush.veloff = -12
 ;power------------------
 getpower = !numhelper(3500)*floor(36*fvar(1))
 givepower = floor(18*fvar(1))
@@ -3127,7 +3127,6 @@ envshake.time = 8+8*numhelper(3500)
 envshake.freq = 50
 fall.envshake.freq = 60.53
 guard.kill = numhelper(3500)>0
-
 [State 210]
 type = VarSet
 trigger1 = movecontact
@@ -3135,6 +3134,18 @@ trigger1 = animelemno(0)<5
 persistent = 0
 var(2) = 1
 ignorehitpause = 1
+
+[State 210]
+type = VelSet
+triggerall = p2movetype = H && p2statetype != L
+trigger1 = animelem = 2 && prevstateno != 235
+x = 7
+
+[State 210]
+type = VelSet
+triggerall = p2movetype = H && p2statetype != L
+trigger1 = animelem = 2 && prevstateno = 235
+x = 3
 
 [State 210]
 type = VelSet
@@ -3156,7 +3167,8 @@ trigger1 = animelemno(0)<5
 ignorehitpause = 1
 
 [State 210]
-type = PosAdd
+type = Null;PosAdd
+trigger1 = prevstateno != 235
 trigger1 = animelem = 4
 x = 8
 
@@ -3212,6 +3224,26 @@ trigger1 = !numhelper(3500)
 trigger2 = prevstateno != [200,799]
 value = 235
 
+[State 230]
+type = PosAdd
+trigger1 = prevstateno != 100
+trigger1 = prevstateno != 230
+x = 10
+persistent = 0
+
+[State 100, PosAdd]
+type = PosAdd
+triggerall = prevstateno = 100
+triggerall = p2movetype = H
+trigger1 = time = 0
+x = -8
+
+[State 230]
+type = Null;PosAdd
+trigger1 = p2movetype = H && p2statetype != A
+x = -5
+persistent = 0
+
 [State 230, Voice]
 type = PlaySnd
 trigger1 = time = 1
@@ -3250,14 +3282,14 @@ ground.slidetime = 15
 ground.hittime  = 15+5*numhelper(3500)
 guard.hittime = 9
 air.hittime = 15+5*numhelper(3500)
-ground.velocity = -3
+ground.velocity = -4
 air.velocity = -2,-3.5
 guard.velocity = -4
 fall = 0
 fall.recover = 1
 fall.recovertime = 15
 yaccel = cond(var(43)>0,.35+.2*var(43),.35)
-ground.cornerpush.veloff = -6
+ground.cornerpush.veloff = -8
 guard.cornerpush.veloff = -8
 ;power------------------
 getpower = !numhelper(3500)*floor(72*fvar(1))
@@ -3309,6 +3341,13 @@ ctrl = 0
 anim = 235
 sprpriority = 2
 
+[State 100, PosAdd]
+type = Null;PosAdd
+triggerall = prevstateno = 230
+triggerall = p2movetype = H
+trigger1 = time = 0
+x = -8
+
 [State 235]
 type = PlaySnd
 trigger1 = time = 1
@@ -3346,14 +3385,15 @@ air.type = low
 ground.slidetime = 15
 ground.hittime  = 15+5*numhelper(3500)
 air.hittime  = 15+5*numhelper(3500)
-ground.velocity = -4
+ground.velocity = -6
 air.velocity = -3,-3.5
 guard.velocity = -4
 fall = 0
 fall.recover = 1
 fall.recovertime = 15
 yaccel = cond(var(43)>0,.35+.2*var(43),.35)
-ground.cornerpush.veloff = 0
+ground.cornerpush.veloff = -5
+guard.cornerpush.veloff = -5
 ;power------------------
 getpower = !numhelper(3500)*floor(72*fvar(1))
 givepower = floor(36*fvar(1))
@@ -3362,6 +3402,7 @@ envshake.time = 0+8*numhelper(3500)
 envshake.freq = 50
 fall.envshake.freq = 60.53
 guard.kill = numhelper(3500)>0
+
 
 [State -1, Autocombo]
 type = ChangeState
@@ -3546,6 +3587,12 @@ trigger1 = animelem = 2
 persistent = 0
 value = S0,5
 
+[State 230]
+type = PosAdd
+trigger1 = p2statetype = A
+x = 10
+persistent = 0
+
 [State 245]
 type = VelSet
 trigger1 = movecontact
@@ -3583,7 +3630,7 @@ air.velocity = -1,-7
 guard.velocity = -4
 fall = 0
 fall.recover = 1
-fall.recovertime = 30
+fall.recovertime = 40
 yaccel = .35
 ground.cornerpush.veloff = -6
 guard.cornerpush.veloff = -8
@@ -3793,6 +3840,20 @@ anim = 430
 sprpriority = 2
 
 [State 430]
+type = PosAdd
+trigger1 = prevstateno != 100
+trigger1 = prevstateno != 430
+x = 10
+persistent = 0
+
+[State 100, PosAdd]
+type = NUll;PosAdd
+triggerall = prevstateno = 100
+triggerall = p2movetype = H
+trigger1 = time = 0
+x = -10
+
+[State 430]
 type = PlaySnd
 trigger1 = time = 1
 value = S0,1
@@ -3838,7 +3899,7 @@ fall = 0
 fall.recover = 1
 fall.recovertime = 15
 yaccel = .5
-ground.cornerpush.veloff = -6
+ground.cornerpush.veloff = -7
 guard.cornerpush.veloff = -8
 ;power------------------
 getpower = !numhelper(3500)*floor(72*fvar(1))
@@ -4542,8 +4603,8 @@ animtype = hard
 ground.type = high
 air.type = low
 ;movement---------------
-ground.slidetime = 15
-ground.hittime  = 15+5*numhelper(3500)
+ground.slidetime = 5
+ground.hittime  = 20+5*numhelper(3500)
 air.hittime = 20+5*numhelper(3500)
 guard.hittime = 10
 ground.velocity = -5
