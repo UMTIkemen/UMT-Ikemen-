@@ -1,0 +1,44 @@
+name: Discord Update Announcement
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+jobs:
+  announce:
+    if: github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'dev'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send update announcement
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          PATCH_NOTES: ${{ github.event.pull_request.body }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          PAYLOAD=$(jq -n \
+            --arg title "$PR_TITLE" \
+            --arg description "$PATCH_NOTES" \
+            --arg url "$PR_URL" \
+            '{
+              username: "UMT IKEMEN Updates",
+              embeds: [{
+                title: $title,
+                description: $description,
+                url: $url,
+                color: 5814783,
+                footer: {
+                  text: "A new UMT IKEMEN update is now live!"
+                }
+              }]
+            }')
+
+          curl --fail-with-body \
+            -X POST \
+            -H "Content-Type: application/json" \
+            --data "$PAYLOAD" \
+            "$DISCORD_WEBHOOK_URL"
