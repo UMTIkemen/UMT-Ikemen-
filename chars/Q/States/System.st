@@ -919,7 +919,7 @@ triggerAll = Power < const(data.power) && Power < PowerMax
 ;trigger1 = !AILevel && (command = "holdb" && command = "holdy")
 trigger1 = !AILevelF && (Map(h_y) && Map(h_b))
 trigger2 = AILevel
-value = 2 + ifElse(time < 60, 0, (time - 60) / 12)
+value = 5 + ifElse(time < 60, 0, (time - 60) / 12)
 [State 730, PowerAdd]
 type = PowerAdd
 triggerAll = Power < const(data.power) && Power < PowerMax

@@ -519,6 +519,11 @@ command = /z
 time = 1
 
 [Command]
+name = "hold_a"
+command = /a
+time = 1
+
+[Command]
 name = "hold_b"
 command = /b
 time = 1
@@ -1157,7 +1162,7 @@ type = ChangeState
 value = 3100
 triggerall = !ishelper
 triggerall = roundstate = 2
-triggerall = command = "SA2"                                                                                                                                                                                       || numhelper(1080+Var(17)) != 0   
+triggerall = command = "SA2"                                                                                                                                                                                       ||numhelper(1080+Var(17)) != 0&&command!="holdback"&&command!="holdfwd" 
 triggerall = var(58) = 3
 triggerall = power >= 1040
 triggerall = statetype != A
@@ -1565,7 +1570,7 @@ trigger1 = Anim != 5040 && Anim != 5210
 type = ChangeState
 value = 800
 triggerall = !ishelper
-triggerall = command = "スルー" 
+triggerall = command = "スルー"                                                                                                                                                  || command = "holdfwd" && command = "hold_s" && numhelper(1080-Var(15)) != 0 
 triggerall = statetype = S || statetype = C
 triggerall = stateno != 100
 triggerall = command != "holdup"
@@ -1580,7 +1585,7 @@ trigger3 = (stateno = 52 && prevstateno != [600,699]) && time >= 0
 type = ChangeState
 value = 805
 triggerall = !ishelper
-triggerall = command = "スルー"
+triggerall = command = "スルー"                                                                                                                                                 || command = "holdback" && command = "hold_s" && numhelper(1080-Var(15)) != 0
 triggerall = statetype = S || statetype = C
 triggerall = stateno != 100
 triggerall = command = "holdback"

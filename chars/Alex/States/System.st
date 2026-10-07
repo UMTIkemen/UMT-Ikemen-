@@ -4084,6 +4084,26 @@ trigger1 = MoveContact = 1 && var(30) < 0
 var(30) = HitPauseTime
 ignoreHitPause = 1
 
+[State -2, NotHitBy]
+type = NotHitBy
+trigger1 = stateno = 40
+value = ,AT,NT,ST,HT
+ignorehitpause = 1
+
+[State -2, NotHitBy] 
+type = NotHitBy
+trigger1 = prevstateno = 5120
+trigger1 = time = [0,6]
+value = ,AT,NT,ST,HT
+time = 6
+
+[State -2, NotHitBy] 
+type = NotHitBy
+trigger1 = stateno = 5120
+trigger1 = AnimTime = 0
+value2 = SCA
+time = 3
+
 [State -2, Hit Sound]
 type = PlaySnd
 trigger1 = MoveContact = 1 && var(30) = HitPauseTime

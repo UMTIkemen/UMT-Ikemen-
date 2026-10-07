@@ -3125,7 +3125,7 @@ channel = 1
 [State 1300, VelSet]
 type = VelSet
 trigger1 = AnimElem = 2
-x = ifElse(var(10) = 2, 7.82122905028, ifElse(var(10) = 1, 6.14525139665, 4.46927374302))
+x = ifElse(var(10) = 2, 8.52122905028, ifElse(var(10) = 1, 7.54525139665, 5.46927374302))
 
 [State 1300, VelSet]
 type = VelAdd

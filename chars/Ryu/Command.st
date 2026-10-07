@@ -1042,6 +1042,43 @@ pauseMoveTime = 10
 superMoveTime = 10
 ignoreHitPause = 1
 
+[State -1, Explod]
+type = Explod
+triggerAll = ifelse(NumExplod(502) != 0, AILevel, !AILevel)
+triggerAll = NumExplod(501) = 0
+trigger1 = stateno = 0
+trigger1 = !NumExplod(500)
+trigger1 = (NumExplod(90000002) || NumExplod(90000003) || NumExplod(90000001)) && (NumExplod(90000195))
+anim = 1
+ID = 500
+pauseMoveTime = 3 + ifElse(HitPauseTime, HitPauseTime - 1, 0)
+superMoveTime = 3 + ifElse(HitPauseTime, HitPauseTime - 1, 0)
+ignoreHitPause = 1
+
+[State -1, Explod]
+type = Explod
+triggerAll = ifelse(NumExplod(502) != 0, AILevel, !AILevel)
+triggerAll = NumExplod(500) = 0
+triggerAll = stateno != [6800,6902]
+triggerAll = stateno != [190,192]
+trigger1 = prevstateno = 0
+trigger1 = time = 2
+trigger1 = !NumExplod(501)
+anim = 1
+ID = 501
+pauseMoveTime = 3 + ifElse(HitPauseTime, HitPauseTime - 1, 0)
+superMoveTime = 3 + ifElse(HitPauseTime, HitPauseTime - 1, 0)
+ignoreHitPause = 1
+
+[State -1, Explod]
+type = Explod
+triggerAll = ifelse(NumExplod(500) != 0, !AILevel, AILevel)
+trigger1 = stateno = 900
+trigger1 = !NumExplod(502)
+anim = 1
+ID = 503
+removetime = 185
+
 [State -1, Remove L, L: Neutral]
 type = RemoveExplod
 triggerAll = NumHelper(90000005) && !IsHelper && !AILevel
@@ -1959,8 +1996,6 @@ removeTime = 10 + ifElse(HitPauseTime, HitPauseTime - 1, 0)
 pauseMoveTime = 10 + ifElse(HitPauseTime, HitPauseTime - 1, 0)
 superMoveTime = 10 + ifElse(HitPauseTime, HitPauseTime - 1, 0)
 ignoreHitPause = 1
-
-
 
 ;==============================================================================================
 ;====================<FORWARD, DOWN, DOWN-FORWARD/BACK, DOWN, DOWN-BACK>=======================
@@ -4754,6 +4789,52 @@ triggerAll = RoundState = 2 && StateType = A && var(40) = 1
 triggerAll = !var(16) && (var(15) < 1 || var(20))
 triggerAll = (P2BodyDist x = [-ifElse((EnemyNear, BackEdgeDist > 24), 15, 30), 50]) && (P2Dist y = [-30, 65]) && P2StateType != A && P2StateType != L && (EnemyNear, StateNo != [5200, 5201])
 trigger1 = ctrl && vel y > 0 && Random < (750 * (AILevel ** 2 / 64.0))
+
+[State -1, CtrlSet]
+type = CtrlSet
+triggerAll = ifelse(NumExplod(500) != 0, !AILevel, AILevel)
+triggerAll = NumExplod(500) != 0
+trigger1 = stateno = 52
+trigger1 = time >= 3
+trigger2 = stateno = 410
+trigger2 = animelem = 5 > 2
+trigger3 = stateno = 400
+trigger3 = animelem = 4 > 2 
+trigger4 = stateno = 430
+trigger4 = animelem = 4 > 2 
+trigger5 = stateno = 440
+trigger5 = animelem = 8 
+value = 1
+
+[State -1, Jodan Sokuto Geri]
+type = ChangeState
+value = ifelse(var(40) = 1, 1400, 1300)
+triggerAll = ifelse(NumExplod(500) != 0, !AILevel, AILevel)
+triggerAll = NumExplod(500) != 0
+triggerAll = (NumExplod(90000002) || NumExplod(90000003) || NumExplod(90000001))  && (NumExplod(90000200) && NumExplod(90000240))
+triggerAll = StateType != A && !var(40)
+triggerAll = stateno = [200,650]
+trigger1 = ctrl
+trigger2 = var(5) 
+
+[State -1, EX Jodan Sokuto Geri]
+type = ChangeState
+value = 1330 
+triggerAll = ifelse(NumExplod(500) != 0, !AILevel, AILevel)
+triggerAll = NumExplod(500) != 0
+triggerAll = (NumExplod(90000002) || NumExplod(90000003) || NumExplod(90000001))  && (NumExplod(90000200) && NumExplod(90000230))
+triggerAll = StateType != A && !var(40)
+triggerAll = power >= 500
+trigger1 = ctrl
+trigger2 = var(5)  
+
+[State -1, PosAdd]
+type = PosAdd
+triggerAll = ifelse(NumExplod(500) != 0, !AILevel, AILevel)
+triggerAll = NumExplod(500) != 0
+trigger1 = stateno = 440
+trigger1 = time = 1
+x = 5
 
 [State -1, Angled Jumping Heavy Kick (Normal/Shadow)]
 type = ChangeState
