@@ -953,7 +953,7 @@ p2defmul=1
 [state ]
 type=varset
 trigger1=animelem=5
-fvar(4)=600+300*(palno>9)
+fvar(4)=1080+300*(palno>9) ; 18s normal / 23s palette > 9 at 60fps
 [state ]
 type=assertspecial
 trigger1=animelem=1,>=0
@@ -1164,25 +1164,18 @@ trigger1=animelem=6
 id=2205
 stateno=2205
 ownpal=1
-[state ]
-type=targetstate
-trigger1=numtarget
-trigger1=!target,hitfall
-trigger1=!projhittime(2205)
-value=2230
-[state ]
-type=selfstate
-trigger1=numtarget
-trigger1=!target,hitfall
-trigger1=!projhittime(2205)
-value=2202
-[state ]
-type=targetlifeadd
-trigger1=numtarget
-trigger1=target,hitfall
-trigger1=!projhittime(2205)
-value=-1
-absolute=1
+; On any confirmed hit, including an airborne/falling target, pull the
+; opponent into state 2230 (that state sets Pos Y=0) to start the cinema.
+[State 2200, Universal Cinematic Target]
+type = TargetState
+trigger1 = NumTarget
+trigger1 = !ProjHitTime(2205)
+value = 2230
+[State 2200, Universal Cinematic Start]
+type = SelfState
+trigger1 = NumTarget
+trigger1 = !ProjHitTime(2205)
+value = 2202
 ;------------èüóò
 [state ]
 type=explod

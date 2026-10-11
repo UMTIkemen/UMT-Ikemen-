@@ -10,10 +10,28 @@ trigger1=roundstate>2
 trigger1=movetype=i
 trigger2=!(var(1)&131072)
 value=(roundstate=3)
+; Clone cleanup - remove ordinary helpers after the round, not the cleanup markers
 [State 0 DestroySelf]
 type = DestroySelf
-triggerall=numhelper(9977)!=0
+triggerall = roundstate > 2
+triggerall = numhelper(9977) != 0
 trigger1 = ishelper
+trigger1 = !ishelper(9977)
+trigger1 = !ishelper(9978)
+; IKEMEN GO training: expose actual actionable neutral states to the engine.
+; This character's custom input code otherwise forces Ctrl=0 even when idle.
+; Attack/hit/guard-stun states retain their original control restrictions.
+[State -1, IKEMEN Neutral Control]
+type = CtrlSet
+triggerall = RoundState = 2
+triggerall = MoveType = I
+trigger1 = StateNo = [0,12]
+trigger2 = StateNo = [20,21]
+trigger3 = StateNo = [50,52]
+trigger4 = StateNo = [100,119]
+trigger5 = StateNo = [130,132]
+value = 1
+
 [state ]
 type=velset
 trigger1=movetype!=h
@@ -190,21 +208,25 @@ trigger36=fvar(1):=fvar(1)-1-var(6)||var(5):=var(5)+var(6)
 [state ]
 type=null
 triggerall=var(5)<3
-trigger1=!projhittime(1010)&&!(var(2)&4194304)&&var(4)
+; Projectile contact alone can be reported for projectile/projectile clashes.
+; Require the actual opponent to be in hitstun before deducting any stars.
+triggerall = EnemyNear, MoveType = H
+triggerall = EnemyNear, GetHitVar(HitTime) > 0
+trigger1=projhittime(1010)=[0,1]&&!(var(2)&4194304)&&var(4)
 trigger1=fvar(1):=fvar(1)-1||var(2):=(var(2)+4194304)||var(5):=var(5)+1
-trigger2=!projhittime(1011)&&!(var(2)&4194304)
+trigger2=projhittime(1011)=[0,1]&&!(var(2)&4194304)
 trigger2=1||var(6):=(var(5)<=2)
 trigger2=1||var(6):=var(6)+!!var(4)*(var(5)+var(6)<=2)
 trigger2=fvar(1):=fvar(1)-var(6)||var(2):=(var(2)+4194304)||var(5):=var(5)+var(6)
-trigger3=!projhittime(1012)&&!(var(2)&4194304)
+trigger3=projhittime(1012)=[0,1]&&!(var(2)&4194304)
 trigger3=1||var(6):=(var(5)<=2)
 trigger3=1||var(6):=var(6)+!!var(4)*(var(5)+var(6)<=2)
 trigger3=fvar(1):=fvar(1)-var(6)||var(2):=(var(2)+4194304)||var(5):=var(5)+var(6)
-trigger4=!projhittime(1013)&&!(var(2)&4194304)
+trigger4=projhittime(1013)=[0,1]&&!(var(2)&4194304)
 trigger4=1||var(6):=(var(5)<=1)+(var(5)<=2)
 trigger4=1||var(6):=var(6)+!!var(4)*(var(5)+var(6)<=2)
 trigger4=fvar(1):=fvar(1)-var(6)||var(2):=(var(2)+4194304)||var(5):=var(5)+var(6)
-trigger5=!projhittime(2000)&&!(var(2)&1073741824)
+trigger5=projhittime(2000)=[0,1]&&!(var(2)&1073741824)
 trigger5=1||var(6):=(var(1)&256&&!(var(1)&512))*(var(5)<=1)
 trigger5=1||var(6):=var(6)+!!(var(1)&2048)*(var(5)+var(6)<=1)
 trigger5=1||var(6):=var(6)+!!var(4)*(var(5)+var(6)<=1)
