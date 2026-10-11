@@ -1,4 +1,10 @@
 [statedef -2]
+; Never let the state 1350 hit-recovery bonus leak into another move.
+[State -2, 1350 Hit Recovery Cleanup]
+type = VarSet
+trigger1 = StateNo != 1350
+trigger1 = StateNo != 1390
+var(57) = 0
 [state ]
 type=attackmulset
 trigger1=1
@@ -37,6 +43,8 @@ pausemovetime=99999999
 [state ]
 type=helper
 triggerall=!numhelper(9978)
+triggerall=roundstate>2
+triggerall=stateno!=[180,189]
 trigger1 = win
 trigger2 = lose
 trigger3 = drawgame
@@ -2711,10 +2719,25 @@ anim=2
 type=assertspecial
 trigger1=1
 flag=noshadow
+flag2=invisible
+ignorehitpause=1
+; These cleanup helpers must never collide with or intercept attacks
+[State Cleanup, No Hit]
+type=NotHitBy
+trigger1=1
+value=SCA
+time=1
+ignorehitpause=1
+[State Cleanup, No Push]
+type=PlayerPush
+trigger1=1
+value=0
+ignorehitpause=1
 [State 0, DestroySelf]
 type = DestroySelf
 trigger1=time=100
 trigger2=root,stateno=[180,189]
+trigger3=roundstate<3
 ;-----------------------------------------------------------------------------
 [Statedef 9978]
 type=a
@@ -2724,9 +2747,24 @@ anim=2
 type=assertspecial
 trigger1=1
 flag=noshadow
+flag2=invisible
+ignorehitpause=1
+; These cleanup helpers must never collide with or intercept attacks
+[State Cleanup, No Hit]
+type=NotHitBy
+trigger1=1
+value=SCA
+time=1
+ignorehitpause=1
+[State Cleanup, No Push]
+type=PlayerPush
+trigger1=1
+value=0
+ignorehitpause=1
 [state ]
 type=helper
 triggerall=!numhelper(9977)
+triggerall=roundstate>2
 trigger1=root,command="down"
 trigger2=root,command="back"
 trigger3=root,command="up" 
@@ -2751,6 +2789,7 @@ pausemovetime=99999999
 [State 0, DestroySelf]
 type = DestroySelf
 trigger1=root,stateno=[180,189]
+trigger2=roundstate<3
 
 ;///////////////////////////////////////////////////////////////////////////////////
 ; バニシング

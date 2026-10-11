@@ -487,6 +487,15 @@ movetype=a
 type=changeanim
 trigger1=anim!=1350
 value=1350
+; Track whether 1350 itself connected (not merely got blocked).
+[State 1350, Hit Recovery Reset]
+type = VarSet
+trigger1 = Time = 0
+var(57) = 0
+[State 1350, Hit Recovery Flag]
+type = VarSet
+trigger1 = MoveHit = 1
+var(57) = 1
 [state ]
 type=turn
 trigger1=animelem=1
@@ -551,10 +560,10 @@ pausetime=0,12+2*!!var(4)
 ground.hittime=14+(enemynear,statetype=c)
 ground.slidetime=14+(enemynear,statetype=c)
 guard.hittime=12+(enemynear,statetype=c)
-ground.velocity=-2.2,-11
+ground.velocity=-2.2,-14
 guard.velocity=-6
 air.hittime=0
-air.velocity=-2.2*!(var(1)&256),ifelse(var(1)&256,-6.6,-9.6)
+air.velocity=-2.2*!(var(1)&256),ifelse(var(1)&256,-8.6,-12.6)
 fall=1
 yaccel=.6+fvar(0)
 fall.recovertime=60+6*!!var(4)
@@ -577,6 +586,7 @@ value=1390
 [state ]
 type=selfstate
 trigger1=!animtime
+trigger2=var(57)&&time>=10 ; 6F faster recovery if 1350 hit
 value=0
 ;----エフェクト
 [statedef 1360]

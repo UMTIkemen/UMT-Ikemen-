@@ -10,10 +10,28 @@ trigger1=roundstate>2
 trigger1=movetype=i
 trigger2=!(var(1)&131072)
 value=(roundstate=3)
+; Clone cleanup - remove ordinary helpers after the round, not the cleanup markers
 [State 0 DestroySelf]
 type = DestroySelf
-triggerall=numhelper(9977)!=0
+triggerall = roundstate > 2
+triggerall = numhelper(9977) != 0
 trigger1 = ishelper
+trigger1 = !ishelper(9977)
+trigger1 = !ishelper(9978)
+; IKEMEN GO training: expose actual actionable neutral states to the engine.
+; This character's custom input code otherwise forces Ctrl=0 even when idle.
+; Attack/hit/guard-stun states retain their original control restrictions.
+[State -1, IKEMEN Neutral Control]
+type = CtrlSet
+triggerall = RoundState = 2
+triggerall = MoveType = I
+trigger1 = StateNo = [0,12]
+trigger2 = StateNo = [20,21]
+trigger3 = StateNo = [50,52]
+trigger4 = StateNo = [100,119]
+trigger5 = StateNo = [130,132]
+value = 1
+
 [state ]
 type=velset
 trigger1=movetype!=h
@@ -75,37 +93,82 @@ type=null
 trigger1=!numtarget
 trigger1=var(7)!=anim||movetype!=a||animelem=1,=1||!animtime
 trigger1=var(2):=0||var(5):=0
+; State 1350: take exactly one star when this attack actually lands.
+; Mark original star-processing bit 128 to prevent a second deduction.
+[State -1, 1350 One Star On Hit]
+type = VarAdd
+triggerall = Anim = 1350
+triggerall = MoveHit = 1
+triggerall = NumTarget
+triggerall = !(Var(2) & 128)
+trigger1 = FVar(1) > 0
+fvar(1) = -1
+[State -1, 1350 Star Processed]
+type = VarAdd
+triggerall = Anim = 1350
+triggerall = MoveHit = 1
+trigger1 = NumTarget
+trigger1 = !(Var(2) & 128)
+var(2) = 128
+
+; Installed specials: one star per special hit, including projectile hits.
+; Bit 4096 is not used by this character's original star flags.
+[State -1, Install Special Star Reset]
+type = VarAdd
+trigger1 = Time = 0
+trigger1 = StateNo = [1000,1701]
+var(2) = -(Var(2) & 4096)
+[State -1, Install Special Star On Hit]
+type = VarAdd
+triggerall = FVar(4) > 0
+triggerall = FVar(1) > 0
+triggerall = !(Var(2) & 4096)
+trigger1 = MoveHit = 1 && NumTarget && Anim = [1000,1701] && Anim != 1350 && Anim != 1001 && Anim != 1201 && Anim != 1351
+trigger2 = (ProjHitTime(1450) = [0,1] || ProjHitTime(1451) = [0,1]) && EnemyNear, MoveType = H && EnemyNear, GetHitVar(HitTime) > 0
+trigger3 = (ProjHitTime(1550) = [0,1] || ProjHitTime(1551) = [0,1]) && EnemyNear, MoveType = H && EnemyNear, GetHitVar(HitTime) > 0
+trigger4 = (ProjHitTime(1650) = [0,1] || ProjHitTime(1651) = [0,1]) && EnemyNear, MoveType = H && EnemyNear, GetHitVar(HitTime) > 0
+fvar(1) = -1
+[State -1, Install Special Star Processed]
+type = VarAdd
+triggerall = FVar(4) > 0
+triggerall = !(Var(2) & 4096)
+trigger1 = MoveHit = 1 && NumTarget && Anim = [1000,1701] && Anim != 1350 && Anim != 1001 && Anim != 1201 && Anim != 1351
+trigger2 = (ProjHitTime(1450) = [0,1] || ProjHitTime(1451) = [0,1]) && EnemyNear, MoveType = H && EnemyNear, GetHitVar(HitTime) > 0
+trigger3 = (ProjHitTime(1550) = [0,1] || ProjHitTime(1551) = [0,1]) && EnemyNear, MoveType = H && EnemyNear, GetHitVar(HitTime) > 0
+trigger4 = (ProjHitTime(1650) = [0,1] || ProjHitTime(1651) = [0,1]) && EnemyNear, MoveType = H && EnemyNear, GetHitVar(HitTime) > 0
+var(2) = 4096
+
 [state ]
 type=null
 triggerall=var(6):=0||fvar(1)>0
 triggerall=movehit=1
 triggerall=var(5)<3
 ;-------衝破（腕）
-trigger1=anim=1400+anim%5&&!(var(2)&1)
+trigger1=anim=1400+anim%5&&!(var(2)&1)&&fvar(4)<=0
 trigger1=var(1)&256||var(4)
 trigger1=1||var(6):=(var(1)&256&&!(var(1)&512))*(var(5)<=2)
 trigger1=1||var(6):=var(6)+!!var(4)*(var(5)+var(6)<=2)
 trigger1=fvar(1):=fvar(1)-var(6)||var(2):=(var(2)+1)||var(5):=var(5)+var(6)||var(1):=var(1)+512*!!(var(1)&256)*!(var(1)&512)
 ;-------爆星（腕）
-trigger2=anim=1500+anim%5&&!(var(2)&4)
+trigger2=anim=1500+anim%5&&!(var(2)&4)&&fvar(4)<=0
 trigger2=var(1)&256||var(4)
 trigger2=1||var(6):=(var(1)&256&&!(var(1)&512))*(var(5)<=2)
 trigger2=1||var(6):=var(6)+!!var(4)*(var(5)+var(6)<=2)
 trigger2=fvar(1):=fvar(1)-var(6)||var(2):=(var(2)+4)||var(5):=var(5)+var(6)||var(1):=var(1)+512*!!(var(1)&256)*!(var(1)&512)
 ;-------不退
-trigger3=anim=1000+anim%5&&!(var(2)&32)
+trigger3=anim=1000+anim%5&&!(var(2)&32)&&fvar(4)<=0
 trigger3=var(1)&256||var(4)
 trigger3=1||var(6):=(var(1)&256&&!(var(1)&512))*(var(5)<=2)
 trigger3=1||var(6):=var(6)+!!var(4)*(var(5)+var(6)<=2)
 trigger3=fvar(1):=fvar(1)-var(6)||var(2):=(var(2)+32)||var(5):=var(5)+var(6)||var(1):=var(1)+512*!!(var(1)&256)*!(var(1)&512)
 ;------不媚
-trigger4=(anim=[1100,1201])&&!(var(2)&64)
+trigger4=(anim=[1100,1201])&&!(var(2)&64)&&fvar(4)<=0
 trigger4=var(1)&256||var(4)
 trigger4=1||var(6):=(var(1)&256&&!(var(1)&512))*(var(5)<=2)
 trigger4=1||var(6):=var(6)+!!var(4)*(var(5)+var(6)<=2)
 trigger4=fvar(1):=fvar(1)-var(6)||var(2):=(var(2)+64)||var(5):=var(5)+var(6)||var(1):=var(1)+512*!!(var(1)&256)*!(var(1)&512)
 ;------不省
-trigger5=(anim=[1300,1351])&&!(var(2)&128)&&palno<10
+trigger5=(anim=[1300,1351])&&!(var(2)&128)&&palno<10&&fvar(4)<=0
 trigger5=var(1)&256||var(4)
 trigger5=1||var(6):=(var(1)&256&&!(var(1)&512))*(var(5)<=2)
 trigger5=1||var(6):=var(6)+!!var(4)*(var(5)+var(6)<=2)
@@ -134,42 +197,46 @@ trigger11=fvar(1):=fvar(1)-1||var(5):=var(5)+1
 trigger12=anim=740+anim%5
 trigger12=fvar(1):=fvar(1)-1
 ;------不省(アレンジモード)
-trigger13=(anim=[1300,1351])&&!(var(2)&128)&&palno>9
+trigger13=(anim=[1300,1351])&&!(var(2)&128)&&palno>9&&fvar(4)<=0
 trigger13=1||var(6):=(var(1)&256&&!(var(1)&512))*(var(5)<=1)
 trigger13=1||var(6):=var(6)+!!var(4)*(var(5)+var(6)<=1)
 trigger13=fvar(1):=fvar(1)-var(6)-1||var(2):=(var(2)+128)||var(5):=var(5)+var(6)||var(1):=var(1)+512*!!(var(1)&256)*!(var(1)&512)
 [state ]
 type=null
 triggerall=var(5)<3
+; Projectile contact alone can be reported for projectile/projectile clashes.
+; Require the actual opponent to be in hitstun before deducting any stars.
+triggerall = EnemyNear, MoveType = H
+triggerall = EnemyNear, GetHitVar(HitTime) > 0
 ;衝破
-trigger1=!projhittime(1450)&&!(var(2)&2)&&var(4)
+trigger1=projhittime(1450)=[0,1]&&!(var(2)&2)&&var(4)&&fvar(4)<=0
 trigger1=fvar(1):=fvar(1)-1||var(2):=(var(2)+2)||var(5):=var(5)+1
-trigger2=!projhittime(1451)&&!(var(2)&2)&&!(var(1)&512)
+trigger2=projhittime(1451)=[0,1]&&!(var(2)&2)&&!(var(1)&512)&&fvar(4)<=0
 trigger2=1||var(6):=(var(5)<=2)
 trigger2=1||var(6):=var(6)+!!var(4)*(var(5)+var(6)<=2)
 trigger2=fvar(1):=fvar(1)-var(6)||var(2):=(var(2)+2)||var(5):=var(5)+var(6)||var(1):=var(1)+512*!!(var(1)&256)*!(var(1)&512)
 ;爆星
-trigger3=!projhittime(1550)&&!(var(2)&8)&&var(4)
+trigger3=projhittime(1550)=[0,1]&&!(var(2)&8)&&var(4)&&fvar(4)<=0
 trigger3=fvar(1):=fvar(1)-1||var(2):=(var(2)+8)||var(5):=var(5)+1
-trigger4=!projhittime(1551)&&!(var(2)&8)&&!(var(1)&512)
+trigger4=projhittime(1551)=[0,1]&&!(var(2)&8)&&!(var(1)&512)&&fvar(4)<=0
 trigger4=1||var(6):=(var(5)<=2)
 trigger4=1||var(6):=var(6)+!!var(4)*(var(5)+var(6)<=2)
 trigger4=fvar(1):=fvar(1)-var(6)||var(2):=(var(2)+8)||var(5):=var(5)+var(6)||var(1):=var(1)+512*!!(var(1)&256)*!(var(1)&512)
 ;槍
-trigger5=!projhittime(1650)&&!(var(2)&16)&&var(4)
+trigger5=projhittime(1650)=[0,1]&&!(var(2)&16)&&var(4)&&fvar(4)<=0
 trigger5=fvar(1):=fvar(1)-1||var(2):=(var(2)+16)||var(5):=var(5)+1
-trigger6=!projhittime(1651)&&!(var(2)&16)&&!(var(1)&512)
+trigger6=projhittime(1651)=[0,1]&&!(var(2)&16)&&!(var(1)&512)&&fvar(4)<=0
 trigger6=1||var(6):=(var(5)<=2)
 trigger6=1||var(6):=var(6)+!!var(4)*(var(5)+var(6)<=2)
 trigger6=fvar(1):=fvar(1)-var(6)||var(2):=(var(2)+16)||var(5):=var(5)+var(6)||var(1):=var(1)+512*!!(var(1)&256)*!(var(1)&512)
 ;十字陵1
-trigger7=!projhittime(2205)&&var(4)
+trigger7=projhittime(2205)=[0,1]&&var(4)
 trigger7=fvar(1):=fvar(1)-1||var(5):=var(5)+1
 ;十字陵2
-trigger8=!projhittime(2220)
+trigger8=projhittime(2220)=[0,1]
 trigger8=fvar(1):=fvar(1)-1||var(5):=var(5)+1
 ;十字陵3
-trigger9=!projhittime(2206)
+trigger9=projhittime(2206)=[0,1]
 trigger9=fvar(1):=fvar(1)-1||var(5):=var(5)+1
 [state ]
 type=varset
@@ -1282,7 +1349,7 @@ trigger1=1||var(3):=(var(3)|(command="236C")*8192)
 trigger1=1||var(3):=(var(3)|(command="623C")*16384)
 trigger1=1||var(3):=(var(3)|(command="214C")*32768)
 trigger1=1||var(3):=(var(3)|(command="236D")*65536)
-trigger1=1||var(3):=(var(3)|(command="2141236A")*131072)
+trigger1=1||var(3):=(var(3)|(command="236236A")*131072)
 trigger1=1||var(3):=(var(3)|(command="214214C")*262144)
 trigger1=1||var(3):=(var(3)|(command="236236C")*524288)
 trigger1=1||var(3):=(var(3)|(command="236C+D")*1048576)
@@ -1304,7 +1371,7 @@ trigger1=command="6A"||command="6B"
 trigger2=command="A+B"||command="B+D"||command="A+C"||command="C+D"
 trigger3=command="236A"||command="623A"||command="214A"
 trigger4=command="623B"||command="236C"||command="214C"
-trigger5=command="236D"||command="2141236A"||command="236236C"
+trigger5=command="236D"||command="236236A"||command="236236C"
 trigger6=command="214214C"||command="236C+D"
 id=34050
 anim=34050
@@ -1326,7 +1393,7 @@ trigger1=command="6A"||command="6B"
 trigger2=command="A+B"||command="B+D"||command="A+C"||command="C+D"
 trigger3=command="236A"||command="623A"||command="214A"
 trigger4=command="623B"||command="236C"||command="214C"
-trigger5=command="236D"||command="2141236A"||command="236236C"
+trigger5=command="236D"||command="236236A"||command="236236C"
 trigger6=command="214214C"||command="236C+D"
 id=34050
 anim=34050
@@ -1347,7 +1414,7 @@ trigger1=command="6A"||command="6B"
 trigger2=command="A+B"||command="B+D"||command="A+C"||command="C+D"
 trigger3=command="236A"||command="623A"||command="214A"
 trigger4=command="623B"||command="236C"||command="214C"
-trigger5=command="236D"||command="2141236A"||command="236236C"
+trigger5=command="236D"||command="236236A"||command="236236C"
 trigger6=command="214214C"||command="236C+D"
 id=34000
 anim=34000
@@ -1453,7 +1520,7 @@ type=selfstate
 triggerall=var(0)<=0
 triggerall=roundstate=2&&!(var(1)&131072)
 triggerall=power>=1000||power>=powermax/2
-triggerall=command="2141236A"
+triggerall=command="236236A"
 trigger1=!anim||(anim=[10,12])||(anim=[20,21])||anim=100||(anim=[41,43])||(anim=[110,119])||(anim=[130,132])||anim=800
 trigger2=movecontact
 trigger2=(anim=[200,236])||(anim=[400,431])||anim=[600,631]
@@ -2190,8 +2257,9 @@ command=~D,DF,F,D,DF,F,x
 time=25
 buffer.time=5
 [command]
-name="2141236A"
-command=~D,DB,B,DB,D,DF,F,a
+name="236236A"
+; 2x quarter-circle forward (236,236 + A)
+command=~D,DF,F,D,DF,F,a
 time=25
 buffer.time=5
 [command]
