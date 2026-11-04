@@ -153,12 +153,11 @@
  ;   https://github.com/ikemen-engine/Ikemen-GO/wiki/Miscellaneous-Info#arcs
  ;
  ; - slot
- ;   IKEMEN feature: Slot parameter, which allows to assign multiple characters
- ;   into a single select screen slot, uses special syntax: declaration starts
- ;   with a line containing only 'slot = {'. The next and following lines have
- ;   characters added using the standard syntax. Closing '}' bracket in a new
- ;   line ends current slot declaration. Characters added this way can have few
- ;   extra parameters assigned:
+ ;   IKEMEN feature: Assigns multiple characters to a single select screen slot.
+ ;   Enclose character declarations in 'slot = { ... }'. Braces may share lines
+ ;   with character declarations. Use '|' to separate multiple character
+ ;   declarations on the same physical line. Characters added this way can use
+ ;   extra parameters:
  ;   - select: Set the paramvalue to the command that selects this character.
  ;     If multiple chars in this slot have the same paramvalue assigned, they
  ;     will be selected randomly.
@@ -185,6 +184,7 @@
  ; kfm, stages/mybg.def, includestage=0
  ; kfm, stages/mybg.def, arcadepath=data/arcade.lua
  ; kfm, stages/mybg.def, music=sound/song.mp3, order=3, ai=8, hidden=2
+ ; slot = {kfm, previous=d, next=w | SuaveDude, previous=d, next=w}
  ; slot = {
  ;      kfm, stages/mybg.def, previous=d, next=w
  ;      SuaveDude, previous=d, next=w, select=/s+a
@@ -192,8 +192,10 @@
  ;
  ;Insert your characters below.
 
-kfm_zss, stages/kfm.def
-kfm720, stages/kfm.def, order=0
+slot = {
+    kfm_zss, stages/kfm.def, previous=d, next=w
+    kfm720, stages/kfm.def, order=0, previous=d, next=w
+}
 kfm_zaxis, stages/kfm.def, order=0
 randomselect
 
@@ -251,6 +253,21 @@ randomselect
  ;   result in stage being randomly chosen from stages with the matching order.
  ;   Stages can have multiple order parameters assigned at the same time.
  ;
+ ; - slot
+ ;   IKEMEN feature: Assigns multiple stages to a single stage select slot.
+ ;   Enclose stage declarations in 'slot = { ... }'. Braces may share lines
+ ;   with stages declarations. Use '|' to separate multiple stages
+ ;   declarations on the same physical line. Stages added this way can use
+ ;   extra parameters:
+ ;   - select: Set the paramvalue to the command that selects this stage.
+ ;     If multiple stages in this slot have the same paramvalue assigned, they
+ ;     will be selected randomly.
+ ;   - next: Set the paramvalue to the command that swaps the current slot
+ ;     stage with the next stage that shares the same paramvalue.
+ ;   - previous: Set the paramvalue to the command that swaps the current slot
+ ;     stage with the previous stage that shares the same paramvalue.
+ ;   Commands use the same syntax as mugen CMD files (comma is permitted)
+ ;
  ; - unlock
  ;   IKEMEN feature: paramvalue is executed as Lua code condition, right after
  ;   new game mode is initiated and upon returning to main menu. If it evaluates
@@ -263,17 +280,26 @@ randomselect
  ;Examples:
  ; stages/mybg.def, music=sound/song.mp3, music=sound/song2.mp3
  ; stages/mybg.def, order=3
+ ; slot = {stages/stage0.def, previous=d, next=w | stages/stage1.def, previous=d, next=w}
+ ; slot = {
+ ;      stages/stage0.def, previous=d, next=w
+ ;      stages/stage1.def, previous=d, next=w, select=/s+a
+ ; }
  ;
  ;Insert your stages below.
 
-stages/stage1.def
-stages/stage3d.def
-stages/stage3d_outline.def
+slot = {
+    stages/stage1.def, previous=d, next=w
+    stages/stage0.def, previous=d, next=w
+    stages/stage0-720.def, previous=d, next=w
+}
+slot = {
+    stages/stage3d.def, previous=d, next=w
+    stages/stage3d_outline.def, previous=d, next=w
+}
 stages/stageZ.def
 stages/interactivestage.def
 stages/kfm.def
-stages/stage0.def
-stages/stage0-720.def
 
 ;-------------------------------------------------------------------------------
 [Options]

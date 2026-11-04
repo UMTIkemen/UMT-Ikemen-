@@ -5,7 +5,7 @@
   ;体力ゲージの初期値
 life = 970
   ;攻撃力（これ以上に設定すると強くなる）
-attack = 90
+attack = 95
   ;防御力（これ以上に設定すると強くなる）
 defence = 100
   ;コンボをくらっている時にあがる防御力
@@ -1675,7 +1675,7 @@ trigger1 = AnimElem = 2
 attr = S, NA
 animtype  = Light
 damage    = 10
-getpower  = 65,30
+getpower  = 35,30
 guardflag = MA
 pausetime = 10-(2**5!=64),10
 sparkno = S8000
@@ -1779,7 +1779,7 @@ type = HitDef
 trigger1 = AnimElem = 3
 attr = S, NA
 damage    = 20
-getpower  = 80,40
+getpower  = 45,40
 animtype  = Medium
 hitflag = MAF
 guardflag = MA
@@ -1884,7 +1884,7 @@ type = HitDef
 trigger1 = AnimElem = 2
 attr = C, NA
 damage    = 10
-getpower  = 65,30
+getpower  = 35,30
 animtype  = Light
 hitflag = MAF
 guardflag = MA
@@ -1991,7 +1991,7 @@ type = HitDef
 trigger1 = AnimElem = 3
 attr = C, NA
 damage    = 20
-getpower  = 80,40
+getpower  = 40,40
 animtype  = Medium
 hitflag = MAF
 guardflag = L
@@ -2369,7 +2369,7 @@ ID = 800
 [State 801, 相手の体力ゲージの増減]
 type = TargetLifeAdd
 trigger1 = AnimElem = 11
-value = -30
+value = -70
 ID = 800
 
 [State 801, 画面振動]
@@ -2420,6 +2420,23 @@ poweradd = 40
 type = VelAdd
 Trigger1 = 1
 y = .4
+
+[State 803, ステート変更]
+type = SelfState
+triggerall = Vel Y > 0
+triggerall = Pos Y >= -20
+triggerall = alive
+triggerall = time > 5
+trigger1 = Command = "recovery"
+value = 5200 ;common1.cns参照
+
+[State 803, 制御解除して相手のステートに戻す]
+type = SelfState
+triggerall = Vel Y > 0
+triggerall = alive
+triggerall = time > 5
+trigger1 = Command = "recovery"
+value = 5210 ;common1.cns参照
 
 [State 803, 制御解除して相手のステートに戻す]
 type = SelfState
@@ -4275,7 +4292,7 @@ value = S1, 2
 [State 3010, 超必エフェクト_K.O.]
 type = helper
 trigger1 = time = 61
-trigger1 = target(3000),life<ceil(100*fvar(1))
+trigger1 = target(3000),life<ceil(100)
 id = 3070
 pos = 4, 50
 postype = left
@@ -4302,7 +4319,7 @@ value = 1
 [State 801, 相手の体力ゲージの増減]
 type = TargetLifeAdd
 Trigger1 = AnimElem = 7
-value = -ceil(50*fvar(1))
+value = -ceil(50)
 kill = 0
 ID = 3000
 
@@ -4428,7 +4445,7 @@ scale = 1,1
 [State 801, 相手の体力ゲージの増減]
 type = TargetLifeAdd
 trigger1 = time = 24
-value = -ceil(80*fvar(1))
+value = -ceil(80)
 ID = 3000
 
 [State 0, EnvColor]

@@ -1139,7 +1139,7 @@ type = ChangeState
 value = 3000
 triggerall = !ishelper
 triggerall = roundstate = 2
-triggerall = command = "SA"
+triggerall = command = "SA"                                                                                                                                                                                       ||numhelper(1080+Var(17)) != 0&&command!="holdback"&&command!="holdfwd" 
 triggerall = var(58) = 2
 triggerall = power >= 880
 triggerall = statetype != A
@@ -1187,7 +1187,7 @@ type = ChangeState
 value = 3200
 triggerall = !ishelper
 triggerall = roundstate = 2
-triggerall = command = "SA2"
+triggerall = command = "SA2"                                                                                                                                                                                       ||numhelper(1080+Var(17)) != 0&&command!="holdback"&&command!="holdfwd" 
 triggerall = var(58) = 4
 triggerall = power >= 720
 triggerall = statetype != A
@@ -1762,9 +1762,9 @@ type = ChangeState
 value = 205
 triggerall = !ishelper
 triggerall = command = "x"
-triggerall = command != "holddown"
-triggerall = p2bodydist x > var(11)*0.5 || p2bodydist x < -var(11)*0.5
-trigger1 = statetype = S || statetype = C
+triggerall = command != "holddown" 
+triggerall = p2bodydist x > var(11)*0.5 || p2bodydist x < -var(11)*0.5 
+trigger1 = statetype = S || statetype = C 
 trigger1 = ctrl
 trigger2 = (stateno = 52 && prevstateno = [600,699]) && time >= 0;time >= 3
 trigger3 = (stateno = 52 && prevstateno != [600,699]) && time >= 0

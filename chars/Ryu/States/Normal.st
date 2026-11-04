@@ -3272,7 +3272,7 @@ trigger1 = !var(16) && (var(15) < 1 || var(20))
 trigger1 = AnimElem = 2
 forceNoFall = !var(20)
 attr = C, NA
-hitFlag = MAF
+hitFlag = M
 guardFlag = L
 priority = 4, Hit
 damage = ceil(ifElse(fvar(11) * 14 < 7, 7, fvar(11) * 14)), 0
@@ -3360,7 +3360,7 @@ trigger1 = !var(16) && (var(15) < 1 || var(20))
 trigger1 = AnimElem = 3
 forceNoFall = !var(20)
 attr = C, NA
-hitFlag = MAF
+hitFlag = M
 guardFlag = L
 priority = 4, Hit
 damage = ceil(ifElse(fvar(11) * ifElse((var(40) = [1, 2]), 49, 56) < 7, 7, fvar(11) * ifElse((var(40) = [1, 2]), 49, 56))), 0
@@ -4974,7 +4974,7 @@ value = 0
 [State 800, HitDef: PP Throw]
 type = HitDef
 trigger1 = AnimElem = 3 && abs(var(10)) = 1
-trigger1 = P2BodyDist x < 28
+trigger1 = P2BodyDist x < 28                                                                                                                                                                         +2*NumExplod(500) != 0
 trigger1 = !var(38)
 attr = S, NT
 hitFlag = M-
@@ -4995,10 +4995,10 @@ p1StateNo = ifElse(ifElse(!NumExplod(92828282) && !NumExplod(92468246), command 
 type = HitDef
 trigger1 = AnimElem = 3 && abs(var(10)) = 2
 trigger1 = !var(38)
-trigger1 = P2BodyDist x < 28
+trigger1 = P2BodyDist x < 28                                                                                                                                                                         +32*NumExplod(500) != 0
 attr = S, NT
 hitFlag = M-
-priority = 1, Miss
+priority = 7, Miss
 getPower = 0,0
 givePower = 0,0
 sparkNo = -1 + 0 * (var(33) := 0)

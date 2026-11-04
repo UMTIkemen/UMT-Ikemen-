@@ -355,7 +355,7 @@ var(10) = ifElse(P2MoveType = H || P2Dist x > 110 || Random < 333, 2, ifElse(Ran
 [State 1100, ChangeAnim]
 type = ChangeAnim
 trigger1 = !Time
-value = ifElse(var(10) = 0, 1100, ifElse(var(10) = 1, 1101, 1102))
+value = ifElse(var(10) = 0, 1100, ifElse(var(10) = 1, 1101, 1102)) 
 
 [State 1100, Voice]
 type = PlaySnd

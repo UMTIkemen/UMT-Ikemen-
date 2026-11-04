@@ -253,12 +253,12 @@ time = 20
 ;ライジングアッパー
 [Command]
 name = "DD_x"
-command = ~D, D, x
+command = ~F, DF, F, x
 time = 20
 
 [Command]
 name = "DD_y"
-command = ~D, D, y
+command = ~F, DF, F, y
 time = 20
 
 ;フリージングベアー
@@ -533,6 +533,19 @@ trigger2 = movecontact
 trigger3 = stateno=1300&&movehit
 
 ;---------------------------------------------------------------------------
+;ライジングアッパー
+[State -1, Arts]
+type = ChangeState
+value = 1100
+triggerall = var(59) <= 0 && (command = "DD_x" || command = "DD_y")
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = [200,299]) || (stateno = [400,499])
+trigger2 = stateno != 440 ;Except for sweep kick
+trigger2 = movecontact
+trigger3 = stateno=1300&&movehit
+
+;---------------------------------------------------------------------------
 ;フレイミングタイガー（弱）
 [State -1, Arts]
 type = ChangeState
@@ -566,19 +579,6 @@ value = 1000
 triggerall = var(59) <= 0 && (command = "DF_a" || command = "DF_b")
 trigger1 = statetype != A
 trigger1 = ctrl
-
-;---------------------------------------------------------------------------
-;ライジングアッパー
-[State -1, Arts]
-type = ChangeState
-value = 1100
-triggerall = var(59) <= 0 && (command = "DD_x" || command = "DD_y")
-trigger1 = statetype != A
-trigger1 = ctrl
-trigger2 = (stateno = [200,299]) || (stateno = [400,499])
-trigger2 = stateno != 440 ;Except for sweep kick
-trigger2 = movecontact
-trigger3 = stateno=1300&&movehit
 
 ;---------------------------------------------------------------------------
 ;フリージングベアー追撃

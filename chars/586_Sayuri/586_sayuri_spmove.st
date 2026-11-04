@@ -2771,7 +2771,7 @@ movetype = A
 physics = N
 anim = 1401
 ctrl = 0
-velset = 6.25,0
+velset = 12.25,0
 
 [State 1401, VarSet];Damage Correction
 type = VarSet
@@ -3252,7 +3252,7 @@ movetype = A
 physics = N
 anim = 1401
 ctrl = 0
-velset = 9.0,0
+velset = 18.0,0
 
 [State 1421, VarSet];Hitsound and effects select
 type = VarSet
@@ -3626,7 +3626,7 @@ movetype = A
 physics = N
 anim = 1401
 ctrl = 0
-velset = 8.0,0
+velset = 16.0,0
 
 [State 6001, VarSet];Hitsound and effects select
 type = VarSet
@@ -3940,7 +3940,7 @@ movetype = A
 physics = N
 anim = 1401
 ctrl = 0
-velset = 9.0,0
+velset = 16.0,0
 
 [State 6011, VarSet];Hitsound and effects select
 type = VarSet
@@ -4096,7 +4096,7 @@ value = 46013
 [State 6013, VelSet]
 type = VelSet
 trigger1 = 1
-x = 8.0
+x = 16.0
 
 [State 6013, TargetBind]
 type = TargetBind
@@ -4311,7 +4311,7 @@ movetype = A
 physics = N
 anim = 1401
 ctrl = 0
-velset = 10.25,0
+velset = 20,0
 
 [State 6021, VarSet];Hitsound and effects select
 type = VarSet
@@ -4342,7 +4342,7 @@ ignorehitpause = 1
 [State 6021, VelSet]
 type = VelSet
 trigger1 = 1
-x = 10.25
+x = 20.25
 
 [State 6021, TargetBind]
 type = TargetBind
@@ -4496,7 +4496,7 @@ ignorehitpause = 1
 [State 6023, VelSet]
 type = VelSet
 trigger1 = 1
-x = 10.25
+x = 20.25
 
 [State 6023, TargetBind]
 type = TargetBind
@@ -4533,7 +4533,7 @@ value = 46013
 [State 6024, VelSet]
 type = VelSet
 trigger1 = 1
-x = 10.25
+x = 20.25
 
 [State 6024, TargetBind]
 type = TargetBind
