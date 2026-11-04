@@ -1073,11 +1073,22 @@ ignoreHitPause = 1
 [State -1, Explod]
 type = Explod
 triggerAll = ifelse(NumExplod(500) != 0, !AILevel, AILevel)
-trigger1 = stateno = 900
+trigger1 = stateno = 1100 && Movecontact
 trigger1 = !NumExplod(502)
 anim = 1
 ID = 503
-removetime = 185
+removetime = 8
+
+[State -1, Jodan Sokuto Geri]
+type = ChangeState
+value = ifelse(var(40) = 1, 1400, 1300)
+triggerAll = ifelse(NumExplod(500) != 0, !AILevel, AILevel)
+triggerAll = NumExplod(500) != 0
+triggerAll = (NumExplod(90000002) || NumExplod(90000003) || NumExplod(90000001))  && (NumExplod(90000200) && NumExplod(90000240))
+triggerAll = StateType != A && !var(40)
+triggerAll = stateno = [200,650]
+trigger1 = ctrl
+trigger2 = var(5) 
 
 [State -1, Remove L, L: Neutral]
 type = RemoveExplod
@@ -4797,13 +4808,11 @@ triggerAll = NumExplod(500) != 0
 trigger1 = stateno = 52
 trigger1 = time >= 3
 trigger2 = stateno = 410
-trigger2 = animelem = 5 > 2
+trigger2 = animelem = 6 > 1
 trigger3 = stateno = 400
 trigger3 = animelem = 4 > 2 
 trigger4 = stateno = 430
 trigger4 = animelem = 4 > 2 
-trigger5 = stateno = 440
-trigger5 = animelem = 8 
 value = 1
 
 [State -1, Jodan Sokuto Geri]
@@ -4828,13 +4837,25 @@ triggerAll = power >= 500
 trigger1 = ctrl
 trigger2 = var(5)  
 
-[State -1, PosAdd]
-type = PosAdd
+[State -1, ChangeState]
+type = ChangeState
 triggerAll = ifelse(NumExplod(500) != 0, !AILevel, AILevel)
-triggerAll = NumExplod(500) != 0
-trigger1 = stateno = 440
-trigger1 = time = 1
-x = 5
+triggerAll = NumExplod(503) != 0 && statetype != A
+triggerall = roundstate = 2
+triggerall = var(20) > 0
+triggerall = NumExplod(90000221)
+trigger1 = stateno = 1100 && movecontact
+value = 1100
+
+[State -1, ChangeState]
+type = ChangeState
+triggerAll = ifelse(NumExplod(500) != 0, !AILevel, AILevel)
+triggerAll = NumExplod(503) != 0 && statetype != A
+triggerall = roundstate = 2 && p2movetype = H
+triggerall = var(20) > 0
+triggerall = NumExplod(90000221)
+trigger1 = prevstateno = 1100 && stateno = 1100 && Animelem = 4 || stateno = 1100 && Animelem = 4 && P2Dist x > 60
+value = 710
 
 [State -1, Angled Jumping Heavy Kick (Normal/Shadow)]
 type = ChangeState

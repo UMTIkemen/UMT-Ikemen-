@@ -1369,6 +1369,14 @@ var(17) = 30
 
 [State 900, NotHitBy]
 type = NotHitBy
+trigger1 = !AILevel
+trigger1 = !time
+value = SCA
+time = 44
+
+[State 900, NotHitBy]
+type = NotHitBy
+trigger1 = AILevel
 trigger1 = !time
 value = SCA
 time = 38
@@ -1463,7 +1471,15 @@ var(17) = 30
 
 [State 905, NotHitBy]
 type = NotHitBy
-trigger1 = !Time
+trigger1 = !AILevel
+trigger1 = !time
+value = SCA
+time = 44
+
+[State 905, NotHitBy]
+type = NotHitBy
+trigger1 = AILevel
+trigger1 = !time
 value = SCA
 time = 38
 
@@ -6579,7 +6595,7 @@ type = NotHitBy
 trigger1 = stateno = 5120
 trigger1 = AnimTime = 0
 value2 = SCA
-time = 3
+time = 4
 
 [State -2, Hit Sound]
 type = PlaySnd

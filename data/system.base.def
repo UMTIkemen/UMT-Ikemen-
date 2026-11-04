@@ -336,6 +336,7 @@
 	;menu.item.active.bg.<itemname>.spacing = 0, 0
 
 	menu.item.delete.keycode = DELETE
+	menu.item.rename.keycode = SPACE
 
 	menu.window.margins.y = 12, 8
 	menu.window.visibleitems = 5
@@ -408,7 +409,7 @@
 	menu.next.key = D, R
 	menu.previous.key = U, L
 	; Key for selecting menu item
-	menu.done.key = a, b, c, x, y, z, s
+	menu.done.key = a, b, c, x, y, z
 	menu.cancel.key = m
 	; Key for displaying highlighted mode hiscore data (if available)
 	menu.hiscore.key = s
@@ -707,6 +708,7 @@ Welcome to I.K.E.M.E.N GO engine! (%s - %s)
 	; Asterisk <col-*> or <*-row> can be used as a wildcard to apply changes to entire columns or rows.
 	; <*-*> can be used to aplly changes to all cells.
 	; Portraits, cell backgrounds, and cursors inherit all cell transformations.
+	; Cursors that define a p<pn>.cursor.<state>.<col>-<row> variant for the cell are excluded.
 	;cell.<col>-<row>.spacing = 0, 0
 	;cell.<col>-<row>.offset = 0, 0
 	;cell.<col>-<row>.facing = 0
@@ -765,7 +767,10 @@ Welcome to I.K.E.M.E.N GO engine! (%s - %s)
 	p1.cursor.active.localcoord = 320, 240
 
 	; <col>-<row> cursor variants replace standard ones on per cell basis.
+	; Asterisk <col-*> or <*-row> can be used as a wildcard to apply changes to entire columns or rows.
+	; <*-*> can be used to apply changes to all cells.
 	; Undefined params defaults to p<pn>.cursor.active/p<pn>.cursor.done values
+	; A variant fully defines the cursor on its cell, taking priority over cell transformations
 	;p1.cursor.active.<col>-<row>.anim = -1
 	;p1.cursor.active.<col>-<row>.spr = -1, 0
 	;p1.cursor.active.<col>-<row>.offset = 0, 0
@@ -1192,7 +1197,8 @@ Welcome to I.K.E.M.E.N GO engine! (%s - %s)
 	p1.teammenu.value.snd = 100, 0
 	p1.teammenu.done.snd = 100, 1
 
-	p1.teammenu.done.key = a, b, c, x, y, z, s
+	p1.teammenu.done.key = a, b, c, x, y, z
+	p1.teammenu.cancel.key = m
 	p1.teammenu.next.key = D
 	p1.teammenu.previous.key = U
 	p1.teammenu.add.key = R
@@ -1782,7 +1788,8 @@ Welcome to I.K.E.M.E.N GO engine! (%s - %s)
 	p2.teammenu.value.snd = 100, 0
 	p2.teammenu.done.snd = 100, 1
 
-	p2.teammenu.done.key = a, b, c, x, y, z, s
+	p2.teammenu.done.key = a, b, c, x, y, z
+	p2.teammenu.cancel.key = m
 	p2.teammenu.next.key = D
 	p2.teammenu.previous.key = U
 	p2.teammenu.add.key = L
@@ -2019,6 +2026,9 @@ Welcome to I.K.E.M.E.N GO engine! (%s - %s)
 
 	stage.move.snd = 100, 0
 
+	; Sound triggered when swapping stages within a slot (see select.def).
+	stage.swap.snd = -1, 0
+
 	; Stage portrait use sprites and anim data from stage's SFF and DEF files.
 	; portrait.bg and portrait.random use screenpack data. portrait element is
 	; layered below stage.active / stage.active2 elements but above portrait.bg.
@@ -2067,6 +2077,22 @@ Welcome to I.K.E.M.E.N GO engine! (%s - %s)
 	stage.portrait.random.window = 
 	stage.portrait.random.localcoord = 320, 240
 
+	; If defined draws a sprite or anim from the screenpack on stages using the slot parameter in select.def.
+	stage.portrait.slot.anim = -1
+	stage.portrait.slot.spr = -1, 0
+	stage.portrait.slot.offset = 0, 0
+	stage.portrait.slot.facing = 1
+	stage.portrait.slot.scale = 1.0, 1.0
+	stage.portrait.slot.xshear = 0
+	stage.portrait.slot.angle = 0
+	stage.portrait.slot.xangle = 0
+	stage.portrait.slot.yangle = 0
+	stage.portrait.slot.projection = orthographic
+	stage.portrait.slot.focallength = 2048
+	stage.portrait.slot.layerno = 0
+	stage.portrait.slot.window =
+	stage.portrait.slot.localcoord = 320, 240
+
 	stage.portrait.loading.anim = -1
 	stage.portrait.loading.spr = -1, 0
 	stage.portrait.loading.offset = 0, 0
@@ -2082,7 +2108,7 @@ Welcome to I.K.E.M.E.N GO engine! (%s - %s)
 	stage.portrait.loading.window = 
 	stage.portrait.loading.localcoord = 320, 240
 
-	done.key = a, b, c, x, y, z, s
+	done.key = a, b, c, x, y, z
 
 	cancel.key = m
 	cancel.snd = 100, 2
@@ -2722,7 +2748,7 @@ Welcome to I.K.E.M.E.N GO engine! (%s - %s)
 	; (in which order parameters are rendered using optional done variants)
 	done.time = 60
 
-	done.key = a, b, c, x, y, z, s
+	done.key = a, b, c, x, y, z
 	skip.key = s
 	cancel.key = m
 
@@ -3808,7 +3834,7 @@ Welcome to I.K.E.M.E.N GO engine! (%s - %s)
 	menu.previous.key = U
 	menu.add.key = R
 	menu.subtract.key = L
-	menu.done.key = a, b, c, x, y, z, s
+	menu.done.key = a, b, c, x, y, z
 	menu.cancel.key = m
 
 	; https://github.com/ikemen-engine/Ikemen-GO/wiki/Screenpack-features#submenus
@@ -3934,8 +3960,9 @@ Welcome to I.K.E.M.E.N GO engine! (%s - %s)
 	menu.itemname.menuengine.back = Back
 
 	menu.itemname.menunetplay = Netplay Settings
-	menu.itemname.menunetplay.portchange = Port Change
 	menu.itemname.menunetplay.netcode = Netcode
+	menu.itemname.menunetplay.portchange = Host Port (TCP)
+	menu.itemname.menunetplay.rollbackport = Rollback Port (UDP)
 	menu.itemname.menunetplay.framedelay = Rollback Frame Delay
 	menu.itemname.menunetplay.spacer1 = -
 	menu.itemname.menunetplay.back = Back
@@ -4259,7 +4286,7 @@ Welcome to I.K.E.M.E.N GO engine! (%s - %s)
 	keymenu.previous.key = U
 	keymenu.add.key = R
 	keymenu.subtract.key = L
-	keymenu.done.key = a, b, c, x, y, z, s
+	keymenu.done.key = a, b, c, x, y, z
 	keymenu.cancel.key = m
 
 	keymenu.unbind.keycode = SPACE
@@ -4476,7 +4503,7 @@ Welcome to I.K.E.M.E.N GO engine! (%s - %s)
 
 	menu.next.key = D
 	menu.previous.key = U
-	menu.done.key = a, b, c, x, y, z, s
+	menu.done.key = a, b, c, x, y, z
 	menu.cancel.key = m
 
 	menu.itemname.back = Back
@@ -4734,7 +4761,7 @@ Welcome to I.K.E.M.E.N GO engine! (%s - %s)
 	menu.previous.key = U
 	menu.add.key = R
 	menu.subtract.key = L
-	menu.done.key = a, b, c, x, y, z, s
+	menu.done.key = a, b, c, x, y, z
 	menu.cancel.key = m
 
 	hidebars = 1
@@ -5116,7 +5143,7 @@ Welcome to I.K.E.M.E.N GO engine! (%s - %s)
 
 	menu.next.key = D, R
 	menu.previous.key = U, L
-	menu.done.key = a, b, c, x, y, z, s
+	menu.done.key = a, b, c, x, y, z
 	menu.cancel.key = m
 	menu.hiscore.key = s
 
@@ -5876,6 +5903,7 @@ Welcome to I.K.E.M.E.N GO engine! (%s - %s)
 	text.layerno = 0
 	text.window = 
 	text.localcoord = 320, 240
+	text.textwrap = w
 
 	overlay.col = 0, 0, 0
 	overlay.alpha = 0, 128
