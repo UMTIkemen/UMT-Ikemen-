@@ -4318,8 +4318,8 @@ ownpal = 1
 [State 3500, Super Pause]
 type = SuperPause
 trigger1 = !time
-time = 465
-moveTime = 465
+time = 478
+moveTime = 478
 p2DefMul = 1
 unHittable = 1
 anim = -1

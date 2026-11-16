@@ -782,7 +782,7 @@ airguard.cornerpush.veloff = 0
 [State 1210, End]
 type = changestate
 trigger1 = animelemtime(3) > 0 && vel y > 0 && pos y >= 0
-value = 1201
+value = 1299
 
 [State Idle]
 type = statetypeset
