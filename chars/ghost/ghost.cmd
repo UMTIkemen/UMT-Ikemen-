@@ -1021,7 +1021,8 @@ triggerAll = Command = "a"
 triggerAll = Command = "holddown"
 triggerAll = StateType != A
 trigger1 = Ctrl
-
+trigger2 = StateNo = 200 && MoveContact
+trigger3 = StateNo = 400 && MoveContact
 
 ;‚µ‚á‚ª‚ÝƒLƒbƒN
 [State -1, Crouching Kick]

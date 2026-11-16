@@ -445,7 +445,7 @@ time = 1
 
 [Command]
 	name = "Burst"
-	command = a+b
+	command = b+c
 	time = 1
 
 

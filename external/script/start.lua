@@ -2844,8 +2844,16 @@ function start.f_selectScreen()
 					--member selection
 					local drawUpdateFlag
 					if activeMember then
-						v.selectState, drawUpdateFlag = start.f_selectMenu(side, v.cmd, v.player, member, v.selectState)
-						if not start.p[side].inPalMenu and getInput(v.cmd, motif.select_info.cancel.key) then
+						local selection = start.p[side].t_selTemp[member]
+						local cancelKyo = selection ~= nil and selection.kyoVersion ~= nil and getInput(v.cmd, motif.select_info.cancel.key)
+						if cancelKyo then
+							selection.kyoVersion = nil
+							selection.kyoConfirmReleased = nil
+							selection.kyoPalette = nil
+						else
+							v.selectState, drawUpdateFlag = start.f_selectMenu(side, v.cmd, v.player, member, v.selectState)
+						end
+						if not cancelKyo and not start.p[side].inPalMenu and getInput(v.cmd, motif.select_info.cancel.key) then
 							local selected = main.f_tableLength(start.p[side].t_selected)
 							if cancelSelectMember(side, k) then
 								timerSelect = motif.select_info.timer.displaytime
@@ -3016,11 +3024,17 @@ function start.f_selectScreen()
 			if #start.p[side].t_selTemp > 0 then
 				for i = 1, #start.p[side].t_selTemp do
 					if i <= motif.select_info['p' .. side].name.num then
-						local name = ''
+						local selection = start.p[side].t_selTemp[i]
 						if motif.select_info['p' .. side].name.num == 1 then
-							name = start.f_getName(start.p[side].t_selTemp[#start.p[side].t_selTemp].ref, side)
-						else
-							name = start.f_getName(start.p[side].t_selTemp[i].ref, side)
+							selection = start.p[side].t_selTemp[#start.p[side].t_selTemp]
+						end
+						local name = start.f_getName(selection.ref, side)
+						if selection.kyoVersion ~= nil then
+							if selection.kyoVersion == main.t_charDef['kyo_ss/neo_kyo_ss.def'] then
+								name = '< NESTS   [NEO] >   Confirm'
+							else
+								name = '< [NESTS]   NEO >   Confirm'
+							end
 						end
 						textImgReset(motif.select_info['p' .. side].name.TextSpriteData)
 						textImgAddPos(
@@ -3683,7 +3697,10 @@ function start.f_selectMenu(side, cmd, player, member, selectState)
 				end
 			end
 			--calculate current position
-			start.c[player].selX, start.c[player].selY = start.f_cellMovement(start.c[player].selX, start.c[player].selY, cmd, side, start.f_getCursorData(player).cursor.move.snd)
+			local selection = start.p[side].t_selTemp[member]
+			if selection == nil or selection.kyoVersion == nil then
+				start.c[player].selX, start.c[player].selY = start.f_cellMovement(start.c[player].selX, start.c[player].selY, cmd, side, start.f_getCursorData(player).cursor.move.snd)
+			end
 			start.c[player].cell = start.c[player].selX + motif.select_info.columns * start.c[player].selY
 			start.c[player].selRef = start.f_selGrid(start.c[player].cell + 1).char_ref
 			main.f_preloadSetCharHighlight(player, start.c[player].selRef)
@@ -3702,7 +3719,10 @@ function start.f_selectMenu(side, cmd, player, member, selectState)
 				})
 			else
 				local updateAnim = false
-				local slotSelected,slotChanged = start.f_slotSelected(start.c[player].cell + 1, side, cmd, player, start.c[player].selX, start.c[player].selY)
+				local slotSelected, slotChanged = false, false
+				if selection.kyoVersion == nil then
+					slotSelected, slotChanged = start.f_slotSelected(start.c[player].cell + 1, side, cmd, player, start.c[player].selX, start.c[player].selY)
+				end
 				local timerExpired = motif.select_info.timer.count ~= -1 and timerSelect == -1
 				needUpdateDrawList = slotChanged
 				local velCopy = false
@@ -3774,6 +3794,28 @@ function start.f_selectMenu(side, cmd, player, member, selectState)
 				end
 				-- cell selected or select screen timer reached 0
 				local canConfirm = (slotSelected and start.f_selGrid(start.c[player].cell + 1).char ~= nil and start.f_selGrid(start.c[player].cell + 1).hidden ~= 2) or timerExpired
+				local nests = main.t_charDef['kyo_ss/nestsstyle_kyo_ss.def']
+				local neo = main.t_charDef['kyo_ss/neo_kyo_ss.def']
+				if selection.kyoVersion ~= nil then
+					local button = main.f_btnPalNo(cmd)
+					if button == 0 then
+						selection.kyoConfirmReleased = true
+					end
+					if getInput(cmd, motif.select_info.cell.left.key) then
+						selection.kyoVersion = nests
+					elseif getInput(cmd, motif.select_info.cell.right.key) and (gameOption('Options.Team.Duplicates') or not t_reservedChars[side][neo]) then
+						selection.kyoVersion = neo
+					end
+					canConfirm = timerExpired or (selection.kyoConfirmReleased and button > 0)
+					if canConfirm then
+						start.c[player].selRef = selection.kyoVersion
+					end
+				elseif slotSelected and not timerExpired and nests ~= nil and neo ~= nil and start.c[player].selRef == nests then
+					selection.kyoVersion = nests
+					selection.kyoConfirmReleased = false
+					selection.kyoPalette = main.f_btnPalNo(cmd)
+					canConfirm = false
+				end
 				if canConfirm then
 					local preloadReady = true
 					if start.c[player].selRef ~= nil then
@@ -3793,6 +3835,8 @@ function start.f_selectMenu(side, cmd, player, member, selectState)
 					end
 				end
 				if canConfirm then
+					selection.kyoVersion = nil
+					selection.kyoConfirmReleased = nil
 					if motif.select_info.paletteselect ~= 0 then
 						timerSelect = motif.select_info.timer.displaytime
 					end
@@ -3803,7 +3847,8 @@ function start.f_selectMenu(side, cmd, player, member, selectState)
 					if motif.select_info.paletteselect > 0 then
 						resetCursorData(player, 'done')
 					end
-					start.p[side].t_selTemp[member].pal = main.f_btnPalNo(cmd)
+					start.p[side].t_selTemp[member].pal = selection.kyoPalette or main.f_btnPalNo(cmd)
+					selection.kyoPalette = nil
 					start.p[side].t_selTemp[member].inRandom = false
 					start.p[side].t_selTemp[member].slotConfirmed = true
 					if not gameOption('Options.Team.Duplicates') then

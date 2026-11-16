@@ -989,7 +989,7 @@ triggerall = statetype != A
 triggerall = power >= 3000 || (fvar(2) && power >= 2000)
 triggerall = (var(15) = 1 && var(49) = 0) || (var(15) = 2 && var(49) = 1)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 4000 || (fvar(2) && power >= 3000))
 
 ;ÅIŒˆí_‹Z
@@ -1006,7 +1006,7 @@ triggerall = var(17) = 25 || var(17) = 125
 triggerall = partner,alive = 1
 triggerall = var(15) = 0 || var(15) = 1 || var(15) = 2
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 4000 || (fvar(2) && power >= 3000))
 
 ;CLIMAX‰Î‰Ş‹ï’Æ
@@ -1021,7 +1021,7 @@ triggerall = statetype != A
 triggerall = power >= 3000 || (fvar(2) && power >= 2000)
 triggerall = (var(15) = 3 && var(49) = 2)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 4000 || (fvar(2) && power >= 3000))
 
 ;CLIMAX“V‰HXa
@@ -1036,7 +1036,7 @@ triggerall = statetype != A
 triggerall = power >= 3000 || (fvar(2) && power >= 2000)
 triggerall = (var(15) = 3 && var(49) = 1)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 4000 || (fvar(2) && power >= 3000))
 
 ;— •S“óEˆë®E“V‘p‰_
@@ -1051,7 +1051,7 @@ triggerall = statetype != A
 triggerall = power >= 3000 || (fvar(2) && power >= 2000)
 triggerall = var(15) = 2
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 4000 || (fvar(2) && power >= 3000))
 
 ;ÅIŒˆí‰œ‹`E—ë®
@@ -1066,7 +1066,7 @@ triggerall = statetype != A
 triggerall = power >= 3000 || (fvar(2) && power >= 2000)
 triggerall = (var(15) = 3 && var(49) = 0)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 4000 || (fvar(2) && power >= 3000))
 
 ;ÅIŒˆí‰œ‹`E—ë®
@@ -1081,7 +1081,7 @@ triggerall = statetype != A
 triggerall = power >= 3000 || (fvar(2) && power >= 2000)
 triggerall = (var(15) = 3 && var(49) = 3)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 4000 || (fvar(2) && power >= 3000))
 
 ;O_‹Z”Vˆë
@@ -1096,7 +1096,7 @@ triggerall = statetype != A
 triggerall = power >= 3000 || (fvar(2) && power >= 2000)
 triggerall = (var(15) = 1 && var(49) = 0) || (var(15) = 2 && var(49) = 0)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 4000 || (fvar(2) && power >= 3000))
 
 ;ÅIŒˆí”é‰œ‹`E\Œ
@@ -1111,7 +1111,7 @@ triggerall = statetype != A
 triggerall = power >= 3000 || (fvar(2) && power >= 2000)
 triggerall = var(15) = 0 || (var(15) = 1 && var(49))
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 4000 || (fvar(2) && power >= 3000))
 
 ;==============================================================================
@@ -1130,7 +1130,7 @@ triggerall = statetype != A
 triggerall = power >= 2000 || (fvar(2) && power >= 1000)
 triggerall = (var(15) = 1 && var(49) = 1) || (var(15) = 2 && var(49) = 0)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 2000 || (fvar(2) && power >= 1000))
 
 ;— ç•S“óEµ®E”ªdŠ_
@@ -1145,7 +1145,7 @@ triggerall = statetype != A
 triggerall = power >= 2000 || (fvar(2) && power >= 1000)
 triggerall = var(15) = 2 && var(49) = 1
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 2000 || (fvar(2) && power >= 1000))
 
 ;MAX•S”ªE“ó®
@@ -1160,7 +1160,7 @@ triggerall = statetype != A
 triggerall = power >= 2000 || (fvar(2) && power >= 1000)
 triggerall = var(15) = 1 && var(49) = 0
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 2000 || (fvar(2) && power >= 1000))
 trigger4 = (stateno = 1180 || stateno = 1182) && animelemtime(7) >= 0 && movehit
 
@@ -1176,7 +1176,7 @@ triggerall = statetype != A
 triggerall = power >= 2000 || (fvar(2) && power >= 1000)
 triggerall = (var(15) = 3 && var(49) = 0)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 2000 || (fvar(2) && power >= 1000))
 
 ;MAXÅIŒˆí‰œ‹`E–³®
@@ -1191,7 +1191,7 @@ triggerall = statetype != A
 triggerall = power >= 2000 || (fvar(2) && power >= 1000)
 triggerall = var(15) = 0 || (var(15) = 3 && var(49) = 2)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 2000 || (fvar(2) && power >= 1000))
 
 ;ŒŞ•SŒŞEŒŞ®E_ˆĞ
@@ -1206,7 +1206,7 @@ triggerall = statetype != A
 triggerall = power >= 2000 || (fvar(2) && power >= 1000)
 triggerall = var(15) = 2
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 2000 || (fvar(2) && power >= 1000))
 
 ;“V‰HXa
@@ -1221,7 +1221,7 @@ triggerall = statetype != A
 triggerall = power >= 2000 || (fvar(2) && power >= 1000)
 triggerall = (var(15) = 3 && var(49) = 0)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 2000 || (fvar(2) && power >= 1000))
 
 ;MAX— •S”ª®¥‘åÖ“ã
@@ -1236,7 +1236,7 @@ triggerall = statetype != A
 triggerall = power >= 2000 || (fvar(2) && power >= 1000)
 triggerall = (var(15) = 0) || (var(15) = 1) || (var(15) = 3 && var(49) = 1) || (var(15) = 3 && var(49) = 3)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 2000 || (fvar(2) && power >= 1000))
 trigger4 = (stateno = 1180 || stateno = 1182) && animelemtime(7) >= 0 && movehit
 
@@ -1257,7 +1257,7 @@ triggerall = statetype != A
 triggerall = power >= 1000 || fvar(2)
 triggerall = (var(15) = 3 && var(49) = 0) || (var(15) = 3 && var(49) = 2)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 2000 || (fvar(2) && power >= 1000))
 
 ;ç‹ã•S‹ãE‹ã®E–¶‰‹(KUSANAGI)
@@ -1272,7 +1272,7 @@ triggerall = statetype != A
 triggerall = power >= 1000 || fvar(2)
 triggerall = (var(15) = 3 && var(49) = 3)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 2000 || (fvar(2) && power >= 1000))
 
 ;ç‹ã•S‹ãE‹ã®E–¶‰‹
@@ -1287,7 +1287,7 @@ triggerall = statetype != A
 triggerall = power >= 1000 || fvar(2)
 triggerall = (var(15) = 3 && var(49) = 0)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 2000 || (fvar(2) && power >= 1000))
 
 ;'00•S”ªE“ó®(ƒlƒI)
@@ -1302,7 +1302,7 @@ triggerall = statetype != A
 triggerall = power >= 1000 || fvar(2)
 triggerall = var(15) = 2
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 2000 || (fvar(2) && power >= 1000))
 
 ;'00•S”ªE“ó®
@@ -1317,7 +1317,7 @@ triggerall = statetype != A
 triggerall = power >= 1000 || fvar(2)
 triggerall = (var(15) = 0 && var(49)) || (var(15) = 1 && var(49))
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 2000 || (fvar(2) && power >= 1000))
 
 ;'99•S”ªE“ó®
@@ -1332,7 +1332,7 @@ triggerall = statetype != A
 triggerall = power >= 1000 || fvar(2)
 triggerall = var(15) = 1 && var(49) = 0
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 2000 || (fvar(2) && power >= 1000))
 trigger4 = (stateno = 1180 || stateno = 1182) && animelemtime(7) >= 0 && movehit && (power >= 2000 || (fvar(2) && power >= 1000))
 
@@ -1348,7 +1348,7 @@ triggerall = statetype != A
 triggerall = power >= 1000 || fvar(2)
 triggerall = var(15) = 0 || (var(15) = 1 && var(49)) || (var(15) = 3 && var(49) = 0) || (var(15) = 3 && var(49) = 2)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 2000 || (fvar(2) && power >= 1000))
 
 ;é“VâP(ƒNƒ[ƒ“)
@@ -1363,7 +1363,7 @@ triggerall = statetype != A
 triggerall = power >= 1000 || fvar(2)
 triggerall = (var(15) = 3 && var(49) = 0)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 2000 || (fvar(2) && power >= 1000))
 
 ;é“VâP(‹-1)
@@ -1378,7 +1378,7 @@ triggerall = statetype != A
 triggerall = power >= 1000 || fvar(2)
 triggerall = (var(15) = 3 && var(49) = 1)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 2000 || (fvar(2) && power >= 1000))
 
 ;ˆŸŒ^— •S”ª®E‹ó’†‘åÖ“ã
@@ -1393,7 +1393,7 @@ triggerall = statetype = A
 triggerall = power >= 1000 || fvar(2)
 triggerall = var(15) = 2
 trigger1 = ctrl || stateno = 105 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 2000 || (fvar(2) && power >= 1000))
 trigger4 = var(12) = 1
 trigger4 = stateno = 1300 || stateno = 1310 || stateno = 1350 || stateno = 1360 || stateno = 2300 || stateno = 2310 || stateno = 2350 || stateno = 2360
@@ -1412,7 +1412,7 @@ triggerall = statetype != A
 triggerall = power >= 1000 || fvar(2)
 triggerall = !(var(15) = 3 && var(49) = 0) && !(var(15) = 3 && var(49) = 2)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (StateNo = 1190 && var(15) = 2 && MoveHit && NumTarget(1190) && AnimElemTime(7) >= 0)
 trigger3 = var(12) = 1 && (power >= 2000 || (fvar(2) && power >= 1000))
 trigger4 = (stateno = 1180 || stateno = 1182) && animelemtime(7) >= 0 && movehit && (power >= 2000 || (fvar(2) && power >= 1000))
 
@@ -1794,7 +1794,7 @@ triggerall = helper(9999),var(14) > 0 || helper(9999),var(15) > 0
 triggerall = statetype != A
 triggerall = (var(15) = 0 && var(49) = 0) || (var(15) = 2 && var(49) = 1)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (Map(NeoAragamiLink) != 0 && Map(NeoAragamiLink) = StateNo)
 trigger3 = var(12) = 1 && fvar(2)
 trigger3 = stateno != [1800,1899]
 
@@ -1809,7 +1809,7 @@ triggerall = helper(9999),var(14) > 0 || helper(9999),var(15) > 0
 triggerall = statetype != A
 triggerall = (var(15) = 3 && var(49) = 3)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (Map(NeoAragamiLink) != 0 && Map(NeoAragamiLink) = StateNo)
 trigger3 = var(12) = 1 && fvar(2)
 trigger3 = stateno != [1800,1899]
 
@@ -1824,7 +1824,7 @@ triggerall = helper(9999),var(23) > 0 || helper(9999),var(24) > 0
 triggerall = statetype != A
 triggerall = (var(15) = 3 && var(49) = 0) || (var(15) = 3 && var(49) = 1)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (Map(NeoAragamiLink) != 0 && Map(NeoAragamiLink) = StateNo)
 trigger3 = var(12) = 1 && fvar(2)
 trigger3 = stateno != [1800,1899]
 
@@ -1839,7 +1839,7 @@ triggerall = helper(9999),var(44) > 0 || helper(9999),var(45) > 0
 triggerall = statetype = A
 triggerall = (var(15) = 1 && var(49)) || (var(15) = 3 && var(49) = 0) || (var(15) = 3 && var(49) = 2)
 trigger1 = ctrl || stateno = 105 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (Map(NeoAragamiLink) != 0 && Map(NeoAragamiLink) = StateNo)
 trigger3 = var(12) = 1 && fvar(2)
 trigger3 = stateno != [1400,1499]
 
@@ -1854,7 +1854,7 @@ triggerall = helper(9999),var(14) > 0 || helper(9999),var(15) > 0
 triggerall = statetype != A
 triggerall = (var(15) = 3 && var(49) = 0) || (var(15) = 3 && var(49) = 2)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (Map(NeoAragamiLink) != 0 && Map(NeoAragamiLink) = StateNo)
 trigger3 = var(12) = 1 && fvar(2)
 trigger3 = stateno != [1400,1499]
 
@@ -1869,7 +1869,7 @@ triggerall = helper(9999),var(14) > 0 || helper(9999),var(15) > 0
 triggerall = statetype != A
 triggerall = var(15) = 0 && var(49) || var(15) = 1 || (var(15) = 2 && var(49) = 0)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (Map(NeoAragamiLink) != 0 && Map(NeoAragamiLink) = StateNo)
 trigger3 = var(12) = 1 && fvar(2)
 trigger3 = stateno != [1400,1499]
 
@@ -1884,7 +1884,7 @@ triggerall = helper(9999),var(3) > 0 || helper(9999),var(4) > 0
 triggerall = statetype != A
 triggerall = var(15) = 0 || (var(15) = 3 && var(49) = 3)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (Map(NeoAragamiLink) != 0 && Map(NeoAragamiLink) = StateNo)
 trigger3 = var(12) = 1 && fvar(2)
 trigger3 = stateno != [2000,2099]
 
@@ -1899,7 +1899,7 @@ triggerall = helper(9999),var(3) > 0 || helper(9999),var(4) > 0
 triggerall = statetype != A
 triggerall = var(15) = 1 || var(15) = 2 || (var(15) = 3 && var(49) = 2)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (Map(NeoAragamiLink) != 0 && Map(NeoAragamiLink) = StateNo)
 trigger3 = var(12) = 1 && fvar(2)
 trigger3 = stateno != [1000,1099]
 
@@ -1914,7 +1914,7 @@ triggerall = helper(9999),var(17) > 0 || helper(9999),var(18) > 0
 triggerall = statetype != A
 triggerall = var(15) = 0 || (var(15) = 2 && var(49) = 1) || (var(15) = 3 && var(49) = 2) || (var(15) = 3 && var(49) = 3)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (Map(NeoAragamiLink) != 0 && Map(NeoAragamiLink) = StateNo)
 trigger3 = var(12) = 1 && fvar(2)
 trigger3 = stateno != [1700,1799]
 
@@ -1929,7 +1929,7 @@ triggerall = helper(9999),var(17) > 0 || helper(9999),var(18) > 0
 triggerall = statetype != A
 triggerall = var(15) = 1 && var(49)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (Map(NeoAragamiLink) != 0 && Map(NeoAragamiLink) = StateNo)
 trigger3 = var(12) = 1 && fvar(2)
 trigger3 = stateno != [2500,2599]
 
@@ -1944,7 +1944,7 @@ triggerall = helper(9999),var(17) > 0 || helper(9999),var(18) > 0
 triggerall = statetype != A
 triggerall = var(15) = 1 && var(49) = 0
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (Map(NeoAragamiLink) != 0 && Map(NeoAragamiLink) = StateNo)
 trigger3 = var(12) = 1 && fvar(2)
 trigger3 = stateno != [1500,1599]
 
@@ -1959,7 +1959,7 @@ triggerall = helper(9999),var(20) > 0 || helper(9999),var(21) > 0
 triggerall = statetype != A
 triggerall = (var(15) = 3 && var(49) = 0) || (var(15) = 3 && var(49) = 1)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (Map(NeoAragamiLink) != 0 && Map(NeoAragamiLink) = StateNo)
 trigger3 = var(12) = 1 && fvar(2)
 trigger3 = stateno != [1700,1799]
 
@@ -1974,7 +1974,7 @@ triggerall = helper(9999),var(20) > 0 || helper(9999),var(21) > 0
 triggerall = statetype != A
 triggerall = (var(15) = 3 && var(49) = 3)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (Map(NeoAragamiLink) != 0 && Map(NeoAragamiLink) = StateNo)
 trigger3 = var(12) = 1 && fvar(2)
 
 ;‹ã•SE®EêK“E‚İ
@@ -1988,7 +1988,7 @@ triggerall = helper(9999),var(20) > 0 || helper(9999),var(21) > 0
 triggerall = statetype != A
 triggerall = var(15) = 0 || (var(15) = 1 && var(49))
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (Map(NeoAragamiLink) != 0 && Map(NeoAragamiLink) = StateNo)
 trigger3 = var(12) = 1 && fvar(2)
 
 ;µEŒÜ®E‰ü(ƒNƒ[ƒ“)
@@ -2002,7 +2002,7 @@ triggerall = helper(9999),var(11) > 0 || helper(9999),var(12) > 0
 triggerall = statetype != A
 triggerall = (var(15) = 3 && var(49) = 0) || (var(15) = 3 && var(49) = 1)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (Map(NeoAragamiLink) != 0 && Map(NeoAragamiLink) = StateNo)
 trigger2 = stateno != 246
 trigger3 = var(12) = 1 && fvar(2)
 
@@ -2017,7 +2017,7 @@ triggerall = helper(9999),var(11) > 0 || helper(9999),var(12) > 0
 triggerall = statetype != A
 triggerall = var(15) = 2
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (Map(NeoAragamiLink) != 0 && Map(NeoAragamiLink) = StateNo)
 trigger2 = stateno != 246
 trigger3 = var(12) = 1 && fvar(2)
 
@@ -2032,7 +2032,7 @@ triggerall = helper(9999),var(11) > 0 || helper(9999),var(12) > 0
 triggerall = statetype != A
 triggerall = var(15) = 0 || var(15) = 1 || (var(15) = 3 && var(49) = 3)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (Map(NeoAragamiLink) != 0 && Map(NeoAragamiLink) = StateNo)
 trigger3 = var(12) = 1 && fvar(2)
 
 ;•S”ª®EˆÅ•¥‚¢(ƒlƒI)
@@ -2047,7 +2047,7 @@ triggerall = statetype != A
 triggerall = var(20) = 0
 triggerall = (var(15) = 2 && var(49) = 0)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (Map(NeoAragamiLink) != 0 && Map(NeoAragamiLink) = StateNo)
 trigger3 = var(12) = 1 && fvar(2)
 
 ;•S”ª®EˆÅ•¥‚¢
@@ -2062,7 +2062,7 @@ triggerall = statetype != A
 triggerall = var(20) = 0
 triggerall = (var(15) = 0 && var(49) = 0) || (var(15) = 2 && var(49) = 1) || (var(15) = 3 && var(49) = 3)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (Map(NeoAragamiLink) != 0 && Map(NeoAragamiLink) = StateNo)
 trigger3 = var(12) = 1 && fvar(2)
 
 ;ˆÅ•¥‚¢(ƒNƒ[ƒ“)
@@ -2077,7 +2077,7 @@ triggerall = statetype != A
 triggerall = var(20) = 0
 triggerall = (var(15) = 3 && var(49) = 0) || (var(15) = 3 && var(49) = 1)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (Map(NeoAragamiLink) != 0 && Map(NeoAragamiLink) = StateNo)
 trigger3 = var(12) = 1 && fvar(2)
 
 ;•SEŒÜ®¥“Å™ù‚İ
@@ -2091,7 +2091,7 @@ triggerall = helper(9999),var(9) > 0
 triggerall = statetype != A
 triggerall = (var(15) = 0 && var(49)) || var(15) = 1 || (var(15) = 2 && var(49) = 0) || (var(15) = 3 && var(49) = 2)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (Map(NeoAragamiLink) != 0 && Map(NeoAragamiLink) = StateNo)
 trigger3 = var(12) = 1 && fvar(2)
 
 ;•SEl®¥r™ù‚İ
@@ -2105,7 +2105,7 @@ triggerall = helper(9999),var(6) > 0
 triggerall = statetype != A
 triggerall = (var(15) = 0 && var(49)) || var(15) = 1 || (var(15) = 2 && var(49) = 0) || (var(15) = 3 && var(49) = 2)
 trigger1 = ctrl || stateno = 100 || stateno = [120,139]
-trigger2 = var(11) = 1
+trigger2 = var(11) = 1 || (Map(NeoAragamiLink) != 0 && Map(NeoAragamiLink) = StateNo)
 trigger3 = var(12) = 1 && fvar(2)
 
 ;==============================================================================
@@ -2753,13 +2753,14 @@ trigger1 = ctrl || stateno = 100 || stateno = [120,139]
 ;ƒK[ƒh
 [State -1, Guard]
 type = changestate
-value = 120
+value = ifelse(StateNo = [100,101], 130 + (helper(9999), fvar(3) > 0), 120)
 triggerall = var(59) <= 0
 triggerall = roundstate = 2
 triggerall = helper(9999),fvar(0) <= 0 || stateno = 20 || stateno = 100
 triggerall = helper(9999),fvar(1) > 0
 triggerall = inguarddist
 trigger1 = ctrl
+trigger2 = StateNo = [100,101]
 
 ;‹ó’†ƒK[ƒh
 [State -1, Air Guard]
