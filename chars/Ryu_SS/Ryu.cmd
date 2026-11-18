@@ -569,7 +569,34 @@ command = $D, $U
 time = 12
 
 ;------------------------------------------------------------------------------
+[Command]
+name = "FocusShortcut"
+command = z+c
+time = 1
+buffer.time = 2
+
 [Statedef -1]
+[State -1, Special to Focus Cancel]
+type = ChangeState
+triggerall = !IsHelper && Var(59) <= 0 && RoundState = 2
+triggerall = NumHelper(9999)
+triggerall = (Helper(9999), Var(22) > 0) || (Helper(9999), Var(23) > 0) || Command = "FocusShortcut"
+triggerall = MoveType != H
+triggerall = Power >= 500
+trigger1 = StateNo = 1000 && AnimElemTime(6) > 0
+trigger2 = StateNo = 1100 && MoveContact
+trigger3 = StateNo = 1400 && AnimElemTime(7) > 0
+value = 1590
+
+[State -1, Focus shortcut]
+type = ChangeState
+triggerall = !IsHelper && Var(59) <= 0 && RoundState = 2
+triggerall = Command = "FocusShortcut"
+triggerall = StateType != A
+trigger1 = Ctrl || StateNo = 100 || StateNo = [120,139]
+value = 1500
+
+
 
 ;--- “ÁŽê‹Z ---
 [State -1, Channel Var]

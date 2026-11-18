@@ -1780,12 +1780,13 @@ type = S
 physics = S
 moveType = I
 velSet = 0,0
-anim = 1201
+ctrl = 0
+anim = ifelse(var(10) = 1, 1204, ifelse(var(10) = 2, 1205, 1201))
 
 [State 0, ChangeAnim]
 type = ChangeAnim
 trigger1 = !Time && var(40)=1
-value = 1202
+value = ifelse(var(10) = 1, 1206, ifelse(var(10) = 2, 1207, 1202))
 
 [State 1201, PosSet]
 type = PosSet
