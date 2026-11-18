@@ -9023,6 +9023,26 @@ physics = N
 ctrl = 0
 anim = 9999
 
+; Read guard inputs while the fighter is frozen by an opponent pause.
+[State 9999, Guard during screen freeze]
+type = ChangeState
+redirectID = Root, ID
+triggerall = IsHelper(9999)
+triggerall = GameVar(SuperPauseTime) > 0 || GameVar(PauseTime) > 0
+triggerall = Root, RoundState = 2
+triggerall = Root, Var(59) <= 0
+triggerall = Root, MoveType = I
+triggerall = Root, StateType != L
+triggerall = Root, StateNo != [120,155]
+triggerall = Command = "holdback"
+triggerall = Root, InGuardDist
+triggerall = Root, Ctrl
+trigger1 = Root, StateType != A
+trigger2 = Root, Var(36) != 0
+value = ifelse(Root, StateType = A, 132, ifelse(Command = "holddown", 131, 130))
+ctrl = 0
+ignorehitpause = 1
+
 ;--- ‰æ–Ê’[ŒŸo
 [State -2];”ò‚Ñ“¹‹ï‚ªÁ‚¦‚½‚ç’âŽ~B
 type=velset

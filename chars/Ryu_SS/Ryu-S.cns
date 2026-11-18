@@ -142,8 +142,8 @@ guardsound = -1
 sparkno = -1
 guard.sparkno = -1
 sparkxy = 0,0
-ground.hittime = 18
-ground.slidetime = 18
+ground.hittime = 22
+ground.slidetime = 22
 ground.velocity = -10,0
 ground.cornerpush.veloff = 0
 air.hittime = 18
@@ -179,8 +179,8 @@ guardsound = -1
 sparkno = -1
 guard.sparkno = -1
 sparkxy = 0,0
-ground.hittime = 18
-ground.slidetime = 18
+ground.hittime = 22
+ground.slidetime = 22
 ground.velocity = -10,0
 ground.cornerpush.veloff = 0
 air.hittime = 18
@@ -2053,15 +2053,29 @@ physics = N
 velset = 0,0
 ctrl = 0
 ;anim = 1500
-poweradd = floor(50*(fvar(2) = 0)*fvar(4))
+poweradd = floor(50*(fvar(2) = 0)*fvar(4)) * (PrevStateNo != 1590)
 ;facep2 = 1
 sprpriority = 2
 
 ;--- コマンド判定 ---
+[State 1500, Immediate paid focus forward dash]
+type = ChangeState
+triggerall = !IsHelper && Var(59) <= 0 && RoundState = 2
+triggerall = Map(PaidFocusCancel) != 0
+trigger1 = Command = "FF" || (Helper(9999), FVar(4) > 0)
+value = 1591
+
+[State 1500, Immediate paid focus backdash]
+type = ChangeState
+triggerall = !IsHelper && Var(59) <= 0 && RoundState = 2
+triggerall = Map(PaidFocusCancel) != 0
+trigger1 = Command = "BB" || (Helper(9999), FVar(5) > 0)
+value = 105
+
 [State 1500, Command Var]
 type = varset
 triggerall = var(59) <= 0
-trigger1 = time = 0 && prevstateno != 1502
+trigger1 = time = 0 && prevstateno != 1502 && prevstateno != 1590
 v = 1
 value = (helper(9999),var(23) >= helper(9999),var(22))
 
@@ -2071,6 +2085,12 @@ trigger1 = time = 0 && prevstateno = 358004
 v = 1
 value = ifelse(var(43) = 1500,0,1)
 
+[State 1500, Shortcut button]
+type = VarSet
+trigger1 = Time = 0 && Command = "FocusShortcut"
+v = 1
+value = 0
+
 [State 1500, ChangeAnim]
 type = null;changeanim
 trigger1 = time = 0 && prevstateno != 1502
@@ -2079,7 +2099,7 @@ value = ifelse(var(1) = 0,1500,1501)
 ;--- アニメ ---
 [State 1500, ChangeAnim]
 type = changeanim
-trigger1 = time = 0 && anim != 1500
+trigger1 = time = 0 && (anim != 1500 || prevstateno = 1590)
 value = 1500
 
 ;elemno初期値
@@ -2297,8 +2317,8 @@ value = 105
 [State 1500, ChangeState]
 type = changestate
 triggerall = animelemtime(3) >= 0
-trigger1 = var(59) <= 0 && command != "holdx" && var(1) = 0
-trigger2 = var(59) <= 0 && command != "holdy" && var(1) = 1
+trigger1 = var(59) <= 0 && command != "holdx" && var(1) = 0 && !(Command = "holdz" && Command = "holdc")
+trigger2 = var(59) <= 0 && command != "holdy" && var(1) = 1 && !(Command = "holdz" && Command = "holdc")
 trigger3 = animelemtime(8) >= 0
 value = 1510
 
@@ -2928,3 +2948,128 @@ absolute = 0
 type = changestate
 trigger1 = var(7) <= 0
 value = 1510
+
+; Special cancel entry for normal Focus.
+[Statedef 1590]
+type = U
+movetype = I
+physics = N
+ctrl = 0
+anim = 1500
+
+[State 1590, Cancel cost]
+type = PowerAdd
+trigger1 = Time = 0
+value = -500
+
+[State 1590, EX startup sound]
+type = PlaySnd
+trigger1 = Time = 0
+value = s7050,0
+
+[State 1590, Yellow flash]
+type = PalFX
+trigger1 = Time = 0
+time = 20
+add = 80,80,-160
+mul = 256,256,256
+sinadd = 40,40,0,4
+color = 256
+
+[State 1590, Paid focus flag]
+type = MapSet
+trigger1 = Time = 0
+map = "PaidFocusCancel"
+value = 1
+
+[State 1590, Focus button]
+type = VarSet
+trigger1 = Time = 0
+v = 1
+value = ifelse(Command = "FocusShortcut" || (Command = "holdz" && Command = "holdc"), 0, (Helper(9999), Var(23) >= Helper(9999), Var(22)))
+
+[State 1590, Immediate paid focus forward dash]
+type = ChangeState
+triggerall = !IsHelper && Var(59) <= 0 && RoundState = 2
+triggerall = Map(PaidFocusCancel) != 0
+trigger1 = Command = "FF" || (Helper(9999), FVar(4) > 0)
+value = 1591
+
+[State 1590, Immediate paid focus backdash]
+type = ChangeState
+triggerall = !IsHelper && Var(59) <= 0 && RoundState = 2
+triggerall = Map(PaidFocusCancel) != 0
+trigger1 = Command = "BB" || (Helper(9999), FVar(5) > 0)
+value = 105
+
+[State 1590, Descend after airborne Shoryuken]
+type = VelSet
+trigger1 = Time = 0 && Pos Y < 0
+x = 0
+y = 2
+
+[State 1590, Air type]
+type = StateTypeSet
+trigger1 = Pos Y < 0
+statetype = A
+
+[State 1590, Gravity]
+type = VelAdd
+trigger1 = Pos Y < 0
+y = 0.5
+
+[State 1590, Ground position]
+type = PosSet
+trigger1 = Pos Y >= 0
+y = 0
+
+[State 1590, Ground type]
+type = StateTypeSet
+trigger1 = Pos Y >= 0
+statetype = S
+
+[State 1590, Focus]
+type = ChangeState
+trigger1 = Pos Y >= 0
+value = 1500
+ctrl = 0
+
+[Statedef 1591]
+type = S
+movetype = I
+physics = N
+ctrl = 0
+anim = 1591
+velset = 0,0
+sprpriority = 1
+
+[State 1591, Ground]
+type = PosSet
+trigger1 = Time = 0
+y = 0
+
+[State 1591, Sound]
+type = PlaySnd
+trigger1 = AnimElem = 2
+value = s105,0
+
+[State 1591, Velocity]
+type = VelSet
+trigger1 = AnimElem = 2
+x = 14
+
+[State 1591, Friction]
+type = VelMul
+trigger1 = 1
+x = 0.9
+
+[State 1591, Stop]
+type = VelSet
+trigger1 = AnimElem = 3
+x = 0
+
+[State 1591, End]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 0
+ctrl = 1
