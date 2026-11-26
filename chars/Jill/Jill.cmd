@@ -514,7 +514,7 @@ trigger4 = (stateno = [210,211]) && movecontact
 trigger5 = stateno = 5120 && time >= 3
 trigger6 = stateno = 620
 trigger6 = numhelper(7771)
-trigger7 = (stateno = 830) && movecontact
+;trigger7 = (stateno = 830) && movecontact
 
 ;---------------------------------------------------------------------------
 [State -1, Exceed Accel]

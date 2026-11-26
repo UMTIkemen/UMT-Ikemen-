@@ -1110,10 +1110,13 @@ ignoreHitPause = 1
 [State -1, Explod]
 type = Explod
 triggerAll = ifelse(NumExplod(502) != 0, AILevel, !AILevel)
-triggerAll = NumExplod(501) = 0
+trigger1 = NumExplod(501) = 0
 trigger1 = stateno = 0
 trigger1 = !NumExplod(500)
 trigger1 = (NumExplod(90000002) || NumExplod(90000003) || NumExplod(90000001)) && (NumExplod(90000195))
+trigger2 = stateno = 105
+trigger2 = !NumExplod(500)
+trigger2 = NumExplod(90000200) && NumExplod(90000195)
 anim = 1
 ID = 500
 pauseMoveTime = 3 + ifElse(HitPauseTime, HitPauseTime - 1, 0)

@@ -2240,22 +2240,26 @@ anim = 150
 
 [State 151, HitVelSet]
 type = HitVelSet
+triggerall = !(GetHitVar(HitID) = 2551 && GetHitVar(PlayerID) != ID)
 trigger1 = !Time
 x = 1
 
 [State 151, VelSet]
 type = VelSet
+triggerall = !(GetHitVar(HitID) = 2551 && GetHitVar(PlayerID) != ID)
 trigger1 = Time = GetHitVar(SlideTime)
 trigger2 = HitOver
 x = 0
 
 [State 151, CtrlSet]
 type = CtrlSet
+triggerall = !(GetHitVar(HitID) = 2551 && GetHitVar(PlayerID) != ID)
 trigger1 = time = GetHitVar(CtrlTime)
 value = 1
 
 [State 151, Standing to Crouching]
 type = StateTypeSet
+triggerall = !(GetHitVar(HitID) = 2551 && GetHitVar(PlayerID) != ID)
 trigger1 = !AILevel && StateType = S && (NumExplod(90000002) || NumExplod(90000001) || NumExplod(90000003))
 trigger2 = AILevel && Random < (250 * (AILevel ** 2 / 64.0))
 trigger2 = StateType = S && (EnemyNear, MoveType = A) && (EnemyNear, StateType = C)
@@ -2264,6 +2268,7 @@ physics = C
 
 [State 151, Crouching to Standing]
 type = StateTypeSet
+triggerall = !(GetHitVar(HitID) = 2551 && GetHitVar(PlayerID) != ID)
 trigger1 = !AILevel && StateType = C && (!NumExplod(90000002) && !NumExplod(90000001) && !NumExplod(90000003))
 trigger2 = AILevel && Random < (125 * (AILevel ** 2 / 64.0))
 trigger2 = StateType = C && (EnemyNear, MoveType = A) && (EnemyNear, StateType != C)
@@ -2272,12 +2277,53 @@ physics = S
 
 [State 151, End]
 type = ChangeState
+triggerall = !(GetHitVar(HitID) = 2551 && GetHitVar(PlayerID) != ID)
 trigger1 = HitOver
 value = 130
 ctrl = 1
 
 
 ;Hit while Guarding (Crouching)
+
+[State 151, 255 standing guard lock]
+type = StateTypeSet
+trigger1 = GetHitVar(HitID) = 2551 && GetHitVar(PlayerID) != ID
+statetype = S
+movetype = H
+physics = S
+ignorehitpause = 1
+
+[State 151, 255 keep guard active]
+type = AssertSpecial
+trigger1 = GetHitVar(HitID) = 2551 && GetHitVar(PlayerID) != ID
+flag = AutoGuard
+ignorehitpause = 1
+
+[State 151, 255 disable actions during guardstun]
+type = CtrlSet
+trigger1 = GetHitVar(HitID) = 2551 && GetHitVar(PlayerID) != ID
+value = 0
+ignorehitpause = 1
+
+[State 151, 255 guard velocity]
+type = HitVelSet
+triggerall = GetHitVar(HitID) = 2551 && GetHitVar(PlayerID) != ID
+trigger1 = Time = 0
+x = 1
+
+[State 151, 255 stop guard pushback]
+type = VelSet
+triggerall = GetHitVar(HitID) = 2551 && GetHitVar(PlayerID) != ID
+trigger1 = GetHitVar(SlideTime) <= 0 || HitOver
+x = 0
+
+[State 151, 255 guardstun ends]
+type = SelfState
+triggerall = GetHitVar(HitID) = 2551 && GetHitVar(PlayerID) != ID
+trigger1 = HitOver
+value = 130
+ctrl = 1
+
 [StateDef 152]
 type = C
 moveType = H
@@ -5066,6 +5112,7 @@ ignoreHitPause = 1
 
 [State -3, Cancel Check]
 type = VarSet
+triggerAll = StateNo != 220 || MoveContact
 triggerAll = MoveContact || var(18)
 trigger1 = var(20) && (StateNo = [200,699])
 trigger2 = var(20) && (StateNo = [1000,2999]) && (MoveContact || var(18))
@@ -5085,6 +5132,7 @@ trigger15 = StateNo = 430
 trigger16 = StateNo = 440 && AnimElemTime(6) < 0
 trigger17 = StateNo = 450 && AnimElemTime(5) < 0
 trigger18 = StateNo = 222 && AnimElemTime(6) < 0
+trigger19 = StateNo = 220 && MoveContact
 var(6) = 1
 ignoreHitPause = 1
 
@@ -5096,6 +5144,7 @@ ignoreHitPause = 1
 
 [State -3, Super Cancel Check]
 type = VarSet
+triggerAll = StateNo != 220 || MoveContact
 trigger1 = var(20) && (StateNo = [200,699])
 trigger2 = var(20) && (StateNo = [1000,2999]) && (MoveContact || var(18))
 trigger3 = (StateNo = [200,699]) && Time <= 2
@@ -5121,6 +5170,7 @@ trigger22 = (StateNo = 1310 || StateNo = 1315) && (MoveContact = [1,6])
 trigger23 = (StateNo = [1400,1402])
 trigger24 = (StateNo = [1020,1030]) && ((AnimElemTime(8) >= 0) || var(18))
 trigger25 = StateNo = 222 && (AnimElemTime(8) < 0 || (MoveContact = [1,8]))
+trigger26 = StateNo = 220 && MoveContact
 var(7) = 1
 ignoreHitPause = 1
 

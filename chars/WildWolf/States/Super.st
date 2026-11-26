@@ -1535,7 +1535,7 @@ ignoreHitPause = 1
 
 [State 3200, NotHitBy]
 type = NotHitBy
-trigger1 = AnimElemTime(20) < 0
+trigger1 = AnimElemTime(28) < 0
 time = 1
 value = SCA
 
