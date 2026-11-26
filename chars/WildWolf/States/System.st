@@ -1383,7 +1383,7 @@ var(17) = 30
 type = NotHitBy
 trigger1 = !time
 value = SCA
-time = 40 
+time = 42 
 
 [State 900, PosFreeze]
 type = PosFreeze

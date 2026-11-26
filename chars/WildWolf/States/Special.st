@@ -3144,7 +3144,7 @@ Triggerall = numhelper(3161) = 0
 Triggerall = numhelper(3162) = 0
 Triggerall = numhelper(1331) = 0
 Triggerall = numhelper(1401) = 0
-trigger1 = !var(16) ;trigger1 = !var(16) && var(15) < 1 && !var(9)
+trigger1 = !var(16) && !var(9)
 trigger1 = AnimElem = 7
 attr = S, SA
 hitFlag = MAF
@@ -3196,7 +3196,7 @@ Triggerall = numhelper(3161) = 0
 Triggerall = numhelper(3162) = 0
 Triggerall = numhelper(1331) = 0
 Triggerall = numhelper(1401) = 0
-trigger1 = !var(16) ;trigger1 = !var(16) && var(15) < 1 && var(9)
+trigger1 = !var(16) && var(9)
 trigger1 = AnimElem = 7
 ID = 1530
 attr = S, SA

@@ -1515,6 +1515,12 @@ ctrl = 0
 anim = 3005
 sprPriority = 5
 
+[State 3005, Super projectile juggle]
+type = AssertSpecial
+trigger1 = 1
+flag = NoJuggleCheck
+ignorehitpause = 1
+
 [State 3005, HitOverride]
 type = HitOverride
 trigger1 = 1
@@ -1572,7 +1578,7 @@ sparkXY = -10,0
 
 [State 3005, HitDef]
 type = HitDef
-trigger1 = !(Root, var(16)) && (Root, var(15) < 5 || Root, var(20))
+trigger1 = 1
 attr = S, HP
 hitFlag = MAF
 guardFlag = M
@@ -1593,11 +1599,11 @@ ground.slideTime = 18
 guard.hitTime = 18
 air.hitTime = 60
 airGuard.ctrlTime = 16
-ground.velocity = -8, -6.5
+ground.velocity = ifelse(var(2) < 5,-3,-8), ifelse(var(2) < 5,-3,-6.5)
 ground.cornerPush.velOff = 0
 guard.velocity = -10.52
 guard.cornerPush.velOff = 0
-air.velocity = -8, -5.5
+air.velocity = ifelse(var(2) < 5,-3,-8), ifelse(var(2) < 5,-3,-5.5)
 air.cornerPush.velOff = 0
 airGuard.velocity = -5, -1
 airGuard.cornerPush.velOff = 0

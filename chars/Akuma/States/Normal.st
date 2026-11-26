@@ -1488,6 +1488,20 @@ sprpriority = 2
 facep2=1
 
 
+[State 255, Reset first-block confirmation]
+type = MapSet
+trigger1 = Time = 0
+map = "Akuma255FirstBlocked"
+value = 0
+ignorehitpause = 1
+
+[State 255, Record first-block confirmation]
+type = MapSet
+trigger1 = MoveGuarded && AnimElemTime(11) < 0
+map = "Akuma255FirstBlocked"
+value = 1
+ignorehitpause = 1
+
 [State 255, Voice]
 type=playsnd
 trigger1= animelem=2 && random<500
@@ -1520,12 +1534,12 @@ type = HitDef
 trigger1 = !var(16) && (var(15) < 1 || var(20))
 trigger1 = AnimElem = 4
 attr = S,NA        ;SCA,NA,SA,HA,NP,SP,HP,NT,ST,HT
-hitflag = MAF        ;HLAFD+-
+hitflag = HAF
 guardflag = M         ;HLA
 animtype = Hard          ;light,medium,hard,back,up,diagup
 priority = 4,Hit   ;Hit,Miss,Dodge
 damage = ceil(ifElse(fvar(11) * 49 < 8, 8, fvar(11) * 49)), 0
-ID = 200
+ID = 2551
 getpower = ifElse(!var(13), 75, 50)*!var(20), 30 * !var(20)
 givepower = 15, 15
 pausetime = 8,12
@@ -1558,12 +1572,43 @@ palFX.add = 255,255,255
 palFX.sinAdd= -255,-255,-255,48
 forcestand = 1
 
+[State 255, Lock confirmed standing guard 0]
+type = ChangeState
+triggerall = NumEnemy > 0
+triggerall = MoveGuarded && AnimElemTime(11) < 0
+triggerall = EnemyNear(0), GetHitVar(Guarded)
+triggerall = EnemyNear(0), GetHitVar(HitID) = 2551
+triggerall = EnemyNear(0), GetHitVar(PlayerID) = ID
+trigger1 = 1
+redirectID = EnemyNear(0), ID
+readPlayerID = ID
+value = 151
+ctrl = 0
+ignorehitpause = 1
+persistent = 0
+
+[State 255, Lock confirmed standing guard 1]
+type = ChangeState
+triggerall = NumEnemy > 1
+triggerall = MoveGuarded && AnimElemTime(11) < 0
+triggerall = EnemyNear(1), GetHitVar(Guarded)
+triggerall = EnemyNear(1), GetHitVar(HitID) = 2551
+triggerall = EnemyNear(1), GetHitVar(PlayerID) = ID
+trigger1 = 1
+redirectID = EnemyNear(1), ID
+readPlayerID = ID
+value = 151
+ctrl = 0
+ignorehitpause = 1
+persistent = 0
+
 [State 255, HitDef 2]
 type = HitDef
+triggerall = Map(Akuma255FirstBlocked) = 0
 trigger1 = !var(16) && (var(15) < 1 || var(20))
 trigger1 = AnimElem = 11
 attr = S,NA        ;SCA,NA,SA,HA,NP,SP,HP,NT,ST,HT
-hitflag = MAF        ;HLAFD+-
+hitflag = HAF
 guardflag = M         ;HLA
 animtype = Hard          ;light,medium,hard,back,up,diagup
 priority = 4,Hit   ;Hit,Miss,Dodge
@@ -1584,7 +1629,55 @@ ground.type = High      ;Low,Trip,None
 air.type = Low
 ground.slidetime = 18 + 4*var(9)
 ground.hittime = 20 + 4*var(9)
-guard.hittime = 12
+guard.hittime = 17
+guard.ctrltime = 17
+air.hittime = 120
+ground.velocity = -5.5
+guard.velocity = -10.5
+air.velocity = -5.5,-6.5
+ground.cornerPush.velOff = 0
+guard.cornerPush.velOff = 0
+air.cornerPush.velOff = 0
+yaccel = .58
+fall = 0
+fall.recover = 1
+fall.recovertime = 120
+palFX.time = 12 * var(9)
+palFX.add = 255,255,255
+palFX.sinAdd= -255,-255,-255,48
+forcestand = 1
+
+
+
+[State 255, HitDef 2 after first block]
+type = HitDef
+triggerall = Map(Akuma255FirstBlocked) != 0
+trigger1 = !var(16) && (var(15) < 1 || var(20))
+trigger1 = AnimElem = 11
+attr = S,NA        ;SCA,NA,SA,HA,NP,SP,HP,NT,ST,HT
+hitflag = MAF
+guardflag = M         ;HLA
+animtype = Hard          ;light,medium,hard,back,up,diagup
+priority = 4,Hit   ;Hit,Miss,Dodge
+damage = ceil(ifElse(fvar(11) * 35 < 8, 8, fvar(11) * 35)), 0
+ID = 200
+getpower = ifElse(!var(13), 75, 50)*!var(20), 30 * !var(20)
+givepower = 15, 15
+pausetime = 12,12
+guard.pausetime = 12,12
+sparkNo = -1 + 0 * (var(33) := 8012)
+guard.sparkNo = -1 + 0 * (var(34) := 8000)
+sparkXY = -10 + 0 * (var(35) := 45), var(36) := -104
+hitsound = s2,5
+guardsound = s130, 0
+air.animType = Back
+fall.animType = Back
+ground.type = High      ;Low,Trip,None
+air.type = Low
+ground.slidetime = 18 + 4*var(9)
+ground.hittime = 20 + 4*var(9)
+guard.hittime = 17
+guard.ctrltime = 17
 air.hittime = 120
 ground.velocity = -5.5
 guard.velocity = -10.5

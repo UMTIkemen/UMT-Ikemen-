@@ -4322,6 +4322,11 @@ type = PlayerPush
 trigger1 = 1
 value = 0
 
+[State 2000, Enable Cross-Up]
+type = Width
+trigger1 = 1
+edge = -1, -1
+
 [State 1401,Turn]
 type = Turn
 trigger1 = P2Dist X < -5
@@ -4342,8 +4347,8 @@ trigger1 = ifelse(var(53) <= 0, power >= 3000 && !var(20), power >= 1000)
 [State 1401, ChangeState]
 type = ChangeState
 Trigger1 = (Time = 34 && var(10) = [0,1]) || (Time = 22 && var(10) = [2,3])
-Trigger2 = Vel X > 0 && FrontEdgeDist <= 10 && AnimElemTime(1) > 0
-Trigger3 = Vel X < 0 && BackEdgeDist <= 10 && AnimElemTime(1) > 0
+Trigger2 = Vel X > 0 && FrontEdgeDist <= 0 && AnimElemTime(1) > 0
+Trigger3 = Vel X < 0 && BackEdgeDist <= 0 && AnimElemTime(1) > 0
 value = 1402
 
 
